@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
+import useIsLogin from '@hooks/useIsLogin';
+import useUserInfo from '@hooks/useUserInfo';
 
 const menus = [
   { label: 'MY 건설현장', path: '/my-field' },
@@ -16,6 +18,9 @@ const menus = [
 ];
 
 export default () => {
+  const isLogin = useIsLogin();
+  const userInfo = useUserInfo();
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -39,19 +44,31 @@ export default () => {
         <RightWrap>
           <TextButton>자료실</TextButton>
           <TextButton>고객센터</TextButton>
-          <IconContainer>
-            <IconWrap>
-              <Icon src={getAssetURL('../assets/ic-chat.svg')} />
-            </IconWrap>
-            <IconWrap>
-              <Icon src={getAssetURL('../assets/ic-alert.svg')} />
-            </IconWrap>
-          </IconContainer>
-          <ProfileWrap>
-            <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
-            <ProfileName>사용자이름</ProfileName>
-            <ProfileIcon src={getAssetURL('../assets/ic-arrow.svg')} />
-          </ProfileWrap>
+          {isLogin ? (
+            <>
+              <IconContainer>
+                <IconWrap>
+                  <Icon src={getAssetURL('../assets/ic-chat.svg')} />
+                </IconWrap>
+                <IconWrap>
+                  <Icon src={getAssetURL('../assets/ic-alert.svg')} />
+                </IconWrap>
+              </IconContainer>
+              <ProfileWrap>
+                <ProfileImage
+                  src={getAssetURL('../assets/default-profile.jpeg')}
+                />
+                <ProfileName>{userInfo?.name}</ProfileName>
+                <ProfileIcon src={getAssetURL('../assets/ic-arrow.svg')} />
+              </ProfileWrap>
+            </>
+          ) : (
+            <>
+              <LoginButton onClick={() => navigate('/auth/login')}>
+                로그인
+              </LoginButton>
+            </>
+          )}
         </RightWrap>
       </ContentContainer>
     </Container>
@@ -71,6 +88,7 @@ const LogoWrap = styled.div`
   display: block;
   width: 350px;
   margin-top: 4px;
+  margin-right: 120px;
 `;
 
 const ContentContainer = styled.div`
@@ -159,4 +177,20 @@ const ProfileName = styled.span`
 const ProfileIcon = styled.img`
   width: 18px;
   height: 18px;
+`;
+
+const LoginButton = styled.span`
+  padding: 10px 28px;
+  border-radius: 6px;
+  background-color: #258fff;
+
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.28px;
+  text-align: center;
+  color: #fff;
+
+  cursor: pointer;
+
+  margin-right: 18px;
 `;

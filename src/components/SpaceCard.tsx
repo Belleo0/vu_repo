@@ -1,7 +1,10 @@
+import { setSelectedSpaceId } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import getAssetURL from '@utils/getAssetURL';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 interface ISpaceCard {
   id: number;
@@ -10,21 +13,27 @@ interface ISpaceCard {
 }
 
 export default ({ id, name, address }: ISpaceCard) => {
-  const [isOpenCard, setIsOpenCard] = useState<boolean>(false);
+  // const [isOpenCard, setIsOpenCard] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const selectedSpaceId = useSelectedSpaceId();
+
+  const isOpen = useMemo(() => {
+    return selectedSpaceId === id;
+  }, [selectedSpaceId]);
 
   return (
-    <Container isOpen={isOpenCard}>
-      <InfoContainer onClick={() => setIsOpenCard((prev) => !prev)}>
+    <Container isOpen={selectedSpaceId === id}>
+      <InfoContainer onClick={() => dispatch(setSelectedSpaceId(id))}>
         <InfoWrap>
           <Title>{name}</Title>
           <Address>{address}</Address>
         </InfoWrap>
         <Icon
           src={getAssetURL('../assets/ic-arrow-gray.svg')}
-          isOpen={isOpenCard}
+          isOpen={isOpen}
         />
       </InfoContainer>
-      {isOpenCard && (
+      {isOpen && (
         <ButtonContainer>
           <BottomButton>숨김</BottomButton>
           <BottomButton style={{ color: '#ef0000' }}>삭제</BottomButton>

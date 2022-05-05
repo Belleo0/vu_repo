@@ -52,8 +52,10 @@ api.interceptors.request.use(async (request) => {
   //   token = setToken(data);
   // }
 
-  // @ts-ignore
-  request.headers.common.authorization = `Bearer ${token?.access_token}`;
+  if (token?.access_token) {
+    // @ts-ignore
+    request.headers.common.authorization = `Bearer ${token?.access_token}`;
+  }
   return request;
 });
 

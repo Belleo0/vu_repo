@@ -3,7 +3,7 @@ import api from '@api';
 
 export const me: any = createAsyncThunk('/auth/login', async (thunkAPI) => {
   const { data } = await api.get(`/auth/login`);
-  return data;
+  return data?.result;
 });
 
 export const authSlice = createSlice({

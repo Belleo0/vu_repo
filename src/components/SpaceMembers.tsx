@@ -2,14 +2,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 
-interface IMember {
-  companyName: string;
-  name: string;
-  role: string;
-}
-
 interface IMembers {
-  data: IMember[];
+  data: any[];
 }
 
 export default ({ data }: IMembers) => {
@@ -19,10 +13,10 @@ export default ({ data }: IMembers) => {
         <ProfileWrap>
           <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
           <ProfileInfoWrap>
-            <CompanyName>{v.companyName}</CompanyName>
+            <CompanyName>{v?.company?.name}</CompanyName>
             <NameRoleWrap>
-              <Name>{v.name}</Name>
-              <Role>{v.role}</Role>
+              <Name>{v?.name}</Name>
+              <Role>{v?.position}</Role>
             </NameRoleWrap>
           </ProfileInfoWrap>
           <ProfileChatWrap onClick={() => null}>

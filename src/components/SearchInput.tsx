@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import React, { CSSProperties, InputHTMLAttributes } from 'react';
-import ProfileBox from './ProfileBox';
 
 export default ({
   containerStyle,

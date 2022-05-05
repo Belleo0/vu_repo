@@ -1,22 +1,18 @@
 import styled from '@emotion/styled';
+import useUserInfo from '@hooks/useUserInfo';
 import getAssetURL from '@utils/getAssetURL';
 import React from 'react';
 
-interface IProfileBox {
-  companyName: string;
-  name: string;
-  role: string;
-}
-
-export default ({ companyName, name, role }: IProfileBox) => {
+export default () => {
+  const userInfo = useUserInfo();
   return (
     <ProfileBox>
       <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
       <ProfileInfoWrap>
-        <CompanyName>{companyName}</CompanyName>
+        <CompanyName>{userInfo?.company?.name}</CompanyName>
         <NameRoleWrap>
-          <Name>{name}</Name>
-          <Role>{role}</Role>
+          <Name>{userInfo?.name}</Name>
+          <Role>{userInfo?.position}</Role>
         </NameRoleWrap>
       </ProfileInfoWrap>
     </ProfileBox>

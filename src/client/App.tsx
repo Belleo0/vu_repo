@@ -8,6 +8,7 @@ import { me } from '@data/auth';
 import { RouteAdapter } from '@components/RouteAdapter';
 
 import MyField from '@pages/my-field';
+import AuthLogin from '@pages/auth/login';
 
 const Container = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,8 @@ const Container = () => {
       ReactRouterRoute={RouteAdapter as unknown as React.FunctionComponent}
     >
       <Routes>
+        <Route path="/auth/login" element={<AuthLogin />} />
+
         <Route path="/my-field" element={<MyField />} />
       </Routes>
     </QueryParamProvider>

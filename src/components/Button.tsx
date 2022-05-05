@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, HTMLAttributes } from 'react';
 import ProfileBox from './ProfileBox';
 import SearchInput from './SearchInput';
 
@@ -53,7 +53,7 @@ export default ({
   containerStyle,
   icon,
   ...props
-}: IButton) => {
+}: IButton & HTMLAttributes<HTMLDivElement>) => {
   return (
     <Container type={type} style={containerStyle} {...props}>
       {icon && <Icon src={getAssetURL(`../assets/${icon}.svg`)} />}

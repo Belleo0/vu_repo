@@ -1,7 +1,10 @@
+import api from '@api';
+import { setSelectedSpaceId } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import React, { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Button, { ButtonType } from './Button';
 import ProfileBox from './ProfileBox';
 import SearchInput from './SearchInput';
@@ -13,16 +16,45 @@ enum TabTypeEnum {
 }
 
 export default () => {
+  // const [mount, setMount] = useState(false);
+  const dispatch = useDispatch();
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [tabType, setTabType] = useState<TabTypeEnum>(TabTypeEnum.DEFAULT);
+
+  const [spaces, setSpaces] = useState<any[]>([]);
+
+  const [search, setSearch] = useState('');
+
+  const searchedSpaces = useMemo(() => {
+    return spaces.filter((v) => v.name.includes(search));
+  }, [spaces, search]);
+
+  useEffect(() => {
+    (async () => {
+      setSpaces([]);
+      const { data } = await api.get(`/field-spaces`, {
+        params: { is_hide: tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y' },
+      });
+      setSpaces(data?.result);
+
+      if (data?.result.length > 0) {
+        console.log('data?.result?.[0]?.id', data?.result?.[0]?.id);
+        dispatch(setSelectedSpaceId(data?.result?.[0]?.id));
+      }
+    })();
+  }, [tabType]);
+
   return (
     <Container>
-      <ProfileBox companyName="회사이름" role="직급" name="사용자이름" />
+      <ProfileBox />
       <SpaceFilterWrap>
         <SpaceFilterName>건설현장</SpaceFilterName>
         <SearchInput
           placeholder="현장명을 입력해주세요."
           containerStyle={{ marginBottom: 20 }}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
         <Button
           type={ButtonType.PRIMARY}
@@ -76,43 +108,17 @@ export default () => {
             <SpaceOrderIcon src={getAssetURL('../assets/ic-sort.svg')} />
           </SpaceOrderWrap>
         </SpaceFilterContainer>
-        <SpaceCard
-          id={1}
-          name="중앙동 일동미라주더마린 오피스텔 adsjfoiadsjofjd"
-          address="부산 중구 충장대로 13번길 22"
-        />
-        <SpaceCard
-          id={1}
-          name="중앙동 일동미라주더마린 오피스텔 adsjfoiadsjofjd"
-          address="부산 중구 충장대로 13번길 22"
-        />
-        <SpaceCard
-          id={1}
-          name="중앙동 일동미라주더마린 오피스텔 adsjfoiadsjofjd"
-          address="부산 중구 충장대로 13번길 22"
-        />
-        <SpaceCard
-          id={1}
-          name="중앙동 일동미라주더마린 오피스텔 adsjfoiadsjofjd"
-          address="부산 중구 충장대로 13번길 22"
-        />
-        <SpaceCard
-          id={1}
-          name="중앙동 일동미라주더마린 오피스텔 adsjfoiadsjofjd"
-          address="부산 중구 충장대로 13번길 22"
-        />
-        <SpaceCard
-          id={1}
-          name="중앙동 일동미라주더마린 오피스텔 adsjfoiadsjofjd"
-          address="부산 중구 충장대로 13번길 22"
-        />
+        {searchedSpaces.map((v) => (
+          <SpaceCard id={v.id} name={v?.name} address={v?.basic_address} />
+        ))}
       </SpaceContainer>
     </Container>
   );
 };
 
 const Container = styled.div`
-  width: 380px;
+  width: 100%;
+  max-width: 380px;
   height: 100%;
 `;
 

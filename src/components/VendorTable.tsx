@@ -2,14 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 interface IVendorTable {
-  data: {
-    factory_company_name: string;
-    factory_address: string;
-    distance: 4.8;
-    duration: 12;
-    sale_user_name: '사용자이름';
-    total_amount: 1200;
-  }[];
+  data: any[];
 }
 
 export default ({ data }: IVendorTable) => {
@@ -25,19 +18,22 @@ export default ({ data }: IVendorTable) => {
       {data.map((v) => (
         <CellWrap>
           <ValueCell style={{ flexDirection: 'column' }}>
-            <FactoryCompanyName>{v.factory_company_name}</FactoryCompanyName>
-            <FactoryAddress>{v.factory_address}</FactoryAddress>
+            <FactoryCompanyName>{v.factory_space.name}</FactoryCompanyName>
+            <FactoryAddress>{v.factory_space.address}</FactoryAddress>
           </ValueCell>
           <ValueCell>
-            <Distance>{v.distance}km</Distance>
+            <Distance>{(v.direction.distance / 1000).toFixed(1)}km</Distance>
             <DistanceDivider />
-            <Duration>{v.duration}분</Duration>
+            <Duration>
+              {Math.round(v.direction.duration / 1000 / 60)}분
+            </Duration>
           </ValueCell>
           <ValueCell>
-            <SaleUserName>{v.sale_user_name}</SaleUserName>
+            <SaleUserName>{v?.factory_space?.site_user?.name}</SaleUserName>
           </ValueCell>
           <ValueCell>
-            <TotalAmount>{v.total_amount?.toLocaleString('ko')}m³</TotalAmount>
+            {/* <TotalAmount>{v.total_amount?.toLocaleString('ko')}m³</TotalAmount> */}
+            <TotalAmount>미구현</TotalAmount>
           </ValueCell>
           <ValueCell>
             <OrderButton>주문</OrderButton>
