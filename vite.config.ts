@@ -1,30 +1,26 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import vitePluginImp from 'vite-plugin-imp';
 import path from 'path';
+
+const hmr: any = () => ({
+  name: 'hmr',
+  enforce: 'post',
+  // HMR
+  handleHotUpdate({ file, server }: any) {
+    if (file.endsWith('.tsx') || file.endsWith('.ts')) {
+      console.log('reloading json file...');
+
+      server.ws.send({
+        type: 'full-reload',
+        path: '*',
+      });
+    }
+  },
+});
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    vitePluginImp({
-      optimize: true,
-      libList: [
-        {
-          libName: 'antd',
-          libDirectory: 'es',
-          style: (name) => `antd/es/${name}/style`,
-        },
-      ],
-    }),
-  ],
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true, // 支持内联 JavaScript
-      },
-    },
-  },
+  plugins: [react({ fastRefresh: true }), hmr()],
   resolve: {
     alias: {
       '@api': path.resolve(__dirname, './src/api'),
@@ -39,6 +35,12 @@ export default defineConfig({
       '@pages': path.resolve(__dirname, './src/pages'),
       '@styles': path.resolve(__dirname, './src/styles'),
       '@utils': path.resolve(__dirname, './src/utils'),
+    },
+  },
+  server: {
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
     },
   },
 });
