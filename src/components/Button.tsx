@@ -67,7 +67,7 @@ const Container = styled.div<{ type: ButtonType }>`
   justify-content: center;
 
   width: 100%;
-  padding: 13px;
+  padding: 16px;
 
   border-radius: 6px;
 

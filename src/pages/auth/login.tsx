@@ -7,6 +7,7 @@ import api, { setToken } from '@api';
 import { useDispatch } from 'react-redux';
 import { me } from '@data/auth';
 import { useNavigate } from 'react-router-dom';
+import Modal from '@components/Modal';
 
 export default () => {
   const dispatch = useDispatch();
@@ -23,9 +24,11 @@ export default () => {
   }, [username]);
 
   const isFormValidated = useMemo(() => {
-    // return true;
+    return true;
     return isEmailValidated && password.length > 0;
   }, [isEmailValidated, password]);
+
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -38,6 +41,7 @@ export default () => {
       navigate('/my-field');
     } catch (err) {
       console.log(err);
+      setIsErrorModalOpen(true);
     }
   };
 
@@ -85,6 +89,16 @@ export default () => {
           </TextButtonWrap>
         </Box>
       </Container>
+      <Modal open={isErrorModalOpen} onClose={() => setIsErrorModalOpen(false)}>
+        <ModalContainer>
+          <ModalText>
+            로그인에 실패하였습니다.
+            <br />
+            계정 정보를 다시 확인해 주세요.
+          </ModalText>
+          <Button onClick={() => setIsErrorModalOpen(false)}>확인</Button>
+        </ModalContainer>
+      </Modal>
     </AuthLayout>
   );
 };
@@ -134,4 +148,26 @@ const TextButtonDivider = styled.span`
   height: 8px;
   margin: 0px 10px;
   background-color: #e3e3e3;
+`;
+
+const ModalContainer = styled.div`
+  min-width: 400px;
+  padding: 30px 40px;
+  border-radius: 20px;
+  background-color: #fff;
+`;
+
+const ModalText = styled.span`
+  display: block;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.63;
+  letter-spacing: -0.32px;
+  text-align: center;
+  color: #000;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
 `;
