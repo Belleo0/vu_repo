@@ -44,25 +44,27 @@ export default () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [tabType, setTabType] = useState<TabTypeEnum>(TabTypeEnum.DEFAULT);
 
-  // const isHide = useMemo(() => {
-  //   return tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y';
-  // }, [tabType]);
+  const isHide = useMemo(() => {
+    return tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y';
+  }, [tabType]);
 
-  // const { data } = useSWR([`/field-spaces`, { is_hide: isHide }]);
+  const { data: spaces, mutate } = useSWR<any[]>([
+    `/field-spaces`,
+    { is_hide: isHide },
+  ]);
+
+  const [isMounted, setIsMounted] = useState(false);
 
   // console.log(data);
-
-  const [spaces, setSpaces] = useState<any[]>([]);
 
   const [search, setSearch] = useState('');
 
   const searchedSpaces = useMemo(() => {
+    if (!spaces) return [];
     return spaces.filter((v) => v.name.includes(search));
   }, [spaces, search]);
 
   const [isOrderChangeModalOpen, setIsOrderChangeModalOpen] = useState(false);
-
-  // const [activeId, setActiveId] = useState(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -73,21 +75,15 @@ export default () => {
 
   const [changeOrderSpaces, setChangeOrderSpaces] = useState<any[]>([]);
 
-  // function handleDragStart(event: any) {
-  //   const { active } = event;
-
-  //   setActiveId(active.id);
-  // }
-
   const handleSubmitChangeOrderSpaceModal = async () => {
     const ids = changeOrderSpaces.map((v) => v.id);
     await api.put(`/field-spaces/change-order`, ids);
-    await loadSpaces(tabType, false);
+    await mutate();
     setIsOrderChangeModalOpen(false);
   };
 
   const handleOpenChangeOrderSpaceModal = () => {
-    setChangeOrderSpaces(spaces);
+    setChangeOrderSpaces(spaces || []);
     setIsOrderChangeModalOpen(true);
   };
 
@@ -118,26 +114,25 @@ export default () => {
     // setActiveId(null);
   };
 
-  const loadSpaces = async (tabType: TabTypeEnum, isFirstLoad: boolean) => {
-    setSpaces([]);
-    const { data } = await api.get(`/field-spaces`, {
-      params: { is_hide: tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y' },
-    });
-    setSpaces(data?.result);
-
-    if (data?.result.length > 0 && isFirstLoad) {
-      console.log('data?.result?.[0]?.id', data?.result?.[0]?.id);
-      dispatch(setSelectedSpaceId(data?.result?.[0]?.id));
+  const setSelectedIdWithFirstId = () => {
+    if (spaces && spaces?.length > 0) {
+      console.log('data?.result?.[0]?.id', spaces?.[0]?.id);
+      dispatch(setSelectedSpaceId(spaces?.[0]?.id));
+      setIsMounted(true);
     }
   };
 
-  const revalidate = async () => {
-    loadSpaces(tabType, false);
-  };
-
   useEffect(() => {
-    loadSpaces(tabType, true);
-  }, [tabType]);
+    if (isMounted === false && spaces && spaces.length > 0) {
+      setSelectedIdWithFirstId();
+      setIsFilterOpen(false);
+    }
+  }, [tabType, spaces, isMounted]);
+
+  const handleChangeTabType = (type: TabTypeEnum) => {
+    setTabType(type);
+    setIsMounted(false);
+  };
 
   return (
     <Container>
@@ -160,13 +155,13 @@ export default () => {
         <TabContainer>
           <Tab
             active={tabType === TabTypeEnum.DEFAULT}
-            onClick={() => setTabType(TabTypeEnum.DEFAULT)}
+            onClick={() => handleChangeTabType(TabTypeEnum.DEFAULT)}
           >
             등록 현장 보기
           </Tab>
           <Tab
             active={tabType === TabTypeEnum.HIDE}
-            onClick={() => setTabType(TabTypeEnum.HIDE)}
+            onClick={() => handleChangeTabType(TabTypeEnum.HIDE)}
           >
             숨긴 현장 보기
           </Tab>
@@ -202,12 +197,14 @@ export default () => {
             <SpaceOrderIcon src={getAssetURL('../assets/ic-sort.svg')} />
           </SpaceOrderWrap>
         </SpaceFilterContainer>
-        {searchedSpaces.map((v) => (
+        {searchedSpaces.map((v, i) => (
           <SpaceCard
+            key={`space-${v.id}-${i}`}
             id={v.id}
             name={v?.name}
             address={v?.basic_address}
-            revalidate={revalidate}
+            revalidate={mutate}
+            isHide={tabType === TabTypeEnum.HIDE}
           />
         ))}
       </SpaceContainer>

@@ -13,9 +13,10 @@ interface ISpaceCard {
   name: string;
   address: string;
   revalidate: () => any;
+  isHide: boolean;
 }
 
-export default ({ id, name, address, revalidate }: ISpaceCard) => {
+export default ({ id, name, address, revalidate, isHide }: ISpaceCard) => {
   // const [isOpenCard, setIsOpenCard] = useState<boolean>(false);
   const dispatch = useDispatch();
   const selectedSpaceId = useSelectedSpaceId();
@@ -27,7 +28,7 @@ export default ({ id, name, address, revalidate }: ISpaceCard) => {
   }, [selectedSpaceId]);
 
   const handleHideSpace = async () => {
-    await api.post(`/field-spaces/${id}/hide`);
+    await api[isHide ? 'delete' : 'post'](`/field-spaces/${id}/hide`);
     revalidate();
     setIsHideModalOpen(false);
   };
@@ -47,7 +48,7 @@ export default ({ id, name, address, revalidate }: ISpaceCard) => {
       {isOpen && (
         <ButtonContainer>
           <BottomButton onClick={() => setIsHideModalOpen(true)}>
-            숨김
+            {isHide ? '숨김 해제' : '숨김'}
           </BottomButton>
           <BottomButton style={{ color: '#ef0000' }}>삭제</BottomButton>
         </ButtonContainer>
@@ -56,7 +57,11 @@ export default ({ id, name, address, revalidate }: ISpaceCard) => {
         open={isHideModalOpen}
         onClose={() => setIsHideModalOpen(false)}
         onSubmit={handleHideSpace}
-        content={`건설현장을 숨김 처리할 경우\n언제든지 다시 숨김해제 하실 수 있습니다.`}
+        content={
+          isHide
+            ? `건설현장을 숨김해제 하실 경우\n언제든지 다시 숨김처리 하실 수 있습니다.`
+            : `건설현장을 숨김 처리할 경우\n언제든지 다시 숨김해제 하실 수 있습니다.`
+        }
       />
     </Container>
   );

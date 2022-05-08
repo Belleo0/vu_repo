@@ -5,7 +5,7 @@ interface IVendorTable {
   data: any[];
 }
 
-export default ({ data }: IVendorTable) => {
+export default ({ data = [] }: IVendorTable) => {
   return (
     <Container>
       <CellWrap>

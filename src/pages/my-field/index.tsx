@@ -8,53 +8,34 @@ import SpaceMembers from '@components/SpaceMembers';
 import VendorTable from '@components/VendorTable';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import api from '@api';
+import useSWR from 'swr';
+import useMySpaceInfo from '@api/useMySpaceInfo';
 
 export default () => {
   const selectedSpaceId = useSelectedSpaceId();
-
-  const [data, setData] = useState<any>(null);
-  const [members, setMembers] = useState<any>([]);
-  const [suppliers, setSuppliers] = useState<any>([]);
-
-  useEffect(() => {
-    if (selectedSpaceId !== undefined) {
-      (async () => {
-        const { data } = await api.get(`/fields/${selectedSpaceId}`);
-        setData(data?.result);
-      })();
-      (async () => {
-        const { data } = await api.get(
-          `/field-spaces/${selectedSpaceId}/members`,
-        );
-        setMembers(data?.result);
-      })();
-      (async () => {
-        const { data } = await api.get(
-          `/field-spaces/${selectedSpaceId}/suppliers`,
-        );
-        setSuppliers(data?.result);
-      })();
-    }
-  }, [selectedSpaceId]);
+  const {
+    data: { info, members, suppliers },
+    isLoading,
+  } = useMySpaceInfo(selectedSpaceId);
 
   return (
     <SpaceLayout>
-      {data === null ? null : (
+      {selectedSpaceId === undefined ? null : isLoading ? null : (
         <Container>
           <BarSection>
             <Title>건설현장</Title>
             <SpaceBar
-              id={data?.id}
-              name={data?.name}
-              adminUserName={data?.admin_user?.name}
-              siteUserName={data?.site_user?.name}
+              id={info?.id}
+              name={info?.name}
+              adminUserName={info?.admin_user?.name}
+              siteUserName={info?.site_user?.name}
             />
             <SpaceInfoTable
-              companyName={data?.company?.name}
-              address={data?.basic_address}
-              startAt={data?.start_at}
-              endAt={data?.end_at}
-              needAmount={data?.field_info?.need_amount}
+              companyName={info?.company?.name}
+              address={info?.basic_address}
+              startAt={info?.start_at}
+              endAt={info?.end_at}
+              needAmount={info?.field_info?.need_amount}
             />
           </BarSection>
           <MidSection>
@@ -69,12 +50,12 @@ export default () => {
               />
             </MidSectionInSection>
             <MidSectionInSection>
-              <Title>현장멤버 ({members.length})</Title>
+              <Title>현장멤버 ({members?.length})</Title>
               <SpaceMembers data={members} />
             </MidSectionInSection>
           </MidSection>
           <BottomSection>
-            <Title>납품사 ({suppliers.length})</Title>
+            <Title>납품사 ({suppliers?.length})</Title>
             <VendorTable data={suppliers} />
           </BottomSection>
         </Container>

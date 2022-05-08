@@ -11,9 +11,9 @@ import './styles/reset.css';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <RecoilRoot>
-      {/* <React.Suspense fallback={<Loading />}> */}
-      <App />
-      {/* </React.Suspense> */}
+      <React.Suspense fallback={<p>loaidng</p>}>
+        <App />
+      </React.Suspense>
     </RecoilRoot>
   </React.StrictMode>,
 );

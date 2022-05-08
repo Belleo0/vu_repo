@@ -6,7 +6,7 @@ interface IMembers {
   data: any[];
 }
 
-export default ({ data }: IMembers) => {
+export default ({ data = [] }: IMembers) => {
   return (
     <Container>
       {data.map((v, i) => (
