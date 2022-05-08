@@ -11,10 +11,11 @@ import SpaceMarkerContent from '@components/SpaceMarkerContent';
 import getAssetURL from '@utils/getAssetURL';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import NaverMapPolyline from '@components/NaverMapPolyline';
-import { clearPolylineInfo, setPolylineInfo } from '@data/map';
+import { setPolylineInfo } from '@data/map';
 import NaverMapImageMarker from '@components/NaverMapImageMarker';
 import NaverMapDirectionMarker from '@components/NaverMapDirectionMarker';
 import DirectionMarkerContent from '@components/DirectionMarkerContent';
+import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 
 export default () => {
   const dispatch = useDispatch();
@@ -129,6 +130,12 @@ export default () => {
                 />
               ))}
           </NaverMap>
+          {selectedSpaceInfo !== null && (
+            <MapSpaceInfoModal
+              data={selectedSpaceInfo}
+              setSelectedSpaceInfo={setSelectedSpaceInfo}
+            />
+          )}
         </Content>
         <Footer />
       </ContentWrap>
@@ -147,4 +154,5 @@ const ContentWrap = styled.div`
 
 const Content = styled.div`
   flex: 1;
+  position: relative;
 `;
