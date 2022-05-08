@@ -36,23 +36,13 @@ export default () => {
     return selectedFieldInfo.id;
   }, [selectedFieldInfo]);
 
-  const {
-    data: factories,
-    isLoading,
-    mutate,
-  } = useFactoryMaps(selectedFieldId, duration);
+  const { data: factories } = useFactoryMaps(selectedFieldId, duration);
 
   const [selectedFactoryIds, setSelectedFactoryIds] = useState<number[]>([]);
 
   const [selectedSpaceInfo, setSelectedSpaceInfo] = useState(null);
 
   const [order, setOrder] = useState('거리순');
-
-  const [search, setSearch] = useState('');
-
-  console.log(factories);
-
-  console.log('paths', polylineInfo);
 
   return (
     <SpaceMapLayout>
