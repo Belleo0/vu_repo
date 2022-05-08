@@ -1,6 +1,6 @@
 import api from '@api';
 import useSWR from 'swr';
-import { setSelectedSpaceId } from '@data/space';
+import { clearSelectedSpaceId, setSelectedSpaceId } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
@@ -134,6 +134,12 @@ export default () => {
     setTabType(type);
     setIsMounted(false);
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearSelectedSpaceId());
+    };
+  }, []);
 
   return (
     <Container>

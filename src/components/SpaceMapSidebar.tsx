@@ -12,33 +12,23 @@ import MapSpaceCard from './MapSpaceCard';
 import useFactoryMaps from '@api/useFactoryMaps';
 import useSpaces from '@api/useSpaces';
 import SelectSpaceCard from './SelectSpaceCard';
+import { clearSelectedSpaceId } from '@data/space';
 
-export default () => {
-  const dispatch = useDispatch();
-
-  const [selectedFieldInfo, setSelectedFieldInfo] = useState<any>(null);
-  const [tempSelectedFieldInfo, setTempSelectedFieldInfo] = useState<any>(null);
-
-  const selectedFieldId = useMemo(() => {
-    if (!selectedFieldInfo) return null;
-    return selectedFieldInfo.id;
-  }, [selectedFieldInfo]);
-
-  const [duration, setDuration] = useState<string>('null');
-
+///// 기준 건설현장 리덕스로 관리하는거 추가
+export default ({
+  factories,
+  duration,
+  setDuration,
+  order,
+  setOrder,
+  selectedFieldInfo,
+  setSelectedFieldInfo,
+  selectedFactoryIds,
+  setSelectedFactoryIds,
+}: any) => {
   const { data: spaces } = useSpaces('N');
 
-  const {
-    data: factories,
-    isLoading,
-    mutate,
-  } = useFactoryMaps(selectedFieldId, duration);
-
-  const [selectedFactoryIds, setSelectedFactoryIds] = useState<number[]>([]);
-
-  const [order, setOrder] = useState('거리순');
-
-  const [search, setSearch] = useState('');
+  const [tempSelectedFieldInfo, setTempSelectedFieldInfo] = useState<any>(null);
 
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
 
@@ -53,9 +43,9 @@ export default () => {
 
   const handleClickFactoryCard = (id: number) => {
     if (selectedFactoryIds.includes(id)) {
-      setSelectedFactoryIds((prev) => prev.filter((v) => v !== id));
+      setSelectedFactoryIds((prev: number[]) => prev.filter((v) => v !== id));
     } else {
-      setSelectedFactoryIds((prev) => prev.concat(id));
+      setSelectedFactoryIds((prev: number[]) => prev.concat(id));
     }
   };
 
@@ -120,7 +110,7 @@ export default () => {
         </FilterWrap>
       </TopSectionWrap>
       {factories &&
-        factories.map((v, i) => (
+        factories.map((v: any, i: any) => (
           <MapSpaceCard
             key={v.id}
             id={v.id}

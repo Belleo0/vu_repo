@@ -27,7 +27,7 @@ export default ({
   return (
     <Container selected={selected} onClick={onClick}>
       <InfoContainer>
-        <Index>{index + 1}</Index>
+        <Index> {(index + 1).toString().padStart(2, '0')}</Index>
         <InfoWrap>
           <Name>{name}</Name>
           <DistanceWrap>
@@ -81,7 +81,7 @@ const InfoContainer = styled.div`
 
 const Index = styled.span`
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.28px;
   text-align: left;
   color: #222;
@@ -108,7 +108,7 @@ const DistanceWrap = styled.div`
 
 const Distance = styled.span`
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.28px;
   text-align: left;
   color: #000;

@@ -9,13 +9,7 @@ export default ({ children }: { children: React.ReactNode }) => {
   return (
     <Container>
       <Header />
-      <ContentContainer>
-        <SpaceMapSidebar />
-        <ContentWrap>
-          <Content>{children}</Content>
-          <Footer />
-        </ContentWrap>
-      </ContentContainer>
+      <ContentContainer>{children}</ContentContainer>
     </Container>
   );
 };
@@ -29,17 +23,4 @@ const Container = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   height: calc(100vh - 80px);
-`;
-
-const ContentWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background-color: #fafafa;
-  overflow-y: scroll;
-`;
-
-const Content = styled.div`
-  flex: 1;
 `;
