@@ -5,9 +5,11 @@ export default (selectedSpaceId: number) => {
   const { data: members, error: memberError } = useSWR(
     `/field-spaces/${selectedSpaceId}/members`,
   );
-  const { data: suppliers, error: supplierError } = useSWR(
-    `/field-spaces/${selectedSpaceId}/suppliers`,
-  );
+  const {
+    data: suppliers,
+    error: supplierError,
+    mutate: supplierMutate,
+  } = useSWR(`/field-spaces/${selectedSpaceId}/suppliers`);
 
   return {
     data: { info, members, suppliers },
@@ -18,5 +20,6 @@ export default (selectedSpaceId: number) => {
       !info &&
       !members &&
       !suppliers,
+    supplierMutate,
   };
 };

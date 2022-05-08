@@ -2,18 +2,17 @@ import React from 'react';
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import SpaceBar from '@components/SpaceBar';
-import SpaceInfoTable from '@components/SpaceInfoTable';
-import Notifications from '@components/Notifications';
-import SpaceMembers from '@components/SpaceMembers';
 import MyFieldVendorTable from '@components/MyFieldVendorTable';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
+import VendorTable from '@components/VendorTable';
 
 export default () => {
   const selectedSpaceId = useSelectedSpaceId();
   const {
-    data: { info, members, suppliers },
+    data: { info, suppliers },
     isLoading,
+    supplierMutate,
   } = useMySpaceInfo(selectedSpaceId);
 
   return (
@@ -28,33 +27,11 @@ export default () => {
               adminUserName={info?.admin_user?.name}
               siteUserName={info?.site_user?.name}
             />
-            <SpaceInfoTable
-              companyName={info?.company?.name}
-              address={info?.basic_address}
-              startAt={info?.start_at}
-              endAt={info?.end_at}
-              needAmount={info?.field_info?.need_amount}
-            />
           </BarSection>
-          <MidSection>
-            <MidSectionInSection>
-              <Title>알림내역 (999) - API 연동 전</Title>
-              <Notifications
-                data={new Array(15).fill({
-                  type: '견적접수',
-                  value: '(주)동서산업의 견적이 접수되었습니다.',
-                  created_at: '2022-05-05T12:18:53.795Z',
-                })}
-              />
-            </MidSectionInSection>
-            <MidSectionInSection>
-              <Title>현장멤버 ({members?.length})</Title>
-              <SpaceMembers data={members} />
-            </MidSectionInSection>
-          </MidSection>
           <BottomSection>
             <Title>납품사 ({suppliers?.length})</Title>
-            <MyFieldVendorTable data={suppliers} />
+            <VendorTable data={suppliers} revalidate={supplierMutate} />
+            <Notice>• 거래업체로 등록하면 주문 기능이 활성화됩니다.</Notice>
           </BottomSection>
         </Container>
       )}
@@ -80,7 +57,7 @@ const Title = styled.span`
 
 const BarSection = styled.div`
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 60px;
 `;
 
 const MidSection = styled.div`
@@ -101,4 +78,11 @@ const MidSectionInSection = styled.div`
 
 const BottomSection = styled.div`
   width: 100%;
+`;
+
+const Notice = styled.span`
+  font-size: 13px;
+  letter-spacing: -0.26px;
+  text-align: center;
+  color: #999;
 `;

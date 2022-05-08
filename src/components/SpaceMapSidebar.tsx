@@ -10,6 +10,7 @@ import MapSpaceCard from './MapSpaceCard';
 import useSpaces from '@api/useSpaces';
 import SelectSpaceCard from './SelectSpaceCard';
 import TextModal from './TextModal';
+import { useNavigate } from 'react-router-dom';
 
 export default ({
   factories,
@@ -24,6 +25,8 @@ export default ({
   selectedFieldId,
   setSelectedSpaceInfo,
 }: any) => {
+  const navigate = useNavigate();
+
   const { data: spaces } = useSpaces('N');
 
   const [tempSelectedFieldInfo, setTempSelectedFieldInfo] = useState<any>(null);
@@ -70,7 +73,8 @@ export default ({
       field_id: selectedFieldInfo.id,
       factory_ids: selectedFactoryIds,
     });
-    if (data?.result?.duplicated_factory_ids) {
+
+    if (data?.result?.duplicated_factory_ids.length > 0) {
       setDuplicatedFactoryIds(data?.result?.duplicated_factory_ids);
       setIsDuplicatedEstimation(true);
     } else {
@@ -208,19 +212,15 @@ export default ({
         content={`등록된 건설현장 정보가 없습니다.\n건설현장을 등록하시겠습니까?`}
         onSubmit={() =>
           window.alert(
-            'TODO : 건설현장 라우팅\nQA중 확인시 시트에 추가 부탁드립니다.',
+            'TODO : 건설현장 추가 페이지로 라우팅\nQA중 확인시 시트에 추가 부탁드립니다.',
           )
         }
         onClose={() => setIsNotFoundSpaceModal(false)}
       />
       <TextModal
         open={isFinishRequestEstimation}
-        content={`견적 요청이 완료되었습니다.\n거래처등록 화면으로 이동하시겠습니까?`}
-        onSubmit={() =>
-          window.alert(
-            'TODO : 거래처등록 라우팅\nQA중 확인시 시트에 추가 부탁드립니다.',
-          )
-        }
+        content={`견적 요청이 완료되었습니다.\n납품사 선정 화면으로 이동하시겠습니까?`}
+        onSubmit={() => navigate('/supplier-choice')}
         onClose={() => setIsFinishRequestEstimation(false)}
       />
 

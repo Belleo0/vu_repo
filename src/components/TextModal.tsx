@@ -7,6 +7,7 @@ interface ITextModal {
   open: boolean;
   onClose: () => any;
   onSubmit?: () => any;
+  submitText?: string;
   containerStyle?: React.CSSProperties;
   wrapperStyle?: React.CSSProperties;
 }
@@ -27,7 +28,7 @@ export default (props: ITextModal) => {
             </Button>
           )}
           <Button onClick={props?.onSubmit ? props.onSubmit : props.onClose}>
-            확인
+            {props?.submitText || '확인'}
           </Button>
         </ModalButtonWrap>
       </ModalContainer>
