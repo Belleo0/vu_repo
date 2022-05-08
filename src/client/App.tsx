@@ -11,6 +11,8 @@ import { RouteAdapter } from '@components/RouteAdapter';
 
 import MyField from '@pages/my-field';
 import AuthLogin from '@pages/auth/login';
+import RemiconMap from '@pages/remicon-map';
+
 import api from '@api';
 
 const Container = () => {
@@ -39,6 +41,8 @@ const Container = () => {
         <Route path="/auth/login" element={<AuthLogin />} />
 
         <Route path="/my-field" element={<MyField />} />
+
+        <Route path="/remicon-map" element={<RemiconMap />} />
       </Routes>
     </QueryParamProvider>
   );

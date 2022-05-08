@@ -116,3 +116,11 @@ export const ModalTitle = styled.div`
   color: #444;
   margin-bottom: 30px;
 `;
+
+export const ShadowButtonWrap = styled(ModalButtonWrap)`
+  width: calc(100% + 80px);
+  margin-left: -40px;
+  margin-bottom: -20px;
+  box-shadow: 0 -6px 16px 0 rgba(0, 0, 0, 0.06);
+  padding: 20px 40px;
+`;

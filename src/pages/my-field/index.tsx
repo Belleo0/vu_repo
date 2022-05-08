@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import SpaceBar from '@components/SpaceBar';
@@ -7,8 +7,6 @@ import Notifications from '@components/Notifications';
 import SpaceMembers from '@components/SpaceMembers';
 import VendorTable from '@components/VendorTable';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
-import api from '@api';
-import useSWR from 'swr';
 import useMySpaceInfo from '@api/useMySpaceInfo';
 
 export default () => {

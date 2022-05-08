@@ -33,6 +33,7 @@ export default () => {
         <MenuWrap>
           {menus.map((v) => (
             <MenuItem
+              key={v.path}
               active={v.path === pathname}
               onClick={() => navigate(v.path)}
             >

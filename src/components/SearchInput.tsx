@@ -3,13 +3,17 @@ import getAssetURL from '@utils/getAssetURL';
 import React, { CSSProperties, InputHTMLAttributes } from 'react';
 
 export default ({
+  icon,
   containerStyle,
+  onClick,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
+  icon?: string;
   containerStyle?: CSSProperties;
 }) => {
   return (
-    <Container style={containerStyle}>
+    <Container style={containerStyle} onClick={onClick}>
+      {icon && <Icon src={getAssetURL(`../assets/${icon}.svg`)} />}
       <Input {...props} />
       <SearchIcon src={getAssetURL('../assets/ic-search.svg')} />
     </Container>
@@ -38,4 +42,10 @@ const Input = styled.input`
 
 const SearchIcon = styled.img`
   margin-right: 12px;
+`;
+
+const Icon = styled.img`
+  margin: 7px -7px 7px 10px;
+  width: 22px;
+  height: 30px;
 `;

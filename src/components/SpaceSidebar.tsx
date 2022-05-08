@@ -14,6 +14,7 @@ import Modal, {
   ModalButtonWrap,
   ModalContainer,
   ModalTitle,
+  ShadowButtonWrap,
 } from '@components/Modal';
 import OrderSpaceCard from './OrderSpaceCard';
 
@@ -31,6 +32,8 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import FilterSelect from './FilterSelect';
+import useSpaces from '@api/useSpaces';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -41,17 +44,15 @@ export default () => {
   // const [mount, setMount] = useState(false);
   const dispatch = useDispatch();
 
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [tabType, setTabType] = useState<TabTypeEnum>(TabTypeEnum.DEFAULT);
+
+  const [order, setOrder] = useState('최신순');
 
   const isHide = useMemo(() => {
     return tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y';
   }, [tabType]);
 
-  const { data: spaces, mutate } = useSWR<any[]>([
-    `/field-spaces`,
-    { is_hide: isHide },
-  ]);
+  const { data: spaces, mutate } = useSpaces(isHide);
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -125,7 +126,7 @@ export default () => {
   useEffect(() => {
     if (isMounted === false && spaces && spaces.length > 0) {
       setSelectedIdWithFirstId();
-      setIsFilterOpen(false);
+      // setIsFilterOpen(false);
     }
   }, [tabType, spaces, isMounted]);
 
@@ -169,29 +170,17 @@ export default () => {
       </SpaceFilterWrap>
       <SpaceContainer>
         <SpaceFilterContainer>
-          <SpaceOrderWrap>
-            <SpaceOrderLabelWrap
-              onClick={() => setIsFilterOpen((prev) => !prev)}
-            >
-              <SpaceOrderLabel>최신순</SpaceOrderLabel>
-              <SpaceOrderIcon
-                isOpen={isFilterOpen}
-                src={getAssetURL('../assets/ic-arrow.svg')}
-              />
-            </SpaceOrderLabelWrap>
-            {isFilterOpen && (
-              <AbsoluteFilterContainer>
-                <AbsoluteFilterLabel active={true}>최신순</AbsoluteFilterLabel>
-                <AbsoluteFilterLabel active={false}>
-                  오래된순
-                </AbsoluteFilterLabel>
-                <AbsoluteFilterLabel active={false}>이름순</AbsoluteFilterLabel>
-                <AbsoluteFilterLabel active={false}>
-                  사용자화
-                </AbsoluteFilterLabel>
-              </AbsoluteFilterContainer>
-            )}
-          </SpaceOrderWrap>
+          {/* FilterSelect  */}
+          <FilterSelect
+            options={[
+              { label: '최신순', value: '최신순' },
+              { label: '오래된순', value: '오래된순' },
+              { label: '이름순', value: '이름순' },
+              { label: '사용자화', value: '사용자화' },
+            ]}
+            value={order}
+            onChange={(v) => setOrder(v)}
+          />
           <SpaceOrderWrap onClick={handleOpenChangeOrderSpaceModal}>
             <SpaceOrderLabel>순서변경</SpaceOrderLabel>
             <SpaceOrderIcon src={getAssetURL('../assets/ic-sort.svg')} />
@@ -237,7 +226,7 @@ export default () => {
               </SortableContext>
             </DndContext>
           </ChangeCardWrap>
-          <CustomModalButtonWrap>
+          <ShadowButtonWrap>
             <Button
               type={ButtonType.GRAY_BLACK}
               onClick={handleCloseChangeOrderSpaceModal}
@@ -246,7 +235,7 @@ export default () => {
               취소
             </Button>
             <Button onClick={handleSubmitChangeOrderSpaceModal}>확인</Button>
-          </CustomModalButtonWrap>
+          </ShadowButtonWrap>
         </ModalContainer>
       </Modal>
     </Container>
@@ -346,56 +335,8 @@ const SpaceOrderIcon = styled.img<{ isOpen?: boolean }>`
         `}
 `;
 
-const AbsoluteFilterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-width: 84px;
-  position: absolute;
-  // [FIXME]
-  top: calc(100% + 6px);
-  left: -10px;
-  padding: 14px 19px 14px 14px;
-  border-radius: 6px;
-  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-`;
-
-const AbsoluteFilterLabel = styled.span<{ active: boolean }>`
-  display: block;
-  font-size: 14px;
-  letter-spacing: -0.28px;
-  text-align: left;
-  width: 100%;
-
-  &:not(:last-child) {
-    margin-bottom: 14px;
-  }
-
-  ${({ active }) =>
-    active
-      ? css`
-          color: #258fff;
-        `
-      : css`
-          color: #000;
-        `}
-`;
-
-const SpaceOrderLabelWrap = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 const ChangeCardWrap = styled.div`
   margin-bottom: 20px;
   max-height: 480px;
   overflow-y: scroll;
-`;
-
-const CustomModalButtonWrap = styled(ModalButtonWrap)`
-  width: calc(100% + 80px);
-  margin-left: -40px;
-  margin-bottom: -20px;
-  box-shadow: 0 -6px 16px 0 rgba(0, 0, 0, 0.06);
-  padding: 20px 40px;
 `;

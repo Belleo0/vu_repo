@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import convertDistance from '@utils/convertDistance';
+import convertDuration from '@utils/convertDuration';
 
 interface IVendorTable {
   data: any[];
@@ -22,11 +24,9 @@ export default ({ data = [] }: IVendorTable) => {
             <FactoryAddress>{v.factory_space.address}</FactoryAddress>
           </ValueCell>
           <ValueCell>
-            <Distance>{(v.direction.distance / 1000).toFixed(1)}km</Distance>
+            <Distance>{convertDistance(v.direction.distance)}km</Distance>
             <DistanceDivider />
-            <Duration>
-              {Math.round(v.direction.duration / 1000 / 60)}분
-            </Duration>
+            <Duration>{convertDuration(v.direction.duration)}분</Duration>
           </ValueCell>
           <ValueCell>
             <SaleUserName>{v?.factory_space?.site_user?.name}</SaleUserName>
