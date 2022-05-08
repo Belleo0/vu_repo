@@ -36,6 +36,13 @@ export default ({
   const [isNotFoundSpaceModal, setIsNotFoundSpaceModal] =
     useState<boolean>(false);
 
+  const [isFinishRequestEstimation, setIsFinishRequestEstimation] =
+    useState(false);
+
+  const [isDuplicatedEstimation, setIsDuplicatedEstimation] = useState(false);
+
+  const [duplicatedFactoryIds, setDuplicatedFactoryIds] = useState([]);
+
   const handleOpenSelectModal = () => {
     if (spaces && spaces.length > 0) {
       setIsSelectModalOpen(true);
@@ -61,6 +68,19 @@ export default ({
     }
   };
 
+  const handleRequestEstimation = async () => {
+    const { data } = await api.post('/estimations', {
+      field_id: selectedFieldInfo.id,
+      factory_ids: selectedFactoryIds,
+    });
+    if (data?.result?.duplicated_factory_ids) {
+      setDuplicatedFactoryIds(data?.result?.duplicated_factory_ids);
+      setIsDuplicatedEstimation(true);
+    } else {
+      setIsFinishRequestEstimation(true);
+    }
+  };
+
   return (
     <Container>
       <TopSectionWrap>
@@ -68,6 +88,7 @@ export default ({
           disabled={true}
           icon="ic-local"
           containerStyle={{ marginBottom: 30, cursor: 'pointer' }}
+          style={{ cursor: 'pointer' }}
           value={selectedFieldInfo?.basic_address || ''}
           placeholder="주소를 입력해 주세요"
           onClick={handleOpenSelectModal}
@@ -135,7 +156,14 @@ export default ({
           />
         ))}
       <BottomButtonWrap>
-        <Button>견적 요청하기</Button>
+        <Button
+          type={
+            selectedFactoryIds.length > 0 ? ButtonType.PRIMARY : ButtonType.GRAY
+          }
+          onClick={handleRequestEstimation}
+        >
+          견적 요청하기
+        </Button>
       </BottomButtonWrap>
       <Modal open={isSelectModalOpen} onClose={handleCloseSelectModal}>
         <ModalContainer>
@@ -173,6 +201,26 @@ export default ({
           )
         }
         onClose={() => setIsNotFoundSpaceModal(false)}
+      />
+      <TextModal
+        open={isFinishRequestEstimation}
+        content={`견적 요청이 완료되었습니다.\n거래처등록 화면으로 이동하시겠습니까?`}
+        onSubmit={() =>
+          window.alert(
+            'TODO : 거래처등록 라우팅\nQA중 확인시 시트에 추가 부탁드립니다.',
+          )
+        }
+        onClose={() => setIsFinishRequestEstimation(false)}
+      />
+
+      <TextModal
+        open={isDuplicatedEstimation}
+        content={`이미 견적요청한 공장이 존재합니다.\n${duplicatedFactoryIds
+          .map(
+            (v) => factories.filter((factory: any) => factory.id === v)[0].name,
+          )
+          .join(', ')}`}
+        onClose={() => setIsDuplicatedEstimation(false)}
       />
     </Container>
   );
