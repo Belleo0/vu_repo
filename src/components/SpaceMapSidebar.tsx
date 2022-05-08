@@ -13,6 +13,7 @@ import useFactoryMaps from '@api/useFactoryMaps';
 import useSpaces from '@api/useSpaces';
 import SelectSpaceCard from './SelectSpaceCard';
 import { clearSelectedSpaceId } from '@data/space';
+import TextModal from './TextModal';
 
 ///// 기준 건설현장 리덕스로 관리하는거 추가
 export default ({
@@ -31,6 +32,17 @@ export default ({
   const [tempSelectedFieldInfo, setTempSelectedFieldInfo] = useState<any>(null);
 
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
+
+  const [isNotFoundSpaceModal, setIsNotFoundSpaceModal] =
+    useState<boolean>(false);
+
+  const handleOpenSelectModal = () => {
+    if (spaces && spaces.length > 0) {
+      setIsSelectModalOpen(true);
+    } else {
+      setIsNotFoundSpaceModal(true);
+    }
+  };
 
   const handleCloseSelectModal = () => {
     setIsSelectModalOpen(false);
@@ -55,16 +67,16 @@ export default ({
         <SearchInput
           disabled={true}
           icon="ic-local"
-          containerStyle={{ marginBottom: 30 }}
+          containerStyle={{ marginBottom: 30, cursor: 'pointer' }}
           value={selectedFieldInfo?.basic_address || ''}
           placeholder="주소를 입력해 주세요"
-          onClick={() => setIsSelectModalOpen(true)}
+          onClick={handleOpenSelectModal}
         />
         <Button
           icon="ic-more"
           type={ButtonType.OUTLINE_THICK}
           containerStyle={{ marginBottom: 30 }}
-          onClick={() => setIsSelectModalOpen(true)}
+          onClick={handleOpenSelectModal}
         >
           MY 건설현장 불러오기
         </Button>
@@ -152,6 +164,16 @@ export default ({
           </ShadowButtonWrap>
         </ModalContainer>
       </Modal>
+      <TextModal
+        open={isNotFoundSpaceModal}
+        content={`등록된 건설현장 정보가 없습니다.\n건설현장을 등록하시겠습니까?`}
+        onSubmit={() =>
+          window.alert(
+            'TODO : 건설현장 라우팅\nQA중 확인시 시트에 추가 부탁드립니다.',
+          )
+        }
+        onClose={() => setIsNotFoundSpaceModal(false)}
+      />
     </Container>
   );
 };

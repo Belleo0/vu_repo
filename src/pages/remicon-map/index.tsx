@@ -16,6 +16,7 @@ import NaverMapImageMarker from '@components/NaverMapImageMarker';
 import NaverMapDirectionMarker from '@components/NaverMapDirectionMarker';
 import DirectionMarkerContent from '@components/DirectionMarkerContent';
 import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
+import TextModal from '@components/TextModal';
 
 export default () => {
   const dispatch = useDispatch();
@@ -120,12 +121,10 @@ export default () => {
                 />
               ))}
           </NaverMap>
-          {selectedSpaceInfo !== null && (
-            <MapSpaceInfoModal
-              data={selectedSpaceInfo}
-              setSelectedSpaceInfo={setSelectedSpaceInfo}
-            />
-          )}
+          <MapSpaceInfoModal
+            data={selectedSpaceInfo}
+            setSelectedSpaceInfo={setSelectedSpaceInfo}
+          />
         </Content>
         <Footer />
       </ContentWrap>

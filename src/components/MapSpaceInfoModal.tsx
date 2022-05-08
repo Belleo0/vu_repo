@@ -1,113 +1,124 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
 
 export default ({ data, setSelectedSpaceInfo }: any) => {
   return (
-    <Container>
-      <CloseIcon
-        src={getAssetURL('../assets/ic-del.svg')}
-        onClick={() => setSelectedSpaceInfo(null)}
-      />
-      <Title>{data?.name}</Title>
-      <Divider />
-      <SubTitle>회사정보</SubTitle>
-      <Table style={{ marginBottom: 24 }}>
-        <CellWrap>
-          <LabelCell>
-            회사명
-            <EngName>Trade name.</EngName>
-          </LabelCell>
-          <ValueCell>{data?.company?.name}</ValueCell>
-        </CellWrap>
-        <CellWrap>
-          <LabelCell>
-            주소 <EngName>Address.</EngName>
-          </LabelCell>
-          <ValueCell>{data?.company?.address}</ValueCell>
-        </CellWrap>
-        <CellWrap>
-          <LabelCell>
-            대표자 <EngName>Arep.</EngName>
-          </LabelCell>
-          <ValueCell>{data?.company?.ceo_name}</ValueCell>
-        </CellWrap>
-        <CellWrap>
-          <LabelCell>
-            전화번호 <EngName>Tel.</EngName>
-          </LabelCell>
-          {/* <ValueCell>{data?.company?.tel}</ValueCell> */}
-          <ValueCell>TODO : companies table 수정해야함</ValueCell>
-        </CellWrap>
-        <CellWrap>
-          <LabelCell>
-            팩스번호 <EngName>Fax.</EngName>
-          </LabelCell>
-          {/* <ValueCell>{data?.company?.fax}</ValueCell> */}
-          <ValueCell>TODO : companies table 수정해야함</ValueCell>
-        </CellWrap>
-      </Table>
-      <SubTitle>레미콘 정보</SubTitle>
-      <Table style={{ marginBottom: 24 }}>
-        <CellWrap>
-          <LabelCell>
-            레미콘배쳐플랜트
-            <EngName>Remicon Batcher Plant</EngName>
-          </LabelCell>
-          <ValueCell style={{ padding: 0 }}>
-            <ColumnCellWrap>
-              <CellWrap>
-                <ColumnLabelCell>기수 NO.</ColumnLabelCell>
-                <ColumnValueCell>{data?.factory_info?.no}</ColumnValueCell>
-              </CellWrap>
-              <CellWrap>
-                <ColumnLabelCell>
-                  레미콘생산능력
-                  <ColumnEngName>Productive Capa(㎡/hr)</ColumnEngName>
-                </ColumnLabelCell>
-                <ColumnValueCell>{data?.factory_info?.capa}</ColumnValueCell>
-              </CellWrap>
-              <CellWrap style={{ border: 0 }}>
-                <ColumnLabelCell>계 Total</ColumnLabelCell>
-                <ColumnValueCell>{data?.factory_info?.total}</ColumnValueCell>
-              </CellWrap>
-            </ColumnCellWrap>
-          </ValueCell>
-        </CellWrap>
-        <CellWrap>
-          <LabelCell>
-            믹서트럭(대) <EngName>Remicon Mixer Truck</EngName>
-          </LabelCell>
-          <ValueCell>{data?.factory_info?.truck_count}</ValueCell>
-        </CellWrap>
-        <CellWrap>
-          <LabelCell>
-            시멘트사일로(TON) <EngName>Cement Silo</EngName>
-          </LabelCell>
-          <ValueCell>{data?.factory_info?.cement_silo}</ValueCell>
-        </CellWrap>
-        <CellWrap>
-          <LabelCell>
-            최초가동일 <EngName>The day of initial operation</EngName>
-          </LabelCell>
-          <ValueCell>
-            {moment(data?.factory_info?.start_at).format('YYYY.MM.DD')}
-          </ValueCell>
-        </CellWrap>
-        <CellWrap>
-          <LabelCell>
-            KS취득일자 <EngName>The day of KS acquired</EngName>
-          </LabelCell>
-          <ValueCell>
-            {moment(data?.factory_info?.ks_acquired_at).format('YYYY.MM.DD')}
-          </ValueCell>
-        </CellWrap>
-      </Table>
+    <Container isOpen={!!data}>
+      {data && (
+        <>
+          <CloseIcon
+            src={getAssetURL('../assets/ic-del.svg')}
+            onClick={() => setSelectedSpaceInfo(null)}
+          />
+          <Title>{data?.name}</Title>
+          <Divider />
+          <SubTitle>회사정보</SubTitle>
+          <Table style={{ marginBottom: 24 }}>
+            <CellWrap>
+              <LabelCell>
+                회사명
+                <EngName>Trade name.</EngName>
+              </LabelCell>
+              <ValueCell>{data?.company?.name}</ValueCell>
+            </CellWrap>
+            <CellWrap>
+              <LabelCell>
+                주소 <EngName>Address.</EngName>
+              </LabelCell>
+              <ValueCell>{data?.company?.address}</ValueCell>
+            </CellWrap>
+            <CellWrap>
+              <LabelCell>
+                대표자 <EngName>Arep.</EngName>
+              </LabelCell>
+              <ValueCell>{data?.company?.ceo_name}</ValueCell>
+            </CellWrap>
+            <CellWrap>
+              <LabelCell>
+                전화번호 <EngName>Tel.</EngName>
+              </LabelCell>
+              {/* <ValueCell>{data?.company?.tel}</ValueCell> */}
+              <ValueCell>TODO : companies table 수정해야함</ValueCell>
+            </CellWrap>
+            <CellWrap>
+              <LabelCell>
+                팩스번호 <EngName>Fax.</EngName>
+              </LabelCell>
+              {/* <ValueCell>{data?.company?.fax}</ValueCell> */}
+              <ValueCell>TODO : companies table 수정해야함</ValueCell>
+            </CellWrap>
+          </Table>
+          <SubTitle>레미콘 정보</SubTitle>
+          <Table style={{ marginBottom: 24 }}>
+            <CellWrap>
+              <LabelCell>
+                레미콘배쳐플랜트
+                <EngName>Remicon Batcher Plant</EngName>
+              </LabelCell>
+              <ValueCell style={{ padding: 0 }}>
+                <ColumnCellWrap>
+                  <CellWrap>
+                    <ColumnLabelCell>기수 NO.</ColumnLabelCell>
+                    <ColumnValueCell>{data?.factory_info?.no}</ColumnValueCell>
+                  </CellWrap>
+                  <CellWrap>
+                    <ColumnLabelCell>
+                      레미콘생산능력
+                      <ColumnEngName>Productive Capa(㎡/hr)</ColumnEngName>
+                    </ColumnLabelCell>
+                    <ColumnValueCell>
+                      {data?.factory_info?.capa}
+                    </ColumnValueCell>
+                  </CellWrap>
+                  <CellWrap style={{ border: 0 }}>
+                    <ColumnLabelCell>계 Total</ColumnLabelCell>
+                    <ColumnValueCell>
+                      {data?.factory_info?.total}
+                    </ColumnValueCell>
+                  </CellWrap>
+                </ColumnCellWrap>
+              </ValueCell>
+            </CellWrap>
+            <CellWrap>
+              <LabelCell>
+                믹서트럭(대) <EngName>Remicon Mixer Truck</EngName>
+              </LabelCell>
+              <ValueCell>{data?.factory_info?.truck_count}</ValueCell>
+            </CellWrap>
+            <CellWrap>
+              <LabelCell>
+                시멘트사일로(TON) <EngName>Cement Silo</EngName>
+              </LabelCell>
+              <ValueCell>{data?.factory_info?.cement_silo}</ValueCell>
+            </CellWrap>
+            <CellWrap>
+              <LabelCell>
+                최초가동일 <EngName>The day of initial operation</EngName>
+              </LabelCell>
+              <ValueCell>
+                {moment(data?.factory_info?.start_at).format('YYYY.MM.DD')}
+              </ValueCell>
+            </CellWrap>
+            <CellWrap>
+              <LabelCell>
+                KS취득일자 <EngName>The day of KS acquired</EngName>
+              </LabelCell>
+              <ValueCell>
+                {moment(data?.factory_info?.ks_acquired_at).format(
+                  'YYYY.MM.DD',
+                )}
+              </ValueCell>
+            </CellWrap>
+          </Table>
+        </>
+      )}
     </Container>
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -118,6 +129,17 @@ const Container = styled.div`
   padding: 30px 50px;
   background-color: white;
   z-index: 99999999;
+
+  ${({ isOpen }) =>
+    isOpen
+      ? css`
+          transform: translateX(0%);
+        `
+      : css`
+          transform: translateX(100%);
+        `}
+
+  transition: transform 0.25s ease-in-out;
 `;
 
 const CloseIcon = styled.img`
@@ -127,6 +149,7 @@ const CloseIcon = styled.img`
   margin-bottom: 10px;
   object-fit: contain;
   margin-left: auto;
+  cursor: pointer;
 `;
 
 const Title = styled.span`
