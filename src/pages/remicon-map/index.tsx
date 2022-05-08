@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import SpaceMapLayout from '@layout/SpaceMapLayout';
 import NaverMap from '@components/NaverMap';
 import NaverMapSpaceMarker from '@components/NaverMapSpaceMarker';
@@ -16,7 +16,9 @@ import NaverMapImageMarker from '@components/NaverMapImageMarker';
 import NaverMapDirectionMarker from '@components/NaverMapDirectionMarker';
 import DirectionMarkerContent from '@components/DirectionMarkerContent';
 import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
-import TextModal from '@components/TextModal';
+
+import { debounce } from 'lodash';
+import { usePrevious } from '@hooks/usePrevious';
 
 export default () => {
   const dispatch = useDispatch();
@@ -37,13 +39,28 @@ export default () => {
     return selectedFieldInfo.id;
   }, [selectedFieldInfo]);
 
-  const { data: factories } = useFactoryMaps(selectedFieldId, duration);
+  const [bounds, setBounds] = useState<any>(null);
+
+  const { data: factoriesData } = useFactoryMaps(
+    selectedFieldId,
+    duration,
+    bounds,
+  );
+
+  const previousFactories = usePrevious(factoriesData);
+
+  const factories = useMemo(() => {
+    if (factoriesData) return factoriesData;
+    return previousFactories;
+  }, [factoriesData]);
 
   const [selectedFactoryIds, setSelectedFactoryIds] = useState<number[]>([]);
 
   const [selectedSpaceInfo, setSelectedSpaceInfo] = useState(null);
 
   const [order, setOrder] = useState('거리순');
+
+  const delayedUpdateCall = useRef(debounce((q) => setBounds(q), 1000)).current;
 
   return (
     <SpaceMapLayout>
@@ -57,6 +74,8 @@ export default () => {
         setSelectedFieldInfo={setSelectedFieldInfo}
         selectedFactoryIds={selectedFactoryIds}
         setSelectedFactoryIds={setSelectedFactoryIds}
+        selectedFieldId={selectedFieldId}
+        setSelectedSpaceInfo={setSelectedSpaceInfo}
       />
       <ContentWrap>
         <Content>
@@ -65,6 +84,15 @@ export default () => {
             lng={126.9253985}
             zoom={15}
             style={{ width: '100%', height: 'calc(100vh - 80px)' }}
+            boundChange={({ _min, _max }) => {
+              const data = {
+                min_lat: _min._lat,
+                min_lng: _min._lng,
+                max_lat: _max._lat,
+                max_lng: _max._lng,
+              };
+              delayedUpdateCall(data);
+            }}
           >
             {polylineInfo?.path && (
               <NaverMapPolyline paths={polylineInfo?.path} />
@@ -97,6 +125,7 @@ export default () => {
             {factories &&
               factories.map((v, i) => (
                 <NaverMapSpaceMarker
+                  key={v.id}
                   lat={v.latitude}
                   lng={v.longitude}
                   content={
@@ -113,9 +142,10 @@ export default () => {
                         dispatch(setPolylineInfo(v?.direction));
                       }}
                       selected={
-                        v.direction === polylineInfo ||
+                        (!!v.direction && v.direction === polylineInfo) ||
                         selectedFactoryIds.includes(v.id)
                       }
+                      hideWithoutName={selectedFieldId !== null}
                     />
                   }
                 />

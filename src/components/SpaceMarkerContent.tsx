@@ -14,6 +14,7 @@ interface IMarkerContent {
   onInfo: () => any;
   onChangePath: () => any;
   selected: boolean;
+  hideWithoutName: boolean;
 }
 
 export default ({
@@ -25,6 +26,7 @@ export default ({
   selected,
   onInfo,
   onChangePath,
+  hideWithoutName,
 }: IMarkerContent) => {
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -64,17 +66,25 @@ export default ({
         onMouseLeave={() => setIsHovered(false)}
         onClick={() => setIsModalOpened(true)}
       >
-        <Index selected={isSelected}>
-          {(index + 1).toString().padStart(2, '0')}
-        </Index>
-        <InfoWrap>
-          <PlaceName>{name}</PlaceName>
-          <DurationWrap>
-            <Distance>{convertDistance(distance)}km</Distance>
-            <Divider />
-            <Duration>{convertDuration(duration)}분</Duration>
-          </DurationWrap>
-        </InfoWrap>
+        {hideWithoutName && (
+          <Index selected={isSelected}>
+            {(index + 1).toString().padStart(2, '0')}
+          </Index>
+        )}
+        {hideWithoutName ? (
+          <InfoWrap>
+            <PlaceName>{name}</PlaceName>
+            <DurationWrap>
+              <Distance>{convertDistance(distance)}km</Distance>
+              <Divider />
+              <Duration>{convertDuration(duration)}분</Duration>
+            </DurationWrap>
+          </InfoWrap>
+        ) : (
+          <OnlyNameWrap>
+            <OnlyPlaceName>{name}</OnlyPlaceName>
+          </OnlyNameWrap>
+        )}
       </ContentsWrap>
       {isSelected && (
         <SearchIconWrap>
@@ -95,15 +105,19 @@ export default ({
               >
                 공장정보
               </ModalButton>
-              <ModalButton
-                onClick={() => {
-                  onChangePath();
-                  setIsModalOpened(false);
-                }}
-              >
-                <ModalButtonIcon src={getAssetURL('../assets/ic-car-on.svg')} />
-                경로
-              </ModalButton>
+              {hideWithoutName && (
+                <ModalButton
+                  onClick={() => {
+                    onChangePath();
+                    setIsModalOpened(false);
+                  }}
+                >
+                  <ModalButtonIcon
+                    src={getAssetURL('../assets/ic-car-on.svg')}
+                  />
+                  경로
+                </ModalButton>
+              )}
             </ModalButtonWrap>
           </HoveredModal>
           <Triangle />
@@ -295,4 +309,19 @@ const ModalButtonIcon = styled.img`
   width: 20px;
   height: 20px;
   margin: 0 2px 0 0;
+`;
+
+const OnlyNameWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
+const OnlyPlaceName = styled.span`
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  text-align: left;
+  color: #000;
 `;

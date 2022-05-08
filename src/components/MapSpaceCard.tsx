@@ -13,6 +13,7 @@ interface IMapSpaceCard {
   duration: number;
   selected: boolean;
   onClick: () => any;
+  selectedFieldId: null | number;
 }
 
 export default ({
@@ -23,7 +24,17 @@ export default ({
   duration,
   selected,
   onClick,
+  selectedFieldId,
 }: IMapSpaceCard) => {
+  if (selectedFieldId === null)
+    return (
+      <WithoutInfoContainer>
+        <Name>{name}</Name>
+        <SearchIconWrap className="search-icon-circle" onClick={onClick}>
+          <SearchIcon src={getAssetURL('../assets/ic-search-on.svg')} />
+        </SearchIconWrap>
+      </WithoutInfoContainer>
+    );
   return (
     <Container selected={selected} onClick={onClick}>
       <InfoContainer>
@@ -48,6 +59,18 @@ export default ({
     </Container>
   );
 };
+
+const WithoutInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 26px 30px;
+  border-bottom: 1px solid #f2f2f2;
+  &:hover {
+    .search-icon-circle {
+      opacity: 1;
+    }
+  }
+`;
 
 const Container = styled.div<{ selected: boolean }>`
   display: flex;
@@ -138,5 +161,24 @@ const Duration = styled.span`
 const CheckIcon = styled.img`
   width: 28px;
   height: 28px;
+  object-fit: contain;
+`;
+
+const SearchIconWrap = styled.div`
+  width: 34px;
+  height: 34px;
+  padding: 7px;
+  border-radius: 17px;
+  box-shadow: 1px 0 6px 0 rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin-left: 10px;
+  opacity: 0;
+  transition: opacity 0.05s linear;
+  cursor: pointer;
+`;
+
+const SearchIcon = styled.img`
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 `;

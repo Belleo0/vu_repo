@@ -1,21 +1,16 @@
 import api from '@api';
-import useSWR from 'swr';
 import styled from '@emotion/styled';
-import { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 import SearchInput from './SearchInput';
 import Button, { ButtonType } from './Button';
 import { css } from '@emotion/react';
 import FilterSelect from './FilterSelect';
 import Modal, { ModalContainer, ModalTitle, ShadowButtonWrap } from './Modal';
 import MapSpaceCard from './MapSpaceCard';
-import useFactoryMaps from '@api/useFactoryMaps';
 import useSpaces from '@api/useSpaces';
 import SelectSpaceCard from './SelectSpaceCard';
-import { clearSelectedSpaceId } from '@data/space';
 import TextModal from './TextModal';
 
-///// 기준 건설현장 리덕스로 관리하는거 추가
 export default ({
   factories,
   duration,
@@ -26,6 +21,8 @@ export default ({
   setSelectedFieldInfo,
   selectedFactoryIds,
   setSelectedFactoryIds,
+  selectedFieldId,
+  setSelectedSpaceInfo,
 }: any) => {
   const { data: spaces } = useSpaces('N');
 
@@ -101,33 +98,37 @@ export default ({
         >
           MY 건설현장 불러오기
         </Button>
-        <Title>소요시간</Title>
-        <DurationWrap>
-          <Duration
-            active={duration === 'null'}
-            onClick={() => setDuration('null')}
-          >
-            전체
-          </Duration>
-          <Duration
-            active={duration === '30'}
-            onClick={() => setDuration('30')}
-          >
-            30분
-          </Duration>
-          <Duration
-            active={duration === '60'}
-            onClick={() => setDuration('60')}
-          >
-            60분
-          </Duration>
-          <Duration
-            active={duration === '90'}
-            onClick={() => setDuration('90')}
-          >
-            90분
-          </Duration>
-        </DurationWrap>
+        {selectedFieldId !== null && (
+          <>
+            <Title>소요시간</Title>
+            <DurationWrap>
+              <Duration
+                active={duration === 'null'}
+                onClick={() => setDuration('null')}
+              >
+                전체
+              </Duration>
+              <Duration
+                active={duration === '30'}
+                onClick={() => setDuration('30')}
+              >
+                30분
+              </Duration>
+              <Duration
+                active={duration === '60'}
+                onClick={() => setDuration('60')}
+              >
+                60분
+              </Duration>
+              <Duration
+                active={duration === '90'}
+                onClick={() => setDuration('90')}
+              >
+                90분
+              </Duration>
+            </DurationWrap>
+          </>
+        )}
         <FilterWrap>
           <TotalText>
             총 <b>{(factories || []).length}개</b> 의 레미콘 공장
@@ -152,19 +153,29 @@ export default ({
             distance={v?.direction?.distance}
             duration={v?.direction?.duration}
             selected={selectedFactoryIds.includes(v.id)}
-            onClick={() => handleClickFactoryCard(v.id)}
+            onClick={
+              selectedFieldId === null
+                ? () => setSelectedSpaceInfo(v)
+                : () => handleClickFactoryCard(v.id)
+            }
+            selectedFieldId={selectedFieldId}
           />
         ))}
-      <BottomButtonWrap>
-        <Button
-          type={
-            selectedFactoryIds.length > 0 ? ButtonType.PRIMARY : ButtonType.GRAY
-          }
-          onClick={handleRequestEstimation}
-        >
-          견적 요청하기
-        </Button>
-      </BottomButtonWrap>
+      {selectedFieldId !== null && (
+        <BottomButtonWrap>
+          <Button
+            type={
+              selectedFactoryIds.length > 0
+                ? ButtonType.PRIMARY
+                : ButtonType.GRAY
+            }
+            onClick={handleRequestEstimation}
+          >
+            견적 요청하기
+          </Button>
+        </BottomButtonWrap>
+      )}
+
       <Modal open={isSelectModalOpen} onClose={handleCloseSelectModal}>
         <ModalContainer>
           <ModalTitle>MY 건설현장</ModalTitle>
@@ -217,7 +228,9 @@ export default ({
         open={isDuplicatedEstimation}
         content={`이미 견적요청한 공장이 존재합니다.\n${duplicatedFactoryIds
           .map(
-            (v) => factories.filter((factory: any) => factory.id === v)[0].name,
+            (v) =>
+              (factories || []).filter((factory: any) => factory.id === v)[0]
+                .name,
           )
           .join(', ')}`}
         onClose={() => setIsDuplicatedEstimation(false)}

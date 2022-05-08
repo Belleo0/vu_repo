@@ -49,11 +49,12 @@ export default ({
       setMap(tempMap);
 
       if (zoomChange) {
-        naver.maps.Event.addListener(map, 'zoom_changed', zoomChange);
+        naver.maps.Event.addListener(tempMap, 'zoom_changed', zoomChange);
       }
 
       if (boundChange) {
-        naver.maps.Event.addListener(map, 'bounds_changed', boundChange);
+        naver.maps.Event.addListener(tempMap, 'bounds_changed', boundChange);
+        boundChange(tempMap.getBounds());
       }
 
       setIsMapRendered(true);
