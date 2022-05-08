@@ -1,4 +1,5 @@
 import api from '@api';
+import useSWR from 'swr';
 import { setSelectedSpaceId } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -9,6 +10,27 @@ import Button, { ButtonType } from './Button';
 import ProfileBox from './ProfileBox';
 import SearchInput from './SearchInput';
 import SpaceCard from './SpaceCard';
+import Modal, {
+  ModalButtonWrap,
+  ModalContainer,
+  ModalTitle,
+} from '@components/Modal';
+import OrderSpaceCard from './OrderSpaceCard';
+
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -22,6 +44,14 @@ export default () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [tabType, setTabType] = useState<TabTypeEnum>(TabTypeEnum.DEFAULT);
 
+  // const isHide = useMemo(() => {
+  //   return tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y';
+  // }, [tabType]);
+
+  // const { data } = useSWR([`/field-spaces`, { is_hide: isHide }]);
+
+  // console.log(data);
+
   const [spaces, setSpaces] = useState<any[]>([]);
 
   const [search, setSearch] = useState('');
@@ -30,19 +60,83 @@ export default () => {
     return spaces.filter((v) => v.name.includes(search));
   }, [spaces, search]);
 
-  useEffect(() => {
-    (async () => {
-      setSpaces([]);
-      const { data } = await api.get(`/field-spaces`, {
-        params: { is_hide: tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y' },
-      });
-      setSpaces(data?.result);
+  const [isOrderChangeModalOpen, setIsOrderChangeModalOpen] = useState(false);
 
-      if (data?.result.length > 0) {
-        console.log('data?.result?.[0]?.id', data?.result?.[0]?.id);
-        dispatch(setSelectedSpaceId(data?.result?.[0]?.id));
-      }
-    })();
+  // const [activeId, setActiveId] = useState(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const [changeOrderSpaces, setChangeOrderSpaces] = useState<any[]>([]);
+
+  // function handleDragStart(event: any) {
+  //   const { active } = event;
+
+  //   setActiveId(active.id);
+  // }
+
+  const handleSubmitChangeOrderSpaceModal = async () => {
+    const ids = changeOrderSpaces.map((v) => v.id);
+    await api.put(`/field-spaces/change-order`, ids);
+    await loadSpaces(tabType, false);
+    setIsOrderChangeModalOpen(false);
+  };
+
+  const handleOpenChangeOrderSpaceModal = () => {
+    setChangeOrderSpaces(spaces);
+    setIsOrderChangeModalOpen(true);
+  };
+
+  const handleCloseChangeOrderSpaceModal = () => {
+    // setChangeOrderSpaces(spaces);
+    setIsOrderChangeModalOpen(false);
+  };
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+
+    console.log(active, over);
+
+    if (active.id !== over.id) {
+      setChangeOrderSpaces((items) => {
+        const oldIndex = items.indexOf(
+          items.filter((v) => v.id === active.id)?.[0],
+        );
+        const newIndex = items.indexOf(
+          items.filter((v) => v.id === over.id)?.[0],
+        );
+        const result = arrayMove(items, oldIndex, newIndex);
+
+        return result;
+      });
+    }
+
+    // setActiveId(null);
+  };
+
+  const loadSpaces = async (tabType: TabTypeEnum, isFirstLoad: boolean) => {
+    setSpaces([]);
+    const { data } = await api.get(`/field-spaces`, {
+      params: { is_hide: tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y' },
+    });
+    setSpaces(data?.result);
+
+    if (data?.result.length > 0 && isFirstLoad) {
+      console.log('data?.result?.[0]?.id', data?.result?.[0]?.id);
+      dispatch(setSelectedSpaceId(data?.result?.[0]?.id));
+    }
+  };
+
+  const revalidate = async () => {
+    loadSpaces(tabType, false);
+  };
+
+  useEffect(() => {
+    loadSpaces(tabType, true);
   }, [tabType]);
 
   return (
@@ -103,15 +197,61 @@ export default () => {
               </AbsoluteFilterContainer>
             )}
           </SpaceOrderWrap>
-          <SpaceOrderWrap>
+          <SpaceOrderWrap onClick={handleOpenChangeOrderSpaceModal}>
             <SpaceOrderLabel>순서변경</SpaceOrderLabel>
             <SpaceOrderIcon src={getAssetURL('../assets/ic-sort.svg')} />
           </SpaceOrderWrap>
         </SpaceFilterContainer>
         {searchedSpaces.map((v) => (
-          <SpaceCard id={v.id} name={v?.name} address={v?.basic_address} />
+          <SpaceCard
+            id={v.id}
+            name={v?.name}
+            address={v?.basic_address}
+            revalidate={revalidate}
+          />
         ))}
       </SpaceContainer>
+      <Modal
+        open={isOrderChangeModalOpen}
+        onClose={handleCloseChangeOrderSpaceModal}
+      >
+        <ModalContainer>
+          <ModalTitle>순서변경</ModalTitle>
+          <ChangeCardWrap>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              // onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={changeOrderSpaces}
+                strategy={verticalListSortingStrategy}
+              >
+                {changeOrderSpaces.map((v) => (
+                  <OrderSpaceCard
+                    draggable
+                    key={v.id}
+                    id={v.id}
+                    name={v?.name}
+                    address={v?.basic_address}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+          </ChangeCardWrap>
+          <CustomModalButtonWrap>
+            <Button
+              type={ButtonType.GRAY_BLACK}
+              onClick={handleCloseChangeOrderSpaceModal}
+              containerStyle={{ marginRight: 20 }}
+            >
+              취소
+            </Button>
+            <Button onClick={handleSubmitChangeOrderSpaceModal}>확인</Button>
+          </CustomModalButtonWrap>
+        </ModalContainer>
+      </Modal>
     </Container>
   );
 };
@@ -247,4 +387,18 @@ const AbsoluteFilterLabel = styled.span<{ active: boolean }>`
 const SpaceOrderLabelWrap = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const ChangeCardWrap = styled.div`
+  margin-bottom: 20px;
+  max-height: 480px;
+  overflow-y: scroll;
+`;
+
+const CustomModalButtonWrap = styled(ModalButtonWrap)`
+  width: calc(100% + 80px);
+  margin-left: -40px;
+  margin-bottom: -20px;
+  box-shadow: 0 -6px 16px 0 rgba(0, 0, 0, 0.06);
+  padding: 20px 40px;
 `;

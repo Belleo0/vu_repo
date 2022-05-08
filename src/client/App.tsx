@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider, shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { QueryParamProvider } from 'use-query-params';
+import { SWRConfig } from 'swr';
+
 import store from '@data';
 import { me } from '@data/auth';
 
@@ -9,10 +11,11 @@ import { RouteAdapter } from '@components/RouteAdapter';
 
 import MyField from '@pages/my-field';
 import AuthLogin from '@pages/auth/login';
+import api from '@api';
 
 const Container = () => {
   const dispatch = useDispatch();
-  const { principal } = useSelector((s) => s.auth, shallowEqual);
+  const { principal } = useSelector((s: any) => s.auth, shallowEqual);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,13 +44,23 @@ const Container = () => {
   );
 };
 
+const swrConfig = {
+  fetcher(url: string, params: object) {
+    return api.get(url, { params }).then((res) => {
+      return res.data?.result || res.data;
+    });
+  },
+};
+
 function App() {
   return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Container />
-      </BrowserRouter>
-    </Provider>
+    <SWRConfig value={swrConfig}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Container />
+        </BrowserRouter>
+      </Provider>
+    </SWRConfig>
   );
 }
 

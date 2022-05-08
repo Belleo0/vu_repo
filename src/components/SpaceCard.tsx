@@ -1,3 +1,4 @@
+import api from '@api';
 import { setSelectedSpaceId } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -5,21 +6,31 @@ import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import getAssetURL from '@utils/getAssetURL';
 import React, { useMemo, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import TextModal from './TextModal';
 
 interface ISpaceCard {
   id: number;
   name: string;
   address: string;
+  revalidate: () => any;
 }
 
-export default ({ id, name, address }: ISpaceCard) => {
+export default ({ id, name, address, revalidate }: ISpaceCard) => {
   // const [isOpenCard, setIsOpenCard] = useState<boolean>(false);
   const dispatch = useDispatch();
   const selectedSpaceId = useSelectedSpaceId();
 
+  const [isHideModalOpen, setIsHideModalOpen] = useState<boolean>(false);
+
   const isOpen = useMemo(() => {
     return selectedSpaceId === id;
   }, [selectedSpaceId]);
+
+  const handleHideSpace = async () => {
+    await api.post(`/field-spaces/${id}/hide`);
+    revalidate();
+    setIsHideModalOpen(false);
+  };
 
   return (
     <Container isOpen={selectedSpaceId === id}>
@@ -35,10 +46,18 @@ export default ({ id, name, address }: ISpaceCard) => {
       </InfoContainer>
       {isOpen && (
         <ButtonContainer>
-          <BottomButton>숨김</BottomButton>
+          <BottomButton onClick={() => setIsHideModalOpen(true)}>
+            숨김
+          </BottomButton>
           <BottomButton style={{ color: '#ef0000' }}>삭제</BottomButton>
         </ButtonContainer>
       )}
+      <TextModal
+        open={isHideModalOpen}
+        onClose={() => setIsHideModalOpen(false)}
+        onSubmit={handleHideSpace}
+        content={`건설현장을 숨김 처리할 경우\n언제든지 다시 숨김해제 하실 수 있습니다.`}
+      />
     </Container>
   );
 };

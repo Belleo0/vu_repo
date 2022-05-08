@@ -10,6 +10,7 @@ export enum ButtonType {
   OUTLINE,
   OUTLINE_THICK,
   GRAY,
+  GRAY_BLACK,
 }
 
 interface IButton {
@@ -24,6 +25,7 @@ const backgroundColors = {
   [ButtonType.OUTLINE]: '#ffffff',
   [ButtonType.OUTLINE_THICK]: '#ffffff',
   [ButtonType.GRAY]: '#f2f2f2',
+  [ButtonType.GRAY_BLACK]: '#f2f2f2',
 };
 
 const borderWidths = {
@@ -31,6 +33,7 @@ const borderWidths = {
   [ButtonType.OUTLINE]: 1,
   [ButtonType.OUTLINE_THICK]: 2,
   [ButtonType.GRAY]: 1,
+  [ButtonType.GRAY_BLACK]: 1,
 };
 
 const borderColors = {
@@ -38,6 +41,7 @@ const borderColors = {
   [ButtonType.OUTLINE]: '#4490f7',
   [ButtonType.OUTLINE_THICK]: '#4490f7',
   [ButtonType.GRAY]: '#f2f2f2',
+  [ButtonType.GRAY_BLACK]: '#f2f2f2',
 };
 
 const textColors = {
@@ -45,6 +49,7 @@ const textColors = {
   [ButtonType.OUTLINE]: '#258fff',
   [ButtonType.OUTLINE_THICK]: '#258fff',
   [ButtonType.GRAY]: '#999999',
+  [ButtonType.GRAY_BLACK]: '#000000',
 };
 
 export default ({
