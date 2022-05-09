@@ -13,7 +13,7 @@ import MyField from '@pages/my-field';
 import AuthLogin from '@pages/auth/login';
 import RemiconMap from '@pages/remicon-map';
 import SupplierChoice from '@pages/supplier-choice';
-
+import AddConstructionField from '@pages/add-construction-field';
 import api from '@api';
 
 const Container = () => {
@@ -46,6 +46,11 @@ const Container = () => {
         <Route path="/remicon-map" element={<RemiconMap />} />
 
         <Route path="/supplier-choice" element={<SupplierChoice />} />
+
+        <Route
+          path="/add-construction-field"
+          element={<AddConstructionField />}
+        />
       </Routes>
     </QueryParamProvider>
   );
