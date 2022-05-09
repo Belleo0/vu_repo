@@ -20,13 +20,13 @@ export default ({ data = [] }: IVendorTable) => {
       {data.map((v) => (
         <CellWrap>
           <ValueCell style={{ flexDirection: 'column' }}>
-            <FactoryCompanyName>{v.factory_space.name}</FactoryCompanyName>
-            <FactoryAddress>{v.factory_space.address}</FactoryAddress>
+            <FactoryCompanyName>{v?.factory_space?.name}</FactoryCompanyName>
+            <FactoryAddress>{v?.factory_space?.address}</FactoryAddress>
           </ValueCell>
           <ValueCell>
-            <Distance>{convertDistance(v.direction.distance)}km</Distance>
+            <Distance>{convertDistance(v?.direction?.distance)}km</Distance>
             <DistanceDivider />
-            <Duration>{convertDuration(v.direction.duration)}분</Duration>
+            <Duration>{convertDuration(v?.direction?.duration)}분</Duration>
           </ValueCell>
           <ValueCell>
             <SaleUserName>{v?.factory_space?.site_user?.name}</SaleUserName>
