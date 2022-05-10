@@ -33,6 +33,7 @@ import {
 } from '@dnd-kit/sortable';
 import FilterSelect from './FilterSelect';
 import useSpaces from '@api/useSpaces';
+import { useNavigate } from 'react-router-dom';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -42,6 +43,8 @@ enum TabTypeEnum {
 export default () => {
   // const [mount, setMount] = useState(false);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const [tabType, setTabType] = useState<TabTypeEnum>(TabTypeEnum.DEFAULT);
 
@@ -155,6 +158,7 @@ export default () => {
           type={ButtonType.PRIMARY}
           containerStyle={{ marginBottom: 30 }}
           icon="ic-plus-white"
+          onClick={() => navigate('/add-construction-field/step-1')}
         >
           건설현장 추가
         </Button>

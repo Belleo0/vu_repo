@@ -18,7 +18,7 @@ export default ({
   errorMessage,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
-  label: string;
+  label?: React.ReactNode;
   containerStyle?: CSSProperties;
   errorMessage?: string;
 }) => {
