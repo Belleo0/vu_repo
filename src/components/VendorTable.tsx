@@ -58,11 +58,24 @@ export default ({ data = [], revalidate }: IVendorTable) => {
     setIsRegisterModalOpen(false);
   };
 
+  const handleRemove = async () => {
+    await Promise.all(
+      selectedIds.map(async (v) => await api.delete(`/estimations/${v}`)),
+    );
+    await revalidate();
+    setSelectedIds([]);
+  };
+
   return (
     <Container>
       <CellWrap>
         <LabelCell style={{ maxWidth: 130 }}>
-          <DeleteButton disabled={selectedIds.length === 0}>삭제</DeleteButton>
+          <DeleteButton
+            disabled={selectedIds.length === 0}
+            onClick={selectedIds.length === 0 ? () => null : handleRemove}
+          >
+            삭제
+          </DeleteButton>
         </LabelCell>
         <LabelCell>레미콘 공장</LabelCell>
         <LabelCell>상태</LabelCell>

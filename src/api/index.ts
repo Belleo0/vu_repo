@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const getAPIHost = () => {
+  // return 'https://conaz-core-api.02.dance';
   return 'http://localhost:3000';
 };
 
