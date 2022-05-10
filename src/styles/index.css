@@ -19,3 +19,7 @@ input::placeholder {
     'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', sans-serif;
 }
+
+* {
+  font-family: 'Pretendard Variable', sans-serif !important;
+}
