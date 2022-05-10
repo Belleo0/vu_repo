@@ -12,7 +12,7 @@ export enum CalendarTypeState {
   WEEK,
 }
 
-const CalendarTypeOptions = [
+const calendarTypeOptions = [
   { label: '일', value: CalendarTypeState.DAY },
   { label: '주', value: CalendarTypeState.WEEK },
 ];
@@ -154,7 +154,7 @@ export default () => {
             <TodayButton onClick={handleToday}>오늘</TodayButton>
             <Select
               width={64}
-              options={CalendarTypeOptions}
+              options={calendarTypeOptions}
               value={type}
               onChange={(v) => setType(v)}
             />
@@ -165,8 +165,7 @@ export default () => {
             {hours.map((v) => (
               <TimeWrap>
                 <TimeText>
-                  {v >= 12 ? '오후' : '오전'}
-                  {v > 12 ? v - 12 : v}시
+                  {v >= 12 ? '오후' : '오전'} {v > 12 ? v - 12 : v}시
                 </TimeText>
                 <TimeDivider />
               </TimeWrap>
