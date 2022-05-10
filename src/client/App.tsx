@@ -13,7 +13,12 @@ import MyField from '@pages/my-field';
 import AuthLogin from '@pages/auth/login';
 import RemiconMap from '@pages/remicon-map';
 import SupplierChoice from '@pages/supplier-choice';
-import AddConstructionField from '@pages/add-construction-field';
+import AddConstructionField from '@pages/add-construction-field/index';
+import AddConstructionField2 from '@pages/add-construction-field/index2';
+import AddConstructionField3 from '@pages/add-construction-field/index3';
+import AddConstructionField4 from '@pages/add-construction-field/index4';
+import AddConstructionField5 from '@pages/add-construction-field/index5';
+
 import api from '@api';
 
 const Container = () => {
@@ -50,6 +55,24 @@ const Container = () => {
         <Route
           path="/add-construction-field"
           element={<AddConstructionField />}
+        />
+
+        <Route
+          path="/add-construction-field/2"
+          element={<AddConstructionField2 />}
+        />
+        <Route
+          path="/add-construction-field/3"
+          element={<AddConstructionField3 />}
+        />
+        <Route
+          path="/add-construction-field/4"
+          element={<AddConstructionField4 />}
+        />
+
+        <Route
+          path="/add-construction-field/5"
+          element={<AddConstructionField5 />}
         />
       </Routes>
     </QueryParamProvider>
