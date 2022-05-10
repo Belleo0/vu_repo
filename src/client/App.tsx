@@ -53,28 +53,7 @@ const Container = () => {
 
         <Route path="/supplier-choice" element={<SupplierChoice />} />
 
-        <Route
-          path="/add-construction-field"
-          element={<AddConstructionField />}
-        />
-
-        <Route
-          path="/add-construction-field/2"
-          element={<AddConstructionField2 />}
-        />
-        <Route
-          path="/add-construction-field/3"
-          element={<AddConstructionField3 />}
-        />
-        <Route
-          path="/add-construction-field/4"
-          element={<AddConstructionField4 />}
-        />
-
-        <Route
-          path="/add-construction-field/5"
-          element={<AddConstructionField5 />}
-        />
+        <Route path="/calendar" element={<Calendar />} />
       </Routes>
     </QueryParamProvider>
   );
