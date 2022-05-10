@@ -4,17 +4,19 @@ export const spaceSlice = createSlice({
   name: 'auth',
   initialState: {
     selectedSpaceId: undefined,
+    selectedSpaceInfo: undefined,
   },
   reducers: {
-    setSelectedSpaceId: (state, action) => {
-      state.selectedSpaceId = action.payload;
+    setSelectedSpaceInfo: (state, action) => {
+      state.selectedSpaceInfo = action.payload;
     },
-    clearSelectedSpaceId: (state) => {
-      state.selectedSpaceId = undefined;
+    clearSelectedSpaceInfo: (state) => {
+      state.selectedSpaceInfo = undefined;
     },
   },
 });
 
-export const { setSelectedSpaceId, clearSelectedSpaceId } = spaceSlice.actions;
+export const { setSelectedSpaceInfo, clearSelectedSpaceInfo } =
+  spaceSlice.actions;
 
 export default spaceSlice.reducer;

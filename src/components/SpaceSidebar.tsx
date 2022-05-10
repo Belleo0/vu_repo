@@ -1,6 +1,5 @@
 import api from '@api';
-import useSWR from 'swr';
-import { clearSelectedSpaceId, setSelectedSpaceId } from '@data/space';
+import { clearSelectedSpaceInfo, setSelectedSpaceInfo } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
@@ -118,7 +117,7 @@ export default () => {
   const setSelectedIdWithFirstId = () => {
     if (spaces && spaces?.length > 0) {
       console.log('data?.result?.[0]?.id', spaces?.[0]?.id);
-      dispatch(setSelectedSpaceId(spaces?.[0]?.id));
+      dispatch(setSelectedSpaceInfo(spaces?.[0]));
       setIsMounted(true);
     }
   };
@@ -137,7 +136,7 @@ export default () => {
 
   useEffect(() => {
     return () => {
-      dispatch(clearSelectedSpaceId());
+      dispatch(clearSelectedSpaceInfo());
     };
   }, []);
 
@@ -195,6 +194,7 @@ export default () => {
         {searchedSpaces.map((v, i) => (
           <SpaceCard
             key={`space-${v.id}-${i}`}
+            info={v}
             id={v.id}
             name={v?.name}
             address={v?.basic_address}

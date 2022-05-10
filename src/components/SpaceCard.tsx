@@ -1,5 +1,5 @@
 import api from '@api';
-import { setSelectedSpaceId } from '@data/space';
+import { setSelectedSpaceInfo } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
@@ -9,6 +9,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import TextModal from './TextModal';
 
 interface ISpaceCard {
+  info: any;
   id: number;
   name: string;
   address: string;
@@ -16,7 +17,14 @@ interface ISpaceCard {
   isHide: boolean;
 }
 
-export default ({ id, name, address, revalidate, isHide }: ISpaceCard) => {
+export default ({
+  info,
+  id,
+  name,
+  address,
+  revalidate,
+  isHide,
+}: ISpaceCard) => {
   // const [isOpenCard, setIsOpenCard] = useState<boolean>(false);
   const dispatch = useDispatch();
   const selectedSpaceId = useSelectedSpaceId();
@@ -35,7 +43,7 @@ export default ({ id, name, address, revalidate, isHide }: ISpaceCard) => {
 
   return (
     <Container isOpen={selectedSpaceId === id}>
-      <InfoContainer onClick={() => dispatch(setSelectedSpaceId(id))}>
+      <InfoContainer onClick={() => dispatch(setSelectedSpaceInfo(info))}>
         <InfoWrap>
           <Title>{name}</Title>
           <Address>{address}</Address>
