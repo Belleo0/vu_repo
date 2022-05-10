@@ -11,10 +11,10 @@ export default () => {
   const [chkText, setChkText] = useState<any>(0);
 
   const nxtPageHandler = () => {
-    window.location.replace('http://localhost:3000/add-construction-field/5');
+    navigate('/add-construction-field/step-5');
   };
   const prvPageHandler = () => {
-    navigate('/add-construction-field/4');
+    navigate('/add-construction-field/step-4');
   };
 
   const chkTextLength = (e: any) => {

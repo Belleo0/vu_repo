@@ -13,11 +13,11 @@ export default () => {
   const step = 4;
 
   const nxtStepHandler = () => {
-    navigate('/add-construction-field/4');
+    navigate('/add-construction-field/step-4');
   };
 
   const prvPageHandler = () => {
-    navigate('/add-construction-field/2');
+    navigate('/add-construction-field/step-2');
   };
 
   // useEffect(() => {

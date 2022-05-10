@@ -14,7 +14,7 @@ export default () => {
   const step = 4;
 
   const nxtStepHandler = () => {
-    navigate('/add-construction-field/2');
+    navigate('/add-construction-field/step-2');
   };
 
   return (

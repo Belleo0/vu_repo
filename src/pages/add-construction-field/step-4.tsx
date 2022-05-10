@@ -50,10 +50,10 @@ export default () => {
   const navigate = useNavigate();
 
   const nxtPageHandler = () => {
-    navigate('/add-construction-field/5');
+    navigate('/add-construction-field/step-5');
   };
   const prvPageHandler = () => {
-    navigate('/add-construction-field/3');
+    navigate('/add-construction-field/step-3');
   };
 
   const paymentOptionHandler = (idx: number) => {

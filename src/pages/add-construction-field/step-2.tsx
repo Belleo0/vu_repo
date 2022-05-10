@@ -14,11 +14,11 @@ export default () => {
   const step = 4;
 
   const nxtStepHandler = () => {
-    navigate('/add-construction-field/3');
+    navigate('/add-construction-field/step-3');
   };
 
   const prvPageHandler = () => {
-    navigate('/add-construction-field');
+    navigate('/add-construction-field/step-1');
   };
 
   // const slider = document.querySelector('.items');
