@@ -11,6 +11,9 @@ import { RouteAdapter } from '@components/RouteAdapter';
 
 import MyField from '@pages/my-field';
 import AuthLogin from '@pages/auth/login';
+import EmailInquiry from '@pages/auth/emailInquiry';
+import PwInquiry from '@pages/auth/passwordInquiry';
+import ChangePw from '@pages/auth/changePassword';
 import RemiconMap from '@pages/remicon-map';
 import SupplierChoice from '@pages/supplier-choice';
 import Home from '@pages/home';
@@ -49,6 +52,12 @@ const Container = () => {
         <Route path="/" element={<Home />} />
 
         <Route path="/auth/login" element={<AuthLogin />} />
+
+        <Route path="/auth/email" element={<EmailInquiry />} />
+
+        <Route path="/auth/pw" element={<PwInquiry />} />
+
+        <Route path="/auth/change-pw" element={<ChangePw />} />
 
         <Route path="/my-field" element={<MyField />} />
 

@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import { me } from '@data/auth';
 import { useNavigate } from 'react-router-dom';
 import TextModal from '@components/TextModal';
+import HelperTxt from '@components/HelperTxt';
+import ImgModal from '@components/ImgModal';
 
 export default () => {
   const dispatch = useDispatch();
@@ -15,7 +17,6 @@ export default () => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
   const isEmailValidated = useMemo(() => {
     const regex =
@@ -24,31 +25,23 @@ export default () => {
   }, [username]);
 
   const isFormValidated = useMemo(() => {
-    return true;
-    return isEmailValidated && password.length > 0;
-  }, [isEmailValidated, password]);
+    return isEmailValidated;
+  }, [isEmailValidated]);
 
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
-  const handleLogin = async () => {
-    try {
-      const { data } = await api.post('/auth/login', {
-        username,
-        password,
-      });
-      setToken(data);
-      dispatch(me());
-      navigate('/my-field');
-    } catch (err) {
-      console.log(err);
-      setIsErrorModalOpen(true);
-    }
+  const handleSuccessModal = () => {
+    setIsSuccessModalOpen(!isSuccessModalOpen);
+  };
+  const handleErrorModal = () => {
+    setIsErrorModalOpen(!isErrorModalOpen);
   };
 
   return (
     <AuthLayout>
       <Container>
-        <Title>로그인</Title>
+        <Title>비밀번호 찾기</Title>
         <Box>
           <Input
             label="이메일"
@@ -56,7 +49,7 @@ export default () => {
             placeholder="이메일을 입력해 주세요"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            containerStyle={{ marginBottom: 34 }}
+            containerStyle={{ marginBottom: 14 }}
             errorMessage={
               username === ''
                 ? ''
@@ -65,38 +58,35 @@ export default () => {
                 : '이메일 형식이 올바르지 않습니다.'
             }
           />
-          <Input
-            label="비밀번호"
-            placeholder="비밀번호를 입력해 주세요"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            containerStyle={{ marginBottom: 50 }}
+          <HelperTxt
+            helperTxt={
+              '가입 시 등록하신 이메일 주소를 입력해 주세요. \n 비밀번호 재설정 링크를 보내드립니다.'
+            }
+            containerStyle={{ marginBottom: 30 }}
           />
           <Button
             type={isFormValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
-            onClick={() => (isFormValidated ? handleLogin() : null)}
-            containerStyle={{ marginBottom: 28 }}
+            onClick={isFormValidated ? handleSuccessModal : handleErrorModal}
           >
-            로그인
+            비밀번호 변경 URL 전송
           </Button>
-          <TextButtonWrap>
-            <TextButton onClick={() => navigate('/auth/email')}>
-              이메일 찾기
-            </TextButton>
-            <TextButtonDivider />
-            <TextButton onClick={() => navigate('/auth/pw')}>
-              비밀번호 찾기
-            </TextButton>
-            <TextButtonDivider />
-            <TextButton onClick={() => navigate('')}>회원가입</TextButton>
-          </TextButtonWrap>
         </Box>
       </Container>
-      <TextModal
+      <ImgModal
+        open={isSuccessModalOpen}
+        onClose={handleSuccessModal}
+        email={username}
+        content={' 으로 \n 비밀번호 재설정 링크가 발송되었어요.'}
+        redContent={'메일을 받지 못하셨다면 스팸 폴더를 확인해주세요.'}
+        imgUrl="../assets/img-email.png"
+      />
+      <ImgModal
         open={isErrorModalOpen}
-        onClose={() => setIsErrorModalOpen(false)}
-        content={`로그인에 실패하였습니다.\n계정 정보를 다시 확인해 주세요.`}
+        onClose={handleErrorModal}
+        title={'회원 정보 없음'}
+        redContent={'회원가입을 하시면 이용이 가능합니다.'}
+        imgUrl="../assets/img-check.png"
+        submitText={'다시 입력하기'}
       />
     </AuthLayout>
   );
@@ -127,25 +117,4 @@ const Box = styled.div`
   padding: 50px 30px;
   border-radius: 20px;
   background-color: #fff;
-`;
-
-const TextButtonWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-`;
-
-const TextButton = styled.span`
-  font-size: 14px;
-  letter-spacing: -0.28px;
-  color: #444;
-  cursor: pointer;
-`;
-
-const TextButtonDivider = styled.span`
-  display: block;
-  width: 1px;
-  height: 8px;
-  margin: 0px 10px;
-  background-color: #e3e3e3;
 `;
