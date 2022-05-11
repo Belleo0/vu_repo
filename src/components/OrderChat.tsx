@@ -164,6 +164,9 @@ const CircleButton = styled.span`
   color: #258fff;
 
   margin-right: 10px;
+
+  cursor: pointer;
+  user-select: none;
 `;
 
 const CircleRedButton = styled(CircleButton)`
@@ -178,6 +181,7 @@ const Icon = styled.img`
   object-fit: contain;
 
   cursor: pointer;
+  user-select: none;
 
   &:not(:last-child) {
     margin-right: 14px;
@@ -229,4 +233,5 @@ const SendIcon = styled.img`
   height: 26px;
   margin-right: 20px;
   cursor: pointer;
+  user-select: none;
 `;
