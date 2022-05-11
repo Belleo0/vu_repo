@@ -182,7 +182,6 @@ const InputStyle = styled.textarea`
   background-color: #fff;
   resize: none;
 
-  font-family: SourceHanSansKR;
   font-size: 14px;
   font-weight: 500;
   font-stretch: normal;
@@ -197,7 +196,6 @@ const InputStyle = styled.textarea`
 `;
 
 const LengthCaption = styled.div`
-  font-family: SourceHanSansKR;
   font-size: 13px;
   font-weight: normal;
   font-stretch: normal;
