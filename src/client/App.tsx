@@ -14,8 +14,14 @@ import AuthLogin from '@pages/auth/login';
 import RemiconMap from '@pages/remicon-map';
 import SupplierChoice from '@pages/supplier-choice';
 import Home from '@pages/home';
+import AddConstructionFieldStep1 from '@pages/add-construction-field/step-1';
+import AddConstructionFieldStep2 from '@pages/add-construction-field/step-2';
+import AddConstructionFieldStep3 from '@pages/add-construction-field/step-3';
+import AddConstructionFieldStep4 from '@pages/add-construction-field/step-4';
+import AddConstructionFieldStep5 from '@pages/add-construction-field/step-5';
 
 import api from '@api';
+import Calendar from '@pages/calendar';
 
 const Container = () => {
   const dispatch = useDispatch();
@@ -40,7 +46,7 @@ const Container = () => {
       ReactRouterRoute={RouteAdapter as unknown as React.FunctionComponent}
     >
       <Routes>
-        <Route path="/" element={<Home/>}/>
+        <Route path="/" element={<Home />} />
 
         <Route path="/auth/login" element={<AuthLogin />} />
 
@@ -49,6 +55,31 @@ const Container = () => {
         <Route path="/remicon-map" element={<RemiconMap />} />
 
         <Route path="/supplier-choice" element={<SupplierChoice />} />
+
+        <Route path="/calendar" element={<Calendar />} />
+
+        <Route
+          path="/add-construction-field/step-1"
+          element={<AddConstructionFieldStep1 />}
+        />
+
+        <Route
+          path="/add-construction-field/step-2"
+          element={<AddConstructionFieldStep2 />}
+        />
+        <Route
+          path="/add-construction-field/step-3"
+          element={<AddConstructionFieldStep3 />}
+        />
+        <Route
+          path="/add-construction-field/step-4"
+          element={<AddConstructionFieldStep4 />}
+        />
+
+        <Route
+          path="/add-construction-field/step-5"
+          element={<AddConstructionFieldStep5 />}
+        />
       </Routes>
     </QueryParamProvider>
   );
