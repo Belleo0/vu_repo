@@ -10,7 +10,7 @@ export default ({ data = [] }: IMembers) => {
   return (
     <Container>
       {data.map((v, i) => (
-        <ProfileWrap>
+        <ProfileWrap key={v.id}>
           <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
           <ProfileInfoWrap>
             <CompanyName>{v?.company?.name}</CompanyName>

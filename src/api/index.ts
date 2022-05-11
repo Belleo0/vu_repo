@@ -1,8 +1,12 @@
 import axios from 'axios';
 
 export const getAPIHost = () => {
-  return 'https://conaz-core-api.02.dance';
-  // return 'http://localhost:3000';
+  // return 'https://conaz-core-api.02.dance';
+  return 'http://localhost:8080';
+};
+
+export const getSocketHost = () => {
+  return 'http://localhost:8090';
 };
 
 export const api = axios.create({

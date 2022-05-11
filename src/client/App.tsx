@@ -20,8 +20,12 @@ import AddConstructionFieldStep3 from '@pages/add-construction-field/step-3';
 import AddConstructionFieldStep4 from '@pages/add-construction-field/step-4';
 import AddConstructionFieldStep5 from '@pages/add-construction-field/step-5';
 
+import routes, { Permission } from './Routes';
+
 import api from '@api';
 import Calendar from '@pages/calendar';
+import Order from '@pages/order';
+import PrivateWrapper from './PrivateWrapper';
 
 const Container = () => {
   const dispatch = useDispatch();
@@ -37,6 +41,10 @@ const Container = () => {
       .then(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    routes.forEach((v) => v.component.preload());
+  }, []);
+
   if (loading) {
     return <div>...</div>;
   }
@@ -46,40 +54,21 @@ const Container = () => {
       ReactRouterRoute={RouteAdapter as unknown as React.FunctionComponent}
     >
       <Routes>
-        <Route path="/" element={<Home />} />
-
-        <Route path="/auth/login" element={<AuthLogin />} />
-
-        <Route path="/my-field" element={<MyField />} />
-
-        <Route path="/remicon-map" element={<RemiconMap />} />
-
-        <Route path="/supplier-choice" element={<SupplierChoice />} />
-
-        <Route path="/calendar" element={<Calendar />} />
-
-        <Route
-          path="/add-construction-field/step-1"
-          element={<AddConstructionFieldStep1 />}
-        />
-
-        <Route
-          path="/add-construction-field/step-2"
-          element={<AddConstructionFieldStep2 />}
-        />
-        <Route
-          path="/add-construction-field/step-3"
-          element={<AddConstructionFieldStep3 />}
-        />
-        <Route
-          path="/add-construction-field/step-4"
-          element={<AddConstructionFieldStep4 />}
-        />
-
-        <Route
-          path="/add-construction-field/step-5"
-          element={<AddConstructionFieldStep5 />}
-        />
+        {routes.map((v) => (
+          <Route
+            key={v.path}
+            path={v.path}
+            element={
+              v.permission === Permission.PRIVATE ? (
+                <PrivateWrapper>
+                  <v.component />
+                </PrivateWrapper>
+              ) : (
+                <v.component />
+              )
+            }
+          />
+        ))}
       </Routes>
     </QueryParamProvider>
   );

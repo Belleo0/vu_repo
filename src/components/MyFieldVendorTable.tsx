@@ -18,7 +18,7 @@ export default ({ data = [] }: IVendorTable) => {
         <LabelCell />
       </CellWrap>
       {data.map((v) => (
-        <CellWrap>
+        <CellWrap key={v.id}>
           <ValueCell style={{ flexDirection: 'column' }}>
             <FactoryCompanyName>{v?.factory_space?.name}</FactoryCompanyName>
             <FactoryAddress>{v?.factory_space?.address}</FactoryAddress>
