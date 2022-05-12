@@ -13,7 +13,6 @@ import React, {
 export default ({
   label,
   containerStyle,
-  inputStyle,
   value = '',
   onChange,
   errorMessage,
@@ -21,7 +20,6 @@ export default ({
 }: InputHTMLAttributes<HTMLInputElement> & {
   label?: React.ReactNode;
   containerStyle?: CSSProperties;
-  inputStyle?: CSSProperties;
   errorMessage?: string;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -36,7 +34,7 @@ export default ({
   return (
     <RealContainer style={containerStyle}>
       {label && <Label>{label}</Label>}
-      <Container isFocus={isFocused} style={inputStyle}>
+      <Container isFocus={isFocused}>
         <Input
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -67,16 +65,15 @@ const RealContainer = styled.div`
 const Container = styled.div<{ isFocus: boolean }>`
   display: flex;
   width: 100%;
-  border-radius: 6px;
-  background-color: white;
+  background-color: inherit;
 
   ${({ isFocus }) =>
     isFocus
       ? css`
-          border: solid 1px #777;
+          border-bottom: solid 1px #777;
         `
       : css`
-          border: solid 1px #c7c7c7;
+          border-bottom: solid 1px #e3e3e3;
         `}
 
   margin-bottom: 8px;
@@ -84,7 +81,9 @@ const Container = styled.div<{ isFocus: boolean }>`
 
 const Input = styled.input`
   width: 100%;
-  padding: 11px 14px;
+  padding: 0 0 20px 0;
+  font-size: 16px;
+  font-weight: 500;
   background: none;
   border: 0;
   outline: 0;
@@ -107,7 +106,7 @@ const Label = styled.span`
   letter-spacing: -0.32px;
   text-align: left;
   color: #000;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 `;
 
 const ErrorMessage = styled.span`

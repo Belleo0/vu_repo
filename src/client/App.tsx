@@ -22,6 +22,7 @@ import AddConstructionFieldStep2 from '@pages/add-construction-field/step-2';
 import AddConstructionFieldStep3 from '@pages/add-construction-field/step-3';
 import AddConstructionFieldStep4 from '@pages/add-construction-field/step-4';
 import AddConstructionFieldStep5 from '@pages/add-construction-field/step-5';
+import Mypage from '@pages/mypage';
 
 import api from '@api';
 import Calendar from '@pages/calendar';
@@ -89,6 +90,8 @@ const Container = () => {
           path="/add-construction-field/step-5"
           element={<AddConstructionFieldStep5 />}
         />
+
+        <Route path="/mypage" element={<Mypage />} />
       </Routes>
     </QueryParamProvider>
   );
