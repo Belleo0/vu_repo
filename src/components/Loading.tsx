@@ -25,9 +25,9 @@ export default () => {
             cy="50"
             fill="none"
             stroke="#258fff"
-            stroke-width="3"
+            strokeWidth="3"
             r="35"
-            stroke-dasharray="164.93361431346415 56.97787143782138"
+            strokeDasharray="164.93361431346415 56.97787143782138"
           >
             <animateTransform
               attributeName="transform"

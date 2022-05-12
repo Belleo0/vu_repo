@@ -63,7 +63,7 @@ export default () => {
       </FilterContainer>
       <CalendarContainer>
         {dates.map((v) => (
-          <DayContainer>
+          <DayContainer key={v.toISOString()}>
             <DayText className="day-text">{days[v.getDay()]}</DayText>
             <DayContents>
               <DayAmountWrap>

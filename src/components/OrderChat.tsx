@@ -1,78 +1,270 @@
+import io from 'socket.io-client';
+import api, { getSocketHost } from '@api';
+import useChatData from '@api/useChatData';
+import useOrderSuppliers from '@api/useOrderSuppliers';
 import styled from '@emotion/styled';
+import { usePrevious } from '@hooks/usePrevious';
+import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
+import useUserInfo from '@hooks/useUserInfo';
 import getAssetURL from '@utils/getAssetURL';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Button, { ButtonSize, ButtonType } from './Button';
 import OrderChatCompanyCard from './OrderChatCompanyCard';
+import OrderChatMessage from './OrderChatMessage';
 import SearchInput from './SearchInput';
 
 export default () => {
+  const [mount, setMount] = useState(false);
+
+  const userInfo = useUserInfo();
+
+  const selectedSpaceId = useSelectedSpaceId();
+  const { data: spaces, isLoading } = useOrderSuppliers(selectedSpaceId);
+
+  const [search, setSearch] = useState('');
+
+  const searchedSpaces = useMemo(() => {
+    if (!spaces) return [];
+    return spaces.filter((v) => v?.factory_space?.name?.includes(search));
+  }, [spaces, search]);
+
+  const [selectedChatRoomInfo, setSelectedChatRoomInfo] = useState<any>(null);
+
+  const chatRoomId = useMemo(() => {
+    if (!selectedChatRoomInfo) return null;
+    return selectedChatRoomInfo?.chat_room_id;
+  }, [selectedChatRoomInfo]);
+
+  const previousChatRoomId = usePrevious(chatRoomId);
+
+  const [socketState, setSocketState] = useState<any>(null);
+
+  const messageContainerRef = useRef<HTMLDivElement>(null);
+
+  const {
+    data: { messages, members },
+    isLoading: isChatLoading,
+    mutateMessages,
+  } = useChatData(chatRoomId);
+
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (spaces.length > 0) {
+      const data = spaces?.[0];
+      setSelectedChatRoomInfo(data);
+    }
+  }, [spaces]);
+
+  useEffect(() => {
+    setMessage('');
+    setMount(false);
+  }, [chatRoomId]);
+
+  const scrollToBottom = (init: boolean) => {
+    if (messageContainerRef.current) {
+      if (init || (!init && messageContainerRef.current.scrollTop >= 0)) {
+        messageContainerRef.current.scrollTop =
+          messageContainerRef.current.scrollHeight;
+      }
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom(mount);
+    if (!mount) {
+      setMount(true);
+    }
+  }, [messages, mount]);
+
+  const handleSendMessage = async () => {
+    if (message.length > 0) {
+      mutateMessages(
+        (v: any) => [
+          {
+            content: message,
+            created_at: new Date(),
+            data: null,
+            send_user: userInfo,
+            type: 'TEXT',
+          },
+          ...v,
+        ],
+        false,
+      );
+
+      await api.post(`/chats/${chatRoomId}`, {
+        type: 'TEXT',
+        content: message,
+        data: null,
+      });
+
+      mutateMessages();
+      setMessage('');
+
+      scrollToBottom(true);
+    }
+  };
+
+  useEffect(() => {
+    const socket = io(getSocketHost(), {
+      query: '',
+      transports: ['websocket'],
+      autoConnect: true,
+    });
+    socket.on('connect', () => {
+      socket.on('success', function () {
+        console.log('Socket 접속 성공');
+      });
+      socket.on('state', function (args: any) {
+        console.log('참고 상태 : ', args); // 참고용 데이터입니다.
+      });
+      socket.on('chat_message', function (args: any) {
+        const data: any = JSON.stringify(args);
+        console.log('메세지 데이터: ', data); // 실제 메세지 데이터입니다.
+
+        if (data?.id) {
+          mutateMessages(
+            (v: any) => [
+              {
+                content: message,
+                created_at: new Date(),
+                data: null,
+                send_user: userInfo,
+                type: 'TEXT',
+              },
+              ...v,
+            ],
+            false,
+          );
+          // mutateMessages();
+          scrollToBottom(false);
+        }
+      });
+    });
+
+    setSocketState(socket);
+
+    return () => {
+      socketState?.disconnect?.();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (socketState !== null) {
+      socketState.emit('/chats/join', { id: chatRoomId });
+    }
+
+    if (socketState !== null && previousChatRoomId !== null) {
+      socketState.emit('/chats/leave', { id: previousChatRoomId });
+    }
+  }, [socketState, chatRoomId]);
+
+  useEffect(() => {
+    console.log('messages가 바뀜', messages);
+  }, [messages]);
+
+  if (isLoading) return null;
+
   return (
     <Container>
       <SideContainer>
         <SideTopSection>
-          <SideTitle>거래업체(05)</SideTitle>
-          <SearchInput placeholder="업체명을 입력해 주세요" />
+          <SideTitle>거래업체({spaces.length})</SideTitle>
+          <SearchInput
+            placeholder="업체명을 입력해 주세요"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </SideTopSection>
         <CompanyCardWrap>
-          <OrderChatCompanyCard />
-          <OrderChatCompanyCard />
-          <OrderChatCompanyCard />
-          <OrderChatCompanyCard />
-          <OrderChatCompanyCard />
-          <OrderChatCompanyCard />
-          <OrderChatCompanyCard />
-          <OrderChatCompanyCard />
-          <OrderChatCompanyCard />
-          <OrderChatCompanyCard />
+          {searchedSpaces.map((v) => (
+            <OrderChatCompanyCard
+              key={v.id}
+              active={v.id === selectedChatRoomInfo?.id}
+              name={v?.factory_space?.name}
+              saleUserName={v?.factory_space?.site_user?.name}
+              saleUserPosition={v?.factory_space?.site_user?.position}
+              totalAmount={1200} // TODO 나중에 백엔드 반영하고 고치기
+              onClick={() => setSelectedChatRoomInfo(v)}
+            />
+          ))}
         </CompanyCardWrap>
       </SideContainer>
       <MainContainer>
-        <TopSection>
-          <TopSectionTitle>(주)표주레미콘</TopSectionTitle>
-          <CircleButton>물량배정</CircleButton>
-          <CircleRedButton>현장마감</CircleRedButton>
-          <TopRightSection>
-            <Button
-              size={ButtonSize.SMALL}
-              type={ButtonType.GRAY_BLACK}
-              icon="ic-people"
-              containerStyle={{ width: 'auto', marginRight: 20 }}
-            >
-              멤버보기
-            </Button>
-            <Button
-              size={ButtonSize.SMALL}
-              type={ButtonType.OUTLINE}
-              icon="ic-add-person"
-              containerStyle={{ width: 'auto', marginRight: 10 }}
-            >
-              초대하기
-            </Button>
-            <Button
-              size={ButtonSize.SMALL}
-              type={ButtonType.BLACK}
-              containerStyle={{
-                width: 'auto',
-                height: 44,
-                marginRight: 24,
-              }}
-            >
-              공장정보
-            </Button>
-            <Icon src={getAssetURL('../assets/ic-search-small.svg')} />
-            <Icon src={getAssetURL('../assets/ic-setting.svg')} />
-            <Icon src={getAssetURL('../assets/ic-out.svg')} />
-          </TopRightSection>
-        </TopSection>
-        <MidSection />
-        <BottomSection>
-          <BottomIcon
-            src={getAssetURL('../assets/ic-plus-rounded-square.svg')}
-          />
-          <InputContainer>
-            <Input />
-            <SendIcon src={getAssetURL('../assets/ic-send.svg')} />
-          </InputContainer>
-        </BottomSection>
+        {!isChatLoading && (
+          <>
+            <TopSection>
+              <TopSectionTitle>
+                {selectedChatRoomInfo?.factory_space?.name}
+              </TopSectionTitle>
+              <CircleButton>물량배정</CircleButton>
+              <CircleRedButton>현장마감</CircleRedButton>
+              <TopRightSection>
+                <Button
+                  size={ButtonSize.SMALL}
+                  type={ButtonType.GRAY_BLACK}
+                  icon="ic-people"
+                  containerStyle={{ width: 'auto', marginRight: 20 }}
+                >
+                  멤버보기({members.length})
+                </Button>
+                <Button
+                  size={ButtonSize.SMALL}
+                  type={ButtonType.OUTLINE}
+                  icon="ic-add-person"
+                  containerStyle={{ width: 'auto', marginRight: 10 }}
+                >
+                  초대하기
+                </Button>
+                <Button
+                  size={ButtonSize.SMALL}
+                  type={ButtonType.BLACK}
+                  containerStyle={{
+                    width: 'auto',
+                    height: 44,
+                    marginRight: 24,
+                  }}
+                >
+                  공장정보
+                </Button>
+                <Icon src={getAssetURL('../assets/ic-search-small.svg')} />
+                <Icon src={getAssetURL('../assets/ic-setting.svg')} />
+                <Icon src={getAssetURL('../assets/ic-out.svg')} />
+              </TopRightSection>
+            </TopSection>
+            <MidSection ref={messageContainerRef}>
+              {messages.map((v: any) => (
+                <OrderChatMessage
+                  companyName={v?.send_user?.company?.name}
+                  userName={v?.send_user?.name}
+                  userPosition={v?.send_user?.company?.position}
+                  content={v?.content}
+                  sendAt={v?.created_at}
+                  isMyChat={v?.send_user?.id === userInfo?.id}
+                />
+              ))}
+            </MidSection>
+            <BottomSection>
+              <BottomIcon
+                src={getAssetURL('../assets/ic-plus-rounded-square.svg')}
+              />
+              <InputContainer>
+                <Input
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyPress={(e) =>
+                    e.key === 'Enter' ? handleSendMessage() : null
+                  }
+                />
+                <SendIcon
+                  src={getAssetURL('../assets/ic-send.svg')}
+                  onClick={handleSendMessage}
+                />
+              </InputContainer>
+            </BottomSection>
+          </>
+        )}
       </MainContainer>
     </Container>
   );
@@ -83,6 +275,8 @@ const Container = styled.div`
   background-color: white;
   border-top: 1px solid #c7c7c7;
   border-bottom: 1px solid #e3e3e3;
+  height: 686px;
+  max-height: 686px;
 `;
 
 const SideContainer = styled.div`
@@ -91,7 +285,6 @@ const SideContainer = styled.div`
   width: 100%;
   max-width: 300px;
   border-right: 1px solid #e3e3e3;
-  max-height: 686px;
 `;
 
 const MainContainer = styled.div`
@@ -189,7 +382,13 @@ const Icon = styled.img`
 `;
 
 const MidSection = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
   flex: 1;
+  padding: 20px 30px;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
 `;
 
 const BottomSection = styled.div`

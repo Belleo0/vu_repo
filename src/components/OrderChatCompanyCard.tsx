@@ -1,24 +1,45 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-export default () => {
+interface IOrderChatCompanyCard {
+  active: boolean;
+  name: string;
+  saleUserName: string;
+  saleUserPosition: string;
+  totalAmount: number;
+  onClick: () => any;
+}
+
+export default ({
+  active,
+  name,
+  saleUserName,
+  saleUserPosition,
+  totalAmount,
+  onClick,
+}: IOrderChatCompanyCard) => {
   return (
-    <CompanyCard>
+    <CompanyCard active={active} onClick={onClick}>
       <CompanyNameWrap>
-        <CompanyName>(주)표주레미콘</CompanyName>
+        <CompanyName>{name}</CompanyName>
       </CompanyNameWrap>
       <CompanyInfoRow>
         <CompanyInfoLabel>영업사원</CompanyInfoLabel>
-        <CompanyInfoValue>김머시기 대리</CompanyInfoValue>
+        <CompanyInfoValue>
+          {saleUserName} {saleUserPosition}
+        </CompanyInfoValue>
       </CompanyInfoRow>
       <CompanyInfoRow>
         <CompanyInfoLabel>누적 주문량</CompanyInfoLabel>
-        <CompanyInfoValue>1,200m³</CompanyInfoValue>
+        <CompanyInfoValue>
+          {totalAmount?.toLocaleString('ko')}m³
+        </CompanyInfoValue>
       </CompanyInfoRow>
     </CompanyCard>
   );
 };
 
-const CompanyCard = styled.div`
+const CompanyCard = styled.div<{ active: boolean }>`
   width: 100%;
   padding: 17px 24px;
   border-bottom: 1px solid #f2f2f2;
@@ -32,6 +53,12 @@ const CompanyCard = styled.div`
   transition: background-color 0.1s linear;
 
   cursor: pointer;
+
+  ${({ active }) =>
+    active &&
+    css`
+      background-color: #eaf4fe;
+    `})}
 `;
 
 const CompanyNameWrap = styled.div`

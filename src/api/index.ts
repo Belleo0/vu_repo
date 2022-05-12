@@ -6,7 +6,7 @@ export const getAPIHost = () => {
 };
 
 export const getSocketHost = () => {
-  return 'http://localhost:8090';
+  return 'http://localhost:8080';
 };
 
 export const api = axios.create({

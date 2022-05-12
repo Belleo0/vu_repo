@@ -46,7 +46,6 @@ export const generateWeekInfo = (type: CalendarTypeState, dates: any[]) => {
   } else {
     const realWeekNum = getWeekNumber(dates[0]);
     const maxWeekNum = getWeekCountOfMonth(dates[0]);
-    console.log('maxWeekNum', dates[0], maxWeekNum);
 
     const weekNum = realWeekNum === maxWeekNum ? 1 : realWeekNum;
     const month = realWeekNum === maxWeekNum ? realMonth + 1 : realMonth;
