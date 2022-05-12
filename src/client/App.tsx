@@ -9,23 +9,12 @@ import { me } from '@data/auth';
 
 import { RouteAdapter } from '@components/RouteAdapter';
 
-import MyField from '@pages/my-field';
-import AuthLogin from '@pages/auth/login';
-import RemiconMap from '@pages/remicon-map';
-import SupplierChoice from '@pages/supplier-choice';
-import Home from '@pages/home';
-import AddConstructionFieldStep1 from '@pages/add-construction-field/step-1';
-import AddConstructionFieldStep2 from '@pages/add-construction-field/step-2';
-import AddConstructionFieldStep3 from '@pages/add-construction-field/step-3';
-import AddConstructionFieldStep4 from '@pages/add-construction-field/step-4';
-import AddConstructionFieldStep5 from '@pages/add-construction-field/step-5';
-
 import routes, { Permission } from './Routes';
+import PrivateWrapper from './PrivateWrapper';
 
 import api from '@api';
-import Calendar from '@pages/calendar';
-import Order from '@pages/order';
-import PrivateWrapper from './PrivateWrapper';
+
+import Loading from '@components/Loading';
 
 const Container = () => {
   const dispatch = useDispatch();
@@ -46,7 +35,7 @@ const Container = () => {
   }, []);
 
   if (loading) {
-    return <div>...</div>;
+    return <Loading />;
   }
 
   return (
