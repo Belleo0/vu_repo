@@ -12,6 +12,7 @@ import React, {
 
 export default ({
   label,
+  redStar,
   containerStyle,
   inputStyle,
   value = '',
@@ -20,6 +21,7 @@ export default ({
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   label?: React.ReactNode;
+  redStar?: React.ReactNode;
   containerStyle?: CSSProperties;
   inputStyle?: CSSProperties;
   errorMessage?: string;
@@ -35,7 +37,10 @@ export default ({
 
   return (
     <RealContainer style={containerStyle}>
-      {label && <Label>{label}</Label>}
+      <LableBox>
+        {label && <Label>{label}</Label>}
+        {redStar && <RedStar>{redStar}</RedStar>}
+      </LableBox>
       <Container isFocus={isFocused} style={inputStyle}>
         <Input
           onFocus={() => setIsFocused(true)}
@@ -114,4 +119,15 @@ const ErrorMessage = styled.span`
   font-size: 12px;
   letter-spacing: -0.24px;
   color: #ef0000;
+`;
+
+const RedStar = styled.span`
+  font-size: 14px;
+  color: #ef0000;
+  margin-left: 2px;
+`;
+
+const LableBox = styled.div`
+  display: block;
+  margin-bottom: 10px;
 `;

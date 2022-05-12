@@ -102,6 +102,7 @@ export default () => {
               <ButtonInputBox>
                 <Input
                   label="이메일"
+                  redStar="*"
                   type="email"
                   name="email"
                   value={email}
@@ -188,6 +189,7 @@ export default () => {
                 <>
                   <Input
                     label="현재 비밀번호"
+                    redStar="*"
                     type="password"
                     placeholder="비밀번호를 입력해 주세요"
                     name="password"
@@ -197,6 +199,7 @@ export default () => {
                   <Divider />
                   <Input
                     label="새 비밀번호"
+                    redStar="*"
                     type="password"
                     name="newPassword"
                     placeholder="영문과 숫자, 특수문자 포함 8자 이상 입력해 주세요"
@@ -206,6 +209,7 @@ export default () => {
                   <Divider />
                   <Input
                     label="새 비밀번호 확인"
+                    redStar="*"
                     type="password"
                     name="passwordConfirm"
                     placeholder="새 비밀번호를 다시 입력해 주세요"
@@ -219,6 +223,7 @@ export default () => {
                 <ButtonInputBox>
                   <Input
                     label="휴대폰번호"
+                    redStar="*"
                     type="text"
                     name="phone"
                     placeholder="'-' 입력 제외(번호만 입력해 주세요)"
@@ -249,6 +254,7 @@ export default () => {
                 <ButtonInputBox>
                   <Input
                     label="휴대폰번호"
+                    redStar="*"
                     type="text"
                     name="phone"
                     placeholder="'-' 입력 제외(번호만 입력해 주세요)"
