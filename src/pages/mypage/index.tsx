@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import MypageLayout from '@layout/MypageLayout';
 import getAssetURL from '@utils/getAssetURL';
+
+import MypageLayout from '@layout/MypageLayout';
 
 import LinedInput from '@components/LinedInput';
 import Input from '@components/Input';
@@ -9,16 +10,13 @@ import Button, { ButtonType } from '@components/Button';
 import ImgModal from '@components/ImgModal';
 import TextModal from '@components/TextModal';
 import useUserInfo from '@hooks/useUserInfo';
-import AuthLayout from '@layout/AuthLayout';
-import SpaceLayout from '@layout/SpaceLayout';
-import MypageSidebar from '@components/MypageSidebar';
 
 export default () => {
   const userInfo = useUserInfo();
 
-  useEffect(() => {
-    console.log(userInfo);
-  }, []);
+  // useEffect(() => {
+  //   console.log(userInfo);
+  // }, []);
 
   let initialState = {
     name: userInfo ? userInfo.name : '',
@@ -50,8 +48,9 @@ export default () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target);
     const { name, value } = e.target;
-
-    setUserData({ ...userData, [name]: value });
+    setUserData((prev) => {
+      return { ...prev, [name]: value };
+    });
   };
 
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -107,22 +106,12 @@ export default () => {
                   name="email"
                   value={email}
                   onChange={handleChange}
-                  inputStyle={{
-                    backgroundColor: '#f2f2f2',
-                    borderRadius: '6px',
-                  }}
+                  inputStyle={emailInputStyle}
                 />
                 <Button
-                  type={ButtonType.BLACK}
+                  type={ButtonType.BLACK_WHITE}
                   onClick={handleEmailSuccessModal}
-                  containerStyle={{
-                    width: '45%',
-                    height: '40px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    padding: '11px 0',
-                    marginLeft: '10px',
-                  }}
+                  containerStyle={buttonStyle}
                 >
                   이메일 변경
                 </Button>
@@ -170,15 +159,8 @@ export default () => {
                     }}
                   />
                   <Button
-                    type={ButtonType.BLACK}
-                    containerStyle={{
-                      width: '45%',
-                      height: '40px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      padding: '11px 0',
-                      marginLeft: '10px',
-                    }}
+                    type={ButtonType.BLACK_WHITE}
+                    containerStyle={buttonStyle}
                     onClick={handlePassword}
                   >
                     비밀번호 변경
@@ -235,15 +217,8 @@ export default () => {
                     }}
                   />
                   <Button
-                    type={ButtonType.BLACK}
-                    containerStyle={{
-                      width: '45%',
-                      height: '40px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      padding: '11px 0',
-                      marginLeft: '10px',
-                    }}
+                    type={ButtonType.BLACK_WHITE}
+                    containerStyle={buttonStyle}
                     onClick={handleSMS}
                   >
                     휴대폰번호 변경
@@ -265,17 +240,7 @@ export default () => {
                       borderRadius: '6px',
                     }}
                   />
-                  <Button
-                    type={ButtonType.GRAY}
-                    containerStyle={{
-                      width: '45%',
-                      height: '40px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      padding: '11px 0',
-                      marginLeft: '10px',
-                    }}
-                  >
+                  <Button type={ButtonType.GRAY} containerStyle={buttonStyle}>
                     인증번호 전송
                   </Button>
                 </ButtonInputBox>
@@ -357,18 +322,6 @@ const ProfileImage = styled.img`
   border-radius: 100px;
 `;
 
-const BarSection = styled.div`
-  width: 100%;
-  margin-bottom: 60px;
-`;
-
-const MidSection = styled.div`
-  display: flex;
-  width: 100%;
-  margin-top: 66px;
-  margin-bottom: 60px;
-`;
-
 const Divider = styled.span`
   display: block;
   width: 100%;
@@ -381,6 +334,7 @@ const ButtonInputBox = styled.div`
   width: 100%;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 `;
 
 const EditButton = styled.span`
@@ -417,3 +371,21 @@ const Withdrawal = styled.span`
   border-bottom: 1px solid #999;
   cursor: pointer;
 `;
+
+const emailInputStyle = {
+  backgroundColor: '#f2f2f2',
+  borderRadius: '6px',
+  '&: focus': {
+    backgroundColor: '#ffffff',
+  },
+};
+
+const buttonStyle = {
+  width: '45%',
+  height: '40px',
+  fontSize: '14px',
+  fontWeight: '500',
+  padding: '11px 0',
+  marginLeft: '10px',
+  marginTop: '5px',
+};

@@ -19,6 +19,24 @@ export default [
     permission: Permission.PUBLIC,
   },
   {
+    label: '이메일 찾기',
+    path: '/auth/email',
+    component: lazy(() => import('@pages/auth/emailInquiry')),
+    permission: Permission.PUBLIC,
+  },
+  {
+    label: '비밀번호 찾기',
+    path: '/auth/pw',
+    component: lazy(() => import('@pages/auth/passwordInquiry')),
+    permission: Permission.PUBLIC,
+  },
+  {
+    label: '비밀번호 재설정',
+    path: '/auth/change-pw',
+    component: lazy(() => import('@pages/auth/changePassword')),
+    permission: Permission.PUBLIC,
+  },
+  {
     label: 'MY 건설현장',
     path: '/my-field',
     component: lazy(() => import('@pages/my-field')),
@@ -83,5 +101,11 @@ export default [
     path: '/add-construction-field/step-5',
     component: lazy(() => import('@pages/add-construction-field/step-5')),
     permission: Permission.PRIVATE,
+  },
+  {
+    label: '회원정보 수정',
+    path: '/mypage',
+    component: lazy(() => import('@pages/mypage')),
+    permission: Permission.PUBLIC,
   },
 ];

@@ -23,11 +23,11 @@ export default ({ sidemenus }: ISideMenus) => {
   return (
     <SideContainer>
       <MenuItemListBox>
-        {sidemenus.map((item) => (
-          <MenuItemBox>
+        {sidemenus.map((item, i) => (
+          <MenuItemBox key={i}>
             <MenuItem
               key={item.path}
-              active={item.path === pathname}
+              isActive={item.path === pathname}
               onClick={() => navigate(item.path)}
             >
               {item.label}
@@ -54,7 +54,7 @@ const MenuItemBox = styled.div`
   padding: 14px 10px;
 `;
 
-const MenuItem = styled.span<{ active?: boolean }>`
+const MenuItem = styled.span<{ isActive?: boolean }>`
   font-size: 16px;
   font-weight: 500;
   line-height: 1.4;
@@ -64,8 +64,8 @@ const MenuItem = styled.span<{ active?: boolean }>`
   text-align: left;
   cursor: pointer;
 
-  ${({ active }) =>
-    active
+  ${({ isActive }) =>
+    isActive
       ? css`
           color: #258fff;
         `

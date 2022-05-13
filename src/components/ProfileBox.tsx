@@ -15,12 +15,12 @@ export default () => {
           <Role>{userInfo?.position}</Role>
         </NameRoleWrap>
       </ProfileInfoWrap>
-      {userInfo.likeCount && (
+      {/* {userInfo.likeCount && (
         <LikeWrap>
           <Icon src={getAssetURL('../assets/ic-like.svg')} />
           <Count>{userInfo?.likeCount}</Count>
         </LikeWrap>
-      )}
+      )} */}
     </ProfileBox>
   );
 };
