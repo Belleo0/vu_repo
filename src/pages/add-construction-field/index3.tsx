@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
-import Input from '@components/Input';
 import { useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 
