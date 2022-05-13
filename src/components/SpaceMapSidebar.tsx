@@ -21,9 +21,9 @@ export default ({
   selectedFieldInfo,
   setSelectedFieldInfo,
   selectedFactoryIds,
-  setSelectedFactoryIds,
   selectedFieldId,
   setSelectedSpaceInfo,
+  handleClickFactoryCard,
 }: any) => {
   const navigate = useNavigate();
 
@@ -58,14 +58,6 @@ export default ({
   const handleSubmitSelectModal = () => {
     setSelectedFieldInfo(tempSelectedFieldInfo);
     setIsSelectModalOpen(false);
-  };
-
-  const handleClickFactoryCard = (id: number) => {
-    if (selectedFactoryIds.includes(id)) {
-      setSelectedFactoryIds((prev: number[]) => prev.filter((v) => v !== id));
-    } else {
-      setSelectedFactoryIds((prev: number[]) => prev.concat(id));
-    }
   };
 
   const handleRequestEstimation = async () => {

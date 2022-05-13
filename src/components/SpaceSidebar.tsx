@@ -34,6 +34,7 @@ import {
 import FilterSelect from './FilterSelect';
 import useSpaces from '@api/useSpaces';
 import { useNavigate } from 'react-router-dom';
+import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -45,6 +46,8 @@ export default () => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  const selectedSpaceId = useSelectedSpaceId();
 
   const [tabType, setTabType] = useState<TabTypeEnum>(TabTypeEnum.DEFAULT);
 
@@ -124,7 +127,12 @@ export default () => {
   };
 
   useEffect(() => {
-    if (isMounted === false && spaces && spaces.length > 0) {
+    if (
+      !!!selectedSpaceId &&
+      isMounted === false &&
+      spaces &&
+      spaces.length > 0
+    ) {
       setSelectedIdWithFirstId();
       // setIsFilterOpen(false);
     }
@@ -137,7 +145,7 @@ export default () => {
 
   useEffect(() => {
     return () => {
-      dispatch(clearSelectedSpaceInfo());
+      // dispatch(clearSelectedSpaceInfo());
     };
   }, []);
 
