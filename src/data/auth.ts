@@ -22,7 +22,6 @@ export const authSlice = createSlice({
     clearPrincipal: (state) => {
       window.sessionStorage.clear();
       state.principal = undefined;
-      console.log('...??');
     },
   },
   extraReducers: {

@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
 import Input from '@components/Input';
 import Button, { ButtonType } from '@components/Button';
 import api, { setToken } from '@api';
 import { useDispatch } from 'react-redux';
-import { me } from '@data/auth';
+import { clearPrincipal, me } from '@data/auth';
 import { useNavigate } from 'react-router-dom';
 import TextModal from '@components/TextModal';
 
@@ -37,13 +37,17 @@ export default () => {
         password,
       });
       setToken(data);
-      dispatch(me());
-      navigate('/my-field');
+      await dispatch(me());
+      await navigate('/my-field');
     } catch (err) {
       console.log(err);
       setIsErrorModalOpen(true);
     }
   };
+
+  useEffect(() => {
+    dispatch(clearPrincipal());
+  }, []);
 
   return (
     <AuthLayout>

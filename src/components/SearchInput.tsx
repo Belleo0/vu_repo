@@ -5,17 +5,22 @@ import React, { CSSProperties, InputHTMLAttributes } from 'react';
 export default ({
   icon,
   containerStyle,
+  searchIconStyle,
   onClick,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   icon?: string;
   containerStyle?: CSSProperties;
+  searchIconStyle?: CSSProperties;
 }) => {
   return (
     <Container style={containerStyle} onClick={onClick}>
       {icon && <Icon src={getAssetURL(`../assets/${icon}.svg`)} />}
       <Input {...props} />
-      <SearchIcon src={getAssetURL('../assets/ic-search.svg')} />
+      <SearchIcon
+        style={searchIconStyle}
+        src={getAssetURL('../assets/ic-search.svg')}
+      />
     </Container>
   );
 };

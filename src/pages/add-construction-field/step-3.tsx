@@ -2,46 +2,54 @@ import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
-import Input from '@components/Input';
 import { useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 
 export default () => {
+  const [requirement, setRequirement] = useState<string>();
+
   const navigate = useNavigate();
-  const [chkText, setChkText] = useState<any>(0);
+  const step = 4;
 
-  const nxtPageHandler = () => {
-    window.location.replace('http://localhost:3000/add-construction-field/5');
+  const nxtStepHandler = () => {
+    navigate('/add-construction-field/step-4');
   };
+
   const prvPageHandler = () => {
-    navigate('/add-construction-field/4');
+    navigate('/add-construction-field/step-2');
   };
 
-  const chkTextLength = (e: any) => {
-    const length = e.target.value.length;
-    setChkText(length);
-    console.log(length, ' || ', chkText);
-  };
+  // useEffect(() => {
+  //   console.log('requirement => ', requirement);
+  // }, [requirement]);
 
   return (
     <SpaceLayout>
       <Container>
         <TopTitleWrapper>
           <BorderNumberWrapper>
-            <BorderNumber>5</BorderNumber>
+            <BorderNumber>3</BorderNumber>
           </BorderNumberWrapper>
-          <TopTitleBox>특기사항</TopTitleBox>
+          <TopTitleBox>레미콘 소요량</TopTitleBox>
         </TopTitleWrapper>
-
         <InputItemWrapper>
-          <FieldName>특기사항 입력 (선택)</FieldName>
-          <InputStyle onChange={(e) => chkTextLength(e)} maxLength={500} />
-          <LengthCaption>{chkText}/500</LengthCaption>
+          <FieldName>레미콘 소요량 입력 (선택)</FieldName>
+          <BottomContentWrapper>
+            <ContentText>레미콘 소요량</ContentText>
+            <InputStyle
+              type="number"
+              onChange={(e) => {
+                setRequirement(e.target.value);
+              }}
+              placeholder="000"
+            />
+            <ContentRightText>m³</ContentRightText>
+          </BottomContentWrapper>
         </InputItemWrapper>
-
+        <Caption>• 레미콘사가 견적을 제출하는데 참고할 수 있습니다.</Caption>
         <BottomBtnWrapper>
           <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
-          <ActiveBtn onClick={() => nxtPageHandler()}>다음</ActiveBtn>
+          <ActiveBtn onClick={() => nxtStepHandler()}>다음</ActiveBtn>
         </BottomBtnWrapper>
       </Container>
     </SpaceLayout>
@@ -113,7 +121,7 @@ const FieldName = styled.div`
 
 const InputItemWrapper = styled.div`
   width: 540px;
-  height: 259px;
+  height: 134px;
 `;
 
 const BottomBtnWrapper = styled.div`
@@ -123,7 +131,7 @@ const BottomBtnWrapper = styled.div`
   width: 540px;
   height: 50px;
   flex-direction: row;
-  margin-top: 349px;
+  margin-top: 322px;
 `;
 
 const InActiveBtn = styled.div`
@@ -164,45 +172,94 @@ const ActiveBtn = styled.div`
 `;
 
 const BottomContentWrapper = styled.div`
-  width: 260px;
-  height: 42px;
+  width: 540px;
+  height: 100px;
+  margin: 10px 0 14px;
+  border: 1px solid #e3e3e3;
+  background-color: #fff;
+  border-radius: 6px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 `;
 
-const InputStyle = styled.textarea`
-  width: 540px;
-  height: 200px;
-  margin-bottom: 6px;
-  padding: 20px;
-  border-radius: 6px;
-  border: solid 1px #e3e3e3;
-  background-color: #fff;
-  resize: none;
+const ContentText = styled.div`
+  height: 26px;
+  margin: 37px 30px 37px 140px;
 
-  font-family: SourceHanSansKR;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500;
   font-stretch: normal;
   font-style: normal;
-  letter-spacing: -0.28px;
+  letter-spacing: -0.36px;
+  text-align: left;
+  color: #222;
+`;
+
+const ContentRightText = styled.div`
+  width: 24px;
+  height: 26px;
+  margin: 37px 0 37px 8px;
+
+  font-size: 18px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: -0.36px;
   text-align: left;
   color: #000;
+`;
+
+const InputStyle = styled.input`
+  width: 98px;
+  height: 50px;
+  padding: 5px 0;
+  border-radius: 6px;
+  border: solid 2px #4490f7;
+  background-color: #fff;
+
+  font-size: 28px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: -0.56px;
+  text-align: center;
 
   :focus {
     outline: none;
   }
+
+  ::placeholder {
+    font-size: 28px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: -0.56px;
+    color: #c7c7c7;
+    text-align: center;
+  }
+
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  :focus::placeholder {
+    color: transparent;
+  }
 `;
 
-const LengthCaption = styled.div`
-  font-family: SourceHanSansKR;
+const Caption = styled.div`
+  height: 19px;
+  margin-top: 14px;
+
   font-size: 13px;
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
   letter-spacing: -0.26px;
-  text-align: right;
+  text-align: center;
   color: #999;
+  text-align: left;
 `;

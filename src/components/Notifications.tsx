@@ -16,7 +16,7 @@ export default ({ data }: INotifications) => {
   return (
     <NotificationBox>
       {data.map((v, i) => (
-        <NotificationBar>
+        <NotificationBar key={i}>
           <Badge
             style={
               i === 0 ? { backgroundColor: '#ff7d00', color: 'white' } : {}

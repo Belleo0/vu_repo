@@ -50,10 +50,10 @@ export default () => {
   const navigate = useNavigate();
 
   const nxtPageHandler = () => {
-    navigate('/add-construction-field/5');
+    navigate('/add-construction-field/step-5');
   };
   const prvPageHandler = () => {
-    navigate('/add-construction-field/3');
+    navigate('/add-construction-field/step-3');
   };
 
   const paymentOptionHandler = (idx: number) => {
@@ -407,7 +407,6 @@ const InputStyle = styled.input`
   border: solid 1px #c7c7c7;
   background-color: #fff;
 
-  font-family: SourceHanSansKR;
   font-size: 14px;
   font-weight: normal;
   font-stretch: normal;
@@ -421,7 +420,6 @@ const InputStyle = styled.input`
   }
 
   ::placeholder {
-    font-family: SourceHanSansKR;
     font-size: 14px;
     font-weight: normal;
     font-stretch: normal;
@@ -450,7 +448,6 @@ const SelectWrapper = styled.select`
   background-color: #fff;
 
   :placeholder {
-    font-family: SourceHanSansKR;
     font-size: 14px;
     font-weight: normal;
     font-stretch: normal;
@@ -481,7 +478,6 @@ const DateSelectBorder = styled.div<{ type: OptionType }>`
   border-radius: 18px;
   padding: 9px 0;
 
-  font-family: SourceHanSansKR;
   font-size: 14px;
   font-weight: 500;
   font-stretch: normal;
@@ -499,7 +495,7 @@ const DateSelectBorder = styled.div<{ type: OptionType }>`
 const OptionTitle = styled.span`
   height: 19px;
   margin: 3px 0 12px 14px;
-  font-family: SourceHanSansKR;
+
   font-size: 13px;
   font-weight: normal;
   font-stretch: normal;
@@ -512,7 +508,7 @@ const OptionTitle = styled.span`
 const Caption = styled.div`
   height: 19px;
   margin-top: 14px;
-  font-family: SourceHanSansKR;
+
   font-size: 13px;
   font-weight: normal;
   font-stretch: normal;

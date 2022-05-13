@@ -1,6 +1,5 @@
 import api from '@api';
-import useSWR from 'swr';
-import { clearSelectedSpaceId, setSelectedSpaceId } from '@data/space';
+import { clearSelectedSpaceInfo, setSelectedSpaceInfo } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
@@ -34,6 +33,7 @@ import {
 } from '@dnd-kit/sortable';
 import FilterSelect from './FilterSelect';
 import useSpaces from '@api/useSpaces';
+import { useNavigate } from 'react-router-dom';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -43,6 +43,8 @@ enum TabTypeEnum {
 export default () => {
   // const [mount, setMount] = useState(false);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const [tabType, setTabType] = useState<TabTypeEnum>(TabTypeEnum.DEFAULT);
 
@@ -96,8 +98,6 @@ export default () => {
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
 
-    console.log(active, over);
-
     if (active.id !== over.id) {
       setChangeOrderSpaces((items) => {
         const oldIndex = items.indexOf(
@@ -117,8 +117,8 @@ export default () => {
 
   const setSelectedIdWithFirstId = () => {
     if (spaces && spaces?.length > 0) {
-      console.log('data?.result?.[0]?.id', spaces?.[0]?.id);
-      dispatch(setSelectedSpaceId(spaces?.[0]?.id));
+      // console.log('data?.result?.[0]?.id', spaces?.[0]?.id);
+      dispatch(setSelectedSpaceInfo(spaces?.[0]));
       setIsMounted(true);
     }
   };
@@ -137,7 +137,7 @@ export default () => {
 
   useEffect(() => {
     return () => {
-      dispatch(clearSelectedSpaceId());
+      dispatch(clearSelectedSpaceInfo());
     };
   }, []);
 
@@ -156,6 +156,7 @@ export default () => {
           type={ButtonType.PRIMARY}
           containerStyle={{ marginBottom: 30 }}
           icon="ic-plus-white"
+          onClick={() => navigate('/add-construction-field/step-1')}
         >
           건설현장 추가
         </Button>
@@ -195,6 +196,7 @@ export default () => {
         {searchedSpaces.map((v, i) => (
           <SpaceCard
             key={`space-${v.id}-${i}`}
+            info={v}
             id={v.id}
             name={v?.name}
             address={v?.basic_address}

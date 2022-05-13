@@ -14,11 +14,11 @@ export default () => {
   const step = 4;
 
   const nxtStepHandler = () => {
-    navigate('/add-construction-field/3');
+    navigate('/add-construction-field/step-3');
   };
 
   const prvPageHandler = () => {
-    navigate('/add-construction-field');
+    navigate('/add-construction-field/step-1');
   };
 
   // const slider = document.querySelector('.items');
@@ -302,7 +302,7 @@ const SliderCircleText = styled.div`
   width: 18px;
   height: 24px;
   margin-bottom: 2px;
-  font-family: SourceHanSansKR;
+
   font-size: 16px;
   font-weight: bold;
   font-stretch: normal;

@@ -1,6 +1,6 @@
 import { useSelector, shallowEqual } from 'react-redux';
 
 export default () => {
-  const { selectedSpaceId } = useSelector((s: any) => s.space, shallowEqual);
-  return selectedSpaceId;
+  const { selectedSpaceInfo } = useSelector((s: any) => s.space, shallowEqual);
+  return selectedSpaceInfo?.id;
 };
