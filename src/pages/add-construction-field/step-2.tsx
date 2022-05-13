@@ -302,7 +302,7 @@ const SliderCircleText = styled.div`
   width: 18px;
   height: 24px;
   margin-bottom: 2px;
-  font-family: SourceHanSansKR;
+
   font-size: 16px;
   font-weight: bold;
   font-stretch: normal;

@@ -141,6 +141,7 @@ const Address = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 16px;
 `;
 
 const InfoWrap = styled.div`

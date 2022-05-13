@@ -188,7 +188,7 @@ const BottomContentWrapper = styled.div`
 const ContentText = styled.div`
   height: 26px;
   margin: 37px 30px 37px 140px;
-  font-family: SourceHanSansKR;
+
   font-size: 18px;
   font-weight: 500;
   font-stretch: normal;
@@ -202,7 +202,7 @@ const ContentRightText = styled.div`
   width: 24px;
   height: 26px;
   margin: 37px 0 37px 8px;
-  font-family: SourceHanSansKR;
+
   font-size: 18px;
   font-weight: 500;
   font-stretch: normal;
@@ -220,7 +220,6 @@ const InputStyle = styled.input`
   border: solid 2px #4490f7;
   background-color: #fff;
 
-  font-family: SourceHanSansKR;
   font-size: 28px;
   font-weight: normal;
   font-stretch: normal;
@@ -233,7 +232,6 @@ const InputStyle = styled.input`
   }
 
   ::placeholder {
-    font-family: SourceHanSansKR;
     font-size: 28px;
     font-weight: normal;
     font-stretch: normal;
@@ -256,7 +254,7 @@ const InputStyle = styled.input`
 const Caption = styled.div`
   height: 19px;
   margin-top: 14px;
-  font-family: SourceHanSansKR;
+
   font-size: 13px;
   font-weight: normal;
   font-stretch: normal;

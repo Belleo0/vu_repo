@@ -98,8 +98,6 @@ export default () => {
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
 
-    console.log(active, over);
-
     if (active.id !== over.id) {
       setChangeOrderSpaces((items) => {
         const oldIndex = items.indexOf(
@@ -119,7 +117,7 @@ export default () => {
 
   const setSelectedIdWithFirstId = () => {
     if (spaces && spaces?.length > 0) {
-      console.log('data?.result?.[0]?.id', spaces?.[0]?.id);
+      // console.log('data?.result?.[0]?.id', spaces?.[0]?.id);
       dispatch(setSelectedSpaceInfo(spaces?.[0]));
       setIsMounted(true);
     }

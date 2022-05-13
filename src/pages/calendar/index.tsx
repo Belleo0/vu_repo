@@ -4,13 +4,13 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
 import SpaceLayout from '@layout/SpaceLayout';
+import {
+  CalendarTypeState,
+  generateWeekData,
+  generateWeekInfo,
+} from '@utils/calendar';
 import getAssetURL from '@utils/getAssetURL';
 import { useEffect, useMemo, useState } from 'react';
-
-export enum CalendarTypeState {
-  DAY,
-  WEEK,
-}
 
 const calendarTypeOptions = [
   { label: '일', value: CalendarTypeState.DAY },
@@ -48,55 +48,9 @@ export default () => {
   const [type, setType] = useState(CalendarTypeState.DAY);
   const [dates, setDates] = useState<any>([]);
 
-  const getWeekNumber = (date = new Date()) => {
-    const dateFrom = new Date(date);
-    const currentDate = dateFrom.getDate();
-    const startOfMonth = new Date(dateFrom.setDate(1));
-    const weekDay = startOfMonth.getDay();
-    return parseInt(((weekDay - 1 + currentDate) / 7) as unknown as string) + 1;
-  };
-
-  const getWeekCountOfMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-
-    const lastDate = new Date(year, month + 1, 0);
-
-    return getWeekNumber(lastDate);
-  };
-
-  const convertString = (v: any) => v.toString().padStart(2, '0');
-
   const weekInfo = useMemo(() => {
-    if (!dates || dates.length === 0) return null;
-
-    const year = dates[0].getFullYear();
-    const realMonth = dates[0].getMonth() + 1;
-    const day = dates[0].getDate();
-
-    if (type === CalendarTypeState.DAY) {
-      return `${year}년 ${convertString(realMonth)}월 ${convertString(day)}일`;
-    } else {
-      const realWeekNum = getWeekNumber(dates[0]);
-      const maxWeekNum = getWeekCountOfMonth(dates[0]);
-      console.log('maxWeekNum', dates[0], maxWeekNum);
-
-      const weekNum = realWeekNum === maxWeekNum ? 1 : realWeekNum;
-      const month = realWeekNum === maxWeekNum ? realMonth + 1 : realMonth;
-
-      return `${year}년 ${convertString(month)}월 ${weekNum}주차`;
-    }
-  }, [dates, type]);
-
-  const generateWeekData = (date: Date) => {
-    const day = date.getDay();
-
-    const week = new Array(7)
-      .fill(null)
-      .map((v, i) => new Date(date.valueOf() + 86400000 * (i - day)));
-    console.log(week);
-    return week;
-  };
+    return generateWeekInfo(type, dates);
+  }, [type, dates]);
 
   const handleToday = () => {
     if (type === CalendarTypeState.DAY) {

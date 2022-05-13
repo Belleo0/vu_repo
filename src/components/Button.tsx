@@ -2,8 +2,11 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import React, { CSSProperties, HTMLAttributes } from 'react';
-import ProfileBox from './ProfileBox';
-import SearchInput from './SearchInput';
+
+export enum ButtonSize {
+  PRIMARY,
+  SMALL,
+}
 
 export enum ButtonType {
   PRIMARY,
@@ -15,6 +18,7 @@ export enum ButtonType {
 }
 
 interface IButton {
+  size?: ButtonSize;
   type?: ButtonType;
   children: React.ReactNode;
   containerStyle?: CSSProperties;
@@ -27,7 +31,7 @@ const backgroundColors = {
   [ButtonType.OUTLINE_THICK]: '#ffffff',
   [ButtonType.GRAY]: '#f2f2f2',
   [ButtonType.GRAY_BLACK]: '#f2f2f2',
-  [ButtonType.BLACK]: '#000',
+  [ButtonType.BLACK]: '#ffffff',
 };
 
 const borderWidths = {
@@ -45,7 +49,7 @@ const borderColors = {
   [ButtonType.OUTLINE_THICK]: '#4490f7',
   [ButtonType.GRAY]: '#f2f2f2',
   [ButtonType.GRAY_BLACK]: '#f2f2f2',
-  [ButtonType.BLACK]: '#000',
+  [ButtonType.BLACK]: '#000000',
 };
 
 const textColors = {
@@ -54,10 +58,11 @@ const textColors = {
   [ButtonType.OUTLINE_THICK]: '#258fff',
   [ButtonType.GRAY]: '#999999',
   [ButtonType.GRAY_BLACK]: '#000000',
-  [ButtonType.BLACK]: '#fff',
+  [ButtonType.BLACK]: '#000000',
 };
 
 export default ({
+  size = ButtonSize.PRIMARY,
   type = ButtonType.PRIMARY,
   children,
   containerStyle,
@@ -65,23 +70,22 @@ export default ({
   ...props
 }: IButton & HTMLAttributes<HTMLDivElement>) => {
   return (
-    <Container type={type} style={containerStyle} {...props}>
-      {icon && <Icon src={getAssetURL(`../assets/${icon}.svg`)} />}
+    <Container size={size} type={type} style={containerStyle} {...props}>
+      {icon && <Icon size={size} src={getAssetURL(`../assets/${icon}.svg`)} />}
       {children}
     </Container>
   );
 };
 
-const Container = styled.div<{ type: ButtonType }>`
+const Container = styled.div<{ size: ButtonSize; type: ButtonType }>`
   display: flex;
   justify-content: center;
+  align-items: center;
 
   width: 100%;
-  padding: 16px;
 
   border-radius: 6px;
 
-  font-size: 16px;
   font-weight: 500;
 
   cursor: pointer;
@@ -93,10 +97,30 @@ const Container = styled.div<{ type: ButtonType }>`
     color: ${textColors[type]};
     border: ${borderWidths[type]}px solid ${borderColors[type]};
   `}
+
+  ${({ size }) =>
+    size === ButtonSize.PRIMARY
+      ? css`
+          padding: 16px;
+          font-size: 16px;
+        `
+      : css`
+          padding: 11px 16px;
+          font-size: 14px;
+        `}
 `;
 
-const Icon = styled.img`
-  width: 14px;
-  height: 14px;
-  margin-right: 8px;
+const Icon = styled.img<{ size: ButtonSize }>`
+  ${({ size }) =>
+    size === ButtonSize.PRIMARY
+      ? css`
+          width: 14px;
+          height: 14px;
+          margin-right: 8px;
+        `
+      : css`
+          width: 20px;
+          height: 20px;
+          margin-right: 4px;
+        `}
 `;
