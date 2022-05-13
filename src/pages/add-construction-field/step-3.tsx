@@ -80,7 +80,6 @@ const BorderNumberWrapper = styled.div`
 `;
 
 const BorderNumber = styled.div`
-  width: 9px;
   height: 24px;
   font-family: Noto Sans KR;
   font-size: 16px;
@@ -88,7 +87,7 @@ const BorderNumber = styled.div`
   font-stretch: normal;
   font-style: normal;
   color: #258fff;
-  line-height: 1.4;
+  line-height: 1.5;
 `;
 
 const TopTitleBox = styled.div`

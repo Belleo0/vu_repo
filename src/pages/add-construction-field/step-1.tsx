@@ -122,7 +122,7 @@ const BorderNumber = styled.div`
   font-stretch: normal;
   font-style: normal;
   color: #258fff;
-  line-height: 1.4;
+  line-height: 1.5;
 `;
 
 const TopTitleBox = styled.div`
