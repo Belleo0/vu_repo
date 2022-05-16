@@ -4,11 +4,8 @@ import api from '@api';
 import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
 import Input from '@components/Input';
-import { useNavigate } from 'react-router-dom';
-import getAssetURL from '@utils/getAssetURL';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
-import data from '@data';
-import { values } from 'lodash';
 
 enum ButtonType {
   'ABLE',
@@ -47,9 +44,17 @@ const cursor = {
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const nxtStepHandler = () => {
-    navigate('/sign-up/3');
+    navigate('/sign-up/3', {
+      state: {
+        signname: email,
+        password: password,
+        name: name,
+        phone: phone,
+      },
+    });
   };
 
   const companyName: string = '동양건설';

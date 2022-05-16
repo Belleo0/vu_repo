@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 
 export default () => {
@@ -10,8 +10,15 @@ export default () => {
 
   const navigate = useNavigate();
 
+  const location = useLocation();
+
   const nxtStepHandler = () => {
-    navigate('/add-construction-field/step-4');
+    navigate('/add-construction-field/step-4', {
+      state: {
+        ...location.state,
+        requirement: requirement,
+      },
+    });
   };
 
   const prvPageHandler = () => {

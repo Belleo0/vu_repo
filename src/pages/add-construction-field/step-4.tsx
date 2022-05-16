@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import Input from '@components/Input';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
 
@@ -43,19 +43,31 @@ const textColors = {
 
 export default () => {
   const [step, setStep] = useState<number>(0);
+  const location = useLocation();
 
   const [maturity, setMaturity] = useState<string>();
   const [maturityInput, setMaturityInput] = useState<string>();
   const [paymentDate, setPaymentDate] = useState<string>();
   const [paymentDateInput, setPaymentDateInput] = useState<string>();
+  const [paymentType, setPaymentType] = useState<string>('CASH');
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const nxtPageHandler = () => {
-    navigate('/add-construction-field/step-5');
+    navigate('/add-construction-field/step-5', {
+      state: {
+        ...location.state,
+        maturity: maturity,
+        maturityInput: maturityInput,
+        paymentDate: paymentDate,
+        paymentDateInput: paymentDateInput,
+        paymentType: paymentType,
+      },
+    });
   };
+
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-3');
   };
@@ -69,23 +81,18 @@ export default () => {
       setIsValid(false);
       setStep(2);
     }
-    console.log(step, ' || ', isValid);
   };
 
   const dateOptionHandler = (v: string) => {
-    console.log('dateOptionHandler => ', v);
     setMaturity(v);
   };
   const dateInputHandler = (v: string) => {
-    console.log('dateInputHandler => ', v);
     setMaturityInput(v);
   };
   const paymentDateOptionHandler = (v: string) => {
-    console.log('dateInputHandler => ', v);
     setPaymentDate(v);
   };
   const paymentDateInputHandler = (v: string) => {
-    console.log('paymentDateInputHandler => ', v);
     setPaymentDateInput(v);
   };
 
@@ -248,7 +255,8 @@ export default () => {
 
         <BottomBtnWrapper>
           <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
-          {isValid ? (
+          {isValid ||
+          (maturity && maturityInput && paymentDateInput && paymentDate) ? (
             <ActiveBtn onClick={() => nxtPageHandler()}>다음</ActiveBtn>
           ) : (
             <InActiveBtn>다음</InActiveBtn>

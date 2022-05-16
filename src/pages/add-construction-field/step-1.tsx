@@ -13,7 +13,13 @@ export default () => {
   const navigate = useNavigate();
 
   const nxtStepHandler = () => {
-    navigate('/add-construction-field/step-2');
+    navigate('/add-construction-field/step-2', {
+      state: {
+        fieldNm: fieldNm,
+        fieldAddr: fieldAddr,
+        secFieldAddr: secFieldAddr,
+      },
+    });
   };
 
   const step = fieldNm && fieldAddr && secFieldAddr ? true : false;

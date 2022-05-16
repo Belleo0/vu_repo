@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
-import Input from '@components/Input';
 import { useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';

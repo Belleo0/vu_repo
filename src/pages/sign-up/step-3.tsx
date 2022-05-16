@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
 import Input from '@components/Input';
 import SearchInput from '@components/SearchInput';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
 
@@ -40,6 +40,7 @@ const cursor = {
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const userInviteType: boolean = false;
   const companyName: string = '동양건설';
@@ -47,14 +48,14 @@ export default () => {
 
   const requestSignUpHandler = async () => {
     const data = await api.post('/auth/register', {
-      signname: 'string',
-      password: 'string',
-      name: 'string',
-      phone: 'string',
-      company_id: 0,
-      position: 'string',
-      tel: 'string',
+      signname: location.state?.email,
+      password: location.state?.password,
+      name: location.state?.name,
+      phone: location.state?.phone,
+      position: input.rank,
+      tel: input.inPhone,
     });
+    console.log('requestSignUpHandler => ', data);
   };
 
   const [input, setInput] = useState<any>({
