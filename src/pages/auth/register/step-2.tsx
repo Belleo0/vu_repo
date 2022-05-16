@@ -57,7 +57,7 @@ export default () => {
     });
   };
 
-  const companyName: string = '동양건설';
+  const companyName: string = '';
 
   const validItem = {
     chkEmail:
@@ -220,7 +220,7 @@ export default () => {
     <AuthLayout>
       <Container>
         <MainTitle>
-          {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
+          {companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
         </MainTitle>
         <TermsWrapper>
           <ProgressBar>
