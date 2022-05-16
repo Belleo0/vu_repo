@@ -11,16 +11,13 @@ import React, {
 } from 'react';
 
 export default ({
-  label,
   containerStyle,
   value = '',
   onChange,
-  errorMessage,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   label?: React.ReactNode;
   containerStyle?: CSSProperties;
-  errorMessage?: string;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -31,10 +28,15 @@ export default ({
     onChange && onChange(ev); // optional로 인한 코드
   };
 
+  useEffect(() => {
+    if (value !== inputValue) {
+      setInputValue(value);
+    }
+  }, [value]);
+
   return (
     <RealContainer style={containerStyle}>
-      {label && <Label>{label}</Label>}
-      <Container isFocus={isFocused}>
+      <Container isFocus={isFocused || inputValue !== ''}>
         <Input
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -42,16 +44,7 @@ export default ({
           onChange={changeHandler}
           {...props}
         />
-        {inputValue !== '' && (
-          <XIcon
-            src={getAssetURL('../assets/ic-circle-x.svg')}
-            onClick={() => {
-              changeHandler({ target: { value: '' } } as any);
-            }}
-          />
-        )}
       </Container>
-      <ErrorMessage>{errorMessage || 'ㅤ'}</ErrorMessage>
     </RealContainer>
   );
 };
@@ -59,7 +52,6 @@ export default ({
 const RealContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
 `;
 
 const Container = styled.div<{ isFocus: boolean }>`
@@ -74,20 +66,18 @@ const Container = styled.div<{ isFocus: boolean }>`
           border: solid 1px #777;
         `
       : css`
-          border: solid 1px #c7c7c7;
+          border: solid 1px #e3e3e3;
         `}
-
-  margin-bottom: 8px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 11px 14px;
+  padding: 8px 10px;
   background: none;
   border: 0;
   outline: 0;
   &::placeholder {
-    color: #999999;
+    color: #c7c7c7;
     font-size: 14px;
     letter-spacing: -0.28px;
   }
