@@ -12,6 +12,7 @@ import Button, { ButtonSize, ButtonType } from './Button';
 import OrderChatCompanyCard from './OrderChatCompanyCard';
 import OrderChatMessage from './OrderChatMessage';
 import SearchInput from './SearchInput';
+import OrderAssignmentModal from './OrderAssignmentModal';
 
 export default () => {
   const [mount, setMount] = useState(false);
@@ -268,6 +269,7 @@ export default () => {
           </>
         )}
       </MainContainer>
+      <OrderAssignmentModal />
     </Container>
   );
 };
