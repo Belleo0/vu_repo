@@ -1,17 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
-import Input from '@components/Input';
-import { useNavigate } from 'react-router-dom';
-import getAssetURL from '@utils/getAssetURL';
+import { useLocation, useNavigate } from 'react-router-dom';
+import api from '@api';
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [chkText, setChkText] = useState<any>(0);
+  const [remarks, setRemarks] = useState<string>('');
 
-  const nxtPageHandler = () => {
-    navigate('/add-construction-field/step-5');
+  const requestSignUp = () => {
+    console.log(location.state);
+
+    api
+      .post('/field-spaces', {
+        name: location.state?.fieldNm,
+        basic_address: location.state?.fieldAddr,
+        detail_address: location.state?.secFieldAddr,
+        field_info: {
+          start_at: location.state?.constructionStartDate,
+          end_at: location.state?.constructionEndDate,
+          payment_method: location.state?.paymentType,
+          payment_expire_date: location.state?.maturity,
+          payment_due_date: location.state?.paymentDate,
+          need_amount: location.state?.need_amount,
+          remarks: remarks,
+        },
+      })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
   };
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-4');
@@ -19,8 +38,9 @@ export default () => {
 
   const chkTextLength = (e: any) => {
     const length = e.target.value.length;
+    const txt = e.target.value;
+    setRemarks(txt);
     setChkText(length);
-    console.log(length, ' || ', chkText);
   };
 
   return (
@@ -41,7 +61,7 @@ export default () => {
 
         <BottomBtnWrapper>
           <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
-          <ActiveBtn onClick={() => nxtPageHandler()}>다음</ActiveBtn>
+          <ActiveBtn onClick={() => requestSignUp()}>완료</ActiveBtn>
         </BottomBtnWrapper>
       </Container>
     </SpaceLayout>
@@ -72,7 +92,6 @@ const BorderNumberWrapper = styled.div`
 `;
 
 const BorderNumber = styled.div`
-  width: 9px;
   height: 24px;
   font-family: Noto Sans KR;
   font-size: 16px;
@@ -80,7 +99,7 @@ const BorderNumber = styled.div`
   font-stretch: normal;
   font-style: normal;
   color: #258fff;
-  line-height: 1.4;
+  line-height: 1.5;
 `;
 
 const TopTitleBox = styled.div`

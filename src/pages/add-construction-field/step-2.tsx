@@ -3,54 +3,33 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import Input from '@components/Input';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 
 export default () => {
+  const location = useLocation();
+
   const [constructionStartDate, setContructionStartDate] = useState<string>('');
   const [constructionEndDate, setContructionEndDate] = useState<string>('');
 
   const navigate = useNavigate();
-  const step = 4;
+  const step = constructionStartDate && constructionEndDate ? true : false;
 
   const nxtStepHandler = () => {
-    navigate('/add-construction-field/step-3');
+    navigate('/add-construction-field/step-3', {
+      state: {
+        ...location.state,
+        constructionStartDate: constructionStartDate,
+        constructionEndDate: constructionEndDate,
+      },
+    });
   };
+
+  console.log('step-2 navigate State => ', location.state);
 
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-1');
   };
-
-  // const slider = document.querySelector('.items');
-  // let isMouseDown = false;
-  // let startX: number, scrollLeft: number;
-
-  // slider?.addEventListener('mousedown', (e)=> {
-  //   isMouseDown = true;
-  //   slider.classList.add('active');
-
-  //   startX = e.pageX - slider.offsetLeft;
-  //   scrollLeft = slider.scrollLeft;
-  // });
-
-  // slider?.addEventListener('mouseleave', ()=>{
-  //   isMouseDown = false;
-  //   slider.classList.remove('active');
-  // })
-
-  // slider?.addEventListener('mouseup', ()=>{
-  //   isMouseDown = false;
-  //   slider.classList.remove('active')
-  // })
-
-  // slider?.addEventListener('mousemove', (e)=>{
-  //   if(!isMouseDown) return;
-
-  //   e.preventDefault();
-  //   const x = e.pageX - slider.offsetLeft;
-  //   const walk = (x-startX) * 1;
-  //   slider.scrollLeft = scrollLeft - walk;
-  // });
 
   return (
     <SpaceLayout>
@@ -110,7 +89,7 @@ export default () => {
 
         <BottomBtnWrapper>
           <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
-          {step === 4 ? (
+          {step ? (
             <ActiveBtn onClick={() => nxtStepHandler()}>다음</ActiveBtn>
           ) : (
             <InActiveBtn>다음</InActiveBtn>
@@ -152,7 +131,7 @@ const BorderNumber = styled.div`
   font-stretch: normal;
   font-style: normal;
   color: #258fff;
-  line-height: 1.4;
+  line-height: 1.5;
 `;
 
 const TopTitleBox = styled.div`

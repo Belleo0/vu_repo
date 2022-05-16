@@ -1,1 +1,1 @@
-export default (path: string) => path;
+export default (path: string) => `../../../../${path}`;

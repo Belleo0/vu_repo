@@ -2,27 +2,28 @@ import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
-import Input from '@components/Input';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 
 export default () => {
   const [requirement, setRequirement] = useState<string>();
 
   const navigate = useNavigate();
-  const step = 4;
+
+  const location = useLocation();
 
   const nxtStepHandler = () => {
-    navigate('/add-construction-field/step-4');
+    navigate('/add-construction-field/step-4', {
+      state: {
+        ...location.state,
+        requirement: requirement,
+      },
+    });
   };
 
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-2');
   };
-
-  // useEffect(() => {
-  //   console.log('requirement => ', requirement);
-  // }, [requirement]);
 
   return (
     <SpaceLayout>
@@ -43,6 +44,7 @@ export default () => {
                 setRequirement(e.target.value);
               }}
               placeholder="000"
+              value={requirement}
             />
             <ContentRightText>m³</ContentRightText>
           </BottomContentWrapper>
@@ -81,7 +83,6 @@ const BorderNumberWrapper = styled.div`
 `;
 
 const BorderNumber = styled.div`
-  width: 9px;
   height: 24px;
   font-family: Noto Sans KR;
   font-size: 16px;
@@ -89,7 +90,7 @@ const BorderNumber = styled.div`
   font-stretch: normal;
   font-style: normal;
   color: #258fff;
-  line-height: 1.4;
+  line-height: 1.5;
 `;
 
 const TopTitleBox = styled.div`
