@@ -58,7 +58,7 @@ export default () => {
   const nxtPageHandler = () => {
     navigate('/add-construction-field/step-5', {
       state: {
-        ...location.state,
+        ...(location.state as any),
         maturity: maturity,
         maturityInput: maturityInput,
         paymentDate: paymentDate,

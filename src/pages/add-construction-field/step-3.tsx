@@ -15,7 +15,7 @@ export default () => {
   const nxtStepHandler = () => {
     navigate('/add-construction-field/step-4', {
       state: {
-        ...location.state,
+        ...(location.state as any as any),
         requirement: requirement,
       },
     });

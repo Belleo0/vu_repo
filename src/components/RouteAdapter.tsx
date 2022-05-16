@@ -23,10 +23,10 @@ export const RouteAdapter: React.FunctionComponent<{
   const adaptedHistory = React.useMemo(
     () => ({
       replace(location: Location) {
-        navigate(location, { replace: true, state: location.state });
+        navigate(location, { replace: true, state: location.state as any });
       },
       push(location: Location) {
-        navigate(location, { replace: false, state: location.state });
+        navigate(location, { replace: false, state: location.state as any });
       },
     }),
     [navigate],

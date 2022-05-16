@@ -18,14 +18,14 @@ export default () => {
   const nxtStepHandler = () => {
     navigate('/add-construction-field/step-3', {
       state: {
-        ...location.state,
+        ...(location.state as any as any),
         constructionStartDate: constructionStartDate,
         constructionEndDate: constructionEndDate,
       },
     });
   };
 
-  console.log('step-2 navigate State => ', location.state);
+  console.log('step-2 navigate State => ', location.state as any);
 
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-1');
