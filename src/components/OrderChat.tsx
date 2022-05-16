@@ -53,6 +53,8 @@ export default () => {
     if (spaces.length > 0) {
       const data = spaces?.[0];
       setSelectedChatRoomInfo(data);
+    } else {
+      setSelectedChatRoomInfo(null);
     }
   }, [spaces]);
 
@@ -192,7 +194,7 @@ export default () => {
         </CompanyCardWrap>
       </SideContainer>
       <MainContainer>
-        {!isChatLoading && (
+        {!isChatLoading && chatRoomId !== null && (
           <>
             <TopSection>
               <TopSectionTitle>

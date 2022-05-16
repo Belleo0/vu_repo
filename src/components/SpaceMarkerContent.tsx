@@ -11,6 +11,7 @@ interface IMarkerContent {
   address: string;
   distance: number;
   duration: number;
+  onClick: () => any;
   onInfo: () => any;
   onChangePath: () => any;
   selected: boolean;
@@ -24,6 +25,7 @@ export default ({
   distance,
   duration,
   selected,
+  onClick,
   onInfo,
   onChangePath,
   hideWithoutName,
@@ -64,7 +66,9 @@ export default ({
       <ContentsWrap
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        onClick={() => setIsModalOpened(true)}
+        onClick={
+          hideWithoutName === false ? () => setIsModalOpened(true) : onClick
+        }
       >
         {hideWithoutName && (
           <Index selected={isSelected}>
@@ -85,12 +89,18 @@ export default ({
             <OnlyPlaceName>{name}</OnlyPlaceName>
           </OnlyNameWrap>
         )}
+        {isSelected && (
+          <SearchIconWrap
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsModalOpened(true);
+            }}
+          >
+            <SearchIcon src={getAssetURL('../assets/ic-search-on.svg')} />
+          </SearchIconWrap>
+        )}
       </ContentsWrap>
-      {isSelected && (
-        <SearchIconWrap>
-          <SearchIcon src={getAssetURL('../assets/ic-search-on.svg')} />
-        </SearchIconWrap>
-      )}
+
       {isModalOpened && (
         <HoveredWrap>
           <HoveredModal>

@@ -1,4 +1,10 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import SpaceMapLayout from '@layout/SpaceMapLayout';
 import NaverMap from '@components/NaverMap';
 import NaverMapSpaceMarker from '@components/NaverMapSpaceMarker';
@@ -19,6 +25,7 @@ import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 
 import { debounce } from 'lodash';
 import { usePrevious } from '@hooks/usePrevious';
+import Loading from '@components/Loading';
 
 export default () => {
   const dispatch = useDispatch();
@@ -41,7 +48,7 @@ export default () => {
 
   const [bounds, setBounds] = useState<any>(null);
 
-  const { data: factoriesData } = useFactoryMaps(
+  const { data: factoriesData, isLoading } = useFactoryMaps(
     selectedFieldId,
     duration,
     bounds,
@@ -62,6 +69,27 @@ export default () => {
 
   const delayedUpdateCall = useRef(debounce((q) => setBounds(q), 1000)).current;
 
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+
+  const handleClickFactoryCard = useCallback(
+    (id: number) => {
+      setSelectedFactoryIds((prev: number[]) => {
+        if (prev.includes(id)) {
+          const result = prev.filter((v) => v !== id);
+          return result;
+        } else {
+          const result = prev.concat(id);
+          return result;
+        }
+      });
+    },
+    [selectedFactoryIds],
+  );
+
+  useEffect(() => {
+    console.log('changed selectedFactoryIds', selectedFactoryIds);
+  }, [selectedFactoryIds]);
+
   return (
     <SpaceMapLayout>
       <SpaceMapSidebar
@@ -73,9 +101,9 @@ export default () => {
         selectedFieldInfo={selectedFieldInfo}
         setSelectedFieldInfo={setSelectedFieldInfo}
         selectedFactoryIds={selectedFactoryIds}
-        setSelectedFactoryIds={setSelectedFactoryIds}
         selectedFieldId={selectedFieldId}
         setSelectedSpaceInfo={setSelectedSpaceInfo}
+        handleClickFactoryCard={handleClickFactoryCard}
       />
       <ContentWrap>
         <Content>
@@ -135,8 +163,16 @@ export default () => {
                       address={v?.basic_address}
                       distance={v?.direction?.distance}
                       duration={v?.direction?.duration}
+                      onClick={() => {
+                        console.log('ddd');
+                        handleClickFactoryCard(v.id);
+                      }}
                       onInfo={() => {
+                        setIsInfoModalOpen(false);
                         setSelectedSpaceInfo(v);
+                        setTimeout(() => {
+                          setIsInfoModalOpen(true);
+                        }, 250);
                       }}
                       onChangePath={() => {
                         dispatch(setPolylineInfo(v?.direction));
@@ -152,8 +188,9 @@ export default () => {
               ))}
           </NaverMap>
           <MapSpaceInfoModal
+            open={isInfoModalOpen}
+            onClose={() => setIsInfoModalOpen(false)}
             data={selectedSpaceInfo}
-            setSelectedSpaceInfo={setSelectedSpaceInfo}
           />
         </Content>
         <Footer />

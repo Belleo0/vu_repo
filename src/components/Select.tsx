@@ -48,6 +48,7 @@ export default ({ width, options, value, onChange }: ISelect) => {
         </AbsoluteValueContainer>
         {options.map((v) => (
           <OptionText
+            key={v.value as string}
             active={value === v.value}
             onClick={() => onChange(v.value)}
           >

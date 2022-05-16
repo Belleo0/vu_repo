@@ -117,7 +117,7 @@ export default () => {
         <CalendarContainer type={type}>
           <TimeContainer type={type}>
             {hours.map((v) => (
-              <TimeWrap>
+              <TimeWrap key={v}>
                 <TimeText>
                   {v >= 12 ? '오후' : '오전'} {v > 12 ? v - 12 : v}시
                 </TimeText>

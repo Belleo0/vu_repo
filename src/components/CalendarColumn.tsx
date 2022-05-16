@@ -70,8 +70,6 @@ export default ({ date, data, type }: any) => {
       };
     });
 
-    console.log(tempData);
-
     let beforeLeft = 0;
 
     return tempData.map((v: any, i: number) => {
@@ -116,6 +114,7 @@ export default ({ date, data, type }: any) => {
         {transformedData.map((v: any, i: number) =>
           type === CalendarTypeState.WEEK ? (
             <Bar
+              key={i}
               type={type}
               top={v.top}
               left={v.left + defaultLeftMargin}
@@ -130,6 +129,7 @@ export default ({ date, data, type }: any) => {
             </Bar>
           ) : (
             <Bar
+              key={i}
               type={type}
               top={v.top}
               left={v.left + defaultLeftMargin}
@@ -155,7 +155,7 @@ const Container = styled.div`
     border-right: 1px solid #e3e3e3;
   }
 
-  &:first-child {
+  &:first-of-type {
     .calendar-top-text {
       color: #ff5517;
     }
