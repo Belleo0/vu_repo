@@ -37,7 +37,7 @@ export default () => {
   const companyName: string = '동양건설';
 
   const nxtStepHandler = () => {
-    isValid ? navigate('/sign-up/2') : null;
+    isValid ? navigate('/auth/register/step-2') : null;
   };
 
   const [chk, setChk] = useState<any>({
@@ -262,11 +262,15 @@ const Test = styled.input`
 `;
 
 const Container = styled.div`
-  width: 1920px;
+  width: 100%;
   height: 100%;
-  padding: 150px 740px 158px 740px;
 
-  user-select: none;
+  min-height: calc(100vh - 80px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const MainTitle = styled.div`
