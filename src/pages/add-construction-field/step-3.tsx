@@ -9,7 +9,6 @@ export default () => {
   const [requirement, setRequirement] = useState<string>();
 
   const navigate = useNavigate();
-  const step = 4;
 
   const nxtStepHandler = () => {
     navigate('/add-construction-field/step-4');
@@ -18,10 +17,6 @@ export default () => {
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-2');
   };
-
-  // useEffect(() => {
-  //   console.log('requirement => ', requirement);
-  // }, [requirement]);
 
   return (
     <SpaceLayout>
@@ -42,6 +37,7 @@ export default () => {
                 setRequirement(e.target.value);
               }}
               placeholder="000"
+              value={requirement}
             />
             <ContentRightText>m³</ContentRightText>
           </BottomContentWrapper>

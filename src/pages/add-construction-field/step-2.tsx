@@ -11,7 +11,7 @@ export default () => {
   const [constructionEndDate, setContructionEndDate] = useState<string>('');
 
   const navigate = useNavigate();
-  const step = 4;
+  const step = constructionStartDate && constructionEndDate ? true : false;
 
   const nxtStepHandler = () => {
     navigate('/add-construction-field/step-3');
@@ -110,7 +110,7 @@ export default () => {
 
         <BottomBtnWrapper>
           <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
-          {step === 4 ? (
+          {step ? (
             <ActiveBtn onClick={() => nxtStepHandler()}>다음</ActiveBtn>
           ) : (
             <InActiveBtn>다음</InActiveBtn>

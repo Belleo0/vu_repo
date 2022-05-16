@@ -43,8 +43,12 @@ const textColors = {
 
 export default () => {
   const [step, setStep] = useState<number>(0);
+
   const [maturity, setMaturity] = useState<string>();
+  const [maturityInput, setMaturityInput] = useState<string>();
   const [paymentDate, setPaymentDate] = useState<string>();
+  const [paymentDateInput, setPaymentDateInput] = useState<string>();
+
   const [isValid, setIsValid] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -68,16 +72,21 @@ export default () => {
     console.log(step, ' || ', isValid);
   };
 
-  const dateOptionHandler = (name: string) => {
-    console.log(name);
-    setMaturity(name);
-    console.log(maturity);
+  const dateOptionHandler = (v: string) => {
+    console.log('dateOptionHandler => ', v);
+    setMaturity(v);
   };
-
-  const paymentDateOptionHandler = (name: string) => {
-    console.log(name);
-    setPaymentDate(name);
-    console.log(paymentDate);
+  const dateInputHandler = (v: string) => {
+    console.log('dateInputHandler => ', v);
+    setMaturityInput(v);
+  };
+  const paymentDateOptionHandler = (v: string) => {
+    console.log('dateInputHandler => ', v);
+    setPaymentDate(v);
+  };
+  const paymentDateInputHandler = (v: string) => {
+    console.log('paymentDateInputHandler => ', v);
+    setPaymentDateInput(v);
   };
 
   return (
@@ -173,7 +182,8 @@ export default () => {
                 </OptionWrapper>
                 <InputStyle
                   placeholder="숫자만 입력해 주세요"
-                  type={'number'}
+                  value={maturityInput}
+                  onChange={(e) => dateInputHandler(e.target.value)}
                 />
               </InputItemWrapper>
 
@@ -222,7 +232,8 @@ export default () => {
                 </OptionWrapper>
                 <InputStyle
                   placeholder="숫자만 입력해 주세요"
-                  type={'number'}
+                  value={paymentDateInput}
+                  onChange={(e) => paymentDateInputHandler(e.target.value)}
                 />
               </InputItemWrapper>
               <Caption>

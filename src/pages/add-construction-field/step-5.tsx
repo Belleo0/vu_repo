@@ -9,6 +9,7 @@ import getAssetURL from '@utils/getAssetURL';
 export default () => {
   const navigate = useNavigate();
   const [chkText, setChkText] = useState<any>(0);
+  const [input, setInput] = useState<string>('');
 
   const nxtPageHandler = () => {
     navigate('/add-construction-field/step-5');
@@ -19,9 +20,14 @@ export default () => {
 
   const chkTextLength = (e: any) => {
     const length = e.target.value.length;
+    const txt = e.target.value;
+    setInput(txt);
     setChkText(length);
-    console.log(length, ' || ', chkText);
   };
+
+  useEffect(() => {
+    console.log(input);
+  }, [input]);
 
   return (
     <SpaceLayout>
