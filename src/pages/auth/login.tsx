@@ -6,13 +6,15 @@ import Button, { ButtonType } from '@components/Button';
 import api, { setToken } from '@api';
 import { useDispatch } from 'react-redux';
 import { clearPrincipal, me } from '@data/auth';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TextModal from '@components/TextModal';
 
 export default () => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  const location = useLocation();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -38,7 +40,7 @@ export default () => {
       });
       setToken(data);
       await dispatch(me());
-      await navigate('/my-field');
+      await navigate((location?.state as any)?.redirect_to || '/my-field');
     } catch (err) {
       console.log(err);
       setIsErrorModalOpen(true);
@@ -85,11 +87,17 @@ export default () => {
             로그인
           </Button>
           <TextButtonWrap>
-            <TextButton>이메일 찾기</TextButton>
+            <TextButton onClick={() => window.alert('TODO : 라우팅 예정')}>
+              이메일 찾기
+            </TextButton>
             <TextButtonDivider />
-            <TextButton>비밀번호 찾기</TextButton>
+            <TextButton onClick={() => window.alert('TODO : 라우팅 예정')}>
+              비밀번호 찾기
+            </TextButton>
             <TextButtonDivider />
-            <TextButton>회원가입</TextButton>
+            <TextButton onClick={() => navigate('/auth/register/step-1')}>
+              회원가입
+            </TextButton>
           </TextButtonWrap>
         </Box>
       </Container>
@@ -135,12 +143,15 @@ const TextButtonWrap = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+  user-select: none;
 `;
 
 const TextButton = styled.span`
   font-size: 14px;
   letter-spacing: -0.28px;
   color: #444;
+  cursor: pointer;
+  user-select: none;
 `;
 
 const TextButtonDivider = styled.span`

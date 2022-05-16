@@ -1,9 +1,12 @@
 import styled from '@emotion/styled';
+import getAssetURL from '@utils/getAssetURL';
 
 export default () => {
   return (
     <Container>
-      <Logo />
+      <Logo>
+        <img src={getAssetURL('../assets/logo-grey.svg')} />
+      </Logo>
       <InfoContainer>
         <MenuWrap>
           <Menu>개인정보처리방침</Menu>
@@ -33,16 +36,23 @@ export default () => {
 
 const Container = styled.div`
   display: flex;
+  justify-content: center;
   width: 100%;
   padding: 50px 60px;
   background-color: #f2f2f2;
 `;
 
 const Logo = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 300px;
   height: 186px;
   margin: 0 40px 0 0;
-  background-color: #e5e5e5;
+
+  & > img {
+    width: 208px;
+  }
 `;
 
 const InfoContainer = styled.div`

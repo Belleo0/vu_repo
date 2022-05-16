@@ -26,7 +26,7 @@ export default () => {
 
   return (
     <Container>
-      <LogoWrap>
+      <LogoWrap onClick={() => navigate('/')}>
         <img src={getAssetURL('../assets/logo.svg')} />
       </LogoWrap>
       <ContentContainer>
@@ -83,13 +83,15 @@ const Container = styled.div`
   background-color: white;
   border-bottom: 1px solid #f2f2f2;
   max-height: 80px;
+  height: 80px;
 `;
 
 const LogoWrap = styled.div`
   display: block;
-  width: 350px;
+  width: 120px;
   margin-top: 4px;
-  margin-right: 120px;
+  margin-right: 350px;
+  cursor: pointer;
 `;
 
 const ContentContainer = styled.div`
