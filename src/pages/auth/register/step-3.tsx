@@ -48,10 +48,10 @@ export default () => {
 
   const requestSignUpHandler = async () => {
     const data = await api.post('/auth/register', {
-      signname: location.state?.email,
-      password: location.state?.password,
-      name: location.state?.name,
-      phone: location.state?.phone,
+      signname: (location.state as any)?.email,
+      password: (location.state as any)?.password,
+      name: (location.state as any)?.name,
+      phone: (location.state as any)?.phone,
       position: input.rank,
       tel: input.inPhone,
     });

@@ -12,20 +12,20 @@ export default () => {
   const [remarks, setRemarks] = useState<string>('');
 
   const requestSignUp = () => {
-    console.log(location.state);
+    console.log(location.state as any);
 
     api
       .post('/field-spaces', {
-        name: location.state?.fieldNm,
-        basic_address: location.state?.fieldAddr,
-        detail_address: location.state?.secFieldAddr,
+        name: (location.state as any)?.fieldNm,
+        basic_address: (location.state as any)?.fieldAddr,
+        detail_address: (location.state as any)?.secFieldAddr,
         field_info: {
-          start_at: location.state?.constructionStartDate,
-          end_at: location.state?.constructionEndDate,
-          payment_method: location.state?.paymentType,
-          payment_expire_date: location.state?.maturity,
-          payment_due_date: location.state?.paymentDate,
-          need_amount: location.state?.need_amount,
+          start_at: (location.state as any)?.constructionStartDate,
+          end_at: (location.state as any)?.constructionEndDate,
+          payment_method: (location.state as any)?.paymentType,
+          payment_expire_date: (location.state as any)?.maturity,
+          payment_due_date: (location.state as any)?.paymentDate,
+          need_amount: (location.state as any)?.need_amount,
           remarks: remarks,
         },
       })
