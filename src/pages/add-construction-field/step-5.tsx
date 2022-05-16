@@ -41,7 +41,7 @@ export default () => {
 
         <BottomBtnWrapper>
           <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
-          <ActiveBtn onClick={() => nxtPageHandler()}>다음</ActiveBtn>
+          <ActiveBtn onClick={() => nxtPageHandler()}>완료</ActiveBtn>
         </BottomBtnWrapper>
       </Container>
     </SpaceLayout>

@@ -84,4 +84,22 @@ export default [
     component: lazy(() => import('@pages/add-construction-field/step-5')),
     permission: Permission.PRIVATE,
   },
+  {
+    label: '회원가입 Step 1',
+    path: '/sign-up/step-1',
+    component: lazy(() => import('@pages//sign-up/step-1')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '회원가입 Step 2',
+    path: '/sign-up/step-2',
+    component: lazy(() => import('@pages//sign-up/step-2')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '회원가입 Step 3',
+    path: '/sign-up/step-3',
+    component: lazy(() => import('@pages//sign-up/step-3')),
+    permission: Permission.PRIVATE,
+  },
 ];

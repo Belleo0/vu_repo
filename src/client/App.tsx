@@ -12,10 +12,6 @@ import { RouteAdapter } from '@components/RouteAdapter';
 import routes, { Permission } from './Routes';
 import PrivateWrapper from './PrivateWrapper';
 
-import SignUp from '@pages/sign-up';
-import SignUp2 from '@pages/sign-up/index2';
-import SignUp3 from '@pages/sign-up/index3';
-
 import api from '@api';
 
 import Loading from '@components/Loading';
