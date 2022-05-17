@@ -6,13 +6,15 @@ import Button, { ButtonType } from '@components/Button';
 import api, { setToken } from '@api';
 import { useDispatch } from 'react-redux';
 import { clearPrincipal, me } from '@data/auth';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TextModal from '@components/TextModal';
 
 export default () => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  const location = useLocation();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -38,7 +40,7 @@ export default () => {
       });
       setToken(data);
       await dispatch(me());
-      await navigate('/my-field');
+      await navigate((location?.state as any)?.redirect_to || '/my-field');
     } catch (err) {
       console.log(err);
       setIsErrorModalOpen(true);
@@ -85,15 +87,17 @@ export default () => {
             로그인
           </Button>
           <TextButtonWrap>
-            <TextButton onClick={() => navigate('/auth/email')}>
+            <TextButton onClick={() => window.alert('TODO : 라우팅 예정')}>
               이메일 찾기
             </TextButton>
             <TextButtonDivider />
-            <TextButton onClick={() => navigate('/auth/pw')}>
+            <TextButton onClick={() => window.alert('TODO : 라우팅 예정')}>
               비밀번호 찾기
             </TextButton>
             <TextButtonDivider />
-            <TextButton onClick={() => navigate('')}>회원가입</TextButton>
+            <TextButton onClick={() => navigate('/auth/register/step-1')}>
+              회원가입
+            </TextButton>
           </TextButtonWrap>
         </Box>
       </Container>
@@ -109,6 +113,8 @@ export default () => {
 const Container = styled.div`
   width: 100%;
   height: 100%;
+
+  min-height: calc(100vh - 80px);
 
   display: flex;
   flex-direction: column;
@@ -137,6 +143,7 @@ const TextButtonWrap = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+  user-select: none;
 `;
 
 const TextButton = styled.span`
@@ -144,6 +151,7 @@ const TextButton = styled.span`
   letter-spacing: -0.28px;
   color: #444;
   cursor: pointer;
+  user-select: none;
 `;
 
 const TextButtonDivider = styled.span`

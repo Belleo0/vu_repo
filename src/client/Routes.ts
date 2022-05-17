@@ -13,6 +13,24 @@ export default [
     permission: Permission.PUBLIC,
   },
   {
+    label: '회원가입 Step 1',
+    path: '/auth/register/step-1',
+    component: lazy(() => import('@pages/auth/register/step-1')),
+    permission: Permission.PUBLIC,
+  },
+  {
+    label: '회원가입 Step 2',
+    path: '/auth/register/step-2',
+    component: lazy(() => import('@pages/auth/register/step-2')),
+    permission: Permission.PUBLIC,
+  },
+  {
+    label: '회원가입 Step 3',
+    path: '/auth/register/step-3',
+    component: lazy(() => import('@pages/auth/register/step-3')),
+    permission: Permission.PUBLIC,
+  },
+  {
     label: '로그인',
     path: '/auth/login',
     component: lazy(() => import('@pages/auth/login')),

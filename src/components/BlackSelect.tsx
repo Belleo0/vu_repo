@@ -7,21 +7,38 @@ interface ISelect {
   width?: number;
   options: { label: string; value: unknown }[];
   value: unknown;
+  placeholder?: string;
   onChange: (v: any) => any;
+  containerStyle?: React.CSSProperties;
 }
 
-export default ({ width, options, value, onChange }: ISelect) => {
+export default ({
+  width,
+  options,
+  placeholder,
+  value,
+  onChange,
+  containerStyle = {},
+}: ISelect) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [isOpened, setIsOpened] = useState(false);
 
+  const [zIndex, setZIndex] = useState(100);
+
   const valueLabel = useMemo(() => {
+    if (value === null) return null;
     return options?.filter?.((v) => v.value === value)?.[0]?.label;
   }, [options, value]);
 
   const handleClickOutside = ({ target }: any) => {
-    if (isOpened && ref.current && !ref.current.contains(target))
+    if (isOpened && ref.current && !ref.current.contains(target)) {
+      setZIndex(200);
       setIsOpened(false);
+      setTimeout(() => {
+        setZIndex(100);
+      }, 150);
+    }
   };
 
   useEffect(() => {
@@ -33,17 +50,39 @@ export default ({ width, options, value, onChange }: ISelect) => {
     }
   }, [isOpened]);
 
+  const handleClickContainer = () => {
+    if (isOpened) {
+      setZIndex(200);
+      setIsOpened(false);
+      setTimeout(() => {
+        setZIndex(100);
+      }, 150);
+    } else {
+      setZIndex(300);
+      setIsOpened(true);
+    }
+  };
+
   return (
     <Container
-      style={{ width: width || 'auto' }}
+      style={{ width: width || 'auto', ...containerStyle }}
       ref={ref}
-      onClick={() => setIsOpened((prev) => !prev)}
+      onClick={handleClickContainer}
     >
-      <Value>{valueLabel}</Value>
+      <Value style={{ color: valueLabel === null ? '#c7c7c7' : '#000' }}>
+        {valueLabel === null ? placeholder : valueLabel}
+      </Value>
       <Icon src={getAssetURL('../assets/ic-arrow-bottom.svg')} />
-      <AbsoluteWrap isOpen={isOpened}>
+      <AbsoluteWrap
+        isOpen={isOpened}
+        value={value}
+        optionLength={options.length}
+        style={{ zIndex }}
+      >
         <AbsoluteValueContainer>
-          <Value>{valueLabel}</Value>
+          <Value style={{ color: valueLabel === null ? '#c7c7c7' : '#000' }}>
+            {valueLabel === null ? placeholder : valueLabel}
+          </Value>
           <Icon src={getAssetURL('../assets/ic-arrow-bottom.svg')} />
         </AbsoluteValueContainer>
         {options.map((v) => (
@@ -63,7 +102,7 @@ export default ({ width, options, value, onChange }: ISelect) => {
 const Container = styled.div`
   display: flex;
   align-items: center;
-  padding: 9px 8px 8px 12px;
+  padding: 8px;
   border-radius: 6px;
   border: solid 1px #c7c7c7;
   background-color: #fff;
@@ -74,7 +113,7 @@ const Container = styled.div`
 const Icon = styled.img`
   width: 18px;
   height: 18px;
-  margin-left: 13px;
+  margin-left: 7px;
 `;
 
 const Value = styled.span`
@@ -84,28 +123,38 @@ const Value = styled.span`
   color: #000;
 `;
 
-const AbsoluteWrap = styled.div<{ isOpen: boolean }>`
+const AbsoluteWrap = styled.div<{
+  isOpen: boolean;
+  value: unknown;
+  optionLength: number;
+}>`
   display: flex;
   flex-direction: column;
   position: absolute;
   top: -1px;
   left: -1px;
   width: calc(100% + 2px);
-  padding: 9px 8px 14px 12px;
+  padding: 8px;
   border-radius: 6px;
-  border: solid 1px #c7c7c7;
+  border: solid 1px #e3e3e3;
   background-color: #fff;
   z-index: 999999;
   overflow: hidden;
 
-  ${({ isOpen }) =>
+  ${({ isOpen, optionLength }) =>
     isOpen
       ? css`
-          max-height: 105px;
+          max-height: ${42 + 28 * optionLength}px;
         `
       : css`
           max-height: 37px;
         `}
+
+  ${({ value }) =>
+    value !== null &&
+    css`
+      border-color: #777;
+    `}
 
   transition: max-height 0.15s ease-in-out;
 `;
@@ -122,7 +171,6 @@ const OptionText = styled.span<{ active: boolean }>`
   display: block;
   cursor: pointer;
   font-size: 14px;
-  letter-spacing: -0.84px;
   text-align: left;
 
   ${({ active }) =>

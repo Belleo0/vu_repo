@@ -11,11 +11,20 @@ export default () => {
   const [secFieldAddr, setSecFieldAddr] = useState('');
 
   const navigate = useNavigate();
-  const step = 4;
 
   const nxtStepHandler = () => {
-    navigate('/add-construction-field/step-2');
+    navigate('/add-construction-field/step-2', {
+      state: {
+        fieldNm: fieldNm,
+        fieldAddr: fieldAddr,
+        secFieldAddr: secFieldAddr,
+      },
+    });
   };
+
+  const step = fieldNm && fieldAddr && secFieldAddr ? true : false;
+
+  const setInputHandler = () => {};
 
   return (
     <SpaceLayout>
@@ -64,9 +73,9 @@ export default () => {
           <Input
             type="text"
             placeholder="상세주소를 입력해 주세요"
-            value={fieldAddr}
+            value={secFieldAddr}
             onChange={(e) => {
-              setFieldAddr(e.target.value), console.log(e);
+              setSecFieldAddr(e.target.value), console.log(e);
             }}
             containerStyle={{
               width: '540px',
@@ -80,7 +89,7 @@ export default () => {
 
         <BottomBtnWrapper>
           <InActiveBtn>이전</InActiveBtn>
-          {step === 4 ? (
+          {step ? (
             <ActiveBtn onClick={() => nxtStepHandler()}>다음</ActiveBtn>
           ) : (
             <InActiveBtn>다음</InActiveBtn>
@@ -122,7 +131,7 @@ const BorderNumber = styled.div`
   font-stretch: normal;
   font-style: normal;
   color: #258fff;
-  line-height: 1.4;
+  line-height: 1.5;
 `;
 
 const TopTitleBox = styled.div`

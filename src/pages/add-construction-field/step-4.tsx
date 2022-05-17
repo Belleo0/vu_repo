@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import Input from '@components/Input';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
 
@@ -43,15 +43,31 @@ const textColors = {
 
 export default () => {
   const [step, setStep] = useState<number>(0);
+  const location = useLocation();
+
   const [maturity, setMaturity] = useState<string>();
+  const [maturityInput, setMaturityInput] = useState<string>();
   const [paymentDate, setPaymentDate] = useState<string>();
+  const [paymentDateInput, setPaymentDateInput] = useState<string>();
+  const [paymentType, setPaymentType] = useState<string>('CASH');
+
   const [isValid, setIsValid] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const nxtPageHandler = () => {
-    navigate('/add-construction-field/step-5');
+    navigate('/add-construction-field/step-5', {
+      state: {
+        ...(location.state as any),
+        maturity: maturity,
+        maturityInput: maturityInput,
+        paymentDate: paymentDate,
+        paymentDateInput: paymentDateInput,
+        paymentType: paymentType,
+      },
+    });
   };
+
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-3');
   };
@@ -65,19 +81,19 @@ export default () => {
       setIsValid(false);
       setStep(2);
     }
-    console.log(step, ' || ', isValid);
   };
 
-  const dateOptionHandler = (name: string) => {
-    console.log(name);
-    setMaturity(name);
-    console.log(maturity);
+  const dateOptionHandler = (v: string) => {
+    setMaturity(v);
   };
-
-  const paymentDateOptionHandler = (name: string) => {
-    console.log(name);
-    setPaymentDate(name);
-    console.log(paymentDate);
+  const dateInputHandler = (v: string) => {
+    setMaturityInput(v);
+  };
+  const paymentDateOptionHandler = (v: string) => {
+    setPaymentDate(v);
+  };
+  const paymentDateInputHandler = (v: string) => {
+    setPaymentDateInput(v);
   };
 
   return (
@@ -173,7 +189,8 @@ export default () => {
                 </OptionWrapper>
                 <InputStyle
                   placeholder="숫자만 입력해 주세요"
-                  type={'number'}
+                  value={maturityInput}
+                  onChange={(e) => dateInputHandler(e.target.value)}
                 />
               </InputItemWrapper>
 
@@ -222,7 +239,8 @@ export default () => {
                 </OptionWrapper>
                 <InputStyle
                   placeholder="숫자만 입력해 주세요"
-                  type={'number'}
+                  value={paymentDateInput}
+                  onChange={(e) => paymentDateInputHandler(e.target.value)}
                 />
               </InputItemWrapper>
               <Caption>
@@ -237,7 +255,8 @@ export default () => {
 
         <BottomBtnWrapper>
           <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
-          {isValid ? (
+          {isValid ||
+          (maturity && maturityInput && paymentDateInput && paymentDate) ? (
             <ActiveBtn onClick={() => nxtPageHandler()}>다음</ActiveBtn>
           ) : (
             <InActiveBtn>다음</InActiveBtn>
@@ -292,7 +311,6 @@ const BorderNumberWrapper = styled.div`
 `;
 
 const BorderNumber = styled.div`
-  width: 9px;
   height: 24px;
   font-family: Noto Sans KR;
   font-size: 16px;
@@ -300,7 +318,7 @@ const BorderNumber = styled.div`
   font-stretch: normal;
   font-style: normal;
   color: #258fff;
-  line-height: 1.4;
+  line-height: 1.5;
 `;
 
 const TopTitleBox = styled.div`

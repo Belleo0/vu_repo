@@ -3,14 +3,14 @@ import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
 
-export default ({ data, setSelectedSpaceInfo }: any) => {
+export default ({ open, data, onClose }: any) => {
   return (
-    <Container isOpen={!!data}>
+    <Container isOpen={open}>
       {data && (
         <>
           <CloseIcon
             src={getAssetURL('../assets/ic-del.svg')}
-            onClick={() => setSelectedSpaceInfo(null)}
+            onClick={onClose}
           />
           <Title>{data?.name}</Title>
           <Divider />

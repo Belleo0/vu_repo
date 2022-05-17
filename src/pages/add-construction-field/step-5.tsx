@@ -1,17 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
-import Input from '@components/Input';
-import { useNavigate } from 'react-router-dom';
-import getAssetURL from '@utils/getAssetURL';
+import { useLocation, useNavigate } from 'react-router-dom';
+import api from '@api';
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [chkText, setChkText] = useState<any>(0);
+  const [remarks, setRemarks] = useState<string>('');
 
-  const nxtPageHandler = () => {
-    navigate('/add-construction-field/step-5');
+  const requestSignUp = () => {
+    console.log(location.state as any);
+
+    api
+      .post('/field-spaces', {
+        name: (location.state as any)?.fieldNm,
+        basic_address: (location.state as any)?.fieldAddr,
+        detail_address: (location.state as any)?.secFieldAddr,
+        field_info: {
+          start_at: (location.state as any)?.constructionStartDate,
+          end_at: (location.state as any)?.constructionEndDate,
+          payment_method: (location.state as any)?.paymentType,
+          payment_expire_date: (location.state as any)?.maturity,
+          payment_due_date: (location.state as any)?.paymentDate,
+          need_amount: (location.state as any)?.need_amount,
+          remarks: remarks,
+        },
+      })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
   };
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-4');
@@ -19,8 +38,9 @@ export default () => {
 
   const chkTextLength = (e: any) => {
     const length = e.target.value.length;
+    const txt = e.target.value;
+    setRemarks(txt);
     setChkText(length);
-    console.log(length, ' || ', chkText);
   };
 
   return (
@@ -41,7 +61,7 @@ export default () => {
 
         <BottomBtnWrapper>
           <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
-          <ActiveBtn onClick={() => nxtPageHandler()}>다음</ActiveBtn>
+          <ActiveBtn onClick={() => requestSignUp()}>완료</ActiveBtn>
         </BottomBtnWrapper>
       </Container>
     </SpaceLayout>
@@ -72,7 +92,6 @@ const BorderNumberWrapper = styled.div`
 `;
 
 const BorderNumber = styled.div`
-  width: 9px;
   height: 24px;
   font-family: Noto Sans KR;
   font-size: 16px;
@@ -80,7 +99,7 @@ const BorderNumber = styled.div`
   font-stretch: normal;
   font-style: normal;
   color: #258fff;
-  line-height: 1.4;
+  line-height: 1.5;
 `;
 
 const TopTitleBox = styled.div`
