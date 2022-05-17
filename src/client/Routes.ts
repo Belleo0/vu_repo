@@ -50,7 +50,7 @@ export default [
   },
   {
     label: '비밀번호 재설정',
-    path: '/auth/change-pw',
+    path: '/:key',
     component: lazy(() => import('@pages/auth/changePassword')),
     permission: Permission.PUBLIC,
   },
@@ -124,6 +124,6 @@ export default [
     label: '회원정보 수정',
     path: '/mypage',
     component: lazy(() => import('@pages/mypage')),
-    permission: Permission.PUBLIC,
+    permission: Permission.PRIVATE,
   },
 ];

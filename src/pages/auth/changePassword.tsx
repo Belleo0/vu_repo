@@ -6,7 +6,7 @@ import Button, { ButtonType } from '@components/Button';
 import api, { setToken } from '@api';
 import { useDispatch } from 'react-redux';
 import { me } from '@data/auth';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ImgModal from '@components/ImgModal';
 import HelperTxt from '@components/HelperTxt';
 
@@ -14,6 +14,7 @@ export default () => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -35,7 +36,7 @@ export default () => {
 
   const handlePasswordEdit = async () => {
     try {
-      await api.put('/auth/login', {
+      await api.post(`/auth/find-password${pathname}`, {
         password: newPassword,
       });
       window.alert('저장완료');
