@@ -38,6 +38,19 @@ export default () => {
     setIsErrorModalOpen(!isErrorModalOpen);
   };
 
+  const handleFindPassword = async () => {
+    try {
+      const { data } = await api.post('/auth/find-password', {
+        username,
+      });
+      if (data?.result === true) {
+        setIsSuccessModalOpen(true);
+      }
+    } catch (error) {
+      setIsErrorModalOpen(true);
+    }
+  };
+
   return (
     <AuthLayout>
       <Container>
@@ -66,7 +79,7 @@ export default () => {
           />
           <Button
             type={isFormValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
-            onClick={isFormValidated ? handleSuccessModal : handleErrorModal}
+            onClick={handleFindPassword}
           >
             비밀번호 변경 URL 전송
           </Button>
@@ -95,6 +108,8 @@ export default () => {
 const Container = styled.div`
   width: 100%;
   height: 100%;
+
+  min-height: calc(100vh - 80px);
 
   display: flex;
   flex-direction: column;

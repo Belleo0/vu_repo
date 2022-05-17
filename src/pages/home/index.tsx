@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
+import useSWR from 'swr';
 import AuthLayout from '@layout/AuthLayout';
 import SearchInput from '@components/SearchInput';
 import getAssetURL from '@utils/getAssetURL';
 import Button, { ButtonType } from '@components/Button';
 
 import useIsLogin from '@hooks/useIsLogin';
-import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
-
 // api
 import useMySpaceInfo from '@api/useMySpaceInfo';
+import useSpaces from '@api/useSpaces';
 
 // components
 import SearchSection from './SearchSection';
@@ -20,10 +20,16 @@ import GuideSection from './GuideSection';
 import AppSection from './AppSection';
 import MySiteSection from './MySiteSection';
 
+enum TabTypeEnum {
+  DEFAULT,
+  HIDE,
+}
+
 export default () => {
   const isLogin = useIsLogin();
-
   const [search, setSearch] = useState('');
+
+  const { data, error, mutate } = useSWR<any[]>([`/field-spaces`]);
 
   return (
     <AuthLayout>
@@ -31,7 +37,7 @@ export default () => {
         {/* Section1 */}
         <SearchSection search={search} setSearch={setSearch} />
         {/* Section2 */}
-        {isLogin ? <MySiteSection /> : <SiteSection />}
+        {isLogin ? <MySiteSection searchedSpaces={data} /> : <SiteSection />}
         {/* Section3 */}
         <InfoSection />
         {/* Section4 */}

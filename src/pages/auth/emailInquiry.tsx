@@ -86,7 +86,7 @@ export default () => {
         onClose={handleErrorModal}
         title={'회원 정보 없음'}
         redContent={'회원가입을 하시면 이용이 가능합니다.'}
-        imgUrl="../assets/img-check.png"
+        imgUrl="../assets/img-warning.png"
         submitText={'다시 입력하기'}
       />
     </AuthLayout>
@@ -96,6 +96,8 @@ export default () => {
 const Container = styled.div`
   width: 100%;
   height: 100%;
+
+  min-height: calc(100vh - 80px);
 
   display: flex;
   flex-direction: column;

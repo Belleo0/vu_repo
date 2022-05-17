@@ -87,11 +87,11 @@ export default () => {
             로그인
           </Button>
           <TextButtonWrap>
-            <TextButton onClick={() => window.alert('TODO : 라우팅 예정')}>
+            <TextButton onClick={() => navigate('/auth/email')}>
               이메일 찾기
             </TextButton>
             <TextButtonDivider />
-            <TextButton onClick={() => window.alert('TODO : 라우팅 예정')}>
+            <TextButton onClick={() => navigate('/auth/pw')}>
               비밀번호 찾기
             </TextButton>
             <TextButtonDivider />

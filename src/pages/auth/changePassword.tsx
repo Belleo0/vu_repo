@@ -15,23 +15,35 @@ export default () => {
 
   const navigate = useNavigate();
 
-  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const isPasswordValidated = useMemo(() => {
     const regex =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/; // 비밀번호 정규식
-    return regex.test(password);
-  }, [password]);
+    return regex.test(newPassword);
+  }, [newPassword]);
 
   const isConfirmPasswordValidated = useMemo(() => {
-    if (password === confirmPassword) return true;
+    if (newPassword === confirmPassword) return true;
     else return false;
-  }, [password, confirmPassword]);
+  }, [newPassword, confirmPassword]);
 
   const isFormValidated = useMemo(() => {
     return isPasswordValidated && isConfirmPasswordValidated;
   }, [isPasswordValidated, isConfirmPasswordValidated]);
+
+  const handlePasswordEdit = async () => {
+    try {
+      await api.put('/auth/login', {
+        password: newPassword,
+      });
+      window.alert('저장완료');
+      navigate('/auth/login');
+    } catch (error) {
+      window.alert('저장 실패');
+    }
+  };
 
   return (
     <AuthLayout>
@@ -42,11 +54,11 @@ export default () => {
             label="새 비밀번호"
             type="password"
             placeholder="영문과 숫자, 특수문자 포함 8자 이상 입력해 주세요"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
             containerStyle={{ marginBottom: 34 }}
             errorMessage={
-              password === ''
+              newPassword === ''
                 ? ''
                 : isPasswordValidated
                 ? ''
@@ -70,7 +82,7 @@ export default () => {
           />
           <Button
             type={isFormValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
-            onClick={() => (isFormValidated ? true : false)}
+            onClick={handlePasswordEdit}
             containerStyle={{ marginTop: 30 }}
           >
             재설정 완료
@@ -84,6 +96,8 @@ export default () => {
 const Container = styled.div`
   width: 100%;
   height: 100%;
+
+  min-height: calc(100vh - 80px);
 
   display: flex;
   flex-direction: column;

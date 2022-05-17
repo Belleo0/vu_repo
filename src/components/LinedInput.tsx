@@ -13,7 +13,7 @@ import React, {
 export default ({
   label,
   containerStyle,
-  value,
+  value = '',
   name,
   onChange,
   errorMessage,
@@ -28,9 +28,9 @@ export default ({
 
   const [inputValue, setInputValue] = useState<any>(value);
 
-  const changeHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
     setInputValue(ev.target.value);
-    onChange && onChange(ev);
+    onChange && onChange(ev); // optional로 인한 코드
   };
 
   return (
@@ -45,11 +45,11 @@ export default ({
           onChange={changeHandler}
           {...props}
         />
-        {inputValue !== '' && isFocused && (
+        {inputValue !== '' && (
           <XIcon
             src={getAssetURL('../assets/ic-circle-x.svg')}
             onClick={() => {
-              changeHandler({ target: { value: '' } } as any);
+              changeHandler({ target: { name: name, value: '' } } as any);
             }}
           />
         )}
@@ -96,7 +96,7 @@ const Input = styled.input`
     letter-spacing: -0.28px;
   }
   &:focus {
-      border-color
+    /* border-color */
   }
 `;
 
