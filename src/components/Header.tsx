@@ -72,17 +72,21 @@ export default () => {
                   src={getAssetURL('../assets/default-profile.jpeg')}
                 />
                 <ProfileName>{userInfo?.name}</ProfileName>
-                <ProfileIcon src={getAssetURL('../assets/ic-arrow.svg')} />
+                {openProfileNav ? (
+                  <ProfileIcon src={getAssetURL('../assets/ic-arrow-up.svg')} />
+                ) : (
+                  <ProfileIcon src={getAssetURL('../assets/ic-arrow.svg')} />
+                )}
               </ProfileWrap>
               {openProfileNav && (
                 <ProfileNavWrap>
                   <ProfileMenuList>
-                    {profileMenus.map((v) => (
+                    {profileMenus.map((item) => (
                       <ProfileMenu
-                        key={v.path}
-                        onClick={() => navigate(v.path)}
+                        key={item.path}
+                        onClick={() => navigate(item.path)}
                       >
-                        {v.label}
+                        {item.label}
                       </ProfileMenu>
                     ))}
                   </ProfileMenuList>
