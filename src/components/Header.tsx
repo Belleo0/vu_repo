@@ -81,9 +81,9 @@ export default () => {
               {openProfileNav && (
                 <ProfileNavWrap>
                   <ProfileMenuList>
-                    {profileMenus.map((item) => (
+                    {profileMenus.map((item, i) => (
                       <ProfileMenu
-                        key={item.path}
+                        key={item.label}
                         onClick={() => navigate(item.path)}
                       >
                         {item.label}
@@ -236,7 +236,7 @@ const ProfileNavWrap = styled.div`
   top: 0;
   right: 0;
   margin: 70px 30px;
-  z-index: 100;
+  z-index: 999999999;
   background-color: #ffffff;
   border-radius: 12px;
 `;
