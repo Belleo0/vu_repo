@@ -15,6 +15,7 @@ export enum ButtonType {
   GRAY,
   GRAY_BLACK,
   BLACK,
+  BLACK_WHITE,
 }
 
 interface IButton {
@@ -32,6 +33,7 @@ const backgroundColors = {
   [ButtonType.GRAY]: '#f2f2f2',
   [ButtonType.GRAY_BLACK]: '#f2f2f2',
   [ButtonType.BLACK]: '#ffffff',
+  [ButtonType.BLACK_WHITE]: '#000000',
 };
 
 const borderWidths = {
@@ -41,6 +43,7 @@ const borderWidths = {
   [ButtonType.GRAY]: 1,
   [ButtonType.GRAY_BLACK]: 1,
   [ButtonType.BLACK]: 1,
+  [ButtonType.BLACK_WHITE]: 1,
 };
 
 const borderColors = {
@@ -50,6 +53,7 @@ const borderColors = {
   [ButtonType.GRAY]: '#f2f2f2',
   [ButtonType.GRAY_BLACK]: '#f2f2f2',
   [ButtonType.BLACK]: '#000000',
+  [ButtonType.BLACK_WHITE]: 'inherit',
 };
 
 const textColors = {
@@ -59,6 +63,7 @@ const textColors = {
   [ButtonType.GRAY]: '#999999',
   [ButtonType.GRAY_BLACK]: '#000000',
   [ButtonType.BLACK]: '#000000',
+  [ButtonType.BLACK_WHITE]: '#ffffff',
 };
 
 export default ({

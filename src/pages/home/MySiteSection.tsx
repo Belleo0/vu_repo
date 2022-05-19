@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import styled from '@emotion/styled';
-import SearchInput from '@components/SearchInput';
 import getAssetURL from '@utils/getAssetURL';
-import Button, { ButtonType } from '@components/Button';
 
-export default () => {
+export default ({ searchedSpaces }: any) => {
   const navigate = useNavigate();
 
   return (
@@ -28,16 +26,16 @@ export default () => {
           </Box>
         </TitleBox>
         <SiteListContainer>
-          {/* {list &&
-            list.map((item: any) => (
-              <MySiteButton key={item.id} onClick={() => navigate(item.path)}>{item.name}</MySiteButton>
-            ))} */}
-          <MySiteButton>중앙동 일동더마린</MySiteButton>
-          <MySiteButton>중앙동 일동더마린</MySiteButton>
-          <MySiteButton>중앙동 일동더마린</MySiteButton>
-          <MySiteButton>중앙동 일동더마린</MySiteButton>
-          <MySiteButton>중앙동 일동더마린</MySiteButton>
-          <SiteAddButton>
+          {searchedSpaces &&
+            searchedSpaces.map((v: any, i: any) => (
+              <MySiteButton
+                key={`space-${v.id}-${i}`}
+                onClick={() => navigate('/my-field')}
+              >
+                {v.name}
+              </MySiteButton>
+            ))}
+          <SiteAddButton onClick={() => navigate('/my-field')}>
             <BtnIcon src={getAssetURL(`../assets/ic-plus-blue.svg`)} />
             건설현장 등록하기
           </SiteAddButton>

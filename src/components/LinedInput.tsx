@@ -12,19 +12,17 @@ import React, {
 
 export default ({
   label,
-  redStar,
   containerStyle,
-  inputStyle,
   value = '',
+  name,
   onChange,
   errorMessage,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   label?: React.ReactNode;
-  redStar?: React.ReactNode;
   containerStyle?: CSSProperties;
-  inputStyle?: CSSProperties;
   errorMessage?: string;
+  name?: string;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -37,15 +35,13 @@ export default ({
 
   return (
     <RealContainer style={containerStyle}>
-      <LableBox>
-        {label && <Label>{label}</Label>}
-        {redStar && <RedStar>{redStar}</RedStar>}
-      </LableBox>
-      <Container isFocus={isFocused} style={inputStyle}>
+      {label && <Label>{label}</Label>}
+      <Container isFocus={isFocused}>
         <Input
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           value={value}
+          name={name}
           onChange={changeHandler}
           {...props}
         />
@@ -53,7 +49,7 @@ export default ({
           <XIcon
             src={getAssetURL('../assets/ic-circle-x.svg')}
             onClick={() => {
-              changeHandler({ target: { value: '' } } as any);
+              changeHandler({ target: { name: name, value: '' } } as any);
             }}
           />
         )}
@@ -72,16 +68,15 @@ const RealContainer = styled.div`
 const Container = styled.div<{ isFocus: boolean }>`
   display: flex;
   width: 100%;
-  border-radius: 6px;
-  background-color: white;
+  background-color: inherit;
 
   ${({ isFocus }) =>
     isFocus
       ? css`
-          border: solid 1px #777;
+          border-bottom: solid 1px #777;
         `
       : css`
-          border: solid 1px #c7c7c7;
+          border-bottom: solid 1px #e3e3e3;
         `}
 
   margin-bottom: 8px;
@@ -89,7 +84,9 @@ const Container = styled.div<{ isFocus: boolean }>`
 
 const Input = styled.input`
   width: 100%;
-  padding: 11px 14px;
+  padding: 0 0 20px 0;
+  font-size: 16px;
+  font-weight: 500;
   background: none;
   border: 0;
   outline: 0;
@@ -99,12 +96,13 @@ const Input = styled.input`
     letter-spacing: -0.28px;
   }
   &:focus {
-    /* border-color:  */
+    /* border-color */
   }
 `;
 
 const XIcon = styled.img`
   margin-right: 12px;
+  margin-bottom: 20px;
 `;
 
 const Label = styled.span`
@@ -112,22 +110,11 @@ const Label = styled.span`
   letter-spacing: -0.32px;
   text-align: left;
   color: #000;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 `;
 
 const ErrorMessage = styled.span`
   font-size: 12px;
   letter-spacing: -0.24px;
   color: #ef0000;
-`;
-
-const RedStar = styled.span`
-  font-size: 14px;
-  color: #ef0000;
-  margin-left: 2px;
-`;
-
-const LableBox = styled.div`
-  display: block;
-  margin-bottom: 10px;
 `;

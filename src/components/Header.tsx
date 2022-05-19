@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -17,12 +17,20 @@ const menus = [
   { label: '거래내역', path: '/transaction' },
 ];
 
+const profileMenus = [
+  { label: '회원정보 수정', path: '/mypage' },
+  { label: '조직관리', path: '' },
+  { label: '친구관리', path: '' },
+  { label: '알림설정', path: '' },
+];
+
 export default () => {
   const isLogin = useIsLogin();
   const userInfo = useUserInfo();
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [openProfileNav, setOpenProfileNav] = useState<any>(false);
 
   return (
     <Container>
@@ -55,13 +63,32 @@ export default () => {
                   <Icon src={getAssetURL('../assets/ic-alert.svg')} />
                 </IconWrap>
               </IconContainer>
-              <ProfileWrap>
+              <ProfileWrap
+                onClick={() => {
+                  setOpenProfileNav(!openProfileNav);
+                }}
+              >
                 <ProfileImage
                   src={getAssetURL('../assets/default-profile.jpeg')}
                 />
                 <ProfileName>{userInfo?.name}</ProfileName>
                 <ProfileIcon src={getAssetURL('../assets/ic-arrow.svg')} />
               </ProfileWrap>
+              {openProfileNav && (
+                <ProfileNavWrap>
+                  <ProfileMenuList>
+                    {profileMenus.map((v) => (
+                      <ProfileMenu
+                        key={v.path}
+                        onClick={() => navigate(v.path)}
+                      >
+                        {v.label}
+                      </ProfileMenu>
+                    ))}
+                  </ProfileMenuList>
+                  <Logout>로그아웃</Logout>
+                </ProfileNavWrap>
+              )}
             </>
           ) : (
             <>
@@ -196,4 +223,43 @@ const LoginButton = styled.span`
   cursor: pointer;
 
   margin-right: 18px;
+`;
+
+const ProfileNavWrap = styled.div`
+  position: fixed;
+  width: 134px;
+  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
+  top: 0;
+  right: 0;
+  margin: 70px 30px;
+  z-index: 100;
+  background-color: #ffffff;
+  border-radius: 12px;
+`;
+
+const ProfileMenuList = styled.div`
+  padding-top: 7px;
+  padding-bottom: 7px;
+`;
+
+const ProfileMenu = styled.div`
+  padding: 7px 14px;
+  font-size: 14px;
+  letter-spacing: -0.28px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f2f2f2;
+  }
+`;
+
+const Logout = styled.div`
+  padding: 10px 14px 12px 14px;
+  font-size: 14px;
+  border-top: 1px solid #f2f2f2;
+  color: #999999;
+  cursor: pointer;
+  &:hover {
+    background-color: #f2f2f2;
+    border-radius: 0px 0px 12px 12px;
+  }
 `;

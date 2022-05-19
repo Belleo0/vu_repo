@@ -15,6 +15,12 @@ export default () => {
           <Role>{userInfo?.position}</Role>
         </NameRoleWrap>
       </ProfileInfoWrap>
+      {/* {userInfo.likeCount && (
+        <LikeWrap>
+          <Icon src={getAssetURL('../assets/ic-like.svg')} />
+          <Count>{userInfo?.likeCount}</Count>
+        </LikeWrap>
+      )} */}
     </ProfileBox>
   );
 };
@@ -69,4 +75,19 @@ const Role = styled.span`
   text-align: left;
   color: #444;
   margin-left: 4px;
+`;
+
+const LikeWrap = styled.div`
+  display: flex;
+  align-items: flex-end;
+  margin-left: auto;
+`;
+const Icon = styled.img`
+  width: 19px;
+  height: auto;
+  margin-right: 4px;
+`;
+const Count = styled.span`
+  font-size: 14px;
+  font-weight: 500;
 `;
