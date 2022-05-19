@@ -90,7 +90,7 @@ export default () => {
                 </DayAmountWrap>
                 <BarContainer>
                   {data?.map((v: any) => (
-                    <Bar>
+                    <Bar style={{ backgroundColor: v?.estimation?.color }}>
                       <BarTime>{convertTime(v?.start_time, true)}</BarTime>
                       <BarName>{v?.estimation?.factory_space?.name}</BarName>
                       <BarAmount>

@@ -282,7 +282,7 @@ export default ({ date, data, type }: any) => {
               top={v.top}
               left={v.left + defaultLeftMargin}
               height={Math.abs(v.height)}
-              style={{ backgroundColor: i % 2 !== 0 ? '#fff5df' : '#dbeafb' }}
+              style={{ backgroundColor: v?.estimation?.color }}
             >
               <WeekInfoRow>
                 <Name>{v?.estimation?.factory_space?.name}</Name>
@@ -297,7 +297,7 @@ export default ({ date, data, type }: any) => {
               top={v.top}
               left={v.left + defaultLeftMargin}
               height={Math.abs(v.height)}
-              style={{ backgroundColor: i % 2 !== 0 ? '#fff5df' : '#dbeafb' }}
+              style={{ backgroundColor: v?.estimation?.color }}
             >
               <Name>{v?.estimation?.factory_space?.name}</Name>
               <Time>{v.time}</Time>
