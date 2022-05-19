@@ -80,7 +80,7 @@ export default ({
         </RightWrap>
       </FilterContainer>
       <CalendarContainer>
-        {dates.map((v) => {
+        {dates.map((v: any) => {
           const date = moment(v).format('YYYY-MM-DD');
           const data = assignments?.[date] || [];
           return (
