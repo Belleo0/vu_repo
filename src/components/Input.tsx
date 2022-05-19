@@ -18,6 +18,7 @@ export default ({
   value = '',
   onChange,
   errorMessage,
+  withoutErrorMessage = false,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   label?: React.ReactNode;
@@ -25,6 +26,7 @@ export default ({
   containerStyle?: CSSProperties;
   inputStyle?: CSSProperties;
   errorMessage?: string;
+  withoutErrorMessage?: boolean;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -37,10 +39,12 @@ export default ({
 
   return (
     <RealContainer style={containerStyle}>
-      <LableBox>
-        {label && <Label>{label}</Label>}
-        {redStar && <RedStar>{redStar}</RedStar>}
-      </LableBox>
+      {label && (
+        <LableBox>
+          {label && <Label>{label}</Label>}
+          {redStar && <RedStar>{redStar}</RedStar>}
+        </LableBox>
+      )}
       <Container isFocus={isFocused} style={inputStyle}>
         <Input
           onFocus={() => setIsFocused(true)}
@@ -58,7 +62,9 @@ export default ({
           />
         )}
       </Container>
-      <ErrorMessage>{errorMessage || 'ㅤ'}</ErrorMessage>
+      {!withoutErrorMessage && (
+        <ErrorMessage>{errorMessage || 'ㅤ'}</ErrorMessage>
+      )}
     </RealContainer>
   );
 };

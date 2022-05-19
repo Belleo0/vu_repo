@@ -7,6 +7,10 @@ import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import useIsLogin from '@hooks/useIsLogin';
 import useUserInfo from '@hooks/useUserInfo';
+import { useDispatch } from 'react-redux';
+import { clearPrincipal } from '@data/auth';
+import { clearSelectedSpaceInfo } from '@data/space';
+import { clearPolylineInfo } from '@data/map';
 
 const menus = [
   { label: 'MY 건설현장', path: '/my-field' },
@@ -31,6 +35,15 @@ export default () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [openProfileNav, setOpenProfileNav] = useState<any>(false);
+
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    navigate('/auth/login');
+    dispatch(clearPrincipal());
+    dispatch(clearSelectedSpaceInfo());
+    dispatch(clearPolylineInfo());
+  };
 
   return (
     <Container>
@@ -90,7 +103,7 @@ export default () => {
                       </ProfileMenu>
                     ))}
                   </ProfileMenuList>
-                  <Logout>로그아웃</Logout>
+                  <Logout onClick={handleLogout}>로그아웃</Logout>
                 </ProfileNavWrap>
               )}
             </>
@@ -120,9 +133,15 @@ const Container = styled.div`
 const LogoWrap = styled.div`
   display: block;
   width: 120px;
+  height: 34px;
   margin-top: 4px;
-  margin-right: 350px;
+  margin-right: 288px;
   cursor: pointer;
+
+  & > img {
+    width: 120px;
+    height: 34px;
+  }
 `;
 
 const ContentContainer = styled.div`

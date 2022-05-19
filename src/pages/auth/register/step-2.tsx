@@ -237,13 +237,13 @@ export default () => {
               style={
                 emailCodeVisible
                   ? { marginBottom: 0 }
-                  : { marginBottom: '34px' }
+                  : { marginBottom: '13px' }
               }
             >
               <RepeatTitle>이메일</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '250px', height: '42px', margin: 0 }}
+                  containerStyle={{ width: '250px', margin: 0 }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'email');
@@ -273,7 +273,6 @@ export default () => {
                   <Input
                     containerStyle={{
                       width: '250px',
-                      height: '42px',
                       margin: 0,
                     }}
                     type="text"
@@ -308,7 +307,7 @@ export default () => {
               <RepeatTitle>이름</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '380px', height: '42px', margin: 0 }}
+                  containerStyle={{ width: '380px', margin: 0 }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'name');
@@ -319,11 +318,12 @@ export default () => {
               </TextWrapper>
             </LineWrapper>
 
-            <LineWrapper>
+            <LineWrapper style={{ marginBottom: 13 }}>
               <RepeatTitle>비밀번호</RepeatTitle>
               <TextWrapper style={{ flexDirection: 'column' }}>
                 <Input
-                  containerStyle={{ width: '380px', height: '42px', margin: 0 }}
+                  withoutErrorMessage
+                  containerStyle={{ width: '380px', margin: 0 }}
                   type="password"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'password');
@@ -336,7 +336,6 @@ export default () => {
                 <Input
                   containerStyle={{
                     width: '380px',
-                    height: '42px',
                     marginTop: '8px',
                   }}
                   type="password"
@@ -356,7 +355,7 @@ export default () => {
               <RepeatTitle>휴대폰 번호</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '250px', height: '42px', margin: 0 }}
+                  containerStyle={{ width: '250px', margin: 0 }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'phone');
@@ -379,7 +378,6 @@ export default () => {
                   <Input
                     containerStyle={{
                       width: '250px',
-                      height: '42px',
                       margin: 0,
                     }}
                     type="text"
@@ -435,7 +433,6 @@ const Container = styled.div`
 `;
 
 const MainTitle = styled.div`
-  height: 32px;
   font-size: 22px;
   font-weight: bold;
   font-stretch: normal;
@@ -447,7 +444,6 @@ const MainTitle = styled.div`
 
 const TermsWrapper = styled.div`
   width: 440px;
-  height: 678px;
   margin-top: 30px;
   padding: 30px 30px 50px 30px;
   border-radius: 20px;
@@ -524,7 +520,6 @@ const LineWrapper = styled.div`
   width: 100%;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 34px;
 `;
 
 const Button = styled.div<{ type: ButtonType }>`
@@ -559,6 +554,7 @@ const SendButton = styled.div<{ type: AbleType }>`
   width: 120px;
   height: 42px;
   margin-left: 10px;
+  margin-bottom: 16px;
   padding: 11px 0;
   border-radius: 6px;
   background-color: #f2f2f2;
