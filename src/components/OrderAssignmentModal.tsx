@@ -34,8 +34,8 @@ export default ({
   const selectedSpaceInfo = useSelectedSpaceInfo();
 
   const [date, setDate] = useState('');
-  const [startAt, setStartAt] = useState(null);
-  const [endAt, setEndAt] = useState(null);
+  const [startAt, setStartAt] = useState<string | null>(null);
+  const [endAt, setEndAt] = useState<string | null>(null);
 
   const [specs, setSpecs] = useState<ISpec[]>([defaultSpec, defaultSpec]);
 
@@ -111,8 +111,18 @@ export default ({
         const data = {
           specs,
           date: date,
-          start_time: `${date}T${startAt}:00.000Z`,
-          end_time: `${date}T${endAt}:00.000Z`,
+          start_time: moment(date)
+            .set({
+              hour: parseInt(startAt!.slice(0, 2), 10),
+              minute: parseInt(startAt!.slice(3, 5), 10),
+            })
+            .toISOString(),
+          end_time: moment(date)
+            .set({
+              hour: parseInt(endAt!.slice(0, 2), 10),
+              minute: parseInt(endAt!.slice(3, 5), 10),
+            })
+            .toISOString(),
           mulcha: checkbox.mulcha,
           multal: checkbox.multal,
           inducer: checkbox.inducer,
