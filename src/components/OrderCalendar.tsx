@@ -15,13 +15,18 @@ import { convertTime } from '@utils/date';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
+import CalendarModal from './CalendarModal';
 
-export default () => {
+export default ({ mutateMessages }: any) => {
   const spaceInfo = useSelectedSpaceInfo();
 
   const [dates, setDates] = useState<Date[]>([]);
 
-  const { data: assignments } = useAssignments(
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
+  const [selectedBarInfo, setSelectedBarInfo] = useState(null);
+
+  const { data: assignments, mutate } = useAssignments(
     dates?.[0],
     dates?.[dates.length - 1],
   );
@@ -49,6 +54,12 @@ export default () => {
   useEffect(() => {
     handleToday();
   }, []);
+
+  const handleCalendarModalClose = () => {
+    setIsModalOpened(false);
+    setSelectedBarInfo(null);
+    setModalPosition({ x: 0, y: 0 });
+  };
 
   return (
     <Container>
@@ -90,7 +101,14 @@ export default () => {
                 </DayAmountWrap>
                 <BarContainer>
                   {data?.map((v: any) => (
-                    <Bar style={{ backgroundColor: v?.estimation?.color }}>
+                    <Bar
+                      style={{ backgroundColor: v?.estimation?.color }}
+                      onClick={(e) => {
+                        setSelectedBarInfo(v);
+                        setIsModalOpened(true);
+                        setModalPosition({ x: e.clientX, y: e.clientY });
+                      }}
+                    >
                       <BarTime>{convertTime(v?.start_time, true)}</BarTime>
                       <BarName>{v?.estimation?.factory_space?.name}</BarName>
                       <BarAmount>
@@ -104,6 +122,16 @@ export default () => {
           );
         })}
       </CalendarContainer>
+      <CalendarModal
+        open={isModalOpened}
+        onClose={handleCalendarModalClose}
+        info={selectedBarInfo}
+        position={modalPosition}
+        revalidate={() => {
+          mutate();
+          mutateMessages();
+        }}
+      />
     </Container>
   );
 };
@@ -264,6 +292,7 @@ const Bar = styled.div`
   border-radius: 6px;
   background-color: #ffd6cc;
   margin-bottom: 2px;
+  cursor: pointer;
 `;
 
 const BarTime = styled.span`

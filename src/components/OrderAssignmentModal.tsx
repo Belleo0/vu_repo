@@ -4,7 +4,8 @@ import { norminalStrengthOptions, slumpOptions } from '@constance/SpecOptions';
 import styled from '@emotion/styled';
 import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
 import getAssetURL from '@utils/getAssetURL';
-import { useMemo, useState } from 'react';
+import moment from 'moment';
+import { useEffect, useMemo, useState } from 'react';
 import BlackInput from './BlackInput';
 import BlackSelect from './BlackSelect';
 import Button, { ButtonType } from './Button';
@@ -20,7 +21,16 @@ interface ISpec {
 
 const defaultSpec = { value: 0, slump: 0, norminal_strength: 0, quantity: 0 };
 
-export default ({ id, open, onClose, name, percent, revalidate }: any) => {
+export default ({
+  id,
+  open,
+  onClose,
+  name,
+  percent,
+  revalidate,
+  isEditModal = false,
+  initialInfo,
+}: any) => {
   const selectedSpaceInfo = useSelectedSpaceInfo();
 
   const [date, setDate] = useState('');
@@ -55,6 +65,8 @@ export default ({ id, open, onClose, name, percent, revalidate }: any) => {
 
     return true;
   }, [date, startAt, endAt, specs]);
+
+  const [loading, setLoading] = useState(false);
 
   const handleChangeSpecValue = (index: number, key: string, value: string) => {
     console.log(value);
@@ -93,21 +105,49 @@ export default ({ id, open, onClose, name, percent, revalidate }: any) => {
   };
 
   const handleSubmit = async () => {
-    const data = {
-      specs,
-      date: date,
-      start_time: `${date}T${startAt}:00.000Z`,
-      end_time: `${date}T${endAt}:00.000Z`,
-      mulcha: checkbox.mulcha,
-      multal: checkbox.multal,
-      inducer: checkbox.inducer,
-      remark,
-      total: totalAmount,
-    };
-    await api.post(`/assignments/${id}`, data);
-    onClose();
-    revalidate();
+    if (loading === false) {
+      setLoading(true);
+      try {
+        const data = {
+          specs,
+          date: date,
+          start_time: `${date}T${startAt}:00.000Z`,
+          end_time: `${date}T${endAt}:00.000Z`,
+          mulcha: checkbox.mulcha,
+          multal: checkbox.multal,
+          inducer: checkbox.inducer,
+          remark,
+          total: totalAmount,
+        };
+        if (isEditModal) {
+          await api.put(`/assignments/${initialInfo?.id}`, data);
+        } else {
+          await api.post(`/assignments/${id}`, data);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+        onClose();
+        await revalidate();
+      }
+    }
   };
+
+  useEffect(() => {
+    if (isEditModal) {
+      setDate(initialInfo.date);
+      setStartAt(moment(initialInfo.start_time).format('HH:mm') as any);
+      setEndAt(moment(initialInfo.end_time).format('HH:mm') as any);
+      setSpecs(initialInfo.specs);
+      setCheckbox({
+        mulcha: initialInfo.mulcha,
+        multal: initialInfo.multal,
+        inducer: initialInfo.inducer,
+      });
+      setRemark(initialInfo.remark);
+    }
+  }, [isEditModal, initialInfo]);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -277,7 +317,7 @@ export default ({ id, open, onClose, name, percent, revalidate }: any) => {
             type={isValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
             onClick={handleSubmit}
           >
-            등록하기
+            {isEditModal ? '수정하기' : '등록하기'}
           </Button>
         </Contents>
       </Container>

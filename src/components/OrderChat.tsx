@@ -17,7 +17,16 @@ import { mutate } from 'swr';
 import OrderChatAssignment from './OrderChatAssignment';
 import { useLocation } from 'react-router-dom';
 
-export default () => {
+export default ({
+  messages,
+  members,
+  isChatLoading,
+  mutateMessages,
+  chatRoomId,
+  selectedChatRoomInfo,
+  setSelectedChatRoomInfo,
+  previousChatRoomId,
+}: any) => {
   const location = useLocation();
 
   const [mount, setMount] = useState(false);
@@ -34,24 +43,9 @@ export default () => {
     return spaces.filter((v) => v?.factory_space?.name?.includes(search));
   }, [spaces, search]);
 
-  const [selectedChatRoomInfo, setSelectedChatRoomInfo] = useState<any>(null);
-
-  const chatRoomId = useMemo(() => {
-    if (!selectedChatRoomInfo) return null;
-    return selectedChatRoomInfo?.chat_room_id;
-  }, [selectedChatRoomInfo]);
-
-  const previousChatRoomId = usePrevious(chatRoomId);
-
   const [socketState, setSocketState] = useState<any>(null);
 
   const messageContainerRef = useRef<HTMLDivElement>(null);
-
-  const {
-    data: { messages, members },
-    isLoading: isChatLoading,
-    mutateMessages,
-  } = useChatData(chatRoomId);
 
   const [message, setMessage] = useState('');
 
@@ -267,6 +261,7 @@ export default () => {
                   />
                 ) : (
                   <OrderChatAssignment
+                    type={v?.type}
                     chatRoomData={selectedChatRoomInfo}
                     companyName={v?.send_user?.company?.name}
                     userName={v?.send_user?.name}

@@ -12,6 +12,7 @@ import Checkbox from './Checkbox';
 import OrderChatAssignmentButton from './OrderChatAssignmentButton';
 
 interface IOrderChatMessage {
+  type: string;
   chatRoomData: any;
   companyName: string;
   userName: string;
@@ -22,30 +23,8 @@ interface IOrderChatMessage {
   mutate: () => any;
 }
 
-const chat = {
-  id: 92,
-  send_user: {
-    id: 2,
-    signname: 'field',
-    name: '건설현장멤버 테스트',
-    phone: '01072816345',
-    company: {
-      id: 2,
-      company_type: 'CONSTRUCTION',
-      name: '(주)제로투건설사',
-      address: 'address',
-      ceo_name: 'ceo_name',
-    },
-    position: '과장 수정',
-    tel: 'string',
-  },
-  type: 'ASSIGNMENT_CREATE',
-  content: null,
-  //   data: ,
-  created_at: '2022-05-19T14:12:22.000Z',
-};
-
 export default ({
+  type,
   chatRoomData,
   companyName,
   userName,
@@ -78,6 +57,11 @@ export default ({
         )}
 
         <MessageBox isMyChat={isMyChat}>
+          {type === 'ASSIGNMENT_DELETE' ? (
+            <RemoveTitle>배송일정이 삭제되었습니다.</RemoveTitle>
+          ) : type === 'ASSIGNMENT_UPDATE' ? (
+            <UpdateTitle>배송일정이 수정되었습니다.</UpdateTitle>
+          ) : null}
           <TitleWrap>
             <Title>레미콘 주문</Title>
             <TotalAmountWrap>
@@ -332,4 +316,17 @@ const CheckboxWrap = styled.div`
   padding-bottom: 14px;
   border-bottom: 1px solid #f2f2f2;
   margin-bottom: 16px;
+`;
+
+const UpdateTitle = styled.span`
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.36px;
+  text-align: left;
+  color: #258fff;
+  margin-bottom: 6px;
+`;
+
+const RemoveTitle = styled(UpdateTitle)`
+  color: #ef0000;
 `;
