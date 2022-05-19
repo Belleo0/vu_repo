@@ -15,8 +15,11 @@ import SearchInput from './SearchInput';
 import OrderAssignmentModal from './OrderAssignmentModal';
 import { mutate } from 'swr';
 import OrderChatAssignment from './OrderChatAssignment';
+import { useLocation } from 'react-router-dom';
 
 export default () => {
+  const location = useLocation();
+
   const [mount, setMount] = useState(false);
 
   const userInfo = useUserInfo();
@@ -56,8 +59,15 @@ export default () => {
 
   useEffect(() => {
     if (spaces.length > 0) {
-      const data = spaces?.[0];
-      setSelectedChatRoomInfo(data);
+      if ((location.state as any)?.id !== undefined) {
+        const data =
+          spaces?.filter((v) => v.id === (location.state as any)?.id)?.[0] ||
+          spaces?.[0];
+        setSelectedChatRoomInfo(data);
+      } else {
+        const data = spaces?.[0];
+        setSelectedChatRoomInfo(data);
+      }
     } else {
       setSelectedChatRoomInfo(null);
     }

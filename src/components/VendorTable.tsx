@@ -8,6 +8,7 @@ import EstimationStatusValue from './EstimationStatusValue';
 import moment from 'moment';
 import TextModal from './TextModal';
 import api from '@api';
+import { useNavigate } from 'react-router-dom';
 
 interface IVendorTable {
   data: any[];
@@ -15,6 +16,8 @@ interface IVendorTable {
 }
 
 export default ({ data = [], revalidate }: IVendorTable) => {
+  const navigate = useNavigate();
+
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const [isRegisterModalOpen, setIsRegisterModalOpen] =
@@ -42,11 +45,9 @@ export default ({ data = [], revalidate }: IVendorTable) => {
     }
   };
 
-  const handleOrder = (isChatRoomJoined: number) => {
+  const handleOrder = (id: number, isChatRoomJoined: number) => {
     if (Boolean(isChatRoomJoined)) {
-      window.alert(
-        'TODO : 주문 페이지로 이동\nQA중 확인시 시트에 추가 부탁드립니다.',
-      );
+      navigate('/order', { state: { id } });
     } else {
       setIsNotJoinChatRoomModalOpen(true);
     }
@@ -165,7 +166,7 @@ export default ({ data = [], revalidate }: IVendorTable) => {
               onClick={
                 v.status !== 'REGISTERED'
                   ? () => setIsNotRegisterModalOpen(true)
-                  : () => handleOrder(v?.is_chat_room_joined)
+                  : () => handleOrder(v.id, v?.is_chat_room_joined)
               }
             >
               주문
