@@ -8,6 +8,7 @@ import SearchInput from '@components/SearchInput';
 import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
+import { isNull } from 'lodash';
 
 enum ButtonType {
   'ABLE',
@@ -39,7 +40,6 @@ const cursor = {
 };
 
 export default () => {
-  const navigate = useNavigate();
   const location = useLocation();
 
   const userInviteType: boolean = false;
@@ -106,27 +106,22 @@ export default () => {
   const insertUserCompany = () => {
     setIsUserInsert(true);
     setIsValid(false);
-    setInput(['', '', '', '', '']);
+    setInput(['']);
   };
 
   useEffect(() => {
-    if (
-      isUserInsert &&
-      input.zipCode &&
-      input.company &&
-      input.companyAdress &&
-      input.companyAdress2
-    ) {
-      setIsValid(true);
+    if (isUserInsert) {
+      if (
+        input.zipCode?.length >= 1 &&
+        input.company?.length >= 1 &&
+        input.companyAdress?.length >= 1 &&
+        input.companyAdress2?.length >= 1
+      ) {
+        setIsValid(true);
+      } else {
+        setIsValid(false);
+      }
     }
-    console.log(
-      isUserInsert,
-      input.zipCode,
-      input.company,
-      input.companyAdress,
-      input.companyAdress2,
-      isValid,
-    );
   });
 
   return (
@@ -369,7 +364,7 @@ export default () => {
           </MainContentBox>
           <Button
             type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
-            onClick={() => requestSignUpHandler()}
+            onClick={isValid ? () => requestSignUpHandler() : isNull}
           >
             회원가입
           </Button>
