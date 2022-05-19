@@ -72,17 +72,21 @@ export default () => {
                   src={getAssetURL('../assets/default-profile.jpeg')}
                 />
                 <ProfileName>{userInfo?.name}</ProfileName>
-                <ProfileIcon src={getAssetURL('../assets/ic-arrow.svg')} />
+                {openProfileNav ? (
+                  <ProfileIcon src={getAssetURL('../assets/ic-arrow-up.svg')} />
+                ) : (
+                  <ProfileIcon src={getAssetURL('../assets/ic-arrow.svg')} />
+                )}
               </ProfileWrap>
               {openProfileNav && (
                 <ProfileNavWrap>
                   <ProfileMenuList>
-                    {profileMenus.map((v) => (
+                    {profileMenus.map((item, i) => (
                       <ProfileMenu
-                        key={v.path}
-                        onClick={() => navigate(v.path)}
+                        key={item.label}
+                        onClick={() => navigate(item.path)}
                       >
-                        {v.label}
+                        {item.label}
                       </ProfileMenu>
                     ))}
                   </ProfileMenuList>
@@ -232,7 +236,7 @@ const ProfileNavWrap = styled.div`
   top: 0;
   right: 0;
   margin: 70px 30px;
-  z-index: 100;
+  z-index: 999999999;
   background-color: #ffffff;
   border-radius: 12px;
 `;
