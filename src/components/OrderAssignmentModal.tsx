@@ -1,11 +1,14 @@
+import api from '@api';
 import assignmentTimeOptions from '@constance/AssignmentTimeOptions';
 import { norminalStrengthOptions, slumpOptions } from '@constance/SpecOptions';
 import styled from '@emotion/styled';
 import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
 import getAssetURL from '@utils/getAssetURL';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import BlackInput from './BlackInput';
 import BlackSelect from './BlackSelect';
+import Button, { ButtonType } from './Button';
+import Checkbox from './Checkbox';
 import Modal from './Modal';
 
 interface ISpec {
@@ -17,13 +20,41 @@ interface ISpec {
 
 const defaultSpec = { value: 0, slump: 0, norminal_strength: 0, quantity: 0 };
 
-export default () => {
+export default ({ id, open, onClose, name, percent, revalidate }: any) => {
   const selectedSpaceInfo = useSelectedSpaceInfo();
 
+  const [date, setDate] = useState('');
   const [startAt, setStartAt] = useState(null);
   const [endAt, setEndAt] = useState(null);
 
   const [specs, setSpecs] = useState<ISpec[]>([defaultSpec, defaultSpec]);
+
+  const [checkbox, setCheckbox] = useState({
+    mulcha: false,
+    multal: false,
+    inducer: false,
+  });
+
+  const totalAmount = useMemo(() => {
+    return specs.reduce(
+      (previousValue, currentValue) => previousValue + currentValue.quantity,
+      0,
+    );
+  }, [specs]);
+
+  const [remark, setRemark] = useState('');
+
+  const isValidated = useMemo(() => {
+    if (date === '') return false;
+    if (startAt === null) return false;
+    if (endAt === null) return false;
+    if (specs[0].value === 0) return false;
+    if (specs[0].slump === 0) return false;
+    if (specs[0].norminal_strength === 0) return false;
+    if (specs[0].quantity === 0) return false;
+
+    return true;
+  }, [date, startAt, endAt, specs]);
 
   const handleChangeSpecValue = (index: number, key: string, value: string) => {
     console.log(value);
@@ -61,11 +92,31 @@ export default () => {
     }
   };
 
+  const handleSubmit = async () => {
+    const data = {
+      specs,
+      date: date,
+      start_time: `${date}T${startAt}:00.000Z`,
+      end_time: `${date}T${endAt}:00.000Z`,
+      mulcha: checkbox.mulcha,
+      multal: checkbox.multal,
+      inducer: checkbox.inducer,
+      remark,
+      total: totalAmount,
+    };
+    await api.post(`/assignments/${id}`, data);
+    onClose();
+    revalidate();
+  };
+
   return (
-    <Modal open={false} onClose={() => null}>
+    <Modal open={open} onClose={onClose}>
       <Container>
         <TopSection>
-          <CloseIcon src={getAssetURL('../assets/ic-del.svg')} />
+          <CloseIcon
+            src={getAssetURL('../assets/ic-del.svg')}
+            onClick={onClose}
+          />
           <Title>물량 배정</Title>
         </TopSection>
         <InfoSection>
@@ -80,19 +131,22 @@ export default () => {
           <ContentsInfoContainer>
             <ContentsInfoWrap>
               <Label>납품업체</Label>
-              <Value>(주)표주레미콘</Value>
+              <Value>{name}</Value>
             </ContentsInfoWrap>
             <ContentsInfoWrap>
               <Label>단가율</Label>
-              <Value>84%</Value>
+              <Value>{percent}%</Value>
             </ContentsInfoWrap>
           </ContentsInfoContainer>
           <Form>
             <FormRow>
               <FormLabel>배정일자</FormLabel>
               <BlackInput
+                type="date"
                 placeholder="yyyy.mm.dd"
                 containerStyle={{ width: 130 }}
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
               />
             </FormRow>
             <FormRow>
@@ -118,6 +172,7 @@ export default () => {
                 <FormRow>
                   <FormLabel>{i === 0 ? '규격' : ''}</FormLabel>
                   <BlackInput
+                    maxLength={2}
                     placeholder="00"
                     containerStyle={{ width: 40 }}
                     value={v.value === 0 ? '' : v.value}
@@ -173,7 +228,57 @@ export default () => {
                 </FormRow>
               ))}
             </SpecContainer>
+            <CheckboxWrap>
+              <Checkbox
+                value={checkbox.mulcha}
+                onChange={() =>
+                  setCheckbox((prev) => ({ ...prev, mulcha: !prev.mulcha }))
+                }
+                label="물차"
+                containerStyle={{ marginRight: 24 }}
+              />
+              <Checkbox
+                value={checkbox.multal}
+                onChange={() =>
+                  setCheckbox((prev) => ({ ...prev, multal: !prev.multal }))
+                }
+                label="물탈"
+                containerStyle={{ marginRight: 24 }}
+              />
+              <Checkbox
+                value={checkbox.inducer}
+                onChange={() =>
+                  setCheckbox((prev) => ({ ...prev, inducer: !prev.inducer }))
+                }
+                label="유도제"
+                containerStyle={{ marginRight: 24 }}
+              />
+            </CheckboxWrap>
+            <FormRow style={{ alignItems: 'flex-start', marginBottom: 18 }}>
+              <FormLabel style={{ width: 64 }}>
+                특기사항
+                <br />
+                (선택)
+              </FormLabel>
+              <TextArea
+                value={remark}
+                onChange={(e) => setRemark(e.target.value)}
+              />
+            </FormRow>
+            <FormRow style={{ justifyContent: 'space-between' }}>
+              <FormLabel style={{ width: 64 }}>합계</FormLabel>
+              <Amount>
+                {totalAmount.toLocaleString('ko')}
+                <span>m³</span>
+              </Amount>
+            </FormRow>
           </Form>
+          <Button
+            type={isValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
+            onClick={handleSubmit}
+          >
+            등록하기
+          </Button>
         </Contents>
       </Container>
     </Modal>
@@ -198,6 +303,7 @@ const CloseIcon = styled.img`
   object-fit: contain;
   margin-left: auto;
   margin-bottom: 6px;
+  cursor: pointer;
 `;
 
 const Title = styled.span`
@@ -292,18 +398,22 @@ const Form = styled.div`
   border-radius: 20px;
   box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.06);
   background-color: #fff;
+  margin-bottom: 30px;
 `;
 
 const FormRow = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 14px;
+  &:not(:last-child) {
+    margin-bottom: 14px;
+  }
 `;
 
 const FormLabel = styled.span`
   font-size: 14px;
   font-weight: 600;
+  line-height: 1.43;
   letter-spacing: -0.28px;
   text-align: left;
   color: #222;
@@ -350,4 +460,39 @@ const SpecRowIcon = styled.img`
 const SpecContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 30px;
+`;
+
+const CheckboxWrap = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f2f2f2;
+  margin-bottom: 14px;
+`;
+
+const TextArea = styled.textarea`
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  border-radius: 6px;
+  border: solid 1px #e3e3e3;
+  background-color: #fff;
+  outline: 0;
+  resize: none;
+`;
+
+const Amount = styled.span`
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.36px;
+  color: #222;
+
+  & > span {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.26px;
+    color: #1f1d1d;
+    margin-left: 4px;
+  }
 `;

@@ -13,6 +13,8 @@ import OrderChatCompanyCard from './OrderChatCompanyCard';
 import OrderChatMessage from './OrderChatMessage';
 import SearchInput from './SearchInput';
 import OrderAssignmentModal from './OrderAssignmentModal';
+import { mutate } from 'swr';
+import OrderChatAssignment from './OrderChatAssignment';
 
 export default () => {
   const [mount, setMount] = useState(false);
@@ -50,6 +52,8 @@ export default () => {
 
   const [message, setMessage] = useState('');
 
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+
   useEffect(() => {
     if (spaces.length > 0) {
       const data = spaces?.[0];
@@ -82,10 +86,13 @@ export default () => {
 
   const handleSendMessage = async () => {
     if (message.length > 0) {
+      const tempMessage = message;
+      setMessage('');
+
       mutateMessages(
         (v: any) => [
           {
-            content: message,
+            content: tempMessage,
             created_at: new Date(),
             data: null,
             send_user: userInfo,
@@ -98,12 +105,11 @@ export default () => {
 
       await api.post(`/chats/${chatRoomId}`, {
         type: 'TEXT',
-        content: message,
+        content: tempMessage,
         data: null,
       });
 
       mutateMessages();
-      setMessage('');
 
       scrollToBottom(true);
     }
@@ -201,7 +207,9 @@ export default () => {
               <TopSectionTitle>
                 {selectedChatRoomInfo?.factory_space?.name}
               </TopSectionTitle>
-              <CircleButton>물량배정</CircleButton>
+              <CircleButton onClick={() => setIsRequestModalOpen(true)}>
+                물량배정
+              </CircleButton>
               <CircleRedButton>현장마감</CircleRedButton>
               <TopRightSection>
                 <Button
@@ -237,16 +245,29 @@ export default () => {
               </TopRightSection>
             </TopSection>
             <MidSection ref={messageContainerRef}>
-              {messages.map((v: any) => (
-                <OrderChatMessage
-                  companyName={v?.send_user?.company?.name}
-                  userName={v?.send_user?.name}
-                  userPosition={v?.send_user?.company?.position}
-                  content={v?.content}
-                  sendAt={v?.created_at}
-                  isMyChat={v?.send_user?.id === userInfo?.id}
-                />
-              ))}
+              {messages.map((v: any) =>
+                v.type === 'TEXT' ? (
+                  <OrderChatMessage
+                    companyName={v?.send_user?.company?.name}
+                    userName={v?.send_user?.name}
+                    userPosition={v?.send_user?.company?.position}
+                    content={v?.content}
+                    sendAt={v?.created_at}
+                    isMyChat={v?.send_user?.id === userInfo?.id}
+                  />
+                ) : (
+                  <OrderChatAssignment
+                    chatRoomData={selectedChatRoomInfo}
+                    companyName={v?.send_user?.company?.name}
+                    userName={v?.send_user?.name}
+                    userPosition={v?.send_user?.company?.position}
+                    data={v?.data}
+                    sendAt={v?.created_at}
+                    isMyChat={v?.send_user?.id === userInfo?.id}
+                    mutate={() => mutateMessages()}
+                  />
+                ),
+              )}
             </MidSection>
             <BottomSection>
               <BottomIcon
@@ -269,7 +290,16 @@ export default () => {
           </>
         )}
       </MainContainer>
-      <OrderAssignmentModal />
+      {isRequestModalOpen && (
+        <OrderAssignmentModal
+          open={isRequestModalOpen}
+          onClose={() => setIsRequestModalOpen(false)}
+          id={selectedChatRoomInfo?.id || 0}
+          name={selectedChatRoomInfo?.factory_space?.name || ''}
+          percent={selectedChatRoomInfo?.percent || 0}
+          revalidate={() => mutateMessages()}
+        />
+      )}
     </Container>
   );
 };
