@@ -5,6 +5,163 @@ import { CalendarTypeState, days, isDateToday } from '@utils/calendar';
 import getAssetURL from '@utils/getAssetURL';
 import { useMemo } from 'react';
 
+const ddddd = {
+  id: 17,
+  estimation: {
+    id: 12,
+    field_space: {
+      id: 4,
+      type: 'FIELD',
+      company: {
+        id: 2,
+        company_type: 'CONSTRUCTION',
+        name: '(주)제로투건설사',
+        address: 'address',
+        ceo_name: 'ceo_name',
+      },
+      name: '2번',
+      basic_address: 'string',
+      detail_address: 'string',
+      latitude: 37.557733,
+      longitude: 126.9253985,
+      admin_user: {
+        id: 2,
+        signname: 'field',
+        name: '건설현장멤버 테스트',
+        phone: '01072816345',
+        company_type: 'CONSTRUCTION',
+        company_id: 2,
+        position: '과장 수정',
+        tel: 'string',
+      },
+      site_user: {
+        id: 2,
+        signname: 'field',
+        name: '건설현장멤버 테스트',
+        phone: '01072816345',
+        company_type: 'CONSTRUCTION',
+        company_id: 2,
+        position: '과장 수정',
+        tel: 'string',
+      },
+      field_info: {
+        id: 1,
+        start_at: '2022-04-12T20:54:22.000Z',
+        end_at: '2022-04-12T20:54:22.000Z',
+        need_amount: 0,
+        is_need_discuss: 'string',
+        payment_method: 'CASH',
+        payment_expire_date: 'string',
+        payment_due_date: 'string',
+        remarks: 'string',
+      },
+      is_removed: false,
+    },
+    factory_space: {
+      id: 1,
+      type: 'FACTORY',
+      company: {
+        id: 1,
+        company_type: 'REMICON',
+        name: 'remicon-test-company',
+        address: 'address',
+        ceo_name: 'ceo_name',
+      },
+      name: 'string',
+      basic_address: 'string',
+      detail_address: 'string',
+      latitude: 37.5491848,
+      longitude: 126.9141225,
+      admin_user: {
+        id: 1,
+        signname: 'factory',
+        name: '레미콘공장멤버 테스트',
+        phone: '01072816345',
+        company_type: 'REMICON',
+        company_id: 1,
+        position: 'string',
+        tel: 'string',
+      },
+      site_user: {
+        id: 1,
+        signname: 'factory',
+        name: '레미콘공장멤버 테스트',
+        phone: '01072816345',
+        company_type: 'REMICON',
+        company_id: 1,
+        position: 'string',
+        tel: 'string',
+      },
+      factory_info: {
+        id: 1,
+        tel: 'string',
+        fax: 'string',
+        no: 0,
+        capa: 'string',
+        total: 'string',
+        truck_count: 0,
+        cement_silo: 0,
+        start_at: '2022-04-12T20:47:40.000Z',
+        ks_acquired_at: '2022-04-12T20:47:40.000Z',
+      },
+      is_removed: false,
+    },
+    status: 'REGISTERED',
+    percent: 0,
+    slump_1: 0,
+    norminal_strength_1: 0,
+    price_1: 0,
+    slump_2: 0,
+    norminal_strength_2: 0,
+    price_2: 0,
+    slump_3: 0,
+    norminal_strength_3: 0,
+    price_3: 0,
+    remarks: 'string',
+    attachments: 'string',
+    manager_user: {
+      id: 1,
+      signname: 'factory',
+      name: '레미콘공장멤버 테스트',
+      phone: '01072816345',
+      company: {
+        id: 1,
+        company_type: 'REMICON',
+        name: 'remicon-test-company',
+        address: 'address',
+        ceo_name: 'ceo_name',
+      },
+      position: 'string',
+      tel: 'string',
+    },
+    sales_user: {
+      id: 1,
+      signname: 'factory',
+      name: '레미콘공장멤버 테스트',
+      phone: '01072816345',
+      company: {
+        id: 1,
+        company_type: 'REMICON',
+        name: 'remicon-test-company',
+        address: 'address',
+        ceo_name: 'ceo_name',
+      },
+      position: 'string',
+      tel: 'string',
+    },
+  },
+  type: 'FACTORY_TO_FIELD',
+  status: 'CONFIRMED',
+  date: '2022-05-19',
+  start_time: '2022-05-19T19:00:43.000Z',
+  end_time: '2022-05-19T21:30:43.000Z',
+  mulcha: true,
+  multal: true,
+  inducer: true,
+  remark: 'string',
+  total: 2000,
+};
+
 const hours = [
   4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 ];
@@ -24,7 +181,13 @@ export default ({ date, data, type }: any) => {
   }, [type]);
 
   const transformedData = useMemo(() => {
-    const sortedData = data.sort(
+    const filteredData = data.filter((v: any) => {
+      return (
+        new Date(v.start_time).getHours() >= 3 &&
+        new Date(v.start_time).getHours() <= 12
+      );
+    });
+    const sortedData = filteredData.sort(
       (a: any, b: any) =>
         new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
     );
@@ -122,8 +285,8 @@ export default ({ date, data, type }: any) => {
               style={{ backgroundColor: i % 2 !== 0 ? '#fff5df' : '#dbeafb' }}
             >
               <WeekInfoRow>
-                <Name>{v.name}</Name>
-                <Amount>{v.amount}m³</Amount>
+                <Name>{v?.estimation?.factory_space?.name}</Name>
+                <Amount>{v?.total?.toLocaleString?.('ko')}m³</Amount>
               </WeekInfoRow>
               <Time>{v.time}</Time>
             </Bar>
@@ -136,9 +299,9 @@ export default ({ date, data, type }: any) => {
               height={Math.abs(v.height)}
               style={{ backgroundColor: i % 2 !== 0 ? '#fff5df' : '#dbeafb' }}
             >
-              <Name>{v.name}</Name>
+              <Name>{v?.estimation?.factory_space?.name}</Name>
               <Time>{v.time}</Time>
-              <Amount>{v.amount}m³</Amount>
+              <Amount>{v?.total?.toLocaleString?.('ko')}m³</Amount>
             </Bar>
           ),
         )}

@@ -1,3 +1,4 @@
+import useAssignments from '@api/useAssignments';
 import CalendarColumn from '@components/CalendarColumn';
 import Select from '@components/Select';
 import { css } from '@emotion/react';
@@ -10,6 +11,7 @@ import {
   generateWeekInfo,
 } from '@utils/calendar';
 import getAssetURL from '@utils/getAssetURL';
+import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 
 const calendarTypeOptions = [
@@ -47,6 +49,11 @@ export default () => {
 
   const [type, setType] = useState(CalendarTypeState.DAY);
   const [dates, setDates] = useState<any>([]);
+
+  const { data: assignments } = useAssignments(
+    dates?.[0],
+    dates?.[dates.length - 1],
+  );
 
   const weekInfo = useMemo(() => {
     return generateWeekInfo(type, dates);
@@ -128,10 +135,19 @@ export default () => {
           <BarBackground />
           <BarContainer>
             {type === CalendarTypeState.DAY ? (
-              <CalendarColumn data={data} type={type} />
+              <CalendarColumn
+                data={
+                  assignments?.[moment(dates[0]).format('YYYY-MM-DD')] || []
+                }
+                type={type}
+              />
             ) : (
               dates.map((v: any) => (
-                <CalendarColumn date={v} data={data} type={type} />
+                <CalendarColumn
+                  date={v}
+                  data={assignments?.[moment(v).format('YYYY-MM-DD')] || []}
+                  type={type}
+                />
               ))
             )}
           </BarContainer>
