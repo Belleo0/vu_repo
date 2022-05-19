@@ -1,3 +1,4 @@
+import useAssignments from '@api/useAssignments';
 import useChatData from '@api/useChatData';
 import OrderCalendar from '@components/OrderCalendar';
 import OrderChat from '@components/OrderChat';
@@ -22,14 +23,28 @@ export default () => {
     mutateMessages,
   } = useChatData(chatRoomId);
 
+  const [dates, setDates] = useState<Date[]>([]);
+
+  const { data: assignments, mutate } = useAssignments(
+    dates?.[0],
+    dates?.[dates.length - 1],
+  );
+
   return (
     <SpaceLayout>
       <Container>
-        <OrderCalendar mutateMessages={mutateMessages} />
+        <OrderCalendar
+          assignments={assignments}
+          mutate={mutate}
+          dates={dates}
+          setDates={setDates}
+          mutateMessages={mutateMessages}
+        />
         <OrderChat
           messages={messages}
           members={members}
           isChatLoading={isChatLoading}
+          mutate={mutate}
           mutateMessages={mutateMessages}
           chatRoomId={chatRoomId}
           selectedChatRoomInfo={selectedChatRoomInfo}

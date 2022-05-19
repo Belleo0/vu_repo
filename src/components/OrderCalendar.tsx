@@ -17,19 +17,18 @@ import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import CalendarModal from './CalendarModal';
 
-export default ({ mutateMessages }: any) => {
+export default ({
+  dates,
+  setDates,
+  assignments,
+  mutate,
+  mutateMessages,
+}: any) => {
   const spaceInfo = useSelectedSpaceInfo();
-
-  const [dates, setDates] = useState<Date[]>([]);
 
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [selectedBarInfo, setSelectedBarInfo] = useState(null);
-
-  const { data: assignments, mutate } = useAssignments(
-    dates?.[0],
-    dates?.[dates.length - 1],
-  );
 
   const weekInfo = useMemo(() => {
     return generateWeekInfo(CalendarTypeState.WEEK, dates);
@@ -84,7 +83,6 @@ export default ({ mutateMessages }: any) => {
         {dates.map((v) => {
           const date = moment(v).format('YYYY-MM-DD');
           const data = assignments?.[date] || [];
-          console.log(data);
           return (
             <DayContainer key={v.toISOString()}>
               <DayText className="day-text">{days[v.getDay()]}</DayText>

@@ -157,6 +157,7 @@ const Container = styled.div`
   border-radius: 20px;
   box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
   background-color: #fff;
+  z-index: 500;
 `;
 
 const Header = styled.div`

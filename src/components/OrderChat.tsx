@@ -13,7 +13,6 @@ import OrderChatCompanyCard from './OrderChatCompanyCard';
 import OrderChatMessage from './OrderChatMessage';
 import SearchInput from './SearchInput';
 import OrderAssignmentModal from './OrderAssignmentModal';
-import { mutate } from 'swr';
 import OrderChatAssignment from './OrderChatAssignment';
 import { useLocation } from 'react-router-dom';
 
@@ -21,6 +20,7 @@ export default ({
   messages,
   members,
   isChatLoading,
+  mutate,
   mutateMessages,
   chatRoomId,
   selectedChatRoomInfo,
@@ -116,6 +116,8 @@ export default ({
       mutateMessages();
 
       scrollToBottom(true);
+
+      mutate();
     }
   };
 
@@ -152,6 +154,8 @@ export default ({
           );
           // mutateMessages();
           scrollToBottom(false);
+
+          mutate();
         }
       });
     });
@@ -302,7 +306,10 @@ export default ({
           id={selectedChatRoomInfo?.id || 0}
           name={selectedChatRoomInfo?.factory_space?.name || ''}
           percent={selectedChatRoomInfo?.percent || 0}
-          revalidate={() => mutateMessages()}
+          revalidate={() => {
+            mutateMessages();
+            mutate();
+          }}
         />
       )}
     </Container>
