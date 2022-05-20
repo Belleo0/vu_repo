@@ -75,6 +75,9 @@ const Menu = styled.span`
   color: #777;
   margin: 0px 24px;
 
+  user-select: none;
+  cursor: pointer;
+
   &:first-of-type {
     margin-left: 0;
   }

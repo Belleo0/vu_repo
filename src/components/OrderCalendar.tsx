@@ -1,3 +1,4 @@
+import useAssignments from '@api/useAssignments';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
@@ -10,13 +11,24 @@ import {
   generateWeekInfo,
   isDateToday,
 } from '@utils/calendar';
+import { convertTime } from '@utils/date';
 import getAssetURL from '@utils/getAssetURL';
+import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
+import CalendarModal from './CalendarModal';
 
-export default () => {
+export default ({
+  dates,
+  setDates,
+  assignments,
+  mutate,
+  mutateMessages,
+}: any) => {
   const spaceInfo = useSelectedSpaceInfo();
 
-  const [dates, setDates] = useState<Date[]>([]);
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
+  const [selectedBarInfo, setSelectedBarInfo] = useState(null);
 
   const weekInfo = useMemo(() => {
     return generateWeekInfo(CalendarTypeState.WEEK, dates);
@@ -42,6 +54,12 @@ export default () => {
     handleToday();
   }, []);
 
+  const handleCalendarModalClose = () => {
+    setIsModalOpened(false);
+    setSelectedBarInfo(null);
+    setModalPosition({ x: 0, y: 0 });
+  };
+
   return (
     <Container>
       <FilterContainer>
@@ -62,36 +80,56 @@ export default () => {
         </RightWrap>
       </FilterContainer>
       <CalendarContainer>
-        {dates.map((v) => (
-          <DayContainer key={v.toISOString()}>
-            <DayText className="day-text">{days[v.getDay()]}</DayText>
-            <DayContents>
-              <DayAmountWrap>
-                <DayIcon
-                  src={getAssetURL('../assets/ic-sunny.svg')}
-                  style={{ opacity: 0 }}
-                />
-                <DayAmount active={isDateToday(v)}>
-                  {convertString(v.getDate())}
-                </DayAmount>
-                <DayIcon src={getAssetURL('../assets/ic-sunny.svg')} />
-              </DayAmountWrap>
-              <BarContainer>
-                <Bar>
-                  <BarTime>오전7:30</BarTime>
-                  <BarName>(주)표주레asdf미콘</BarName>
-                  <BarAmount>670m³</BarAmount>
-                </Bar>
-                <Bar>
-                  <BarTime>오전7:30</BarTime>
-                  <BarName>(주)표주레asdf미콘</BarName>
-                  <BarAmount>670m³</BarAmount>
-                </Bar>
-              </BarContainer>
-            </DayContents>
-          </DayContainer>
-        ))}
+        {dates.map((v: any) => {
+          const date = moment(v).format('YYYY-MM-DD');
+          const data = assignments?.[date] || [];
+          return (
+            <DayContainer key={v.toISOString()}>
+              <DayText className="day-text">{days[v.getDay()]}</DayText>
+              <DayContents>
+                <DayAmountWrap>
+                  <DayIcon
+                    src={getAssetURL('../assets/ic-sunny.svg')}
+                    style={{ opacity: 0 }}
+                  />
+                  <DayAmount active={isDateToday(v)}>
+                    {convertString(v.getDate())}
+                  </DayAmount>
+                  <DayIcon src={getAssetURL('../assets/ic-sunny.svg')} />
+                </DayAmountWrap>
+                <BarContainer>
+                  {data?.map((v: any) => (
+                    <Bar
+                      style={{ backgroundColor: v?.estimation?.color }}
+                      onClick={(e) => {
+                        setSelectedBarInfo(v);
+                        setIsModalOpened(true);
+                        setModalPosition({ x: e.clientX, y: e.clientY });
+                      }}
+                    >
+                      <BarTime>{convertTime(v?.start_time, true)}</BarTime>
+                      <BarName>{v?.estimation?.factory_space?.name}</BarName>
+                      <BarAmount>
+                        {v?.total?.toLocaleString?.('ko')}m³
+                      </BarAmount>
+                    </Bar>
+                  ))}
+                </BarContainer>
+              </DayContents>
+            </DayContainer>
+          );
+        })}
       </CalendarContainer>
+      <CalendarModal
+        open={isModalOpened}
+        onClose={handleCalendarModalClose}
+        info={selectedBarInfo}
+        position={modalPosition}
+        revalidate={() => {
+          mutate();
+          mutateMessages();
+        }}
+      />
     </Container>
   );
 };
@@ -252,6 +290,7 @@ const Bar = styled.div`
   border-radius: 6px;
   background-color: #ffd6cc;
   margin-bottom: 2px;
+  cursor: pointer;
 `;
 
 const BarTime = styled.span`

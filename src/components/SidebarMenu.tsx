@@ -41,7 +41,7 @@ export default ({ sidemenus }: ISideMenus) => {
 
 const SideContainer = styled.div`
   display: block;
-  padding: 16px 40px;
+  padding: 30px;
 `;
 
 const MenuItemListBox = styled.div`

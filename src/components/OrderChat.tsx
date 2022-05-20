@@ -13,8 +13,22 @@ import OrderChatCompanyCard from './OrderChatCompanyCard';
 import OrderChatMessage from './OrderChatMessage';
 import SearchInput from './SearchInput';
 import OrderAssignmentModal from './OrderAssignmentModal';
+import OrderChatAssignment from './OrderChatAssignment';
+import { useLocation } from 'react-router-dom';
 
-export default () => {
+export default ({
+  messages,
+  members,
+  isChatLoading,
+  mutate,
+  mutateMessages,
+  chatRoomId,
+  selectedChatRoomInfo,
+  setSelectedChatRoomInfo,
+  previousChatRoomId,
+}: any) => {
+  const location = useLocation();
+
   const [mount, setMount] = useState(false);
 
   const userInfo = useUserInfo();
@@ -29,31 +43,25 @@ export default () => {
     return spaces.filter((v) => v?.factory_space?.name?.includes(search));
   }, [spaces, search]);
 
-  const [selectedChatRoomInfo, setSelectedChatRoomInfo] = useState<any>(null);
-
-  const chatRoomId = useMemo(() => {
-    if (!selectedChatRoomInfo) return null;
-    return selectedChatRoomInfo?.chat_room_id;
-  }, [selectedChatRoomInfo]);
-
-  const previousChatRoomId = usePrevious(chatRoomId);
-
   const [socketState, setSocketState] = useState<any>(null);
 
   const messageContainerRef = useRef<HTMLDivElement>(null);
 
-  const {
-    data: { messages, members },
-    isLoading: isChatLoading,
-    mutateMessages,
-  } = useChatData(chatRoomId);
-
   const [message, setMessage] = useState('');
+
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
 
   useEffect(() => {
     if (spaces.length > 0) {
-      const data = spaces?.[0];
-      setSelectedChatRoomInfo(data);
+      if ((location.state as any)?.id !== undefined) {
+        const data =
+          spaces?.filter((v) => v.id === (location.state as any)?.id)?.[0] ||
+          spaces?.[0];
+        setSelectedChatRoomInfo(data);
+      } else {
+        const data = spaces?.[0];
+        setSelectedChatRoomInfo(data);
+      }
     } else {
       setSelectedChatRoomInfo(null);
     }
@@ -82,10 +90,13 @@ export default () => {
 
   const handleSendMessage = async () => {
     if (message.length > 0) {
+      const tempMessage = message;
+      setMessage('');
+
       mutateMessages(
         (v: any) => [
           {
-            content: message,
+            content: tempMessage,
             created_at: new Date(),
             data: null,
             send_user: userInfo,
@@ -98,14 +109,15 @@ export default () => {
 
       await api.post(`/chats/${chatRoomId}`, {
         type: 'TEXT',
-        content: message,
+        content: tempMessage,
         data: null,
       });
 
       mutateMessages();
-      setMessage('');
 
       scrollToBottom(true);
+
+      mutate();
     }
   };
 
@@ -142,6 +154,8 @@ export default () => {
           );
           // mutateMessages();
           scrollToBottom(false);
+
+          mutate();
         }
       });
     });
@@ -201,7 +215,9 @@ export default () => {
               <TopSectionTitle>
                 {selectedChatRoomInfo?.factory_space?.name}
               </TopSectionTitle>
-              <CircleButton>물량배정</CircleButton>
+              <CircleButton onClick={() => setIsRequestModalOpen(true)}>
+                물량배정
+              </CircleButton>
               <CircleRedButton>현장마감</CircleRedButton>
               <TopRightSection>
                 <Button
@@ -237,16 +253,30 @@ export default () => {
               </TopRightSection>
             </TopSection>
             <MidSection ref={messageContainerRef}>
-              {messages.map((v: any) => (
-                <OrderChatMessage
-                  companyName={v?.send_user?.company?.name}
-                  userName={v?.send_user?.name}
-                  userPosition={v?.send_user?.company?.position}
-                  content={v?.content}
-                  sendAt={v?.created_at}
-                  isMyChat={v?.send_user?.id === userInfo?.id}
-                />
-              ))}
+              {messages.map((v: any) =>
+                v.type === 'TEXT' ? (
+                  <OrderChatMessage
+                    companyName={v?.send_user?.company?.name}
+                    userName={v?.send_user?.name}
+                    userPosition={v?.send_user?.company?.position}
+                    content={v?.content}
+                    sendAt={v?.created_at}
+                    isMyChat={v?.send_user?.id === userInfo?.id}
+                  />
+                ) : (
+                  <OrderChatAssignment
+                    type={v?.type}
+                    chatRoomData={selectedChatRoomInfo}
+                    companyName={v?.send_user?.company?.name}
+                    userName={v?.send_user?.name}
+                    userPosition={v?.send_user?.company?.position}
+                    data={v?.data}
+                    sendAt={v?.created_at}
+                    isMyChat={v?.send_user?.id === userInfo?.id}
+                    mutate={() => mutateMessages()}
+                  />
+                ),
+              )}
             </MidSection>
             <BottomSection>
               <BottomIcon
@@ -269,7 +299,19 @@ export default () => {
           </>
         )}
       </MainContainer>
-      <OrderAssignmentModal />
+      {isRequestModalOpen && (
+        <OrderAssignmentModal
+          open={isRequestModalOpen}
+          onClose={() => setIsRequestModalOpen(false)}
+          id={selectedChatRoomInfo?.id || 0}
+          name={selectedChatRoomInfo?.factory_space?.name || ''}
+          percent={selectedChatRoomInfo?.percent || 0}
+          revalidate={() => {
+            mutateMessages();
+            mutate();
+          }}
+        />
+      )}
     </Container>
   );
 };

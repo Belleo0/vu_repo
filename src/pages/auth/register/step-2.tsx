@@ -47,7 +47,7 @@ export default () => {
   const location = useLocation();
 
   const nxtStepHandler = () => {
-    navigate('/sign-up/3', {
+    navigate('/auth/register/step-3', {
       state: {
         signname: email,
         password: password,
@@ -57,18 +57,19 @@ export default () => {
     });
   };
 
-  const companyName: string = '동양건설';
+  const companyName: string = '';
 
   const validItem = {
     chkEmail:
       /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
     chkPhone: /^[0-9\b -]{0,13}$/,
-    chkPw:
-      /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{1,50}).{8,50}$/,
+    chkPw: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/,
   };
 
   const [email, setEmail] = useState<string>('');
+  const [emailCode, setEmailCode] = useState<string>('');
   const [emailValid, setEmailValid] = useState<boolean>(false);
+  const [emailCodeVisible, setEmailCodeVisible] = useState<boolean>(false);
   const [isEmailDone, setIsEmailDone] = useState<boolean>(false);
 
   const [password, setPassword] = useState<string>('');
@@ -79,8 +80,8 @@ export default () => {
   const [name, setName] = useState<string>('');
 
   const [phone, setPhone] = useState<string>('');
-  const [phoneValid, setPhoneValid] = useState<boolean>();
-  const [phoneCode, setPhoneCode] = useState<string>();
+  const [phoneCode, setPhoneCode] = useState<string>('');
+  const [phoneValid, setPhoneValid] = useState<boolean>(false);
   const [phoneCodeRecent, setPhoneCodeRecent] = useState<boolean>(false);
   const [isPhoneDone, setIsPhoneDone] = useState<boolean>(false);
   const [phoneCodeVisible, setPhoneCodeVisible] = useState<boolean>(false);
@@ -88,16 +89,16 @@ export default () => {
   const [isValid, setIsValid] = useState<boolean>(false);
 
   const isValidHandler = (e: any, type: string) => {
-    // console.log('isValidHandler => ', e, ' || ', type);
-    let step = 0;
-
     switch (type) {
       case 'email':
         setEmail(e);
         if (email.length > 0 && validItem.chkEmail.test(email)) {
-          step = 1;
           setEmailValid(true);
         }
+        break;
+
+      case 'emailCode':
+        setEmailCode(e);
         break;
 
       case 'name':
@@ -106,17 +107,15 @@ export default () => {
 
       case 'password':
         setPassword(e);
-        if (validItem.chkPw.test(password)) {
-          setIsPassWordDone(() => true);
-          step = 2;
+        if (validItem.chkPw.test(e)) {
+          setIsPassWordDone(true);
         }
         break;
 
       case 'password2':
         setPassword2(e);
         if (isPasswordDone && password === e) {
-          setIsPassWordDone2(() => true);
-          step = 3;
+          setIsPassWordDone2(true);
         }
         break;
 
@@ -129,9 +128,7 @@ export default () => {
             setPhone(
               e.replace(/-/g, '').replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
             );
-            setPhoneValid(() => true);
-            console.log('4');
-            step = 4;
+            setPhoneValid(true);
           }
         }
         break;
@@ -139,19 +136,6 @@ export default () => {
         setPhoneCode(e);
         break;
     }
-  };
-
-  const requestEmailValidateHandler = async () => {
-    await api
-      .post('/verifications/email', {
-        email: email,
-      })
-      .then((res) => {
-        if (res.data.result) {
-          setIsEmailDone(true);
-        }
-      })
-      .catch((err) => console.log(err));
   };
 
   const requestPhoneValidateHandler = async () => {
@@ -184,12 +168,39 @@ export default () => {
       .catch((err) => console.log(err));
   };
 
+  const requestEmailValidateHandler = async () => {
+    await api
+      .post('/verifications/email', {
+        email: email,
+      })
+      .then((res) => {
+        if (res.data.result) {
+          setEmailCodeVisible(true);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const requestEmailCodeValidateHandler = async () => {
+    await api
+      .post('/verifications/email', {
+        email: email,
+        key: emailCode,
+      })
+      .then((res) => {
+        if (res.data.result) {
+          setIsEmailDone(() => true);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     if (email.length <= 0 || !email.includes('@') || !email.includes('.')) {
       setIsEmailDone(false);
       setEmailValid(false);
     }
-  }, [email]);
+  }, [email, isEmailDone]);
 
   useEffect(() => {
     setPhone(
@@ -198,29 +209,20 @@ export default () => {
   }, [phone, phoneCode]);
 
   useEffect(() => {
-    if (password !== password2) {
-      setIsPassWordDone2(false);
-    }
-    if (password === password2) {
+    if (password.length >= 1 && password === password2) {
       setIsPassWordDone2(true);
     }
   }, [password, password2]);
+
   useEffect(() => {
-    console.log(
-      'effect => ',
-      isEmailDone,
-      isPasswordDone2,
-      isPhoneDone,
-      isValid,
-    );
-    isPhoneDone && isEmailDone && isPasswordDone2 && setIsValid(() => true);
-  });
+    isPhoneDone && isEmailDone && isPasswordDone2 && setIsValid(true);
+  }, [isPhoneDone, isEmailDone, isPasswordDone, isPasswordDone2]);
 
   return (
     <AuthLayout>
       <Container>
         <MainTitle>
-          {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
+          {companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
         </MainTitle>
         <TermsWrapper>
           <ProgressBar>
@@ -231,11 +233,17 @@ export default () => {
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
           <MainContentBox>
-            <LineWrapper>
+            <LineWrapper
+              style={
+                emailCodeVisible
+                  ? { marginBottom: 0 }
+                  : { marginBottom: '13px' }
+              }
+            >
               <RepeatTitle>이메일</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '250px', height: '42px', margin: 0 }}
+                  containerStyle={{ width: '250px', margin: 0 }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'email');
@@ -251,7 +259,7 @@ export default () => {
                     isEmailDone || !emailValid ? AbleType.INABLE : AbleType.ABLE
                   }
                   onClick={() => {
-                    emailValid && requestEmailValidateHandler();
+                    emailValid ? requestEmailValidateHandler() : null;
                   }}
                 >
                   {isEmailDone ? '인증완료' : '이메일 인증'}
@@ -259,11 +267,47 @@ export default () => {
               </TextWrapper>
             </LineWrapper>
 
+            {emailCodeVisible ? (
+              <LineWrapper style={{ marginTop: '13px' }}>
+                <TextWrapper style={{ margin: 0 }}>
+                  <Input
+                    containerStyle={{
+                      width: '250px',
+                      margin: 0,
+                    }}
+                    type="text"
+                    onChange={(e) => {
+                      isValidHandler(e.target.value, 'emailCode');
+                    }}
+                    value={emailCode}
+                    placeholder={'인증번호 6자리 입력'}
+                    errorMessage={
+                      emailCodeVisible && !isEmailDone
+                        ? '인증번호가 일치하지 않습니다.'
+                        : '인증이 완료되었습니다.'
+                    }
+                  />
+                  <SendButton
+                    type={
+                      emailCode.length >= 1 && !isEmailDone
+                        ? AbleType.ABLE
+                        : AbleType.INABLE
+                    }
+                    onClick={() =>
+                      !isEmailDone ? requestEmailCodeValidateHandler() : null
+                    }
+                  >
+                    확인
+                  </SendButton>
+                </TextWrapper>
+              </LineWrapper>
+            ) : null}
+
             <LineWrapper>
               <RepeatTitle>이름</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '380px', height: '42px', margin: 0 }}
+                  containerStyle={{ width: '380px', margin: 0 }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'name');
@@ -274,11 +318,12 @@ export default () => {
               </TextWrapper>
             </LineWrapper>
 
-            <LineWrapper>
+            <LineWrapper style={{ marginBottom: 13 }}>
               <RepeatTitle>비밀번호</RepeatTitle>
               <TextWrapper style={{ flexDirection: 'column' }}>
                 <Input
-                  containerStyle={{ width: '380px', height: '42px', margin: 0 }}
+                  withoutErrorMessage
+                  containerStyle={{ width: '380px', margin: 0 }}
                   type="password"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'password');
@@ -291,7 +336,6 @@ export default () => {
                 <Input
                   containerStyle={{
                     width: '380px',
-                    height: '42px',
                     marginTop: '8px',
                   }}
                   type="password"
@@ -311,7 +355,7 @@ export default () => {
               <RepeatTitle>휴대폰 번호</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '250px', height: '42px', margin: 0 }}
+                  containerStyle={{ width: '250px', margin: 0 }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'phone');
@@ -334,7 +378,6 @@ export default () => {
                   <Input
                     containerStyle={{
                       width: '250px',
-                      height: '42px',
                       margin: 0,
                     }}
                     type="text"
@@ -343,9 +386,18 @@ export default () => {
                     }}
                     value={phoneCode}
                     placeholder={'인증번호 6자리 입력'}
+                    errorMessage={
+                      phoneCodeVisible && !isPhoneDone
+                        ? '인증번호가 일치하지 않습니다.'
+                        : '인증이 완료되었습니다.'
+                    }
                   />
                   <SendButton
-                    type={isPhoneDone ? AbleType.INABLE : AbleType.ABLE}
+                    type={
+                      phoneCode?.length >= 1 && !isPhoneDone
+                        ? AbleType.ABLE
+                        : AbleType.INABLE
+                    }
                     onClick={() =>
                       !isPhoneDone ? requestPhoneCodeValidateHandler() : null
                     }
@@ -358,7 +410,7 @@ export default () => {
           </MainContentBox>
           <Button
             type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
-            onClick={() => nxtStepHandler()}
+            onClick={() => (isValid ? nxtStepHandler() : null)}
           >
             다음
           </Button>
@@ -381,7 +433,6 @@ const Container = styled.div`
 `;
 
 const MainTitle = styled.div`
-  height: 32px;
   font-size: 22px;
   font-weight: bold;
   font-stretch: normal;
@@ -393,7 +444,6 @@ const MainTitle = styled.div`
 
 const TermsWrapper = styled.div`
   width: 440px;
-  height: 678px;
   margin-top: 30px;
   padding: 30px 30px 50px 30px;
   border-radius: 20px;
@@ -470,7 +520,6 @@ const LineWrapper = styled.div`
   width: 100%;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 34px;
 `;
 
 const Button = styled.div<{ type: ButtonType }>`
@@ -505,6 +554,7 @@ const SendButton = styled.div<{ type: AbleType }>`
   width: 120px;
   height: 42px;
   margin-left: 10px;
+  margin-bottom: 16px;
   padding: 11px 0;
   border-radius: 6px;
   background-color: #f2f2f2;
@@ -521,3 +571,12 @@ const SendButton = styled.div<{ type: AbleType }>`
     cursor: ${cursor[type]};
   `}
 `;
+
+// const CustomInput = styled.input`
+//   display: flex;
+//   width: 100%;
+//   border-radius: 6px;
+//   background-color: white;
+//   border: solid 1px #c7c7c7;
+//   margin-bottom: 8px;
+// `;

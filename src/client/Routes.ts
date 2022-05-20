@@ -38,20 +38,20 @@ export default [
   },
   {
     label: '이메일 찾기',
-    path: '/auth/email',
-    component: lazy(() => import('@pages/auth/emailInquiry')),
+    path: '/auth/find-email',
+    component: lazy(() => import('@pages/auth/find-email')),
     permission: Permission.PUBLIC,
   },
   {
     label: '비밀번호 찾기',
-    path: '/auth/pw',
-    component: lazy(() => import('@pages/auth/passwordInquiry')),
+    path: '/auth/find-password',
+    component: lazy(() => import('@pages/auth/find-password')),
     permission: Permission.PUBLIC,
   },
   {
     label: '비밀번호 재설정',
     path: '/:key',
-    component: lazy(() => import('@pages/auth/changePassword')),
+    component: lazy(() => import('@pages/auth/change-password')),
     permission: Permission.PUBLIC,
   },
   {

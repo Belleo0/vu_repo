@@ -95,7 +95,7 @@ const AbsoluteWrap = styled.div<{ isOpen: boolean }>`
   border-radius: 6px;
   border: solid 1px #c7c7c7;
   background-color: #fff;
-  z-index: 999999;
+  z-index: 500;
   overflow: hidden;
 
   ${({ isOpen }) =>

@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import { CalendarTypeState, days, isDateToday } from '@utils/calendar';
 import getAssetURL from '@utils/getAssetURL';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 const hours = [
   4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
@@ -11,7 +11,14 @@ const hours = [
 
 const hourHeight = 46;
 
-export default ({ date, data, type }: any) => {
+export default ({
+  date,
+  data,
+  type,
+  setIsModalOpened,
+  setModalPosition,
+  setSelectedBarInfo,
+}: any) => {
   const defaultTopMargin = useMemo(() => {
     return type === CalendarTypeState.WEEK ? 8 : 8;
   }, []);
@@ -24,7 +31,13 @@ export default ({ date, data, type }: any) => {
   }, [type]);
 
   const transformedData = useMemo(() => {
-    const sortedData = data.sort(
+    const filteredData = data.filter((v: any) => {
+      return (
+        new Date(v.start_time).getHours() >= 3 &&
+        new Date(v.start_time).getHours() <= 12
+      );
+    });
+    const sortedData = filteredData.sort(
       (a: any, b: any) =>
         new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
     );
@@ -119,11 +132,16 @@ export default ({ date, data, type }: any) => {
               top={v.top}
               left={v.left + defaultLeftMargin}
               height={Math.abs(v.height)}
-              style={{ backgroundColor: i % 2 !== 0 ? '#fff5df' : '#dbeafb' }}
+              style={{ backgroundColor: v?.estimation?.color }}
+              onClick={(e) => {
+                setSelectedBarInfo(v);
+                setIsModalOpened(true);
+                setModalPosition({ x: e.clientX, y: e.clientY });
+              }}
             >
               <WeekInfoRow>
-                <Name>{v.name}</Name>
-                <Amount>{v.amount}m³</Amount>
+                <Name>{v?.estimation?.factory_space?.name}</Name>
+                <Amount>{v?.total?.toLocaleString?.('ko')}m³</Amount>
               </WeekInfoRow>
               <Time>{v.time}</Time>
             </Bar>
@@ -134,11 +152,16 @@ export default ({ date, data, type }: any) => {
               top={v.top}
               left={v.left + defaultLeftMargin}
               height={Math.abs(v.height)}
-              style={{ backgroundColor: i % 2 !== 0 ? '#fff5df' : '#dbeafb' }}
+              style={{ backgroundColor: v?.estimation?.color }}
+              onClick={(e) => {
+                setSelectedBarInfo(v);
+                setIsModalOpened(true);
+                setModalPosition({ x: e.clientX, y: e.clientY });
+              }}
             >
-              <Name>{v.name}</Name>
+              <Name>{v?.estimation?.factory_space?.name}</Name>
               <Time>{v.time}</Time>
-              <Amount>{v.amount}m³</Amount>
+              <Amount>{v?.total?.toLocaleString?.('ko')}m³</Amount>
             </Bar>
           ),
         )}
@@ -285,6 +308,8 @@ const Bar = styled.div<{
   border-radius: 6px;
   background-color: #dbeafb;
   z-index: 300;
+
+  cursor: pointer;
 
   ${({ top }) =>
     css`

@@ -87,11 +87,11 @@ export default () => {
             로그인
           </Button>
           <TextButtonWrap>
-            <TextButton onClick={() => navigate('/auth/email')}>
+            <TextButton onClick={() => navigate('/auth/find-email')}>
               이메일 찾기
             </TextButton>
             <TextButtonDivider />
-            <TextButton onClick={() => navigate('/auth/pw')}>
+            <TextButton onClick={() => navigate('/auth/find-password')}>
               비밀번호 찾기
             </TextButton>
             <TextButtonDivider />

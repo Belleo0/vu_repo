@@ -33,7 +33,7 @@ export default ({ data = [] }: IVendorTable) => {
           </ValueCell>
           <ValueCell>
             {/* <TotalAmount>{v.total_amount?.toLocaleString('ko')}m³</TotalAmount> */}
-            <TotalAmount>미구현</TotalAmount>
+            <TotalAmount>2차 범위</TotalAmount>
           </ValueCell>
           <ValueCell>
             <OrderButton>주문</OrderButton>

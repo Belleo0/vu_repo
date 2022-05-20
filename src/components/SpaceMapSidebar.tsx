@@ -202,11 +202,7 @@ export default ({
       <TextModal
         open={isNotFoundSpaceModal}
         content={`등록된 건설현장 정보가 없습니다.\n건설현장을 등록하시겠습니까?`}
-        onSubmit={() =>
-          window.alert(
-            'TODO : 건설현장 추가 페이지로 라우팅\nQA중 확인시 시트에 추가 부탁드립니다.',
-          )
-        }
+        onSubmit={() => navigate('/add-construction-field/step-1')}
         onClose={() => setIsNotFoundSpaceModal(false)}
       />
       <TextModal
