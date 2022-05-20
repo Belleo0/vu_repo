@@ -67,7 +67,7 @@ export default () => {
 
   const searchedSpaces = useMemo(() => {
     if (!spaces) return [];
-    return spaces.filter((v) => v.name.includes(search));
+    return spaces.filter((v) => v?.name?.includes(search));
   }, [spaces, search]);
 
   const [isOrderChangeModalOpen, setIsOrderChangeModalOpen] = useState(false);

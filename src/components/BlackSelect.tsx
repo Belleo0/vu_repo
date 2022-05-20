@@ -138,7 +138,7 @@ const AbsoluteWrap = styled.div<{
   border-radius: 6px;
   border: solid 1px #e3e3e3;
   background-color: #fff;
-  z-index: 999999;
+  z-index: 500;
   overflow: hidden;
 
   ${({ isOpen, optionLength }) =>

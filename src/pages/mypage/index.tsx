@@ -13,6 +13,7 @@ import ImgModal from '@components/ImgModal';
 import TextModal from '@components/TextModal';
 import useUserInfo from '@hooks/useUserInfo';
 import api from '@api';
+import FileUpload from '@components/FileUpload';
 
 export default () => {
   const userInfo = useUserInfo();
@@ -38,8 +39,12 @@ export default () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneVerificationNumber, setPhoneVerificationNumber] = useState('');
+  const [image, setImage] = useState('');
 
   const { name, companyName, position, department, tel } = userData;
+
+  // timer
+  // const [counter, setCounter] = React.useState(179);
 
   //modal
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
@@ -53,18 +58,32 @@ export default () => {
   const [isWithdrawal, setIsWithdrawal] = useState(false);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
 
-  //validation
   const isEmailValidated = useMemo(() => {
     const regex =
       /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,10}$/;
     return regex.test(email);
   }, [email]);
 
+  const isEmailVerifyCode = useMemo(() => {
+    const regex = /^[0-9]{6,6}$/;
+    return regex.test(verifyEmailCode);
+  }, [verifyEmailCode]);
+
   const isPasswordValidated = useMemo(() => {
     const regex =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/; // 비밀번호 정규식
     return regex.test(newPassword);
   }, [newPassword]);
+
+  const isPhoneValidated = useMemo(() => {
+    const regex = /^[0-9]{10,11}$/;
+    return regex.test(phone);
+  }, [phone]);
+
+  const isPhoneVerifyCode = useMemo(() => {
+    const regex = /^[0-9]{6,6}$/;
+    return regex.test(phoneVerificationNumber);
+  }, [phoneVerificationNumber]);
 
   const isConfirmPasswordValidated = useMemo(() => {
     if (newPassword === confirmPassword) return true;
@@ -173,7 +192,11 @@ export default () => {
               <ProfileImage
                 src={getAssetURL('../assets/default-profile.jpeg')}
               />
-              <EditButton>이미지 수정</EditButton>
+              <FileUpload
+                label={'이미지수정'}
+                image={image}
+                setImage={setImage}
+              />
             </ProfileImageBox>
             <MyInfoFormBox>
               <LinedInput
@@ -183,16 +206,36 @@ export default () => {
                 value={name}
                 onChange={handleChange}
               />
-              {!isEmail && (
+              <ButtonInputBox>
+                <Input
+                  label="이메일"
+                  redStar="*"
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  containerStyle={{ marginBottom: 5, height: 60 }}
+                  inputStyle={emailInputStyle}
+                />
+                <Button
+                  type={
+                    isEmailValidated ? ButtonType.BLACK_WHITE : ButtonType.GRAY
+                  }
+                  onClick={handleRequestEmail}
+                  containerStyle={buttonStyle}
+                >
+                  이메일 변경
+                </Button>
+              </ButtonInputBox>
+              {isEmail && (
                 <ButtonInputBox>
                   <Input
-                    label="이메일"
-                    redStar="*"
                     type="email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    containerStyle={{ marginBottom: 5 }}
+                    name="verifyEmailCode"
+                    value={verifyEmailCode}
+                    placeholder={'인증번호를 입력해 주세요.'}
+                    onChange={(e) => setVerifyEmailCode(e.target.value)}
+                    containerStyle={{ marginTop: 0, marginBottom: 5 }}
                     inputStyle={emailInputStyle}
                     errorMessage={
                       email === ''
@@ -204,46 +247,18 @@ export default () => {
                   />
                   <Button
                     type={
-                      isEmailValidated
+                      isEmailVerifyCode
                         ? ButtonType.BLACK_WHITE
                         : ButtonType.GRAY
                     }
-                    onClick={handleRequestEmail}
-                    containerStyle={buttonStyle}
-                  >
-                    이메일 변경
-                  </Button>
-                </ButtonInputBox>
-              )}
-              {isEmail && (
-                <ButtonInputBox>
-                  <Input
-                    label="이메일"
-                    redStar="*"
-                    type="email"
-                    name="verifyEmailCode"
-                    value={verifyEmailCode}
-                    placeholder={'인증번호를 입력해 주세요.'}
-                    onChange={(e) => setVerifyEmailCode(e.target.value)}
-                    inputStyle={{
-                      backgroundColor: '#fff',
-                      borderRadius: '6px',
-                    }}
-                  />
-                  <Button
-                    type={
-                      isConfirmedEmail
-                        ? ButtonType.GRAY
-                        : ButtonType.BLACK_WHITE
-                    }
                     onClick={handleVerifyEmail}
-                    containerStyle={buttonStyle}
+                    containerStyle={buttonStyle2}
                   >
-                    {isConfirmedEmail ? '인증완료' : '이메일 변경'}
+                    인증완료
                   </Button>
                 </ButtonInputBox>
               )}
-              <Divider />
+              <Divider style={{ marginTop: '20px' }} />
               <LinedInput
                 label="회사명"
                 type="text"
@@ -280,6 +295,7 @@ export default () => {
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    containerStyle={{ marginBottom: 5 }}
                     inputStyle={{
                       backgroundColor: '#f2f2f2',
                       borderRadius: '6px',
@@ -287,7 +303,7 @@ export default () => {
                   />
                   <Button
                     type={ButtonType.BLACK_WHITE}
-                    containerStyle={buttonStyle}
+                    containerStyle={buttonStyle2}
                     onClick={handlePassword}
                   >
                     비밀번호 변경
@@ -344,40 +360,40 @@ export default () => {
                 </>
               )}
               <Divider />
-              {!isSMS && (
-                <ButtonInputBox>
-                  <Input
-                    label="휴대폰번호"
-                    redStar="*"
-                    type="text"
-                    name="phone"
-                    placeholder="'-' 입력 제외(번호만 입력해 주세요)"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    inputStyle={{
-                      backgroundColor: '#f2f2f2',
-                      borderRadius: '6px',
-                    }}
-                  />
-                  <Button
-                    type={ButtonType.BLACK_WHITE}
-                    containerStyle={buttonStyle}
-                    onClick={handleRequestPhone}
-                  >
-                    휴대폰번호 변경
-                  </Button>
-                </ButtonInputBox>
-              )}
+              <ButtonInputBox>
+                <Input
+                  label="휴대폰번호"
+                  redStar="*"
+                  type="text"
+                  name="phone"
+                  placeholder="'-' 입력 제외(번호만 입력해 주세요)"
+                  containerStyle={{ marginBottom: 5, height: 60 }}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  inputStyle={{
+                    backgroundColor: '#f2f2f2',
+                    borderRadius: '6px',
+                  }}
+                />
+                <Button
+                  type={
+                    isPhoneValidated ? ButtonType.BLACK_WHITE : ButtonType.GRAY
+                  }
+                  containerStyle={buttonStyle}
+                  onClick={handleRequestPhone}
+                >
+                  휴대폰번호 변경
+                </Button>
+              </ButtonInputBox>
               {isSMS && (
                 <ButtonInputBox>
                   <Input
-                    label="휴대폰번호"
-                    redStar="*"
                     type="text"
                     name="verificationNumber"
                     placeholder="인증번호 6자리 입력"
                     value={phoneVerificationNumber}
                     onChange={(e) => setPhoneVerificationNumber(e.target.value)}
+                    containerStyle={{ marginTop: 0, marginBottom: 5 }}
                     inputStyle={{
                       backgroundColor: '#fff',
                       borderRadius: '6px',
@@ -385,12 +401,14 @@ export default () => {
                   />
                   <Button
                     type={
-                      isSMSConfirm ? ButtonType.GRAY : ButtonType.BLACK_WHITE
+                      isPhoneVerifyCode
+                        ? ButtonType.BLACK_WHITE
+                        : ButtonType.GRAY
                     }
-                    containerStyle={buttonStyle}
+                    containerStyle={buttonStyle2}
                     onClick={handlePhoneVerifyCode}
                   >
-                    {isSMSConfirm ? '인증 완료' : '인증번호 전송'}
+                    {isSMSConfirm ? '인증 완료' : '인증하기'}
                   </Button>
                 </ButtonInputBox>
               )}
@@ -501,23 +519,10 @@ const Divider = styled.span`
 
 const ButtonInputBox = styled.div`
   width: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const EditButton = styled.span`
-  width: 84px;
-  height: 36px;
-  font-size: 13px;
-  padding: 9px 0;
-  margin: 14px 0;
-  border-radius: 6px;
-  border: solid 1px #000;
-  background-color: #fff;
-  cursor: pointer;
-  text-align: center;
-  letter-spacing: -0.26px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  margin-top: 8px;
 `;
 
 const ButtonBox = styled.div`
@@ -544,6 +549,7 @@ const Withdrawal = styled.span`
 const emailInputStyle = {
   backgroundColor: '#f2f2f2',
   borderRadius: '6px',
+  // marginBottom: '5px',
   '&: focus': {
     backgroundColor: '#ffffff',
   },
@@ -556,5 +562,14 @@ const buttonStyle = {
   fontWeight: '500',
   padding: '11px 0',
   marginLeft: '10px',
-  marginTop: '5px',
+};
+
+const buttonStyle2 = {
+  width: '45%',
+  height: '40px',
+  fontSize: '14px',
+  fontWeight: '500',
+  padding: '11px 0',
+  marginLeft: '10px',
+  marginBottom: '24px',
 };

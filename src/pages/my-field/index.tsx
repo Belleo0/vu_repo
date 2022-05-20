@@ -38,7 +38,7 @@ export default () => {
           </BarSection>
           <MidSection>
             <MidSectionInSection>
-              <Title>알림내역 (999) - API 연동 전</Title>
+              <Title>알림내역 (999) - 2차 범위</Title>
               <Notifications
                 data={new Array(15).fill({
                   type: '견적접수',

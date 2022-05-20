@@ -1,4 +1,6 @@
+import useAssignments from '@api/useAssignments';
 import CalendarColumn from '@components/CalendarColumn';
+import CalendarModal from '@components/CalendarModal';
 import Select from '@components/Select';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -10,6 +12,7 @@ import {
   generateWeekInfo,
 } from '@utils/calendar';
 import getAssetURL from '@utils/getAssetURL';
+import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 
 const calendarTypeOptions = [
@@ -47,6 +50,15 @@ export default () => {
 
   const [type, setType] = useState(CalendarTypeState.DAY);
   const [dates, setDates] = useState<any>([]);
+
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
+  const [selectedBarInfo, setSelectedBarInfo] = useState(null);
+
+  const { data: assignments, mutate } = useAssignments(
+    dates?.[0],
+    dates?.[dates.length - 1],
+  );
 
   const weekInfo = useMemo(() => {
     return generateWeekInfo(type, dates);
@@ -88,6 +100,16 @@ export default () => {
     }
   };
 
+  const handleCalendarModalClose = () => {
+    setIsModalOpened(false);
+    setSelectedBarInfo(null);
+    setModalPosition({ x: 0, y: 0 });
+  };
+
+  useEffect(() => {
+    handleCalendarModalClose();
+  }, [type, dates]);
+
   return (
     <SpaceLayout>
       <Container>
@@ -128,14 +150,40 @@ export default () => {
           <BarBackground />
           <BarContainer>
             {type === CalendarTypeState.DAY ? (
-              <CalendarColumn data={data} type={type} />
+              <CalendarColumn
+                data={
+                  assignments?.[moment(dates[0]).format('YYYY-MM-DD')] || []
+                }
+                type={type}
+                mutate={mutate}
+                setIsModalOpened={setIsModalOpened}
+                setModalPosition={setModalPosition}
+                setSelectedBarInfo={setSelectedBarInfo}
+              />
             ) : (
               dates.map((v: any) => (
-                <CalendarColumn date={v} data={data} type={type} />
+                <CalendarColumn
+                  date={v}
+                  data={assignments?.[moment(v).format('YYYY-MM-DD')] || []}
+                  type={type}
+                  mutate={mutate}
+                  setIsModalOpened={setIsModalOpened}
+                  setModalPosition={setModalPosition}
+                  setSelectedBarInfo={setSelectedBarInfo}
+                />
               ))
             )}
           </BarContainer>
         </CalendarContainer>
+        <CalendarModal
+          open={isModalOpened}
+          onClose={handleCalendarModalClose}
+          info={selectedBarInfo}
+          position={modalPosition}
+          revalidate={() => {
+            mutate();
+          }}
+        />
       </Container>
     </SpaceLayout>
   );
