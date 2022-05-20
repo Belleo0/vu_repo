@@ -270,8 +270,8 @@ export default () => {
             </LineWrapper>
 
             {emailCodeVisible ? (
-              <LineWrapper style={{ marginTop: '13px' }}>
-                <TextWrapper style={{ margin: 0 }}>
+              <LineWrapper>
+                <TextWrapper style={{ margin: '0 0 34px 0' }}>
                   <Input
                     containerStyle={{
                       width: '250px',
@@ -282,6 +282,11 @@ export default () => {
                       isValidHandler(e.target.value, 'emailCode');
                     }}
                     value={emailCode}
+                    errorMessageStyle={
+                      emailCodeVisible && !isEmailDone
+                        ? { color: '#ef0000' }
+                        : { color: '#00b448' }
+                    }
                     placeholder={'인증번호 6자리 입력'}
                     errorMessage={
                       emailCodeVisible && !isEmailDone
@@ -375,7 +380,7 @@ export default () => {
             </LineWrapper>
 
             {phoneCodeVisible ? (
-              <LineWrapper style={{ marginTop: '13px' }}>
+              <LineWrapper>
                 <TextWrapper style={{ margin: 0 }}>
                   <Input
                     containerStyle={{
@@ -388,6 +393,11 @@ export default () => {
                     }}
                     value={phoneCode}
                     placeholder={'인증번호 6자리 입력'}
+                    errorMessageStyle={
+                      phoneCodeVisible && !isPhoneDone
+                        ? { color: '#ef0000' }
+                        : { color: '#00b448' }
+                    }
                     errorMessage={
                       phoneCodeVisible && !isPhoneDone
                         ? '인증번호가 일치하지 않습니다.'
