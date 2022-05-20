@@ -3,9 +3,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
+import { css } from '@emotion/react';
 
-export default ({ searchedSpaces }: any) => {
+export default ({ searchedSpaces }: any, spaceCount: number) => {
   const navigate = useNavigate();
+  const [isEmpty, setIsEmpty] = useState(spaceCount);
 
   return (
     <MySiteSection>
@@ -25,7 +27,7 @@ export default ({ searchedSpaces }: any) => {
             </MiniSiteAddButton>
           </Box>
         </TitleBox>
-        <SiteListContainer>
+        <SiteListContainer layout={isEmpty === 0}>
           {searchedSpaces &&
             searchedSpaces.map((v: any, i: any) => (
               <MySiteButton
@@ -35,7 +37,9 @@ export default ({ searchedSpaces }: any) => {
                 {v.name}
               </MySiteButton>
             ))}
-          <SiteAddButton onClick={() => navigate('/my-field')}>
+          <SiteAddButton
+            onClick={() => navigate('/add-construction-field/step-1')}
+          >
             <BtnIcon src={getAssetURL(`../assets/ic-plus-blue.svg`)} />
             건설현장 등록하기
           </SiteAddButton>
@@ -67,32 +71,60 @@ const Box = styled.div`
   margin: auto 0;
 `;
 
-const SiteListContainer = styled.div`
-  margin: 50px auto 0 auto;
-  height: auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-content: center;
+const SiteListContainer = styled.div<{ layout: boolean }>`
+  ${({ layout }) =>
+    layout
+      ? css`
+          margin: 50px auto 0 auto;
+          display: flex;
+          justify-content: center;
+          text-align: center;
+        `
+      : css`
+          margin: 50px auto 0 auto;
+          height: auto;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          align-content: center;
+        `}
 `;
 const MySiteContent = styled.div`
   width: 1230px;
   margin: auto;
 `;
+
+// const SiteAddButton = styled.div`
+//   width: 380px;
+//   height: 100px;
+//   border: 2px dashed #c7c7c7;
+//   border-radius: 6px;
+//   background-color: #fff;
+//   font-size: 22px;
+//   font-weight: 500;
+//   line-height: 1.2;
+//   color: #258fff;
+//   display: flex;
+//   justify-content: center;
+//   cursor: pointer;
+//   align-items: center;
+//   margin: 10px 15px;
+// `;
+
 const SiteAddButton = styled.div`
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23c7c7c7' stroke-width='3' stroke-dasharray='2%2c7' stroke-dashoffset='57' stroke-linecap='square'/%3e%3c/svg%3e");
+  border-radius: 6px;
   width: 380px;
   height: 100px;
-  border: 2px dashed #c7c7c7;
-  border-radius: 6px;
   background-color: #fff;
   font-size: 22px;
   font-weight: 500;
   line-height: 1.2;
   color: #258fff;
   display: flex;
-  justify-content: center;
   cursor: pointer;
   align-items: center;
+  justify-content: center;
   margin: 10px 15px;
 `;
 

@@ -30,6 +30,7 @@ export default () => {
   const [search, setSearch] = useState('');
 
   const { data, error, mutate } = useSWR<any[]>([`/field-spaces`]);
+  const dataCount = data?.length;
 
   return (
     <AuthLayout>
@@ -37,7 +38,11 @@ export default () => {
         {/* Section1 */}
         <SearchSection search={search} setSearch={setSearch} />
         {/* Section2 */}
-        {isLogin ? <MySiteSection searchedSpaces={data} /> : <SiteSection />}
+        {isLogin ? (
+          <MySiteSection searchedSpaces={data} spaceCount={dataCount} />
+        ) : (
+          <SiteSection />
+        )}
         {/* Section3 */}
         <InfoSection />
         {/* Section4 */}
