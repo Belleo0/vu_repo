@@ -211,6 +211,8 @@ export default () => {
   useEffect(() => {
     if (password.length >= 1 && password === password2) {
       setIsPassWordDone2(true);
+    } else {
+      setIsPassWordDone2(false);
     }
   }, [password, password2]);
 
