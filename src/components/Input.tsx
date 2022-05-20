@@ -17,6 +17,7 @@ export default ({
   inputStyle,
   value = '',
   onChange,
+  errorMessageStyle,
   errorMessage,
   withoutErrorMessage = false,
   ...props
@@ -25,6 +26,7 @@ export default ({
   redStar?: React.ReactNode;
   containerStyle?: CSSProperties;
   inputStyle?: CSSProperties;
+  errorMessageStyle?: CSSProperties;
   errorMessage?: string;
   withoutErrorMessage?: boolean;
 }) => {
@@ -63,7 +65,9 @@ export default ({
         )}
       </Container>
       {!withoutErrorMessage && (
-        <ErrorMessage>{errorMessage || 'ㅤ'}</ErrorMessage>
+        <ErrorMessage style={errorMessageStyle}>
+          {errorMessage || 'ㅤ'}
+        </ErrorMessage>
       )}
     </RealContainer>
   );
