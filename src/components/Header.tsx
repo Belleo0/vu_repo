@@ -26,7 +26,7 @@ const remiconMenus = [
   { label: 'MY 레미콘공장', path: '/my-space' },
   { label: '건설현장 지도', path: '/field-map' },
   { label: '견적', path: '/estimation' },
-  { label: '주문', path: '/order' },
+  { label: '레미콘 납품', path: '/order' },
   { label: '캘린더', path: '/calendar' },
   { label: '거래내역', path: '/transaction' },
 ];
