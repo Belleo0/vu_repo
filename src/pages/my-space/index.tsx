@@ -8,12 +8,17 @@ import SpaceMembers from '@components/SpaceMembers';
 import MyFieldVendorTable from '@components/MyFieldVendorTable';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
+import useIsFieldUser from '@hooks/useIsFieldUser';
+import MyFactoryVendorTable from '@components/MyFactoryVendorTable';
 
 export default () => {
+  const isFieldUser = useIsFieldUser();
+
   const selectedSpaceId = useSelectedSpaceId();
   const {
     data: { info, members, suppliers },
     isLoading,
+    supplierMutate,
   } = useMySpaceInfo(selectedSpaceId);
 
   return (
@@ -21,20 +26,29 @@ export default () => {
       {selectedSpaceId === undefined ? null : isLoading ? null : (
         <Container>
           <BarSection>
-            <Title>건설현장</Title>
+            {isFieldUser ? (
+              <Title>건설현장</Title>
+            ) : (
+              <RemiconSpaceTitle>
+                23개 현장과 거래하고 있습니다.
+              </RemiconSpaceTitle>
+            )}
+            {isFieldUser ? null : <Title>공장명</Title>}
             <SpaceBar
               id={info?.id}
               name={info?.name}
               adminUserName={info?.admin_user?.name}
               siteUserName={info?.site_user?.name}
             />
-            <SpaceInfoTable
-              companyName={info?.company?.name}
-              address={info?.basic_address}
-              startAt={info?.start_at}
-              endAt={info?.end_at}
-              needAmount={info?.field_info?.need_amount}
-            />
+            {isFieldUser && (
+              <SpaceInfoTable
+                companyName={info?.company?.name}
+                address={info?.basic_address}
+                startAt={info?.start_at}
+                endAt={info?.end_at}
+                needAmount={info?.field_info?.need_amount}
+              />
+            )}
           </BarSection>
           <MidSection>
             <MidSectionInSection>
@@ -52,10 +66,17 @@ export default () => {
               <SpaceMembers data={members} />
             </MidSectionInSection>
           </MidSection>
-          <BottomSection>
-            <Title>납품사 ({suppliers?.length})</Title>
-            <MyFieldVendorTable data={suppliers} />
-          </BottomSection>
+          {isFieldUser ? (
+            <BottomSection>
+              <Title>납품사 ({suppliers?.length})</Title>
+              <MyFieldVendorTable data={suppliers} />
+            </BottomSection>
+          ) : (
+            <MyFactoryVendorTable
+              data={suppliers}
+              revalidate={() => supplierMutate()}
+            />
+          )}
         </Container>
       )}
     </SpaceLayout>
@@ -101,4 +122,14 @@ const MidSectionInSection = styled.div`
 
 const BottomSection = styled.div`
   width: 100%;
+`;
+
+const RemiconSpaceTitle = styled.span`
+  display: block;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: -0.56px;
+  text-align: left;
+  color: #222;
+  margin-bottom: 40px;
 `;
