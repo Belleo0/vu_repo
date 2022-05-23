@@ -38,24 +38,24 @@ export default () => {
   const [verifyEmailCode, setVerifyEmailCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [phoneVerificationNumber, setPhoneVerificationNumber] = useState('');
+  const [veryfyPhoneCode, setVeryfyPhoneCode] = useState('');
   const [image, setImage] = useState('');
 
   const { name, companyName, position, department, tel } = userData;
 
-  // timer
-  // const [counter, setCounter] = React.useState(179);
-
   //modal
+  const [isEmailCode, setIsEmailCode] = useState(false);
+  const [isEmailDone, setIsEmailDone] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
-  const [isSuccessEmailModalOpen, setIsSuccessEmailModalOpen] = useState(false);
-  const [isConfirmedEmail, setIsConfirmedEmail] = useState(false);
   const [isErrorEmailModalOpen, setIsErrorEmailModalOpen] = useState(false);
+
   const [isPassword, setIsPassword] = useState(false);
-  const [isSMS, setIsSMS] = useState(false);
-  const [isSMSConfirm, setIsSMSConfirm] = useState(false);
-  const [isEmail, setIsEmail] = useState(false);
+
+  const [isPhoneCode, setIsPhoneCode] = useState(false);
+  const [isPhoneDone, setIsPhoneDone] = useState(false);
+
   const [isWithdrawal, setIsWithdrawal] = useState(false);
+  const [isBlocking, setIsBlocking] = useState(false);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
 
   const isEmailValidated = useMemo(() => {
@@ -65,7 +65,7 @@ export default () => {
   }, [email]);
 
   const isEmailVerifyCode = useMemo(() => {
-    const regex = /^[0-9]{6,6}$/;
+    const regex = /^[0-9]/;
     return regex.test(verifyEmailCode);
   }, [verifyEmailCode]);
 
@@ -81,9 +81,9 @@ export default () => {
   }, [phone]);
 
   const isPhoneVerifyCode = useMemo(() => {
-    const regex = /^[0-9]{6,6}$/;
-    return regex.test(phoneVerificationNumber);
-  }, [phoneVerificationNumber]);
+    const regex = /^[0-9]/;
+    return regex.test(veryfyPhoneCode);
+  }, [veryfyPhoneCode]);
 
   const isConfirmPasswordValidated = useMemo(() => {
     if (newPassword === confirmPassword) return true;
@@ -97,6 +97,10 @@ export default () => {
     });
   };
 
+  const handleOpenEmailCode = () => {
+    setIsEmailCode(!isEmailCode);
+  };
+
   const handlePassword = () => {
     setIsPassword(!isPassword);
   };
@@ -105,31 +109,34 @@ export default () => {
     setIsWithdrawal(!isWithdrawal);
   };
 
+  const handleBlocking = () => {
+    setIsBlocking(!isBlocking);
+  };
+
   //api
-  const handleRequestEmail = async () => {
+  const handleRequestEmailCode = async () => {
     try {
       const { data } = await api.post('/verifications/email', {
         email: email,
       });
       if (data?.result === true) {
         setIsEmailModalOpen(true);
-        setIsEmail(true);
+        setIsEmailCode(true);
       }
     } catch (error) {
       setIsErrorEmailModalOpen(true);
     }
   };
 
-  const handleVerifyEmail = async () => {
+  const handleVerifyEmailCode = async () => {
     try {
       const { data } = await api.post('/verifications/email/verify', {
         email: email,
         key: verifyEmailCode,
       });
       if (data?.result === true) {
-        setIsSuccessEmailModalOpen(true);
-        setIsConfirmedEmail(true);
-        setIsEmail(false);
+        setIsEmailDone(true);
+        window.alert('인증성공!');
       }
     } catch (error) {
       setIsErrorEmailModalOpen(true);
@@ -137,13 +144,13 @@ export default () => {
   };
 
   const handleRequestPhone = async () => {
+    const tempPh = phone.replace(/-/g, '');
     try {
-      const tempPh = phone.replace(/-/g, '');
       const { data } = await api.post('/verifications/phone', {
         phone: tempPh,
       });
-      if (data?.result) {
-        setIsSMS(true);
+      if (data?.result === true) {
+        setIsPhoneCode(true);
       }
     } catch (error) {
       console.log(error);
@@ -155,15 +162,15 @@ export default () => {
       const tempPh = phone.replace(/-/g, '');
       const { data } = await api.post('/verifications/phone/verify', {
         phone: tempPh,
-        key: phoneVerificationNumber,
+        key: veryfyPhoneCode,
       });
       if (data?.result) {
+        setIsPhoneDone(true);
         window.alert('인증성공!');
-        setIsSMSConfirm(true);
-        setIsSMS(true);
       }
     } catch (error) {
       console.log(error);
+      window.alert('인증실패!');
     }
   };
 
@@ -214,20 +221,31 @@ export default () => {
                   name="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  containerStyle={{ marginBottom: 5, height: 60 }}
+                  containerStyle={{ marginBottom: 5, height: 75 }}
                   inputStyle={emailInputStyle}
+                  errorMessage={
+                    email === ''
+                      ? ''
+                      : isEmailValidated
+                      ? ''
+                      : '이메일 형식이 올바르지 않습니다.'
+                  }
                 />
                 <Button
                   type={
                     isEmailValidated ? ButtonType.BLACK_WHITE : ButtonType.GRAY
                   }
-                  onClick={handleRequestEmail}
+                  onClick={
+                    isEmailValidated
+                      ? handleRequestEmailCode
+                      : handleOpenEmailCode
+                  }
                   containerStyle={buttonStyle}
                 >
-                  이메일 변경
+                  {isEmailValidated ? '이메일 인증' : '이메일 변경'}
                 </Button>
               </ButtonInputBox>
-              {isEmail && (
+              {isEmailCode && (
                 <ButtonInputBox>
                   <Input
                     type="email"
@@ -235,14 +253,21 @@ export default () => {
                     value={verifyEmailCode}
                     placeholder={'인증번호를 입력해 주세요.'}
                     onChange={(e) => setVerifyEmailCode(e.target.value)}
-                    containerStyle={{ marginTop: 0, marginBottom: 5 }}
-                    inputStyle={emailInputStyle}
+                    containerStyle={{
+                      marginTop: 10,
+                      marginBottom: 5,
+                    }}
+                    inputStyle={{
+                      backgroundColor: '#fff',
+                      borderRadius: '6px',
+                    }}
                     errorMessage={
-                      email === ''
-                        ? ''
-                        : isEmailValidated
-                        ? ''
-                        : '이메일 형식이 올바르지 않습니다.'
+                      isEmailDone
+                        ? '인증번호가 일치합니다.'
+                        : '인증번호가 일치하지 않습니다.'
+                    }
+                    errorMessageStyle={
+                      isEmailDone ? { color: '#00b448' } : { color: '#ef0000' }
                     }
                   />
                   <Button
@@ -251,20 +276,21 @@ export default () => {
                         ? ButtonType.BLACK_WHITE
                         : ButtonType.GRAY
                     }
-                    onClick={handleVerifyEmail}
+                    onClick={handleVerifyEmailCode}
                     containerStyle={buttonStyle2}
                   >
-                    인증완료
+                    {isEmailDone ? '확인완료' : '확인'}
                   </Button>
                 </ButtonInputBox>
               )}
-              <Divider style={{ marginTop: '20px' }} />
+              <Divider style={{ marginTop: 20 }} />
               <LinedInput
                 label="회사명"
                 type="text"
                 name="companyName"
                 value={companyName}
-                onChange={handleChange}
+                errorMessage={'회사변경은 탈퇴 후 재가입 하시기 바랍니다.'}
+                containerStyle={{ marginBottom: '8px' }}
               />
               <LinedInput
                 label="직위/직급"
@@ -320,6 +346,7 @@ export default () => {
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    containerStyle={{ marginBottom: 5 }}
                   />
                   <Divider />
                   <Input
@@ -367,13 +394,14 @@ export default () => {
                   type="text"
                   name="phone"
                   placeholder="'-' 입력 제외(번호만 입력해 주세요)"
-                  containerStyle={{ marginBottom: 5, height: 60 }}
+                  containerStyle={{ marginBottom: 5, height: 75 }}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   inputStyle={{
                     backgroundColor: '#f2f2f2',
                     borderRadius: '6px',
                   }}
+                  maxLength={11}
                 />
                 <Button
                   type={
@@ -382,22 +410,33 @@ export default () => {
                   containerStyle={buttonStyle}
                   onClick={handleRequestPhone}
                 >
-                  휴대폰번호 변경
+                  {isPhoneValidated ? '인증번호 전송' : '휴대폰번호 변경'}
                 </Button>
               </ButtonInputBox>
-              {isSMS && (
+              {isPhoneCode && (
                 <ButtonInputBox>
                   <Input
                     type="text"
                     name="verificationNumber"
                     placeholder="인증번호 6자리 입력"
-                    value={phoneVerificationNumber}
-                    onChange={(e) => setPhoneVerificationNumber(e.target.value)}
-                    containerStyle={{ marginTop: 0, marginBottom: 5 }}
+                    value={veryfyPhoneCode}
+                    onChange={(e) => setVeryfyPhoneCode(e.target.value)}
+                    containerStyle={{
+                      marginTop: 10,
+                      marginBottom: 5,
+                    }}
                     inputStyle={{
                       backgroundColor: '#fff',
                       borderRadius: '6px',
                     }}
+                    errorMessage={
+                      isPhoneDone
+                        ? '인증번호가 일치합니다.'
+                        : '인증번호가 일치하지 않습니다.'
+                    }
+                    errorMessageStyle={
+                      isPhoneDone ? { color: '#00b448' } : { color: '#ef0000' }
+                    }
                   />
                   <Button
                     type={
@@ -408,7 +447,7 @@ export default () => {
                     containerStyle={buttonStyle2}
                     onClick={handlePhoneVerifyCode}
                   >
-                    {isSMSConfirm ? '인증 완료' : '인증하기'}
+                    {isPhoneDone ? '확인완료' : '확인'}
                   </Button>
                 </ButtonInputBox>
               )}
@@ -418,6 +457,7 @@ export default () => {
             <Button
               type={ButtonType.GRAY_BLACK}
               containerStyle={{ marginRight: '20px' }}
+              onClick={handleBlocking}
             >
               취소
             </Button>
@@ -432,7 +472,7 @@ export default () => {
         open={isEmailModalOpen}
         onClose={() => setIsEmailModalOpen(false)}
         email={email}
-        content={' 으로 \n 이메일 인증 링크가 발송되었어요.'}
+        content={' 으로 \n 이메일 인증 주소가 발송되었어요.'}
         redContent={'메일을 받지 못하셨다면 스팸 폴더를 확인해주세요.'}
         imgUrl="../assets/img-email.png"
       />
@@ -441,12 +481,6 @@ export default () => {
         onClose={() => setIsErrorEmailModalOpen(false)}
         submitText={'확인'}
         content={'이미 가입한 회원입니다.'}
-      />
-      <TextModal
-        open={isSuccessEmailModalOpen}
-        onClose={() => setIsSuccessEmailModalOpen(false)}
-        submitText={'확인'}
-        content={'인증에 성공하였습니다.'}
       />
       <TextModal
         open={isSubmittedForm}
@@ -460,6 +494,15 @@ export default () => {
         submitText="탈퇴하기"
         content={'정말 탈퇴하시겠습니까? \n 탈퇴 후 되돌릴 수 없습니다.'}
         onSubmit={() => setIsWithdrawal(false)}
+      />
+      <TextModal
+        open={isBlocking}
+        onClose={() => navigate(-1)}
+        submitText="나가기"
+        content={
+          '페이지를 나가시겠습니까? \n 변경사항이 저장되지 않을 수 있습니다.'
+        }
+        onSubmit={() => setIsBlocking(false)}
       />
     </MypageLayout>
   );
@@ -522,7 +565,6 @@ const ButtonInputBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  margin-top: 8px;
 `;
 
 const ButtonBox = styled.div`
@@ -562,6 +604,7 @@ const buttonStyle = {
   fontWeight: '500',
   padding: '11px 0',
   marginLeft: '10px',
+  marginBottom: '15px',
 };
 
 const buttonStyle2 = {
