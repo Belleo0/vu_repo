@@ -211,6 +211,8 @@ export default () => {
   useEffect(() => {
     if (password.length >= 1 && password === password2) {
       setIsPassWordDone2(true);
+    } else {
+      setIsPassWordDone2(false);
     }
   }, [password, password2]);
 
@@ -243,7 +245,11 @@ export default () => {
               <RepeatTitle>이메일</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '250px', margin: 0 }}
+                  containerStyle={{
+                    width: '250px',
+                    margin: 0,
+                    padding: '11px 20px',
+                  }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'email');
@@ -268,18 +274,24 @@ export default () => {
             </LineWrapper>
 
             {emailCodeVisible ? (
-              <LineWrapper style={{ marginTop: '13px' }}>
-                <TextWrapper style={{ margin: 0 }}>
+              <LineWrapper>
+                <TextWrapper style={{ margin: '0 0 34px 0' }}>
                   <Input
                     containerStyle={{
                       width: '250px',
                       margin: 0,
+                      padding: '11px 20px',
                     }}
                     type="text"
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'emailCode');
                     }}
                     value={emailCode}
+                    errorMessageStyle={
+                      emailCodeVisible && !isEmailDone
+                        ? { color: '#ef0000' }
+                        : { color: '#00b448' }
+                    }
                     placeholder={'인증번호 6자리 입력'}
                     errorMessage={
                       emailCodeVisible && !isEmailDone
@@ -307,7 +319,11 @@ export default () => {
               <RepeatTitle>이름</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '380px', margin: 0 }}
+                  containerStyle={{
+                    width: '380px',
+                    margin: 0,
+                    padding: '11px 20px',
+                  }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'name');
@@ -323,7 +339,11 @@ export default () => {
               <TextWrapper style={{ flexDirection: 'column' }}>
                 <Input
                   withoutErrorMessage
-                  containerStyle={{ width: '380px', margin: 0 }}
+                  containerStyle={{
+                    width: '380px',
+                    margin: 0,
+                    padding: '11px 20px',
+                  }}
                   type="password"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'password');
@@ -355,7 +375,11 @@ export default () => {
               <RepeatTitle>휴대폰 번호</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '250px', margin: 0 }}
+                  containerStyle={{
+                    width: '250px',
+                    margin: 0,
+                    padding: '11px 20px',
+                  }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'phone');
@@ -373,12 +397,13 @@ export default () => {
             </LineWrapper>
 
             {phoneCodeVisible ? (
-              <LineWrapper style={{ marginTop: '13px' }}>
+              <LineWrapper>
                 <TextWrapper style={{ margin: 0 }}>
                   <Input
                     containerStyle={{
                       width: '250px',
                       margin: 0,
+                      padding: '11px 20px',
                     }}
                     type="text"
                     onChange={(e) => {
@@ -386,6 +411,11 @@ export default () => {
                     }}
                     value={phoneCode}
                     placeholder={'인증번호 6자리 입력'}
+                    errorMessageStyle={
+                      phoneCodeVisible && !isPhoneDone
+                        ? { color: '#ef0000' }
+                        : { color: '#00b448' }
+                    }
                     errorMessage={
                       phoneCodeVisible && !isPhoneDone
                         ? '인증번호가 일치하지 않습니다.'
