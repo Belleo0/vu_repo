@@ -2,6 +2,7 @@ import api from '@api';
 import assignmentTimeOptions from '@constance/AssignmentTimeOptions';
 import { norminalStrengthOptions, slumpOptions } from '@constance/SpecOptions';
 import styled from '@emotion/styled';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
@@ -26,11 +27,14 @@ export default ({
   open,
   onClose,
   name,
+  address,
   percent,
   revalidate,
   isEditModal = false,
   initialInfo,
 }: any) => {
+  const isFieldUser = useIsFieldUser();
+
   const selectedSpaceInfo = useSelectedSpaceInfo();
 
   const [date, setDate] = useState('');
@@ -170,10 +174,14 @@ export default ({
           <Title>물량 배정</Title>
         </TopSection>
         <InfoSection>
-          <SelectedSpaceName>{selectedSpaceInfo?.name}</SelectedSpaceName>
+          <SelectedSpaceName>
+            {isFieldUser ? selectedSpaceInfo?.name : name}
+          </SelectedSpaceName>
           <AddressWrap>
             <Label>현장주소</Label>
-            <AddressValue>{selectedSpaceInfo?.basic_address}</AddressValue>
+            <AddressValue>
+              {isFieldUser ? selectedSpaceInfo?.basic_address : address}
+            </AddressValue>
             <Label>현장주소</Label>
           </AddressWrap>
         </InfoSection>
@@ -181,7 +189,9 @@ export default ({
           <ContentsInfoContainer>
             <ContentsInfoWrap>
               <Label>납품업체</Label>
-              <Value>{name}</Value>
+              <Value>
+                {isFieldUser ? name : selectedSpaceInfo?.company?.name}
+              </Value>
             </ContentsInfoWrap>
             <ContentsInfoWrap>
               <Label>단가율</Label>

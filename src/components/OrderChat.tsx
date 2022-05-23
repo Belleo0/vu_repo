@@ -215,7 +215,11 @@ export default ({
                 v?.[isFieldUser ? 'factory_space' : 'field_space']?.site_user
                   ?.position
               }
-              totalAmount={1200} // TODO 나중에 백엔드 반영하고 고치기
+              companyName={
+                v?.[isFieldUser ? 'factory_space' : 'field_space']?.company
+                  ?.name
+              }
+              totalAmount={1200} // [TODO] 누적 주문량 2차범위
               onClick={() => setSelectedChatRoomInfo(v)}
             />
           ))}
@@ -233,9 +237,9 @@ export default ({
                 }
               </TopSectionTitle>
               <CircleButton onClick={() => setIsRequestModalOpen(true)}>
-                물량배정
+                물량배정 {isFieldUser ? '' : '요청'}
               </CircleButton>
-              <CircleRedButton>현장마감</CircleRedButton>
+              {isFieldUser && <CircleRedButton>현장마감</CircleRedButton>}
               <TopRightSection>
                 <Button
                   size={ButtonSize.SMALL}
@@ -325,6 +329,11 @@ export default ({
             selectedChatRoomInfo?.[
               isFieldUser ? 'factory_space' : 'field_space'
             ]?.name || ''
+          }
+          address={
+            selectedChatRoomInfo?.[
+              isFieldUser ? 'factory_space' : 'field_space'
+            ]?.basic_address || ''
           }
           percent={selectedChatRoomInfo?.percent || 0}
           revalidate={() => {

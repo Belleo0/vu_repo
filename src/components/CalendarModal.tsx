@@ -112,7 +112,7 @@ export default ({
           </SpecWrap>
           <BottomDivider />
           <TotalAmountWrap>
-            <TotalAmountLabel>주문합계</TotalAmountLabel>
+            <TotalAmountLabel>총 주문합계</TotalAmountLabel>
             <TotalAmountValue>
               {info?.total?.toLocaleString?.('ko')}m³
             </TotalAmountValue>
