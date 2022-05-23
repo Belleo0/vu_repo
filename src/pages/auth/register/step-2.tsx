@@ -86,6 +86,9 @@ export default () => {
   const [isPhoneDone, setIsPhoneDone] = useState<boolean>(false);
   const [phoneCodeVisible, setPhoneCodeVisible] = useState<boolean>(false);
 
+  const [errorEmailMsg, setErrorEmailMsg] = useState<string>('1');
+  const [errorPhoneMsg, setErrorPhoneMsg] = useState<string>('1');
+
   const [isValid, setIsValid] = useState<boolean>(false);
 
   const isValidHandler = (e: any, type: string) => {
@@ -162,7 +165,10 @@ export default () => {
       })
       .then((res) => {
         if (res.data.result) {
-          setIsPhoneDone(() => true);
+          setIsPhoneDone(true);
+          setErrorPhoneMsg('3');
+        } else {
+          setErrorPhoneMsg('2');
         }
       })
       .catch((err) => console.log(err));
@@ -189,7 +195,10 @@ export default () => {
       })
       .then((res) => {
         if (res.data.result) {
-          setIsEmailDone(() => true);
+          setIsEmailDone(true);
+          setErrorEmailMsg('3');
+        } else {
+          setErrorEmailMsg('2');
         }
       })
       .catch((err) => console.log(err));
@@ -235,21 +244,15 @@ export default () => {
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
           <MainContentBox>
-            <LineWrapper
-              style={
-                emailCodeVisible
-                  ? { marginBottom: 0 }
-                  : { marginBottom: '13px' }
-              }
-            >
+            <LineWrapper style={{ margin: 0 }}>
               <RepeatTitle>이메일</RepeatTitle>
               <TextWrapper>
                 <Input
                   containerStyle={{
                     width: '250px',
                     margin: 0,
-                    padding: '11px 20px',
                   }}
+                  style={{ padding: '11px 20px' }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'email');
@@ -257,7 +260,9 @@ export default () => {
                   value={email}
                   placeholder={'이메일을 입력해 주세요'}
                   errorMessage={
-                    !emailValid ? '이메일 형식이 올바르지 않습니다' : ''
+                    !emailValid && email.length > 0
+                      ? '이메일 형식이 올바르지 않습니다'
+                      : ''
                   }
                 />
                 <SendButton
@@ -275,28 +280,32 @@ export default () => {
 
             {emailCodeVisible ? (
               <LineWrapper>
-                <TextWrapper style={{ margin: '0 0 34px 0' }}>
+                <TextWrapper style={{ margin: '0 0 34px' }}>
                   <Input
                     containerStyle={{
                       width: '250px',
                       margin: 0,
-                      padding: '11px 20px',
                     }}
+                    style={{ padding: '11px 20px' }}
                     type="text"
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'emailCode');
                     }}
                     value={emailCode}
                     errorMessageStyle={
-                      emailCodeVisible && !isEmailDone
+                      errorEmailMsg == '2'
                         ? { color: '#ef0000' }
-                        : { color: '#00b448' }
+                        : errorEmailMsg == '3'
+                        ? { color: '#00b448' }
+                        : {}
                     }
                     placeholder={'인증번호 6자리 입력'}
                     errorMessage={
-                      emailCodeVisible && !isEmailDone
+                      errorEmailMsg === '2'
                         ? '인증번호가 일치하지 않습니다.'
-                        : '인증이 완료되었습니다.'
+                        : errorEmailMsg === '3'
+                        ? '인증이 완료되었습니다.'
+                        : ''
                     }
                   />
                   <SendButton
@@ -322,8 +331,8 @@ export default () => {
                   containerStyle={{
                     width: '380px',
                     margin: 0,
-                    padding: '11px 20px',
                   }}
+                  style={{ padding: '11px 20px' }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'name');
@@ -338,12 +347,12 @@ export default () => {
               <RepeatTitle>비밀번호</RepeatTitle>
               <TextWrapper style={{ flexDirection: 'column' }}>
                 <Input
-                  withoutErrorMessage
                   containerStyle={{
                     width: '380px',
                     margin: 0,
-                    padding: '11px 20px',
+                    height: '42px',
                   }}
+                  style={{ padding: '11px 20px' }}
                   type="password"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'password');
@@ -356,8 +365,9 @@ export default () => {
                 <Input
                   containerStyle={{
                     width: '380px',
-                    marginTop: '8px',
+                    marginTop: '13px',
                   }}
+                  style={{ padding: '11px 20px' }}
                   type="password"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'password2');
@@ -365,7 +375,9 @@ export default () => {
                   value={password2}
                   placeholder={'비밀번호를 한번 더 입력해 주세요'}
                   errorMessage={
-                    !isPasswordDone2 ? '비밀번호가 일치하지 않습니다' : ''
+                    !isPasswordDone2 && password2.length > 0
+                      ? '비밀번호가 일치하지 않습니다'
+                      : ''
                   }
                 />
               </TextWrapper>
@@ -378,8 +390,8 @@ export default () => {
                   containerStyle={{
                     width: '250px',
                     margin: 0,
-                    padding: '11px 20px',
                   }}
+                  style={{ padding: '11px 20px' }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'phone');
@@ -403,8 +415,8 @@ export default () => {
                     containerStyle={{
                       width: '250px',
                       margin: 0,
-                      padding: '11px 20px',
                     }}
+                    style={{ padding: '11px 20px' }}
                     type="text"
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'phoneCode');
@@ -412,14 +424,18 @@ export default () => {
                     value={phoneCode}
                     placeholder={'인증번호 6자리 입력'}
                     errorMessageStyle={
-                      phoneCodeVisible && !isPhoneDone
+                      errorPhoneMsg === '2'
                         ? { color: '#ef0000' }
-                        : { color: '#00b448' }
+                        : errorEmailMsg === '3'
+                        ? { color: '#00b448' }
+                        : {}
                     }
                     errorMessage={
-                      phoneCodeVisible && !isPhoneDone
+                      errorPhoneMsg === '2'
                         ? '인증번호가 일치하지 않습니다.'
-                        : '인증이 완료되었습니다.'
+                        : errorPhoneMsg === '3'
+                        ? '인증이 완료되었습니다.'
+                        : ''
                     }
                   />
                   <SendButton
