@@ -13,7 +13,7 @@ export default () => {
       <Typography1>건설현장</Typography1>
       <Typography2>건설현장을 등록하고 레미콘 공장을 만나보세요</Typography2>
       <AddBtnContainer>
-        <SiteAddButton onClick={() => navigate('/my-field')}>
+        <SiteAddButton onClick={() => navigate('/my-space')}>
           <BtnIcon src={getAssetURL(`../assets/ic-plus-blue.svg`)} />
           건설현장등록
         </SiteAddButton>

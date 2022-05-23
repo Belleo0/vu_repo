@@ -20,15 +20,28 @@ export default (selectedSpaceId: number) => {
     }`,
   );
 
+  const {
+    data: estimations,
+    error: estimationError,
+    mutate: estimationMutate,
+  } = useSWR(
+    `/${
+      isFieldUser ? 'field' : 'factory'
+    }-spaces/${selectedSpaceId}/estimations`,
+  );
+
   return {
-    data: { info, members, suppliers },
+    data: { info, members, suppliers, estimations },
     isLoading:
       !infoError &&
       !memberError &&
       !supplierError &&
+      !estimationError &&
       !info &&
       !members &&
-      !suppliers,
+      !suppliers &&
+      !estimations,
     supplierMutate,
+    estimationMutate,
   };
 };

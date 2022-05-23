@@ -67,9 +67,21 @@ export default [
     permission: Permission.PRIVATE,
   },
   {
+    label: '건설현장 지도',
+    path: '/field-map',
+    component: lazy(() => import('@pages/field-map')),
+    permission: Permission.PRIVATE,
+  },
+  {
     label: '납품사 선정',
     path: '/supplier-choice',
     component: lazy(() => import('@pages/supplier-choice')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '견적',
+    path: '/estimation',
+    component: lazy(() => import('@pages/estimation')),
     permission: Permission.PRIVATE,
   },
   {
