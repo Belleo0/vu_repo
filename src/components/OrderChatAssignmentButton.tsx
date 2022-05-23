@@ -39,7 +39,7 @@ export default ({
   // 건설현장>레미콘공장(제안) 요청인데 건설현장멤버가 보는경우 or 레미콘공장>건설현장(역제안) 요청인데 레미콘공장유저가 보는경우 (액션 X)
   if (
     (type === 'FIELD_TO_FACTORY' && isFieldUser === true) ||
-    (type === 'FIELD_TO_FACTORY' && isFieldUser === false)
+    (type === 'FACTORY_TO_FIELD' && isFieldUser === false)
   ) {
     if (assignmentData?.status === 'REQUESTED') {
       return (

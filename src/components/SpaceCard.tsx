@@ -93,11 +93,11 @@ const Container = styled.div<{ isOpen: boolean }>`
   ${({ isOpen }) =>
     isOpen
       ? css`
-          max-height: 118px;
+          min-height: 118px;
           border-color: #258fff;
         `
       : css`
-          max-height: 78px;
+          min-height: 78px;
           border-color: white;
         `}
 
@@ -105,7 +105,7 @@ const Container = styled.div<{ isOpen: boolean }>`
     border-color: #258fff;
   }
 
-  transition: border 0.1s linear, max-height 0.05s linear;
+  transition: border 0.1s linear, min-height 0.05s linear;
 
   overflow: hidden;
 `;

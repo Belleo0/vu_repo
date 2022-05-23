@@ -15,6 +15,7 @@ import SearchInput from './SearchInput';
 import OrderAssignmentModal from './OrderAssignmentModal';
 import OrderChatAssignment from './OrderChatAssignment';
 import { useLocation } from 'react-router-dom';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 
 export default ({
   messages,
@@ -29,6 +30,8 @@ export default ({
 }: any) => {
   const location = useLocation();
 
+  const isFieldUser = useIsFieldUser();
+
   const [mount, setMount] = useState(false);
 
   const userInfo = useUserInfo();
@@ -40,7 +43,11 @@ export default ({
 
   const searchedSpaces = useMemo(() => {
     if (!spaces) return [];
-    return spaces.filter((v) => v?.factory_space?.name?.includes(search));
+    return spaces.filter((v) =>
+      v?.[isFieldUser ? 'factory_space' : 'field_space']?.name?.includes(
+        search,
+      ),
+    );
   }, [spaces, search]);
 
   const [socketState, setSocketState] = useState<any>(null);
@@ -199,9 +206,15 @@ export default ({
             <OrderChatCompanyCard
               key={v.id}
               active={v.id === selectedChatRoomInfo?.id}
-              name={v?.factory_space?.name}
-              saleUserName={v?.factory_space?.site_user?.name}
-              saleUserPosition={v?.factory_space?.site_user?.position}
+              name={v?.[isFieldUser ? 'factory_space' : 'field_space']?.name}
+              saleUserName={
+                v?.[isFieldUser ? 'factory_space' : 'field_space']?.site_user
+                  ?.name
+              }
+              saleUserPosition={
+                v?.[isFieldUser ? 'factory_space' : 'field_space']?.site_user
+                  ?.position
+              }
               totalAmount={1200} // TODO 나중에 백엔드 반영하고 고치기
               onClick={() => setSelectedChatRoomInfo(v)}
             />
@@ -213,7 +226,11 @@ export default ({
           <>
             <TopSection>
               <TopSectionTitle>
-                {selectedChatRoomInfo?.factory_space?.name}
+                {
+                  selectedChatRoomInfo?.[
+                    isFieldUser ? 'factory_space' : 'field_space'
+                  ]?.name
+                }
               </TopSectionTitle>
               <CircleButton onClick={() => setIsRequestModalOpen(true)}>
                 물량배정
@@ -304,7 +321,11 @@ export default ({
           open={isRequestModalOpen}
           onClose={() => setIsRequestModalOpen(false)}
           id={selectedChatRoomInfo?.id || 0}
-          name={selectedChatRoomInfo?.factory_space?.name || ''}
+          name={
+            selectedChatRoomInfo?.[
+              isFieldUser ? 'factory_space' : 'field_space'
+            ]?.name || ''
+          }
           percent={selectedChatRoomInfo?.percent || 0}
           revalidate={() => {
             mutateMessages();

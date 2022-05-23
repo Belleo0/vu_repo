@@ -1,15 +1,24 @@
+import useIsFieldUser from '@hooks/useIsFieldUser';
 import useSWR from 'swr';
 
 export default (selectedSpaceId: number) => {
-  const { data: info, error: infoError } = useSWR(`/fields/${selectedSpaceId}`);
+  const isFieldUser = useIsFieldUser();
+
+  const { data: info, error: infoError } = useSWR(
+    `/${isFieldUser ? 'fields' : 'factories'}/${selectedSpaceId}`,
+  );
   const { data: members, error: memberError } = useSWR(
-    `/field-spaces/${selectedSpaceId}/members`,
+    `/${isFieldUser ? 'field' : 'factory'}-spaces/${selectedSpaceId}/members`,
   );
   const {
     data: suppliers,
     error: supplierError,
     mutate: supplierMutate,
-  } = useSWR(`/field-spaces/${selectedSpaceId}/suppliers`);
+  } = useSWR(
+    `/${isFieldUser ? 'field' : 'factory'}-spaces/${selectedSpaceId}/${
+      isFieldUser ? 'suppliers' : 'clients'
+    }`,
+  );
 
   return {
     data: { info, members, suppliers },

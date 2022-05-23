@@ -1,8 +1,10 @@
+import useIsFieldUser from '@hooks/useIsFieldUser';
 import useSWR from 'swr';
 
 export default (isHide: string) => {
+  const isFieldUser = useIsFieldUser();
   const { data, error, mutate } = useSWR<any[]>([
-    `/field-spaces`,
+    `/${isFieldUser ? 'field' : 'factory'}-spaces`,
     { is_hide: isHide },
   ]);
 

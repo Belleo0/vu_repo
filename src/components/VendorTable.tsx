@@ -88,15 +88,15 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         <LabelCell>주문</LabelCell>
       </CellWrap>
       {data.map((v) => (
-        <CellWrap key={v.id}>
+        <CellWrap key={v?.id}>
           <ValueCell style={{ maxWidth: 130 }}>
             <DeleteRadio
-              active={selectedIds.includes(v.id)}
-              onClick={() => handleClickRadio(v.id)}
+              active={selectedIds.includes(v?.id)}
+              onClick={() => handleClickRadio(v?.id)}
             >
               <DeleteIcon
                 src={
-                  selectedIds.includes(v.id)
+                  selectedIds.includes(v?.id)
                     ? getAssetURL('../assets/ic-check-only-ic-white.svg')
                     : getAssetURL('../assets/ic-check-only-ic-grey.svg')
                 }
@@ -104,16 +104,16 @@ export default ({ data = [], revalidate }: IVendorTable) => {
             </DeleteRadio>
           </ValueCell>
           <ValueCell style={{ flexDirection: 'column' }}>
-            <FactoryCompanyName>{v.factory_space.name}</FactoryCompanyName>
-            <FactoryAddress>{v.factory_space.basic_address}</FactoryAddress>
+            <FactoryCompanyName>{v?.factory_space?.name}</FactoryCompanyName>
+            <FactoryAddress>{v?.factory_space?.basic_address}</FactoryAddress>
           </ValueCell>
           <ValueCell style={{ flexDirection: 'column' }}>
             <EstimationStatusValue status={v?.status} />
           </ValueCell>
           <ValueCell>
-            <Distance>{convertDistance(v.direction.distance)}km</Distance>
+            <Distance>{convertDistance(v?.direction?.distance)}km</Distance>
             <DistanceDivider />
-            <Duration>{convertDuration(v.direction.duration)}분</Duration>
+            <Duration>{convertDuration(v?.direction?.duration)}분</Duration>
           </ValueCell>
           <ValueCell>B/P 210m³/h x 2</ValueCell>
           <ValueCell>
