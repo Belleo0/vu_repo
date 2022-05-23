@@ -245,7 +245,11 @@ export default () => {
               <RepeatTitle>이메일</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '250px', margin: 0 }}
+                  containerStyle={{
+                    width: '250px',
+                    margin: 0,
+                    padding: '11px 20px',
+                  }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'email');
@@ -276,6 +280,7 @@ export default () => {
                     containerStyle={{
                       width: '250px',
                       margin: 0,
+                      padding: '11px 20px',
                     }}
                     type="text"
                     onChange={(e) => {
@@ -314,7 +319,11 @@ export default () => {
               <RepeatTitle>이름</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '380px', margin: 0 }}
+                  containerStyle={{
+                    width: '380px',
+                    margin: 0,
+                    padding: '11px 20px',
+                  }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'name');
@@ -330,7 +339,11 @@ export default () => {
               <TextWrapper style={{ flexDirection: 'column' }}>
                 <Input
                   withoutErrorMessage
-                  containerStyle={{ width: '380px', margin: 0 }}
+                  containerStyle={{
+                    width: '380px',
+                    margin: 0,
+                    padding: '11px 20px',
+                  }}
                   type="password"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'password');
@@ -362,7 +375,11 @@ export default () => {
               <RepeatTitle>휴대폰 번호</RepeatTitle>
               <TextWrapper>
                 <Input
-                  containerStyle={{ width: '250px', margin: 0 }}
+                  containerStyle={{
+                    width: '250px',
+                    margin: 0,
+                    padding: '11px 20px',
+                  }}
                   type="text"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'phone');
@@ -386,6 +403,7 @@ export default () => {
                     containerStyle={{
                       width: '250px',
                       margin: 0,
+                      padding: '11px 20px',
                     }}
                     type="text"
                     onChange={(e) => {

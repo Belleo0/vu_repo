@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import api from '@api';
 import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
 import Input from '@components/Input';
 import SearchInput from '@components/SearchInput';
-import { useLocation, useNavigate } from 'react-router-dom';
-import getAssetURL from '@utils/getAssetURL';
+import { useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { isNull } from 'lodash';
+import _ from 'lodash';
 
 enum ButtonType {
   'ABLE',
@@ -21,6 +21,11 @@ enum MainHeightType {
 const heightPixel = {
   [MainHeightType.INABLE]: '631px',
   [MainHeightType.ABLE]: '797px',
+};
+
+const paddingPixel = {
+  [MainHeightType.INABLE]: '30px 30px 50px',
+  [MainHeightType.ABLE]: '40px 30px 50px 30px',
 };
 const backgroundColors = {
   [ButtonType.ABLE]: '#258fff',
@@ -41,6 +46,7 @@ const cursor = {
 
 export default () => {
   const location = useLocation();
+  console.log(location.state);
 
   const userInviteType: boolean = false;
   const companyName: string = '동양건설';
@@ -52,21 +58,20 @@ export default () => {
       password: (location.state as any)?.password,
       name: (location.state as any)?.name,
       phone: (location.state as any)?.phone,
-      position: input.rank,
-      tel: input.inPhone,
+      position: position,
+      tel: tel,
+      company_id: 100,
     });
     console.log('requestSignUpHandler => ', data);
   };
 
-  const [input, setInput] = useState<any>({
-    company: '',
-    rank: '',
-    department: '',
-    inPhone: '',
-    zipCode: '',
-    companyAdress: '',
-    companyAdress2: '',
-  });
+  const [company, setCompany] = useState<string>('');
+  const [position, setPosition] = useState<string>('');
+  const [department, setDepartment] = useState<string>('');
+  const [tel, setTel] = useState<string>('');
+  const [zipCode, setZipCode] = useState<string>('');
+  const [companyAdress, setCompanyAdress] = useState<string>('');
+  const [companyAdress2, setCompanyAdress2] = useState<string>('');
 
   const [isUserInsert, setIsUserInsert] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -75,30 +80,30 @@ export default () => {
     // console.log('isValidHandler => ', e, ' || ', type);
     switch (type) {
       case 'company':
-        setInput({ ...input, company: e });
+        setCompany(e);
         if (!isUserInsert) {
           setIsValid(() => true);
         }
         break;
       case 'zipCode':
-        setInput({ ...input, zipCode: e });
+        setZipCode(e);
         break;
       case 'companyAdress':
-        setInput({ ...input, companyAdress: e });
+        setCompanyAdress(e);
         break;
       case 'companyAdress2':
-        setInput({ ...input, companyAdress2: e });
+        setCompanyAdress2(e);
         break;
       case 'rank':
-        setInput({ ...input, rank: e });
+        setPosition(e);
         break;
 
       case 'department':
-        setInput({ ...input, department: e });
+        setDepartment(e);
         break;
 
       case 'inPhone':
-        setInput({ ...input, inPhone: e });
+        setTel(e);
         break;
     }
   };
@@ -106,16 +111,22 @@ export default () => {
   const insertUserCompany = () => {
     setIsUserInsert(true);
     setIsValid(false);
-    setInput(['']);
+    setCompany('');
+    setPosition('');
+    setDepartment('');
+    setTel('');
+    setZipCode('');
+    setCompanyAdress('');
+    setCompanyAdress2('');
   };
 
   useEffect(() => {
     if (isUserInsert) {
       if (
-        input.zipCode?.length >= 1 &&
-        input.company?.length >= 1 &&
-        input.companyAdress?.length >= 1 &&
-        input.companyAdress2?.length >= 1
+        zipCode?.length >= 1 &&
+        company?.length >= 1 &&
+        companyAdress?.length >= 1 &&
+        companyAdress2?.length >= 1
       ) {
         setIsValid(true);
       } else {
@@ -148,16 +159,16 @@ export default () => {
                     {companyType == 'cns' ? '회사명' : '레미콘 공장 상호명'}
                   </RepeatTitle>
                   <Input
-                    style={{ padding: '11px 14px', height: '42px' }}
+                    style={{ padding: '11px 20px', height: '42px' }}
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'company');
                     }}
-                    value={input.company}
+                    value={company}
                     containerStyle={{ marginTop: '8px' }}
                     placeholder={
                       companyType == 'cns'
-                        ? '회사명을 입력해 주세요'
-                        : '레미콘 공장명을 입력해 주세요'
+                        ? '회사명을 검색해 주세요'
+                        : '레미콘 공장명을 검색해 주세요'
                     }
                   />
                 </LineWrapper>
@@ -167,6 +178,7 @@ export default () => {
                   </RepeatTitle>
                   <TextWrapper>
                     <Input
+                      style={{ padding: '11px 20px', height: '42px' }}
                       containerStyle={{
                         width: '250px',
                         height: '42px',
@@ -176,7 +188,7 @@ export default () => {
                       onChange={(e) => {
                         isValidHandler(e.target.value, 'zipCode');
                       }}
-                      value={input.zipCode}
+                      value={zipCode}
                       placeholder={'우편번호 검색'}
                     />
                     <SendButton
@@ -188,6 +200,7 @@ export default () => {
                     </SendButton>
                   </TextWrapper>
                   <Input
+                    style={{ padding: '11px 20px', height: '42px' }}
                     containerStyle={{
                       height: '42px',
                       marginTop: '12px',
@@ -196,7 +209,7 @@ export default () => {
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'companyAdress');
                     }}
-                    value={input.companyAdress}
+                    value={companyAdress}
                     placeholder={
                       companyType == 'cns'
                         ? '회사 주소를 입력해 주세요'
@@ -204,6 +217,7 @@ export default () => {
                     }
                   />
                   <Input
+                    style={{ padding: '11px 20px', height: '42px' }}
                     containerStyle={{
                       height: '42px',
                       marginTop: '12px',
@@ -212,7 +226,7 @@ export default () => {
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'companyAdress2');
                     }}
-                    value={input.companyAdress2}
+                    value={companyAdress2}
                     placeholder={'상세 주소를 입력해 주세요'}
                   />
                 </LineWrapper>
@@ -221,6 +235,7 @@ export default () => {
                   <RepeatTitle>직위/직급 (선택)</RepeatTitle>
                   <TextWrapper>
                     <Input
+                      style={{ padding: '11px 20px', height: '42px' }}
                       containerStyle={{
                         width: '380px',
                         height: '42px',
@@ -229,7 +244,7 @@ export default () => {
                       onChange={(e) => {
                         isValidHandler(e.target.value, 'rank');
                       }}
-                      value={input.rank}
+                      value={position || ''}
                       placeholder={'직위/직급을 입력해 주세요'}
                     />
                   </TextWrapper>
@@ -239,6 +254,7 @@ export default () => {
                   <RepeatTitle>부서 (선택)</RepeatTitle>
                   <TextWrapper>
                     <Input
+                      style={{ padding: '11px 20px', height: '42px' }}
                       containerStyle={{
                         width: '380px',
                         height: '42px',
@@ -247,21 +263,22 @@ export default () => {
                       onChange={(e) => {
                         isValidHandler(e.target.value, 'department');
                       }}
-                      value={input.department}
+                      value={department || ''}
                       placeholder={'부서를 입력해 주세요'}
                     />
                   </TextWrapper>
                 </LineWrapper>
 
                 <LineWrapper style={{ marginBottom: 0 }}>
-                  <RepeatTitle>사내 전화번호 (선택) 번호</RepeatTitle>
+                  <RepeatTitle>사내 전화번호 (선택)</RepeatTitle>
                   <TextWrapper>
                     <Input
+                      style={{ padding: '11px 20px', height: '42px' }}
                       containerStyle={{ height: '42px', margin: 0 }}
                       onChange={(e) => {
                         isValidHandler(e.target.value, 'inPhone');
                       }}
-                      value={input.inPhone}
+                      value={tel || ''}
                       placeholder={
                         '사내 전화번호를 입력해 주세요 (숫자만 입력)'
                       }
@@ -281,11 +298,11 @@ export default () => {
                       backgroundColor: '#fff',
                       marginTop: '8px',
                     }}
-                    style={{ padding: '11px 14px', height: '42px' }}
+                    style={{ padding: '11px 20px', height: '42px' }}
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'company');
                     }}
-                    value={input.company}
+                    value={company}
                     placeholder={
                       companyType == 'cns'
                         ? '회사 주소'
@@ -312,6 +329,7 @@ export default () => {
                   <RepeatTitle>직위/직급 (선택)</RepeatTitle>
                   <TextWrapper>
                     <Input
+                      style={{ padding: '11px 20px', height: '42px' }}
                       containerStyle={{
                         width: '380px',
                         height: '42px',
@@ -320,7 +338,7 @@ export default () => {
                       onChange={(e) => {
                         isValidHandler(e.target.value, 'rank');
                       }}
-                      value={input.rank}
+                      value={position || ''}
                       placeholder={'직위/직급을 입력해 주세요'}
                     />
                   </TextWrapper>
@@ -330,6 +348,7 @@ export default () => {
                   <RepeatTitle>부서 (선택)</RepeatTitle>
                   <TextWrapper>
                     <Input
+                      style={{ padding: '11px 20px', height: '42px' }}
                       containerStyle={{
                         width: '380px',
                         height: '42px',
@@ -338,21 +357,22 @@ export default () => {
                       onChange={(e) => {
                         isValidHandler(e.target.value, 'department');
                       }}
-                      value={input.department}
+                      value={department || ''}
                       placeholder={'부서를 입력해 주세요'}
                     />
                   </TextWrapper>
                 </LineWrapper>
 
                 <LineWrapper style={{ marginBottom: 0 }}>
-                  <RepeatTitle>사내 전화번호 (선택) 번호</RepeatTitle>
+                  <RepeatTitle>사내 전화 (선택)</RepeatTitle>
                   <TextWrapper>
                     <Input
+                      style={{ padding: '11px 20px', height: '42px' }}
                       containerStyle={{ height: '42px', margin: 0 }}
                       onChange={(e) => {
                         isValidHandler(e.target.value, 'inPhone');
                       }}
-                      value={input.inPhone}
+                      value={tel || ''}
                       placeholder={
                         '사내 전화번호를 입력해 주세요 (숫자만 입력)'
                       }
@@ -400,12 +420,13 @@ const MainTitle = styled.div`
 const TermsWrapper = styled.div<{ type: MainHeightType }>`
   width: 440px;
   margin-top: 30px;
-  padding: 30px 30px 50px;
   border-radius: 20px;
   background-color: #fff;
+  margin-bottom: 80px;
 
   ${({ type }) => css`
     height: ${heightPixel[type]};
+    padding: ${paddingPixel[type]};
   `}
 }
 `;

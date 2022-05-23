@@ -494,13 +494,11 @@ const DateSelectBorder = styled.div<{ type: OptionType }>`
   height: 36px;
   cursor: pointer;
   border-radius: 18px;
-  padding: 9px 0;
+  padding: 8px 0;
 
+  line-height: 1.3
   font-size: 14px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.28px;
   text-align: center;
 
   ${({ type }) => css`

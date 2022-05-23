@@ -10,7 +10,6 @@ enum ButtonType {
   'ABLE',
   'INABLE',
 }
-
 const backgroundColors = {
   [ButtonType.ABLE]: '#258fff',
   [ButtonType.INABLE]: '#f2f2f2',
@@ -118,9 +117,9 @@ export default () => {
         <TermsWrapper>
           <ProgressBar>
             <ProgressCircle>1</ProgressCircle>
-            <ProgressDashed />
+            <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
             <ProgressCircleOff>2</ProgressCircleOff>
-            <ProgressDashed />
+            <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
           <MiddleTitle>약관동의</MiddleTitle>
@@ -311,9 +310,6 @@ const ProgressCircle = styled.div`
 
   font-size: 14px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.28px;
   text-align: center;
   color: #fff;
 `;
@@ -327,16 +323,12 @@ const ProgressCircleOff = styled.div`
 
   font-size: 14px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.28px;
   text-align: center;
   color: #999999;
   border: 1px solid #999;
 `;
 
-const ProgressDashed = styled.div`
-  border-top: 2px dashed #999999;
+const ProgressDashed = styled.img`
   width: 14px;
   hieght: 1px;
   margin: 0 6px;

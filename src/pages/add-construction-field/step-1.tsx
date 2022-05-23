@@ -48,7 +48,7 @@ export default () => {
               width: '540px',
               height: '42px',
             }}
-            style={{ height: '42px' }}
+            style={{ height: '42px', padding: '11px 20px' }}
             errorMessage={fieldNm == '' ? '현장명 입력은 필수항목입니다.' : ''}
           />
         </InputItemWrapper>
@@ -66,7 +66,7 @@ export default () => {
                 width: '430px',
                 height: '42px',
               }}
-              style={{ height: '42px' }}
+              style={{ height: '42px', padding: '11px 20px' }}
             />
             <FindBtn>찾기</FindBtn>
           </FindInputBtnWrapper>
@@ -82,7 +82,7 @@ export default () => {
               height: '42px',
               marginTop: '14px',
             }}
-            style={{ height: '42px' }}
+            style={{ height: '42px', padding: '11px 20px' }}
           />
         </InputItemWrapper>
         <MapContentWrapper>지도</MapContentWrapper>
@@ -222,14 +222,10 @@ const InActiveBtn = styled.div`
   background-color: #f2f2f2;
   padding: 15px 0;
   border-radius: 6px;
-  cursor: pointer;
 
   text-align: center;
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
   letter-spacing: -0.32px;
   text-align: center;
   color: #999;
