@@ -44,11 +44,16 @@ export default () => {
   const { name, companyName, position, department, tel } = userData;
 
   //modal
-  const [isEmail, setIsEmail] = useState(false);
+  const [isEmailCode, setIsEmailCode] = useState(false);
+  const [isEmailDone, setIsEmailDone] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isErrorEmailModalOpen, setIsErrorEmailModalOpen] = useState(false);
+
   const [isPassword, setIsPassword] = useState(false);
-  const [isSMS, setIsSMS] = useState(false);
+
+  const [isPhoneCode, setIsPhoneCode] = useState(false);
+  const [isPhoneDone, setIsPhoneDone] = useState(false);
+
   const [isWithdrawal, setIsWithdrawal] = useState(false);
   const [isBlocking, setIsBlocking] = useState(false);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
@@ -60,7 +65,7 @@ export default () => {
   }, [email]);
 
   const isEmailVerifyCode = useMemo(() => {
-    const regex = /^[0-9]{6,6}$/;
+    const regex = /^[0-9]/;
     return regex.test(verifyEmailCode);
   }, [verifyEmailCode]);
 
@@ -76,7 +81,7 @@ export default () => {
   }, [phone]);
 
   const isPhoneVerifyCode = useMemo(() => {
-    const regex = /^[0-9]{6,6}$/;
+    const regex = /^[0-9]/;
     return regex.test(veryfyPhoneCode);
   }, [veryfyPhoneCode]);
 
@@ -93,7 +98,7 @@ export default () => {
   };
 
   const handleOpenEmailCode = () => {
-    setIsEmail(!isEmail);
+    setIsEmailCode(!isEmailCode);
   };
 
   const handlePassword = () => {
@@ -116,7 +121,7 @@ export default () => {
       });
       if (data?.result === true) {
         setIsEmailModalOpen(true);
-        setIsEmail(true);
+        setIsEmailCode(true);
       }
     } catch (error) {
       setIsErrorEmailModalOpen(true);
@@ -130,6 +135,7 @@ export default () => {
         key: verifyEmailCode,
       });
       if (data?.result === true) {
+        setIsEmailDone(true);
         window.alert('인증성공!');
       }
     } catch (error) {
@@ -138,12 +144,13 @@ export default () => {
   };
 
   const handleRequestPhone = async () => {
+    const tempPh = phone.replace(/-/g, '');
     try {
       const { data } = await api.post('/verifications/phone', {
-        phone: phone,
+        phone: tempPh,
       });
       if (data?.result === true) {
-        setIsSMS(true);
+        setIsPhoneCode(true);
       }
     } catch (error) {
       console.log(error);
@@ -158,10 +165,12 @@ export default () => {
         key: veryfyPhoneCode,
       });
       if (data?.result) {
+        setIsPhoneDone(true);
         window.alert('인증성공!');
       }
     } catch (error) {
       console.log(error);
+      window.alert('인증실패!');
     }
   };
 
@@ -212,7 +221,7 @@ export default () => {
                   name="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  containerStyle={{ marginBottom: 5, height: 60 }}
+                  containerStyle={{ marginBottom: 5, height: 75 }}
                   inputStyle={emailInputStyle}
                   errorMessage={
                     email === ''
@@ -236,7 +245,7 @@ export default () => {
                   {isEmailValidated ? '이메일 인증' : '이메일 변경'}
                 </Button>
               </ButtonInputBox>
-              {isEmail && (
+              {isEmailCode && (
                 <ButtonInputBox>
                   <Input
                     type="email"
@@ -252,13 +261,13 @@ export default () => {
                       backgroundColor: '#fff',
                       borderRadius: '6px',
                     }}
-                    maxLength={6}
                     errorMessage={
-                      email === ''
-                        ? ''
-                        : isEmailVerifyCode
+                      isEmailDone
                         ? '인증번호가 일치합니다.'
                         : '인증번호가 일치하지 않습니다.'
+                    }
+                    errorMessageStyle={
+                      isEmailDone ? { color: '#00b448' } : { color: '#ef0000' }
                     }
                   />
                   <Button
@@ -270,11 +279,11 @@ export default () => {
                     onClick={handleVerifyEmailCode}
                     containerStyle={buttonStyle2}
                   >
-                    확인
+                    {isEmailDone ? '확인완료' : '확인'}
                   </Button>
                 </ButtonInputBox>
               )}
-              <Divider style={{ marginTop: 25 }} />
+              <Divider style={{ marginTop: 20 }} />
               <LinedInput
                 label="회사명"
                 type="text"
@@ -337,6 +346,7 @@ export default () => {
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    containerStyle={{ marginBottom: 5 }}
                   />
                   <Divider />
                   <Input
@@ -384,7 +394,7 @@ export default () => {
                   type="text"
                   name="phone"
                   placeholder="'-' 입력 제외(번호만 입력해 주세요)"
-                  containerStyle={{ marginBottom: 5, height: 60 }}
+                  containerStyle={{ marginBottom: 5, height: 75 }}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   inputStyle={{
@@ -398,49 +408,49 @@ export default () => {
                     isPhoneValidated ? ButtonType.BLACK_WHITE : ButtonType.GRAY
                   }
                   containerStyle={buttonStyle}
-                  onClick={() => (isPhoneValidated ? handleRequestPhone : null)}
+                  onClick={handleRequestPhone}
                 >
                   {isPhoneValidated ? '인증번호 전송' : '휴대폰번호 변경'}
                 </Button>
               </ButtonInputBox>
-              {/* {isSMS && ( */}
-              <ButtonInputBox>
-                <Input
-                  type="text"
-                  name="verificationNumber"
-                  placeholder="인증번호 6자리 입력"
-                  value={veryfyPhoneCode}
-                  onChange={(e) => setVeryfyPhoneCode(e.target.value)}
-                  containerStyle={{
-                    marginTop: 10,
-                    marginBottom: 5,
-                  }}
-                  inputStyle={{
-                    backgroundColor: '#fff',
-                    borderRadius: '6px',
-                  }}
-                  maxLength={6}
-                  errorMessage={
-                    email === ''
-                      ? ''
-                      : isEmailValidated
-                      ? '인증번호가 일치합니다.'
-                      : '인증번호가 일치하지 않습니다.'
-                  }
-                />
-                <Button
-                  type={
-                    isPhoneVerifyCode ? ButtonType.BLACK_WHITE : ButtonType.GRAY
-                  }
-                  containerStyle={buttonStyle2}
-                  onClick={() =>
-                    isPhoneVerifyCode ? handlePhoneVerifyCode : null
-                  }
-                >
-                  확인
-                </Button>
-              </ButtonInputBox>
-              {/* )} */}
+              {isPhoneCode && (
+                <ButtonInputBox>
+                  <Input
+                    type="text"
+                    name="verificationNumber"
+                    placeholder="인증번호 6자리 입력"
+                    value={veryfyPhoneCode}
+                    onChange={(e) => setVeryfyPhoneCode(e.target.value)}
+                    containerStyle={{
+                      marginTop: 10,
+                      marginBottom: 5,
+                    }}
+                    inputStyle={{
+                      backgroundColor: '#fff',
+                      borderRadius: '6px',
+                    }}
+                    errorMessage={
+                      isPhoneDone
+                        ? '인증번호가 일치합니다.'
+                        : '인증번호가 일치하지 않습니다.'
+                    }
+                    errorMessageStyle={
+                      isPhoneDone ? { color: '#00b448' } : { color: '#ef0000' }
+                    }
+                  />
+                  <Button
+                    type={
+                      isPhoneVerifyCode
+                        ? ButtonType.BLACK_WHITE
+                        : ButtonType.GRAY
+                    }
+                    containerStyle={buttonStyle2}
+                    onClick={handlePhoneVerifyCode}
+                  >
+                    {isPhoneDone ? '확인완료' : '확인'}
+                  </Button>
+                </ButtonInputBox>
+              )}
             </MyInfoFormBox>
           </MyInfoWrapper>
           <ButtonBox>
@@ -487,12 +497,12 @@ export default () => {
       />
       <TextModal
         open={isBlocking}
-        onClose={() => setIsWithdrawal(false)}
+        onClose={() => navigate(-1)}
         submitText="나가기"
         content={
           '페이지를 나가시겠습니까? \n 변경사항이 저장되지 않을 수 있습니다.'
         }
-        onSubmit={() => setIsWithdrawal(false)}
+        onSubmit={() => setIsBlocking(false)}
       />
     </MypageLayout>
   );
@@ -555,7 +565,6 @@ const ButtonInputBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  margin-top: 8px;
 `;
 
 const ButtonBox = styled.div`
@@ -595,6 +604,7 @@ const buttonStyle = {
   fontWeight: '500',
   padding: '11px 0',
   marginLeft: '10px',
+  marginBottom: '15px',
 };
 
 const buttonStyle2 = {
