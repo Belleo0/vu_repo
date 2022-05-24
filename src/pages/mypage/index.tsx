@@ -104,7 +104,7 @@ export default () => {
     });
   };
 
-  //modal&handleState
+  //modal&handler
   const handleEmailEdit = () => {
     setIsEmailEdit(true);
   };
@@ -123,6 +123,11 @@ export default () => {
 
   const handleBlocking = () => {
     setIsBlocking(!isBlocking);
+  };
+
+  const handleSubmittedForm = () => {
+    setIsSubmittedForm(!isSubmittedForm);
+    navigate(0);
   };
 
   //api
@@ -191,7 +196,7 @@ export default () => {
   };
 
   const handleEdit = async () => {
-    if (!email && !phone) {
+    if (email && phone) {
       try {
         await api.put('/auth/login', {
           ...userData,
@@ -200,14 +205,12 @@ export default () => {
           phone: phone,
         });
         setIsSubmittedForm(true);
-        navigate('/mypage');
       } catch (error) {
         window.alert('저장 실패');
       }
     } else {
-      window.alert('오류발생');
+      return window.alert('이메일, 비밀번호, 핸드폰번호를 입력해주세요');
     }
-    return window.alert('이메일, 비밀번호, 핸드폰번호를 입력해주세요');
   };
 
   useEffect(() => {
@@ -537,7 +540,7 @@ export default () => {
       />
       <TextModal
         open={isSubmittedForm}
-        onClose={() => setIsSubmittedForm(false)}
+        onClose={() => handleSubmittedForm()}
         submitText={'확인'}
         content={'저장이 완료되었습니다.'}
       />
