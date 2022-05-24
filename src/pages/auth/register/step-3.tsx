@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
 import Input from '@components/Input';
 import SearchInput from '@components/SearchInput';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { isNull } from 'lodash';
 import _ from 'lodash';
@@ -46,23 +46,25 @@ const cursor = {
 
 export default () => {
   const location = useLocation();
-  console.log(location.state);
+  const navigate = useNavigate();
 
   const userInviteType: boolean = false;
   const companyName: string = '동양건설';
   const companyType: string = 'cns';
 
   const requestSignUpHandler = async () => {
-    const data = await api.post('/auth/register', {
-      signname: (location.state as any)?.email,
-      password: (location.state as any)?.password,
-      name: (location.state as any)?.name,
-      phone: (location.state as any)?.phone,
-      position: position,
-      tel: tel,
-      company_id: 100,
-    });
-    console.log('requestSignUpHandler => ', data);
+    const data = await api
+      .post('/auth/register', {
+        signname: (location.state as any)?.signname,
+        password: (location.state as any)?.password,
+        name: (location.state as any)?.name,
+        phone: (location.state as any)?.phone,
+        position: position || '',
+        tel: tel || '',
+        company_id: 1,
+      })
+      .then((res) => navigate('/auth/login'))
+      .catch((err) => console.log(err));
   };
 
   const [company, setCompany] = useState<string>('');
@@ -188,7 +190,7 @@ export default () => {
                       onChange={(e) => {
                         isValidHandler(e.target.value, 'zipCode');
                       }}
-                      value={zipCode}
+                      value={zipCode || ''}
                       placeholder={'우편번호 검색'}
                     />
                     <SendButton
