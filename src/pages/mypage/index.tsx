@@ -20,14 +20,14 @@ export default () => {
   const navigate = useNavigate();
 
   let initialState = {
-    name: userInfo ? userInfo.name : '',
-    email: userInfo ? userInfo.signname : '',
-    companyName: userInfo ? userInfo.company.name : '',
-    position: userInfo ? userInfo.position : '',
-    department: userInfo ? userInfo.department : '',
-    tel: userInfo ? userInfo.tel : '',
-    password: userInfo ? userInfo.password : '',
-    phone: userInfo ? userInfo.phone : '',
+    name: userInfo ? userInfo?.name : '',
+    email: userInfo ? userInfo?.signname : '',
+    companyName: userInfo ? userInfo?.company.name : '',
+    position: userInfo ? userInfo?.position : '',
+    department: userInfo ? userInfo?.department : '',
+    tel: userInfo ? userInfo?.tel : '',
+    password: userInfo ? userInfo?.password : '',
+    phone: userInfo ? userInfo?.phone : '',
   };
 
   const [userData, setUserData] = useState(initialState);
