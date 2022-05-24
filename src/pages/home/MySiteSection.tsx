@@ -21,7 +21,7 @@ export default ({ searchedSpaces }: any, spaceCount: number) => {
             </Typography2>
           </Box>
           <Box>
-            <MiniSiteAddButton onClick={() => navigate('/my-field')}>
+            <MiniSiteAddButton onClick={() => navigate('/my-space')}>
               MY 건설현장
               <Icon src={getAssetURL(`../assets/ic-arrow-right.svg`)} />
             </MiniSiteAddButton>
@@ -32,7 +32,7 @@ export default ({ searchedSpaces }: any, spaceCount: number) => {
             searchedSpaces.map((v: any, i: any) => (
               <MySiteButton
                 key={`space-${v.id}-${i}`}
-                onClick={() => navigate('/my-field')}
+                onClick={() => navigate('/my-space')}
               >
                 {v.name}
               </MySiteButton>

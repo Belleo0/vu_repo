@@ -30,6 +30,8 @@ export default () => {
     dates?.[dates.length - 1],
   );
 
+  console.log('selectedChatRoomInfo', selectedChatRoomInfo);
+
   return (
     <SpaceLayout>
       <Container>

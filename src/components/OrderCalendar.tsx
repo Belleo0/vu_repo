@@ -1,6 +1,7 @@
 import useAssignments from '@api/useAssignments';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
 import SpaceLayout from '@layout/SpaceLayout';
 import {
@@ -24,6 +25,8 @@ export default ({
   mutate,
   mutateMessages,
 }: any) => {
+  const isFieldUser = useIsFieldUser();
+
   const spaceInfo = useSelectedSpaceInfo();
 
   const [isModalOpened, setIsModalOpened] = useState(false);
@@ -108,7 +111,13 @@ export default ({
                       }}
                     >
                       <BarTime>{convertTime(v?.start_time, true)}</BarTime>
-                      <BarName>{v?.estimation?.factory_space?.name}</BarName>
+                      <BarName>
+                        {
+                          v?.estimation?.[
+                            isFieldUser ? 'factory_space' : 'field_space'
+                          ]?.name
+                        }
+                      </BarName>
                       <BarAmount>
                         {v?.total?.toLocaleString?.('ko')}m³
                       </BarAmount>

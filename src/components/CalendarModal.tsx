@@ -1,5 +1,6 @@
 import api from '@api';
 import styled from '@emotion/styled';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 import { convertTime } from '@utils/date';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
@@ -27,6 +28,8 @@ export default ({
   position,
   revalidate,
 }: ICalendarModal) => {
+  const isFieldUser = useIsFieldUser();
+
   const [realPosition, setRealPosition] = useState<{
     x: number;
     y: number;
@@ -74,7 +77,12 @@ export default ({
               onClick={onClose}
             />
           </Header>
-          <Title>{info?.estimation?.factory_space?.name}</Title>
+          <Title>
+            {
+              info?.estimation?.[isFieldUser ? 'factory_space' : 'field_space']
+                ?.name
+            }
+          </Title>
           <Day>
             {moment(info?.date).format('YYYY년 M월 D일')}{' '}
             {convertTime(info?.start_time)}~{convertTime(info?.end_time)}
@@ -104,7 +112,7 @@ export default ({
           </SpecWrap>
           <BottomDivider />
           <TotalAmountWrap>
-            <TotalAmountLabel>주문합계</TotalAmountLabel>
+            <TotalAmountLabel>총 주문합계</TotalAmountLabel>
             <TotalAmountValue>
               {info?.total?.toLocaleString?.('ko')}m³
             </TotalAmountValue>
@@ -135,7 +143,11 @@ export default ({
               isEditModal
               open={isEditModalOpened}
               onClose={() => setIsEditModalOpened(false)}
-              name={info?.estimation?.factory_space?.name || ''}
+              name={
+                info?.estimation?.[
+                  isFieldUser ? 'factory_space' : 'field_space'
+                ]?.name || ''
+              }
               percent={info?.estimation?.percent || 0}
               revalidate={async () => await revalidate()}
               initialInfo={info}

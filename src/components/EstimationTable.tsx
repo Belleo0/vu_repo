@@ -70,107 +70,102 @@ export default ({ data = [], revalidate }: IVendorTable) => {
   return (
     <Container>
       <CellWrap>
-        <LabelCell style={{ maxWidth: 130 }}>
-          <DeleteButton
-            disabled={selectedIds.length === 0}
-            onClick={selectedIds.length === 0 ? () => null : handleRemove}
-          >
-            삭제
-          </DeleteButton>
-        </LabelCell>
-        <LabelCell>레미콘 공장</LabelCell>
-        <LabelCell>상태</LabelCell>
-        <LabelCell>거리/시간</LabelCell>
-        <LabelCell>생산설비</LabelCell>
-        <LabelCell>영업사원</LabelCell>
-        <LabelCell>단가율</LabelCell>
-        <LabelCell>납품사 등록</LabelCell>
-        <LabelCell>주문</LabelCell>
+        <LabelCell style={{ maxWidth: 130 }}>일자</LabelCell>
+        <LabelCell style={{ maxWidth: 180 }}>건설사</LabelCell>
+        <LabelCell>건설현장</LabelCell>
+        <LabelCell style={{ maxWidth: 180 }}>거리/시간</LabelCell>
+        <LabelCell style={{ maxWidth: 120 }}>건설사 담당자</LabelCell>
+        <LabelCell style={{ maxWidth: 180 }}>견적</LabelCell>
+        <LabelCell style={{ maxWidth: 130 }}>상태</LabelCell>
+        <LabelCell style={{ maxWidth: 120 }}>예상물량</LabelCell>
+        <LabelCell style={{ maxWidth: 120 }}>레미콘사 담당자</LabelCell>
+        <LabelCell style={{ maxWidth: 120 }} />
       </CellWrap>
       {data.map((v) => (
         <CellWrap key={v?.id}>
           <ValueCell style={{ maxWidth: 130 }}>
-            <DeleteRadio
-              active={selectedIds.includes(v?.id)}
-              onClick={() => handleClickRadio(v?.id)}
-            >
-              <DeleteIcon
-                src={
-                  selectedIds.includes(v?.id)
-                    ? getAssetURL('../assets/ic-check-only-ic-white.svg')
-                    : getAssetURL('../assets/ic-check-only-ic-grey.svg')
-                }
-              />
-            </DeleteRadio>
+            <DateValue>{moment(v?.created_at).format('YYYY.MM.DD')}</DateValue>
+          </ValueCell>
+          <ValueCell style={{ flexDirection: 'column', maxWidth: 180 }}>
+            <FactoryCompanyName>
+              {v?.field_space?.company.name}
+            </FactoryCompanyName>
           </ValueCell>
           <ValueCell style={{ flexDirection: 'column' }}>
-            <FactoryCompanyName>{v?.factory_space?.name}</FactoryCompanyName>
-            <FactoryAddress>{v?.factory_space?.basic_address}</FactoryAddress>
+            <FactoryCompanyName>{v?.field_space?.name}</FactoryCompanyName>
+            <FactoryAddress>{v?.field_space?.basic_address}</FactoryAddress>
           </ValueCell>
-          <ValueCell style={{ flexDirection: 'column' }}>
-            <EstimationStatusValue status={v?.status} />
-          </ValueCell>
-          <ValueCell>
+          <ValueCell style={{ maxWidth: 180 }}>
             <Distance>{convertDistance(v?.direction?.distance)}km</Distance>
             <DistanceDivider />
             <Duration>{convertDuration(v?.direction?.duration)}분</Duration>
           </ValueCell>
-          <ValueCell>B/P 210m³/h x 2</ValueCell>
-          <ValueCell>
-            <SaleUserName>{v?.factory_space?.site_user?.name}</SaleUserName>
+          <ValueCell style={{ maxWidth: 120 }}>
+            <SaleUserName>
+              {v?.field_space?.site_user?.name}{' '}
+              {v?.field_space?.site_user?.position}
+            </SaleUserName>
           </ValueCell>
-          <ValueCell>
+          <ValueCell style={{ maxWidth: 180 }}>
             {v.status === 'REQUESTED' ? (
+              <SubmitButton disabled={false}>견적제출</SubmitButton>
+            ) : (
+              <TotalAmount>{v?.percent}%</TotalAmount>
+            )}
+          </ValueCell>
+          <ValueCell style={{ maxWidth: 130 }}>
+            {['REQUESTED', 'RESPONDED'].includes(v.status) ? (
               <RequestedAtWrap>
-                <RequestedAtLabel>견적요청 일시</RequestedAtLabel>
+                <RequestedAtLabel>
+                  견적{v.status === 'REQUESTED' ? '요청 접수' : '제출'}
+                </RequestedAtLabel>
                 <RequestedAtValue>
                   {moment(v.created_at).format('YYYY.MM.DD')}
                 </RequestedAtValue>
               </RequestedAtWrap>
             ) : (
-              <PriceRateWrap>
-                <PriceRateIcon
-                  src={getAssetURL('../assets/ic-price-rate.svg')}
-                />
-                <PriceRateValue>{v?.percent}%</PriceRateValue>
-              </PriceRateWrap>
+              <RequestedAtWrap>
+                <RequestedAtLabel style={{ color: '#ff5517', fontSize: 15 }}>
+                  납품사 등록완료
+                </RequestedAtLabel>
+                <RequestedAtValue>
+                  {moment(v.created_at).format('YYYY.MM.DD')}
+                </RequestedAtValue>
+              </RequestedAtWrap>
             )}
           </ValueCell>
-
-          <ValueCell>
-            <TotalAmount>
-              <SubmitButton
-                disabled={v.status === 'REGISTERED' || v.status === 'REQUESTED'}
-                onClick={
-                  v.status === 'REGISTERED'
-                    ? () => setIsAlreadyRegisterModalOpen(true)
-                    : v.status === 'REQUESTED'
-                    ? () => setIsNotRegisterEstimationModalOpen(true)
-                    : () => {
-                        setIsRegisterModalOpen(true);
-                        setRegisterSpaceInfo(v);
-                      }
-                }
-              >
-                {v.status === 'REGISTERED'
-                  ? '등록완료'
-                  : v.status === 'REQUESTED'
-                  ? '등록불가'
-                  : '등록하기'}
-              </SubmitButton>
-            </TotalAmount>
+          <ValueCell style={{ maxWidth: 120 }}>
+            <Total>
+              {v?.field_space?.field_info?.need_amount?.toLocaleString?.('ko')}
+              m³
+            </Total>
           </ValueCell>
-          <ValueCell>
-            <OrderButton
-              disabled={v.status !== 'REGISTERED'}
-              onClick={
-                v.status !== 'REGISTERED'
-                  ? () => setIsNotRegisterModalOpen(true)
-                  : () => handleOrder(v.id, v?.is_chat_room_joined)
+          {v.status !== 'REQUESTED' ? (
+            <ValueCell style={{ flexDirection: 'column', maxWidth: 120 }}>
+              <UserName>
+                {v?.manager_user?.name} {v?.manager_user?.position}
+              </UserName>
+              <ChangeButton>변경</ChangeButton>
+            </ValueCell>
+          ) : (
+            <ValueCell style={{ maxWidth: 120 }} />
+          )}
+          <ValueCell style={{ maxWidth: 120 }}>
+            <ChatButton
+              active={v?.is_chat_room_joined}
+              onClick={() =>
+                handleOrder(v?.chat_room_id, v?.is_chat_room_joined)
               }
             >
-              주문
-            </OrderButton>
+              <ChatIcon
+                src={getAssetURL(
+                  `../assets/ic-chat${
+                    v?.is_chat_room_joined ? '' : '-grey'
+                  }.svg`,
+                )}
+              />
+              채팅
+            </ChatButton>
           </ValueCell>
         </CellWrap>
       ))}
@@ -292,7 +287,7 @@ const SaleUserName = styled.span`
   display: block;
   font-size: 16px;
   letter-spacing: -0.32px;
-  text-align: left;
+  text-align: center;
   color: #258fff;
   text-decoration: underline;
   cursor: pointer;
@@ -309,111 +304,10 @@ const TotalAmount = styled.span`
   color: #1084ff;
 `;
 
-const OrderButton = styled.span<{ disabled: boolean }>`
-  padding: 8px 27px;
-  border-radius: 18px;
-
-  background-color: #fff;
-
-  ${({ disabled }) =>
-    disabled
-      ? css`
-          border: solid 1px #c7c7c7;
-          color: #c7c7c7;
-        `
-      : css`
-          border: solid 1px #258fff;
-          color: #258fff;
-        `}
-
-  font-size: 14px;
-  font-weight: 600;
-
-  letter-spacing: -0.28px;
-  text-align: center;
-
-  cursor: pointer;
-  user-select: none;
-`;
-
-const DeleteButton = styled.span<{ disabled: boolean }>`
-  padding: 5px 20px;
-  border-radius: 6px;
-  background-color: #000;
-
-  ${({ disabled }) =>
-    disabled
-      ? css`
-          background-color: #f2f2f2;
-          color: #999;
-        `
-      : css`
-          background-color: #000;
-          color: #fff;
-        `}
-
-  font-size: 14px;
-  letter-spacing: -0.28px;
-  text-align: center;
-
-  transition: background-color 0.2s ease-in-out;
-
-  cursor: pointer;
-  user-select: none;
-`;
-
-const DeleteRadio = styled.span<{ active: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-  background-color: #fff;
-
-  ${({ active }) =>
-    active
-      ? css`
-          background-color: #222;
-          border: solid 1px #222;
-        `
-      : css`
-          background-color: #fff;
-          border: solid 1px #c7c7c7;
-        `}
-
-  transition: background-color 0.2s ease-in-out;
-`;
-
-const DeleteIcon = styled.img`
-  width: 12px;
-`;
-
-const PriceRateWrap = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const PriceRateIcon = styled.img`
-  width: 24px;
-  height: 24px;
-  margin-right: 7px;
-`;
-
-const PriceRateValue = styled.span`
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.32px;
-  text-align: left;
-  color: #222;
-`;
-
 const SubmitButton = styled.div<{ disabled: boolean }>`
-  width: 100%;
-  padding: 8px 15px;
-  border-radius: 18px;
+  width: 80px;
+  padding: 12px 15px;
+  border-radius: 20px;
 
   font-size: 14px;
   font-weight: 500;
@@ -454,4 +348,76 @@ const RequestedAtValue = styled.span`
   letter-spacing: -0.32px;
   text-align: left;
   color: #000;
+`;
+
+const DateValue = styled.span`
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: -0.28px;
+  text-align: center;
+  color: #222;
+`;
+
+const Total = styled.span`
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: #000;
+`;
+
+const UserName = styled.span`
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  text-align: center;
+  color: #222;
+  margin-bottom: 6px;
+`;
+
+const ChangeButton = styled.span`
+  padding: 6px 14px 6px;
+  border-radius: 20px;
+  border: solid 1px #c7c7c7;
+  background-color: #fff;
+
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.24px;
+  text-align: center;
+  color: #000;
+`;
+
+const ChatButton = styled.span<{ active: boolean }>`
+  display: flex;
+  align-items: center;
+
+  padding: 8px 15px;
+  border-radius: 20px;
+  background-color: #fff;
+
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.28px;
+  text-align: center;
+
+  cursor: pointer;
+  user-select: none;
+
+  ${({ active }) =>
+    active
+      ? css`
+          border: solid 1px #222;
+          color: #222;
+        `
+      : css`
+          border: solid 1px #c7c7c7;
+          color: #c7c7c7;
+        `}
+`;
+
+const ChatIcon = styled.img`
+  width: 20px;
+  height: 20px;
+  margin: 0 4px 0 0;
 `;

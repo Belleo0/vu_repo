@@ -11,12 +11,22 @@ import { useDispatch } from 'react-redux';
 import { clearPrincipal } from '@data/auth';
 import { clearSelectedSpaceInfo } from '@data/space';
 import { clearPolylineInfo } from '@data/map';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 
-const menus = [
-  { label: 'MY 건설현장', path: '/my-field' },
+const fieldMenus = [
+  { label: 'MY 건설현장', path: '/my-space' },
   { label: '레미콘 지도', path: '/remicon-map' },
   { label: '납품사 선정', path: '/supplier-choice' },
   { label: '주문', path: '/order' },
+  { label: '캘린더', path: '/calendar' },
+  { label: '거래내역', path: '/transaction' },
+];
+
+const remiconMenus = [
+  { label: 'MY 레미콘공장', path: '/my-space' },
+  { label: '건설현장 지도', path: '/field-map' },
+  { label: '견적', path: '/estimation' },
+  { label: '레미콘 납품', path: '/order' },
   { label: '캘린더', path: '/calendar' },
   { label: '거래내역', path: '/transaction' },
 ];
@@ -31,6 +41,7 @@ const profileMenus = [
 export default () => {
   const isLogin = useIsLogin();
   const userInfo = useUserInfo();
+  const isFieldUser = useIsFieldUser();
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -52,7 +63,7 @@ export default () => {
       </LogoWrap>
       <ContentContainer>
         <MenuWrap>
-          {menus.map((v) => (
+          {(isFieldUser ? fieldMenus : remiconMenus).map((v) => (
             <MenuItem
               key={v.path}
               active={v.path === pathname}

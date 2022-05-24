@@ -201,17 +201,19 @@ export default () => {
             <SpaceOrderIcon src={getAssetURL('../assets/ic-sort.svg')} />
           </SpaceOrderWrap>
         </SpaceFilterContainer>
-        {searchedSpaces.map((v, i) => (
-          <SpaceCard
-            key={`space-${v.id}-${i}`}
-            info={v}
-            id={v.id}
-            name={v?.name}
-            address={v?.basic_address}
-            revalidate={mutate}
-            isHide={tabType === TabTypeEnum.HIDE}
-          />
-        ))}
+        <SearchedSpaceWrap>
+          {searchedSpaces.map((v, i) => (
+            <SpaceCard
+              key={`space-${v.id}-${i}`}
+              info={v}
+              id={v.id}
+              name={v?.name}
+              address={v?.basic_address}
+              revalidate={mutate}
+              isHide={tabType === TabTypeEnum.HIDE}
+            />
+          ))}
+        </SearchedSpaceWrap>
       </SpaceContainer>
       <Modal
         open={isOrderChangeModalOpen}
@@ -259,6 +261,8 @@ export default () => {
 };
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 380px;
   height: 100%;
@@ -313,6 +317,9 @@ const SpaceContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px 30px;
+  flex: 1;
+  max-height: 100%;
+  overflow: hidden;
 `;
 
 const SpaceFilterContainer = styled.div`
@@ -355,4 +362,15 @@ const ChangeCardWrap = styled.div`
   margin-bottom: 20px;
   max-height: 480px;
   overflow-y: scroll;
+`;
+
+const SearchedSpaceWrap = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;

@@ -50,14 +50,14 @@ export default [
   },
   {
     label: '비밀번호 재설정',
-    path: '/:key',
+    path: '/auth/find-password/:key',
     component: lazy(() => import('@pages/auth/change-password')),
     permission: Permission.PUBLIC,
   },
   {
-    label: 'MY 건설현장',
-    path: '/my-field',
-    component: lazy(() => import('@pages/my-field')),
+    label: 'MY 건설현장/레미콘공장',
+    path: '/my-space',
+    component: lazy(() => import('@pages/my-space')),
     permission: Permission.PRIVATE,
   },
   {
@@ -67,9 +67,21 @@ export default [
     permission: Permission.PRIVATE,
   },
   {
+    label: '건설현장 지도',
+    path: '/field-map',
+    component: lazy(() => import('@pages/field-map')),
+    permission: Permission.PRIVATE,
+  },
+  {
     label: '납품사 선정',
     path: '/supplier-choice',
     component: lazy(() => import('@pages/supplier-choice')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '견적',
+    path: '/estimation',
+    component: lazy(() => import('@pages/estimation')),
     permission: Permission.PRIVATE,
   },
   {

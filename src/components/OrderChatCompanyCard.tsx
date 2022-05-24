@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 
 interface IOrderChatCompanyCard {
   active: boolean;
@@ -7,6 +8,7 @@ interface IOrderChatCompanyCard {
   saleUserName: string;
   saleUserPosition: string;
   totalAmount: number;
+  companyName?: string;
   onClick: () => any;
 }
 
@@ -16,23 +18,29 @@ export default ({
   saleUserName,
   saleUserPosition,
   totalAmount,
+  companyName,
   onClick,
 }: IOrderChatCompanyCard) => {
+  const isFieldUser = useIsFieldUser();
+
   return (
     <CompanyCard active={active} onClick={onClick}>
       <CompanyNameWrap>
         <CompanyName>{name}</CompanyName>
       </CompanyNameWrap>
       <CompanyInfoRow>
-        <CompanyInfoLabel>영업사원</CompanyInfoLabel>
+        <CompanyInfoLabel>
+          {isFieldUser ? '영업사원' : '거래처'}
+        </CompanyInfoLabel>
         <CompanyInfoValue>
-          {saleUserName} {saleUserPosition}
+          {isFieldUser ? `${saleUserName} ${saleUserPosition}` : companyName}
         </CompanyInfoValue>
       </CompanyInfoRow>
       <CompanyInfoRow>
         <CompanyInfoLabel>누적 주문량</CompanyInfoLabel>
         <CompanyInfoValue>
-          {totalAmount?.toLocaleString('ko')}m³
+          {/* {totalAmount?.toLocaleString('ko')}m³ */}
+          2차 범위
         </CompanyInfoValue>
       </CompanyInfoRow>
     </CompanyCard>

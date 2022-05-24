@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 import SpaceLayout from '@layout/SpaceLayout';
 import { CalendarTypeState, days, isDateToday } from '@utils/calendar';
 import getAssetURL from '@utils/getAssetURL';
@@ -19,6 +20,7 @@ export default ({
   setModalPosition,
   setSelectedBarInfo,
 }: any) => {
+  const isFieldUser = useIsFieldUser();
   const defaultTopMargin = useMemo(() => {
     return type === CalendarTypeState.WEEK ? 8 : 8;
   }, []);
@@ -140,7 +142,13 @@ export default ({
               }}
             >
               <WeekInfoRow>
-                <Name>{v?.estimation?.factory_space?.name}</Name>
+                <Name>
+                  {
+                    v?.estimation?.[
+                      isFieldUser ? 'factory_space' : 'field_space'
+                    ]?.name
+                  }
+                </Name>
                 <Amount>{v?.total?.toLocaleString?.('ko')}m³</Amount>
               </WeekInfoRow>
               <Time>{v.time}</Time>
@@ -159,7 +167,12 @@ export default ({
                 setModalPosition({ x: e.clientX, y: e.clientY });
               }}
             >
-              <Name>{v?.estimation?.factory_space?.name}</Name>
+              <Name>
+                {
+                  v?.estimation?.[isFieldUser ? 'factory_space' : 'field_space']
+                    ?.name
+                }
+              </Name>
               <Time>{v.time}</Time>
               <Amount>{v?.total?.toLocaleString?.('ko')}m³</Amount>
             </Bar>

@@ -40,7 +40,7 @@ export default () => {
       });
       setToken(data);
       await dispatch(me());
-      await navigate((location?.state as any)?.redirect_to || '/my-field');
+      await navigate((location?.state as any)?.redirect_to || '/my-space');
     } catch (err) {
       console.log(err);
       setIsErrorModalOpen(true);
