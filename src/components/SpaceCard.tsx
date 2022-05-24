@@ -31,9 +31,11 @@ export default ({
 
   const [isHideModalOpen, setIsHideModalOpen] = useState<boolean>(false);
 
-  const isOpen = useMemo(() => {
+  const isActive = useMemo(() => {
     return selectedSpaceId === id;
   }, [selectedSpaceId]);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleHideSpace = async () => {
     await api[isHide ? 'delete' : 'post'](`/field-spaces/${id}/hide`);
@@ -42,7 +44,7 @@ export default ({
   };
 
   return (
-    <Container isOpen={selectedSpaceId === id}>
+    <Container isActive={isActive} isOpen={isOpen}>
       <InfoContainer onClick={() => dispatch(setSelectedSpaceInfo(info))}>
         <InfoWrap>
           <Title>{name}</Title>
@@ -51,6 +53,7 @@ export default ({
         <Icon
           src={getAssetURL('../assets/ic-arrow-gray.svg')}
           isOpen={isOpen}
+          onClick={() => setIsOpen((prev) => !prev)}
         />
       </InfoContainer>
       {isOpen && (
@@ -75,7 +78,7 @@ export default ({
   );
 };
 
-const Container = styled.div<{ isOpen: boolean }>`
+const Container = styled.div<{ isActive: boolean; isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -94,10 +97,17 @@ const Container = styled.div<{ isOpen: boolean }>`
     isOpen
       ? css`
           min-height: 118px;
-          border-color: #258fff;
         `
       : css`
           min-height: 78px;
+        `}
+
+  ${({ isActive }) =>
+    isActive
+      ? css`
+          border-color: #258fff;
+        `
+      : css`
           border-color: white;
         `}
 
