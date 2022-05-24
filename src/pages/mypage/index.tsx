@@ -43,21 +43,26 @@ export default () => {
 
   const { name, companyName, position, department, tel } = userData;
 
-  //modal
+  const [isEmailEdit, setIsEmailEdit] = useState(false);
   const [isEmailCode, setIsEmailCode] = useState(false);
   const [isEmailDone, setIsEmailDone] = useState(false);
+  const [isEmailDoneFail, setIsEmailDoneFail] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isErrorEmailModalOpen, setIsErrorEmailModalOpen] = useState(false);
 
   const [isPassword, setIsPassword] = useState(false);
 
+  const [isPhoneEdit, setIsPhoneEdit] = useState(false);
   const [isPhoneCode, setIsPhoneCode] = useState(false);
   const [isPhoneDone, setIsPhoneDone] = useState(false);
+  const [isPhoneDoneFail, setIsPhoneDoneFail] = useState(false);
 
   const [isWithdrawal, setIsWithdrawal] = useState(false);
   const [isBlocking, setIsBlocking] = useState(false);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
+  //validation
   const isEmailValidated = useMemo(() => {
     const regex =
       /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,10}$/;
@@ -86,8 +91,10 @@ export default () => {
   }, [veryfyPhoneCode]);
 
   const isConfirmPasswordValidated = useMemo(() => {
-    if (newPassword === confirmPassword) return true;
-    else return false;
+    if (newPassword.length > 0 && newPassword === confirmPassword) {
+      setIsEditing(false);
+      return true;
+    }
   }, [newPassword, confirmPassword]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,8 +104,13 @@ export default () => {
     });
   };
 
-  const handleOpenEmailCode = () => {
-    setIsEmailCode(!isEmailCode);
+  //modal&handleState
+  const handleEmailEdit = () => {
+    setIsEmailEdit(true);
+  };
+
+  const handlePhoneEdit = () => {
+    setIsPhoneEdit(true);
   };
 
   const handlePassword = () => {
@@ -136,10 +148,12 @@ export default () => {
       });
       if (data?.result === true) {
         setIsEmailDone(true);
+        setIsEditing(false);
         window.alert('인증성공!');
       }
     } catch (error) {
-      setIsErrorEmailModalOpen(true);
+      setIsEmailDoneFail(true);
+      window.alert('인증실패!');
     }
   };
 
@@ -166,28 +180,41 @@ export default () => {
       });
       if (data?.result) {
         setIsPhoneDone(true);
+        setIsEditing(false);
         window.alert('인증성공!');
       }
     } catch (error) {
       console.log(error);
+      setIsPhoneDoneFail(true);
       window.alert('인증실패!');
     }
   };
 
   const handleEdit = async () => {
-    try {
-      await api.put('/auth/login', {
-        ...userData,
-        signname: email,
-        password: newPassword,
-        phone: phone,
-      });
-      setIsSubmittedForm(true);
-      navigate('/mypage');
-    } catch (error) {
-      window.alert('저장 실패');
+    if (!email && !phone) {
+      try {
+        await api.put('/auth/login', {
+          ...userData,
+          signname: email,
+          password: confirmPassword,
+          phone: phone,
+        });
+        setIsSubmittedForm(true);
+        navigate('/mypage');
+      } catch (error) {
+        window.alert('저장 실패');
+      }
+    } else {
+      window.alert('오류발생');
     }
+    return window.alert('이메일, 비밀번호, 핸드폰번호를 입력해주세요');
   };
+
+  useEffect(() => {
+    if (isEmailCode || isPhoneCode || isPassword) {
+      setIsEditing(true);
+    }
+  }, [isEmailCode, isPhoneCode, isPassword]);
 
   return (
     <MypageLayout>
@@ -206,13 +233,17 @@ export default () => {
               />
             </ProfileImageBox>
             <MyInfoFormBox>
+              {/* 이름 */}
               <LinedInput
                 label="이름"
                 type="text"
                 name="name"
                 value={name}
                 onChange={handleChange}
+                xIcon={false}
               />
+
+              {/* 이메일 */}
               <ButtonInputBox>
                 <Input
                   label="이메일"
@@ -222,7 +253,9 @@ export default () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   containerStyle={{ marginBottom: 5, height: 75 }}
-                  inputStyle={emailInputStyle}
+                  inputStyle={
+                    isEmailEdit ? emailEditInputStyle : emailInputStyle
+                  }
                   errorMessage={
                     email === ''
                       ? ''
@@ -230,21 +263,22 @@ export default () => {
                       ? ''
                       : '이메일 형식이 올바르지 않습니다.'
                   }
+                  disabled={!isEmailEdit}
                 />
                 <Button
                   type={
                     isEmailValidated ? ButtonType.BLACK_WHITE : ButtonType.GRAY
                   }
                   onClick={
-                    isEmailValidated
-                      ? handleRequestEmailCode
-                      : handleOpenEmailCode
+                    isEmailEdit ? handleRequestEmailCode : handleEmailEdit
                   }
                   containerStyle={buttonStyle}
                 >
-                  {isEmailValidated ? '이메일 인증' : '이메일 변경'}
+                  {isEmailEdit ? '이메일 인증' : '이메일 변경'}
                 </Button>
               </ButtonInputBox>
+
+              {/* 이메일 인증 */}
               {isEmailCode && (
                 <ButtonInputBox>
                   <Input
@@ -264,7 +298,9 @@ export default () => {
                     errorMessage={
                       isEmailDone
                         ? '인증번호가 일치합니다.'
-                        : '인증번호가 일치하지 않습니다.'
+                        : isEmailDoneFail
+                        ? '인증번호가 일치하지 않습니다.'
+                        : ''
                     }
                     errorMessageStyle={
                       isEmailDone ? { color: '#00b448' } : { color: '#ef0000' }
@@ -284,6 +320,8 @@ export default () => {
                 </ButtonInputBox>
               )}
               <Divider style={{ marginTop: 20 }} />
+
+              {/* 회사명 */}
               <LinedInput
                 label="회사명"
                 type="text"
@@ -291,6 +329,7 @@ export default () => {
                 value={companyName}
                 errorMessage={'회사변경은 탈퇴 후 재가입 하시기 바랍니다.'}
                 containerStyle={{ marginBottom: '8px' }}
+                xIcon={false}
               />
               <LinedInput
                 label="직위/직급"
@@ -313,6 +352,8 @@ export default () => {
                 value={tel}
                 onChange={handleChange}
               />
+
+              {/* 비밀번호 */}
               {!isPassword && (
                 <ButtonInputBox>
                   <Input
@@ -326,6 +367,7 @@ export default () => {
                       backgroundColor: '#f2f2f2',
                       borderRadius: '6px',
                     }}
+                    disabled={!isPassword}
                   />
                   <Button
                     type={ButtonType.BLACK_WHITE}
@@ -336,6 +378,8 @@ export default () => {
                   </Button>
                 </ButtonInputBox>
               )}
+
+              {/* 비밀번호 변경 */}
               {isPassword && (
                 <>
                   <Input
@@ -387,6 +431,8 @@ export default () => {
                 </>
               )}
               <Divider />
+
+              {/* 휴대폰번호 */}
               <ButtonInputBox>
                 <Input
                   label="휴대폰번호"
@@ -397,22 +443,24 @@ export default () => {
                   containerStyle={{ marginBottom: 5, height: 75 }}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  inputStyle={{
-                    backgroundColor: '#f2f2f2',
-                    borderRadius: '6px',
-                  }}
+                  inputStyle={
+                    isPhoneEdit ? emailEditInputStyle : emailInputStyle
+                  }
                   maxLength={11}
+                  disabled={!isPhoneEdit}
                 />
                 <Button
                   type={
                     isPhoneValidated ? ButtonType.BLACK_WHITE : ButtonType.GRAY
                   }
                   containerStyle={buttonStyle}
-                  onClick={handleRequestPhone}
+                  onClick={isPhoneEdit ? handleRequestPhone : handlePhoneEdit}
                 >
-                  {isPhoneValidated ? '인증번호 전송' : '휴대폰번호 변경'}
+                  {isPhoneEdit ? '인증번호 전송' : '휴대폰번호 변경'}
                 </Button>
               </ButtonInputBox>
+
+              {/* 휴대폰번호 인증 */}
               {isPhoneCode && (
                 <ButtonInputBox>
                   <Input
@@ -432,7 +480,9 @@ export default () => {
                     errorMessage={
                       isPhoneDone
                         ? '인증번호가 일치합니다.'
-                        : '인증번호가 일치하지 않습니다.'
+                        : isPhoneDoneFail
+                        ? '인증번호가 일치하지 않습니다.'
+                        : ''
                     }
                     errorMessageStyle={
                       isPhoneDone ? { color: '#00b448' } : { color: '#ef0000' }
@@ -461,7 +511,10 @@ export default () => {
             >
               취소
             </Button>
-            <Button type={ButtonType.PRIMARY} onClick={handleEdit}>
+            <Button
+              type={isEditing ? ButtonType.GRAY : ButtonType.PRIMARY}
+              onClick={() => (isEditing ? null : handleEdit())}
+            >
               확인
             </Button>
           </ButtonBox>
@@ -497,12 +550,12 @@ export default () => {
       />
       <TextModal
         open={isBlocking}
-        onClose={() => navigate(-1)}
+        onClose={() => setIsBlocking(false)}
         submitText="나가기"
         content={
           '페이지를 나가시겠습니까? \n 변경사항이 저장되지 않을 수 있습니다.'
         }
-        onSubmit={() => setIsBlocking(false)}
+        onSubmit={() => navigate(0)}
       />
     </MypageLayout>
   );
@@ -595,6 +648,10 @@ const emailInputStyle = {
   '&: focus': {
     backgroundColor: '#ffffff',
   },
+};
+
+const emailEditInputStyle = {
+  backgroundColor: '#ffffff',
 };
 
 const buttonStyle = {

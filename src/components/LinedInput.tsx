@@ -16,10 +16,12 @@ export default ({
   value = '',
   name,
   onChange,
+  xIcon = true,
   errorMessage,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   label?: React.ReactNode;
+  xIcon?: React.ReactNode;
   containerStyle?: CSSProperties;
   errorMessage?: string;
   name?: string;
@@ -45,14 +47,14 @@ export default ({
           onChange={changeHandler}
           {...props}
         />
-        {inputValue !== '' && (
+        {inputValue !== '' && xIcon ? (
           <XIcon
             src={getAssetURL('../assets/ic-circle-x.svg')}
             onClick={() => {
               changeHandler({ target: { name: name, value: '' } } as any);
             }}
           />
-        )}
+        ) : null}
       </Container>
       <ErrorMessage>{errorMessage || 'ㅤ'}</ErrorMessage>
     </RealContainer>
