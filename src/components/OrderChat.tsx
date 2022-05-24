@@ -16,6 +16,7 @@ import OrderAssignmentModal from './OrderAssignmentModal';
 import OrderChatAssignment from './OrderChatAssignment';
 import { useLocation } from 'react-router-dom';
 import useIsFieldUser from '@hooks/useIsFieldUser';
+import OrderChatMemberModal from './OrderChatMemberModal';
 
 export default ({
   messages,
@@ -57,6 +58,7 @@ export default ({
   const [message, setMessage] = useState('');
 
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
 
   useEffect(() => {
     if (spaces.length > 0) {
@@ -246,6 +248,7 @@ export default ({
                   type={ButtonType.GRAY_BLACK}
                   icon="ic-people"
                   containerStyle={{ width: 'auto', marginRight: 20 }}
+                  onClick={() => setIsMemberModalOpen(true)}
                 >
                   멤버보기({members.length})
                 </Button>
@@ -340,6 +343,13 @@ export default ({
             mutateMessages();
             mutate();
           }}
+        />
+      )}
+      {members?.length > 0 && (
+        <OrderChatMemberModal
+          open={isMemberModalOpen}
+          onClose={() => setIsMemberModalOpen(false)}
+          data={members}
         />
       )}
     </Container>
