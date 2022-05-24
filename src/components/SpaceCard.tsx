@@ -2,6 +2,7 @@ import api from '@api';
 import { setSelectedSpaceInfo } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import getAssetURL from '@utils/getAssetURL';
 import React, { useMemo, useState } from 'react';
@@ -15,6 +16,7 @@ interface ISpaceCard {
   address: string;
   revalidate: () => any;
   isHide: boolean;
+  setSelectedIdWithFirstId: any;
 }
 
 export default ({
@@ -24,12 +26,18 @@ export default ({
   address,
   revalidate,
   isHide,
+  setSelectedIdWithFirstId,
 }: ISpaceCard) => {
-  // const [isOpenCard, setIsOpenCard] = useState<boolean>(false);
+  const isFieldUser = useIsFieldUser();
+
   const dispatch = useDispatch();
   const selectedSpaceId = useSelectedSpaceId();
 
   const [isHideModalOpen, setIsHideModalOpen] = useState<boolean>(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState<boolean>(false);
+
+  const [hideLoading, setIsHideLoading] = useState(false);
+  const [removeLoading, setIsRemoveLoading] = useState(false);
 
   const isActive = useMemo(() => {
     return selectedSpaceId === id;
@@ -38,9 +46,33 @@ export default ({
   const [isOpen, setIsOpen] = useState(false);
 
   const handleHideSpace = async () => {
-    await api[isHide ? 'delete' : 'post'](`/field-spaces/${id}/hide`);
-    revalidate();
-    setIsHideModalOpen(false);
+    if (hideLoading) return;
+    setIsHideLoading(true);
+    try {
+      await api[isHide ? 'delete' : 'post'](`/field-spaces/${id}/hide`);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      revalidate();
+      setSelectedIdWithFirstId();
+      setIsHideModalOpen(false);
+    }
+  };
+
+  const handleRemoveSpace = async () => {
+    if (removeLoading) return;
+    setIsRemoveLoading(true);
+    try {
+      await api.delete(
+        `${isFieldUser ? '/field-spaces' : '/factory-spaces'}/${id}`,
+      );
+    } catch (err) {
+      console.log(err);
+    } finally {
+      revalidate();
+      setSelectedIdWithFirstId();
+      setIsRemoveModalOpen(false);
+    }
   };
 
   return (
@@ -61,7 +93,12 @@ export default ({
           <BottomButton onClick={() => setIsHideModalOpen(true)}>
             {isHide ? '숨김 해제' : '숨김'}
           </BottomButton>
-          <BottomButton style={{ color: '#ef0000' }}>삭제</BottomButton>
+          <BottomButton
+            style={{ color: '#ef0000' }}
+            onClick={() => setIsRemoveModalOpen(true)}
+          >
+            삭제
+          </BottomButton>
         </ButtonContainer>
       )}
       <TextModal
@@ -73,6 +110,12 @@ export default ({
             ? `건설현장을 숨김해제 하실 경우\n언제든지 다시 숨김처리 하실 수 있습니다.`
             : `건설현장을 숨김 처리할 경우\n언제든지 다시 숨김해제 하실 수 있습니다.`
         }
+      />
+      <TextModal
+        open={isRemoveModalOpen}
+        onClose={() => setIsRemoveModalOpen(false)}
+        onSubmit={handleRemoveSpace}
+        content={`건설현장을 삭제할 경우 해당 건설현장의\n주문내역 등 거래정보도 함께 삭제됩니다.`}
       />
     </Container>
   );

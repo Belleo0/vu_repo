@@ -211,6 +211,7 @@ export default () => {
               address={v?.basic_address}
               revalidate={mutate}
               isHide={tabType === TabTypeEnum.HIDE}
+              setSelectedIdWithFirstId={setSelectedIdWithFirstId}
             />
           ))}
         </SearchedSpaceWrap>
