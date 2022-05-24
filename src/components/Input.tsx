@@ -20,6 +20,7 @@ export default ({
   errorMessageStyle,
   errorMessage,
   withoutErrorMessage = false,
+  disabled = false,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   label?: React.ReactNode;
@@ -29,6 +30,7 @@ export default ({
   errorMessageStyle?: CSSProperties;
   errorMessage?: string;
   withoutErrorMessage?: boolean;
+  disabled?: boolean;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -53,9 +55,10 @@ export default ({
           onBlur={() => setIsFocused(false)}
           value={value}
           onChange={changeHandler}
+          disabled={disabled}
           {...props}
         />
-        {inputValue !== '' && (
+        {inputValue !== '' && !disabled && (
           <XIcon
             src={getAssetURL('../assets/ic-circle-x.svg')}
             onClick={() => {

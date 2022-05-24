@@ -53,7 +53,7 @@ const UploadButton = styled.label<{ htmlFor: string }>`
   width: 84px;
   height: 36px;
   font-size: 13px;
-  padding: 9px 0;
+  padding: 10px 0;
   margin: 14px 0;
   border-radius: 6px;
   border: solid 1px #000;
