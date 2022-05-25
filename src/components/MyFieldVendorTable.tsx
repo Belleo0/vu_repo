@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import convertDistance from '@utils/convertDistance';
 import convertDuration from '@utils/convertDuration';
+import { useNavigate } from 'react-router-dom';
+import TextModal from './TextModal';
 
 interface IVendorTable {
   data: any[];
 }
 
 export default ({ data = [] }: IVendorTable) => {
+  const navigate = useNavigate();
+
+  const [isNotJoinChatRoomModalOpen, setIsNotJoinChatRoomModalOpen] =
+    useState<boolean>(false);
+
+  const handleOrder = (id: number, isChatRoomJoined: number) => {
+    if (Boolean(isChatRoomJoined)) {
+      navigate('/order', { state: { id } });
+    } else {
+      setIsNotJoinChatRoomModalOpen(true);
+    }
+  };
+
   return (
     <Container>
       <CellWrap>
@@ -36,10 +51,19 @@ export default ({ data = [] }: IVendorTable) => {
             <TotalAmount>2차 범위</TotalAmount>
           </ValueCell>
           <ValueCell>
-            <OrderButton>주문</OrderButton>
+            <OrderButton
+              onClick={() => handleOrder(v?.id, v?.is_chat_room_joined)}
+            >
+              주문
+            </OrderButton>
           </ValueCell>
         </CellWrap>
       ))}
+      <TextModal
+        open={isNotJoinChatRoomModalOpen}
+        onClose={() => setIsNotJoinChatRoomModalOpen(false)}
+        content={`채팅방에 입장하려면 먼저 초대를 받아야 합니다.`}
+      />
     </Container>
   );
 };
@@ -159,4 +183,6 @@ const OrderButton = styled.span`
   letter-spacing: -0.28px;
   text-align: center;
   color: #258fff;
+
+  cursor: pointer;
 `;

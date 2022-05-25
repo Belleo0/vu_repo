@@ -16,6 +16,9 @@ import OrderAssignmentModal from './OrderAssignmentModal';
 import OrderChatAssignment from './OrderChatAssignment';
 import { useLocation } from 'react-router-dom';
 import useIsFieldUser from '@hooks/useIsFieldUser';
+import OrderChatMemberModal from './OrderChatMemberModal';
+import TextModal from './TextModal';
+import { css } from '@emotion/react';
 
 export default ({
   messages,
@@ -37,7 +40,11 @@ export default ({
   const userInfo = useUserInfo();
 
   const selectedSpaceId = useSelectedSpaceId();
-  const { data: spaces, isLoading } = useOrderSuppliers(selectedSpaceId);
+  const {
+    data: spaces,
+    isLoading,
+    mutate: mutateSpaces,
+  } = useOrderSuppliers(selectedSpaceId);
 
   const [search, setSearch] = useState('');
 
@@ -57,20 +64,37 @@ export default ({
   const [message, setMessage] = useState('');
 
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
+
+  const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
+  const [isUnCloseModalOpen, setIsUnCloseModalOpen] = useState(false);
+
+  const [closeLoading, setCloseLoading] = useState(false);
+
+  const isClosed = useMemo(() => {
+    return selectedChatRoomInfo?.is_closed;
+  }, [selectedChatRoomInfo]);
 
   useEffect(() => {
-    if (spaces.length > 0) {
-      if ((location.state as any)?.id !== undefined) {
-        const data =
-          spaces?.filter((v) => v.id === (location.state as any)?.id)?.[0] ||
-          spaces?.[0];
-        setSelectedChatRoomInfo(data);
+    const sameData = spaces?.filter?.(
+      (v) => v?.id === selectedChatRoomInfo?.id,
+    );
+    if (mount === false || sameData?.length === 0) {
+      if (spaces.length > 0) {
+        if ((location.state as any)?.id !== undefined) {
+          const data =
+            spaces?.filter((v) => v.id === (location.state as any)?.id)?.[0] ||
+            spaces?.[0];
+          setSelectedChatRoomInfo(data);
+        } else {
+          const data = spaces?.[0];
+          setSelectedChatRoomInfo(data);
+        }
       } else {
-        const data = spaces?.[0];
-        setSelectedChatRoomInfo(data);
+        setSelectedChatRoomInfo(null);
       }
     } else {
-      setSelectedChatRoomInfo(null);
+      setSelectedChatRoomInfo(sameData?.[0]);
     }
   }, [spaces]);
 
@@ -188,6 +212,34 @@ export default ({
     console.log('messages가 바뀜', messages);
   }, [messages]);
 
+  const handleClose = async () => {
+    if (closeLoading) return;
+    try {
+      setCloseLoading(true);
+      await api.post(`/estimations/${selectedChatRoomInfo?.id}/close`);
+      await mutateSpaces();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsCloseModalOpen(false);
+      setCloseLoading(false);
+    }
+  };
+
+  const handleUnClose = async () => {
+    if (closeLoading) return;
+    try {
+      setCloseLoading(true);
+      await api.delete(`/estimations/${selectedChatRoomInfo?.id}/close`);
+      await mutateSpaces();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsUnCloseModalOpen(false);
+      setCloseLoading(false);
+    }
+  };
+
   if (isLoading) return null;
 
   return (
@@ -236,16 +288,33 @@ export default ({
                   ]?.name
                 }
               </TopSectionTitle>
-              <CircleButton onClick={() => setIsRequestModalOpen(true)}>
+              <CircleButton
+                style={
+                  isClosed ? { borderColor: '#e3e3e3', color: '#e3e3e3' } : {}
+                }
+                onClick={() => setIsRequestModalOpen(true)}
+              >
                 물량배정 {isFieldUser ? '' : '요청'}
               </CircleButton>
-              {isFieldUser && <CircleRedButton>현장마감</CircleRedButton>}
+              {isFieldUser && (
+                <CircleRedButton
+                  active={!isClosed}
+                  onClick={
+                    isClosed
+                      ? () => setIsUnCloseModalOpen(true)
+                      : () => setIsCloseModalOpen(true)
+                  }
+                >
+                  {isClosed ? '현장복원' : '현장마감'}
+                </CircleRedButton>
+              )}
               <TopRightSection>
                 <Button
                   size={ButtonSize.SMALL}
                   type={ButtonType.GRAY_BLACK}
                   icon="ic-people"
                   containerStyle={{ width: 'auto', marginRight: 20 }}
+                  onClick={() => setIsMemberModalOpen(true)}
                 >
                   멤버보기({members.length})
                 </Button>
@@ -273,6 +342,11 @@ export default ({
                 <Icon src={getAssetURL('../assets/ic-out.svg')} />
               </TopRightSection>
             </TopSection>
+            {isClosed && (
+              <Bar>
+                <BarText>현장이 마감되었습니다.</BarText>
+              </Bar>
+            )}
             <MidSection ref={messageContainerRef}>
               {messages.map((v: any) =>
                 v.type === 'TEXT' ? (
@@ -303,16 +377,24 @@ export default ({
               <BottomIcon
                 src={getAssetURL('../assets/ic-plus-rounded-square.svg')}
               />
-              <InputContainer>
+              <InputContainer
+                style={isClosed ? { backgroundColor: '#e3e3e3' } : {}}
+              >
                 <Input
+                  disabled={isClosed}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyPress={(e) =>
                     e.key === 'Enter' ? handleSendMessage() : null
                   }
+                  placeholder={
+                    isClosed ? '현장이 마감되어 채팅이 불가능합니다.' : ''
+                  }
                 />
                 <SendIcon
-                  src={getAssetURL('../assets/ic-send.svg')}
+                  src={getAssetURL(
+                    `../assets/ic-send${isClosed ? '-disabled' : ''}.svg`,
+                  )}
                   onClick={handleSendMessage}
                 />
               </InputContainer>
@@ -342,6 +424,27 @@ export default ({
           }}
         />
       )}
+      {members?.length > 0 && (
+        <OrderChatMemberModal
+          open={isMemberModalOpen}
+          onClose={() => setIsMemberModalOpen(false)}
+          data={members}
+        />
+      )}
+      <TextModal
+        content={`현장 마감처리를 하시겠습니까?\n현장을 마감하면 더이상 주문 채팅은 불가능합니다.`}
+        submitText="현장마감"
+        open={isCloseModalOpen}
+        onSubmit={handleClose}
+        onClose={() => setIsCloseModalOpen(false)}
+      />
+      <TextModal
+        content={`현장 복원처리를 하시겠습니까?\n현장을 복원하면 원 상태로 복원 후 이용가능합니다.`}
+        submitText="현장복원"
+        open={isUnCloseModalOpen}
+        onSubmit={handleUnClose}
+        onClose={() => setIsUnCloseModalOpen(false)}
+      />
     </Container>
   );
 };
@@ -438,10 +541,19 @@ const CircleButton = styled.span`
   user-select: none;
 `;
 
-const CircleRedButton = styled(CircleButton)`
-  border-color: #ef0000;
-  color: #ef0000;
+const CircleRedButton = styled(CircleButton)<{ active: boolean }>`
   margin-right: 0;
+
+  ${({ active }) =>
+    active
+      ? css`
+          border-color: #ef0000;
+          color: #ef0000;
+        `
+      : css`
+          border-color: #000;
+          color: #000;
+        `}
 `;
 
 const Icon = styled.img`
@@ -459,6 +571,7 @@ const Icon = styled.img`
 
 const MidSection = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column-reverse;
   width: 100%;
   flex: 1;
@@ -509,4 +622,22 @@ const SendIcon = styled.img`
   margin-right: 20px;
   cursor: pointer;
   user-select: none;
+`;
+
+const Bar = styled.div`
+  display: block;
+  width: 100%;
+  padding: 19px 0;
+  background-color: #999;
+  top: 0;
+  left: 0;
+`;
+
+const BarText = styled.span`
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.32px;
+  text-align: center;
+  color: #fff;
 `;
