@@ -12,18 +12,24 @@ import React, {
 
 export default ({
   label,
+  redStar,
   containerStyle,
+  inputStyle,
   value = '',
   name,
   onChange,
   xIcon = true,
   errorMessage,
+  helperMessage,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   label?: React.ReactNode;
+  redStar?: React.ReactNode;
   xIcon?: React.ReactNode;
   containerStyle?: CSSProperties;
+  inputStyle?: CSSProperties;
   errorMessage?: string;
+  helperMessage?: string;
   name?: string;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -37,7 +43,12 @@ export default ({
 
   return (
     <RealContainer style={containerStyle}>
-      {label && <Label>{label}</Label>}
+      {label && (
+        <LableBox>
+          {label && <Label>{label}</Label>}
+          {redStar && <RedStar>{redStar}</RedStar>}
+        </LableBox>
+      )}
       <Container isFocus={isFocused}>
         <Input
           onFocus={() => setIsFocused(true)}
@@ -45,8 +56,12 @@ export default ({
           value={value}
           name={name}
           onChange={changeHandler}
+          style={inputStyle}
           {...props}
         />
+        {helperMessage && (
+          <HelperMessage>{helperMessage || 'ㅤ'}</HelperMessage>
+        )}
         {inputValue !== '' && xIcon ? (
           <XIcon
             src={getAssetURL('../assets/ic-circle-x.svg')}
@@ -69,6 +84,7 @@ const RealContainer = styled.div`
 
 const Container = styled.div<{ isFocus: boolean }>`
   display: flex;
+  flex-direction: column;
   width: 100%;
   background-color: inherit;
 
@@ -86,7 +102,7 @@ const Container = styled.div<{ isFocus: boolean }>`
 
 const Input = styled.input`
   width: 100%;
-  padding: 0 0 20px 0;
+  padding: 0 0 28px 0;
   font-size: 16px;
   font-weight: 500;
   background: none;
@@ -112,11 +128,30 @@ const Label = styled.span`
   letter-spacing: -0.32px;
   text-align: left;
   color: #000;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 `;
 
 const ErrorMessage = styled.span`
   font-size: 12px;
   letter-spacing: -0.24px;
   color: #ef0000;
+  margin-bottom: 8px;
+`;
+
+const HelperMessage = styled.span`
+  font-size: 12px;
+  letter-spacing: -0.24px;
+  color: #ef0000;
+  margin-bottom: 28px;
+`;
+
+const RedStar = styled.span`
+  font-size: 14px;
+  color: #ef0000;
+  margin-left: 2px;
+`;
+
+const LableBox = styled.div`
+  display: block;
+  margin-bottom: 10px;
 `;

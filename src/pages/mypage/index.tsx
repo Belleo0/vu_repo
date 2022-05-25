@@ -91,7 +91,13 @@ export default () => {
   }, [veryfyPhoneCode]);
 
   const isConfirmPasswordValidated = useMemo(() => {
-    if (newPassword.length > 0 && newPassword === confirmPassword) {
+    const regex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/; // 비밀번호 정규식
+    if (
+      newPassword.length > 0 &&
+      regex.test(confirmPassword) &&
+      newPassword === confirmPassword
+    ) {
       setIsEditing(false);
       return true;
     }
@@ -139,6 +145,9 @@ export default () => {
       if (data?.result === true) {
         setIsEmailModalOpen(true);
         setIsEmailCode(true);
+        setVerifyEmailCode('');
+        setIsEmailDone(false);
+        setIsEditing(true);
       }
     } catch (error) {
       setIsErrorEmailModalOpen(true);
@@ -170,6 +179,9 @@ export default () => {
       });
       if (data?.result === true) {
         setIsPhoneCode(true);
+        setVeryfyPhoneCode('');
+        setIsPhoneDone(false);
+        setIsEditing(true);
       }
     } catch (error) {
       console.log(error);
@@ -255,7 +267,6 @@ export default () => {
                   name="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  containerStyle={{ marginBottom: 5, height: 75 }}
                   inputStyle={
                     isEmailEdit ? emailEditInputStyle : emailInputStyle
                   }
@@ -270,30 +281,35 @@ export default () => {
                 />
                 <Button
                   type={
-                    isEmailValidated ? ButtonType.BLACK_WHITE : ButtonType.GRAY
+                    (isEmailValidated && !isEmailCode) ||
+                    (isEmailDone && isEmailEdit)
+                      ? ButtonType.BLACK_WHITE
+                      : isEmailValidated && isEmailCode
+                      ? ButtonType.GRAY
+                      : ButtonType.GRAY
                   }
                   onClick={
                     isEmailEdit ? handleRequestEmailCode : handleEmailEdit
                   }
                   containerStyle={buttonStyle}
                 >
-                  {isEmailEdit ? '이메일 인증' : '이메일 변경'}
+                  {isEmailEdit && !isEmailDone
+                    ? '이메일 인증'
+                    : isEmailEdit && isEmailDone
+                    ? '재인증받기'
+                    : '이메일 변경'}
                 </Button>
               </ButtonInputBox>
 
               {/* 이메일 인증 */}
               {isEmailCode && (
-                <ButtonInputBox>
+                <ButtonInputBox style={{ marginTop: '8px' }}>
                   <Input
                     type="email"
                     name="verifyEmailCode"
                     value={verifyEmailCode}
                     placeholder={'인증번호를 입력해 주세요.'}
                     onChange={(e) => setVerifyEmailCode(e.target.value)}
-                    containerStyle={{
-                      marginTop: 10,
-                      marginBottom: 5,
-                    }}
                     inputStyle={{
                       backgroundColor: '#fff',
                       borderRadius: '6px',
@@ -311,7 +327,7 @@ export default () => {
                   />
                   <Button
                     type={
-                      isEmailVerifyCode
+                      isEmailVerifyCode && !isEmailDone
                         ? ButtonType.BLACK_WHITE
                         : ButtonType.GRAY
                     }
@@ -330,30 +346,38 @@ export default () => {
                 type="text"
                 name="companyName"
                 value={companyName}
-                errorMessage={'회사변경은 탈퇴 후 재가입 하시기 바랍니다.'}
-                containerStyle={{ marginBottom: '8px' }}
+                helperMessage={'회사변경은 탈퇴 후 재가입 하시기 바랍니다.'}
                 xIcon={false}
               />
+
+              {/* 직위/직급 */}
               <LinedInput
                 label="직위/직급"
                 type="text"
                 name="position"
                 value={position}
                 onChange={handleChange}
+                xIcon={false}
               />
+
+              {/* 부서 */}
               <LinedInput
                 label="부서(선택)"
                 type="text"
                 name="department"
                 value={department}
                 onChange={handleChange}
+                xIcon={false}
               />
+
+              {/* 사내번호 */}
               <LinedInput
                 label="사내번호"
                 type="text"
                 name="tel"
                 value={tel}
                 onChange={handleChange}
+                xIcon={false}
               />
 
               {/* 비밀번호 */}
@@ -365,16 +389,16 @@ export default () => {
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    containerStyle={{ marginBottom: 5 }}
                     inputStyle={{
                       backgroundColor: '#f2f2f2',
                       borderRadius: '6px',
                     }}
                     disabled={!isPassword}
+                    errorMessage={''}
                   />
                   <Button
                     type={ButtonType.BLACK_WHITE}
-                    containerStyle={buttonStyle2}
+                    containerStyle={buttonStyle}
                     onClick={handlePassword}
                   >
                     비밀번호 변경
@@ -393,7 +417,7 @@ export default () => {
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    containerStyle={{ marginBottom: 5 }}
+                    containerStyle={{ marginBottom: 8 }}
                   />
                   <Divider />
                   <Input
@@ -404,7 +428,7 @@ export default () => {
                     placeholder="영문과 숫자, 특수문자 포함 8자 이상 입력해 주세요"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    containerStyle={{ marginBottom: 5 }}
+                    containerStyle={{ marginBottom: 8 }}
                     errorMessage={
                       newPassword === ''
                         ? ''
@@ -422,7 +446,7 @@ export default () => {
                     placeholder="새 비밀번호를 다시 입력해 주세요"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    containerStyle={{ marginBottom: 5 }}
+                    containerStyle={{ marginBottom: 8 }}
                     errorMessage={
                       confirmPassword === ''
                         ? ''
@@ -433,7 +457,7 @@ export default () => {
                   />
                 </>
               )}
-              <Divider />
+              <Divider style={{ marginTop: '8px' }} />
 
               {/* 휴대폰번호 */}
               <ButtonInputBox>
@@ -443,7 +467,6 @@ export default () => {
                   type="text"
                   name="phone"
                   placeholder="'-' 입력 제외(번호만 입력해 주세요)"
-                  containerStyle={{ marginBottom: 5, height: 75 }}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   inputStyle={
@@ -454,28 +477,33 @@ export default () => {
                 />
                 <Button
                   type={
-                    isPhoneValidated ? ButtonType.BLACK_WHITE : ButtonType.GRAY
+                    (isPhoneValidated && !isPhoneCode) ||
+                    (isPhoneDone && isPhoneEdit)
+                      ? ButtonType.BLACK_WHITE
+                      : isPhoneValidated && isPhoneCode
+                      ? ButtonType.GRAY
+                      : ButtonType.GRAY
                   }
-                  containerStyle={buttonStyle}
                   onClick={isPhoneEdit ? handleRequestPhone : handlePhoneEdit}
+                  containerStyle={buttonStyle}
                 >
-                  {isPhoneEdit ? '인증번호 전송' : '휴대폰번호 변경'}
+                  {isPhoneEdit && !isPhoneDone
+                    ? '인증번호 전송'
+                    : isPhoneEdit && isPhoneDone
+                    ? '재인증받기'
+                    : '휴대폰번호 변경'}
                 </Button>
               </ButtonInputBox>
 
               {/* 휴대폰번호 인증 */}
               {isPhoneCode && (
-                <ButtonInputBox>
+                <ButtonInputBox style={{ marginTop: '8px' }}>
                   <Input
                     type="text"
                     name="verificationNumber"
                     placeholder="인증번호 6자리 입력"
                     value={veryfyPhoneCode}
                     onChange={(e) => setVeryfyPhoneCode(e.target.value)}
-                    containerStyle={{
-                      marginTop: 10,
-                      marginBottom: 5,
-                    }}
                     inputStyle={{
                       backgroundColor: '#fff',
                       borderRadius: '6px',
@@ -493,7 +521,7 @@ export default () => {
                   />
                   <Button
                     type={
-                      isPhoneVerifyCode
+                      isPhoneVerifyCode && !isPhoneDone
                         ? ButtonType.BLACK_WHITE
                         : ButtonType.GRAY
                     }
@@ -612,7 +640,7 @@ const Divider = styled.span`
   display: block;
   width: 100%;
   height: 1px;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
   background-color: #e3e3e3;
 `;
 
@@ -620,7 +648,8 @@ const ButtonInputBox = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ButtonBox = styled.div`
@@ -647,7 +676,6 @@ const Withdrawal = styled.span`
 const emailInputStyle = {
   backgroundColor: '#f2f2f2',
   borderRadius: '6px',
-  // marginBottom: '5px',
   '&: focus': {
     backgroundColor: '#ffffff',
   },
@@ -664,7 +692,7 @@ const buttonStyle = {
   fontWeight: '500',
   padding: '11px 0',
   marginLeft: '10px',
-  marginBottom: '15px',
+  marginTop: '5px',
 };
 
 const buttonStyle2 = {
@@ -674,5 +702,5 @@ const buttonStyle2 = {
   fontWeight: '500',
   padding: '11px 0',
   marginLeft: '10px',
-  marginBottom: '24px',
+  marginBottom: '20px',
 };
