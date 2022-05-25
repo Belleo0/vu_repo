@@ -133,7 +133,7 @@ const BottomBtnWrapper = styled.div`
   width: 540px;
   height: 50px;
   flex-direction: row;
-  margin-top: 322px;
+  margin-top: 441px;
 `;
 
 const InActiveBtn = styled.div`
