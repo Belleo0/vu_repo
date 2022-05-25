@@ -496,7 +496,7 @@ const DateSelectBorder = styled.div<{ type: OptionType }>`
   border-radius: 18px;
   padding: 8px 0;
 
-  line-height: 1.3
+  line-height: 1.3;
   font-size: 14px;
   font-weight: 500;
   text-align: center;
