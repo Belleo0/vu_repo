@@ -548,7 +548,7 @@ export default () => {
               type={isEditing ? ButtonType.GRAY : ButtonType.PRIMARY}
               onClick={() => (isEditing ? null : handleEdit())}
             >
-              확인
+              저장
             </Button>
           </ButtonBox>
           <Withdrawal onClick={handleWithdrawalModal}>회원탈퇴</Withdrawal>
