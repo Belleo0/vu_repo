@@ -226,7 +226,9 @@ export default () => {
   };
 
   useEffect(() => {
-    if (isEmailCode || isPhoneCode || isPassword) {
+    if (isEmailCode && isPhoneCode && isPassword) {
+      setIsEditing(true);
+    } else if (isEmailCode || isPhoneCode || isPassword) {
       setIsEditing(true);
     }
   }, [isEmailCode, isPhoneCode, isPassword]);
@@ -338,7 +340,7 @@ export default () => {
                   </Button>
                 </ButtonInputBox>
               )}
-              <Divider style={{ marginTop: 20 }} />
+              <Divider style={{ marginTop: '20px' }} />
 
               {/* 회사명 */}
               <LinedInput

@@ -5,6 +5,9 @@ import React from 'react';
 
 export default () => {
   const userInfo = useUserInfo();
+
+  console.log(userInfo.company.company_type);
+
   return (
     <ProfileBox>
       <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
@@ -15,12 +18,12 @@ export default () => {
           <Role>{userInfo?.position}</Role>
         </NameRoleWrap>
       </ProfileInfoWrap>
-      {/* {userInfo.likeCount && (
+      {userInfo.company.company_type === 'REMICON' && (
         <LikeWrap>
           <Icon src={getAssetURL('../assets/ic-like.svg')} />
-          <Count>{userInfo?.likeCount}</Count>
+          <Count>{userInfo?.likeCount ? userInfo?.likeCount : '0'}</Count>
         </LikeWrap>
-      )} */}
+      )}
     </ProfileBox>
   );
 };
