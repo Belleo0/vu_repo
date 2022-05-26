@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 import getAssetURL from '@utils/getAssetURL';
 import React from 'react';
 
@@ -7,9 +8,17 @@ interface ISpaceBar {
   name: string;
   adminUserName: string;
   siteUserName: string;
+  address: string;
 }
 
-export default ({ id, name, adminUserName, siteUserName }: ISpaceBar) => {
+export default ({
+  id,
+  name,
+  adminUserName,
+  siteUserName,
+  address,
+}: ISpaceBar) => {
+  const isFieldUser = useIsFieldUser();
   return (
     <SpaceBar>
       <Icon src={getAssetURL('../assets/ic-field.svg')} />
@@ -18,16 +27,25 @@ export default ({ id, name, adminUserName, siteUserName }: ISpaceBar) => {
           <SpaceName>{name}</SpaceName>
           <Button>편집</Button>
         </InfoRow>
-        <InfoRow>
-          <PersonWrap>
-            <PersonLabel>구매계약 담당자</PersonLabel>
-            <PersonName>{adminUserName}</PersonName>
-          </PersonWrap>
-          <PersonWrap>
-            <PersonLabel>주문담당자(현장)</PersonLabel>
-            <PersonName>{siteUserName}</PersonName>
-          </PersonWrap>
-        </InfoRow>
+        {isFieldUser ? (
+          <InfoRow>
+            <PersonWrap>
+              <PersonLabel>구매계약 담당자</PersonLabel>
+              <PersonName>{adminUserName}</PersonName>
+            </PersonWrap>
+            <PersonWrap>
+              <PersonLabel>주문담당자(현장)</PersonLabel>
+              <PersonName>{siteUserName}</PersonName>
+            </PersonWrap>
+          </InfoRow>
+        ) : (
+          <InfoRow>
+            <PersonWrap>
+              <PersonLabel>공장 주소</PersonLabel>
+              <PersonName>{address}</PersonName>
+            </PersonWrap>
+          </InfoRow>
+        )}
       </InfoContainer>
     </SpaceBar>
   );

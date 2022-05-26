@@ -39,6 +39,7 @@ export default () => {
               name={info?.name}
               adminUserName={info?.admin_user?.name}
               siteUserName={info?.site_user?.name}
+              address={info?.basic_address}
             />
             {isFieldUser && (
               <SpaceInfoTable

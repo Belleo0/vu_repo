@@ -76,19 +76,21 @@ export default ({
   };
 
   return (
-    <Container isActive={isActive} isOpen={isOpen}>
+    <Container isFieldUser={isFieldUser} isActive={isActive} isOpen={isOpen}>
       <InfoContainer onClick={() => dispatch(setSelectedSpaceInfo(info))}>
         <InfoWrap>
           <Title>{name}</Title>
-          <Address>{address}</Address>
+          {isFieldUser && <Address>{address}</Address>}
         </InfoWrap>
-        <Icon
-          src={getAssetURL('../assets/ic-arrow-gray.svg')}
-          isOpen={isOpen}
-          onClick={() => setIsOpen((prev) => !prev)}
-        />
+        {isFieldUser && (
+          <Icon
+            src={getAssetURL('../assets/ic-arrow-gray.svg')}
+            isOpen={isOpen}
+            onClick={() => setIsOpen((prev) => !prev)}
+          />
+        )}
       </InfoContainer>
-      {isOpen && (
+      {isFieldUser && isOpen && (
         <ButtonContainer>
           <BottomButton onClick={() => setIsHideModalOpen(true)}>
             {isHide ? '숨김 해제' : '숨김'}
@@ -121,9 +123,14 @@ export default ({
   );
 };
 
-const Container = styled.div<{ isActive: boolean; isOpen: boolean }>`
+const Container = styled.div<{
+  isFieldUser: boolean;
+  isActive: boolean;
+  isOpen: boolean;
+}>`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   cursor: pointer;
   width: 100%;
   border-radius: 12px;
@@ -136,13 +143,13 @@ const Container = styled.div<{ isActive: boolean; isOpen: boolean }>`
 
   margin-bottom: 16px;
 
-  ${({ isOpen }) =>
+  ${({ isOpen, isFieldUser }) =>
     isOpen
       ? css`
-          min-height: 118px;
+          min-height: ${isFieldUser ? 118 : 64}px;
         `
       : css`
-          min-height: 78px;
+          min-height: ${isFieldUser ? 78 : 64}px;
         `}
 
   ${({ isActive }) =>
@@ -182,6 +189,10 @@ const Title = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const Address = styled.span`
