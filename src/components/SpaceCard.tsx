@@ -130,7 +130,6 @@ const Container = styled.div<{
 }>`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   cursor: pointer;
   width: 100%;
   border-radius: 12px;
@@ -150,6 +149,13 @@ const Container = styled.div<{
         `
       : css`
           min-height: ${isFieldUser ? 78 : 64}px;
+        `}
+
+  ${({ isFieldUser }) =>
+    isFieldUser
+      ? css``
+      : css`
+          justify-content: center;
         `}
 
   ${({ isActive }) =>

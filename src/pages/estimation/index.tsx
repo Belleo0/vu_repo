@@ -28,7 +28,10 @@ export default () => {
           </BarSection>
           <BottomSection>
             <Title>견적 현황</Title>
-            <EstimationTable data={estimations} revalidate={estimationMutate} />
+            <EstimationTable
+              data={estimations}
+              revalidate={() => estimationMutate()}
+            />
           </BottomSection>
         </Container>
       )}

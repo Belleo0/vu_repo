@@ -2,6 +2,7 @@ import useAssignmentInfo from '@api/useAssignmentInfo';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
+import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
 import useUserInfo from '@hooks/useUserInfo';
 import { days } from '@utils/calendar';
 import { convertTime } from '@utils/date';
@@ -34,6 +35,8 @@ export default ({
   isMyChat,
   mutate,
 }: IOrderChatMessage) => {
+  const isFieldUser = useIsFieldUser();
+  const selectedSpaceInfo = useSelectedSpaceInfo();
   return (
     <Container style={isMyChat ? { marginLeft: 'auto' } : {}}>
       {!isMyChat && (
@@ -74,7 +77,11 @@ export default ({
           <Box>
             <BoxRow>
               <BoxLabel>공급처</BoxLabel>
-              <BoxValue>{chatRoomData?.factory_space?.name}</BoxValue>
+              <BoxValue>
+                {isFieldUser
+                  ? chatRoomData?.factory_space?.name
+                  : selectedSpaceInfo?.name}
+              </BoxValue>
             </BoxRow>
             <BoxRow>
               <BoxLabel>배송일정</BoxLabel>

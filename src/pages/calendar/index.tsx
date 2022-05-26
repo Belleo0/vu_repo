@@ -48,7 +48,7 @@ const data = [
 export default () => {
   const spaceInfo = useSelectedSpaceInfo();
 
-  const [type, setType] = useState(CalendarTypeState.DAY);
+  const [type, setType] = useState(CalendarTypeState.WEEK);
   const [dates, setDates] = useState<any>([]);
 
   const [isModalOpened, setIsModalOpened] = useState(false);
