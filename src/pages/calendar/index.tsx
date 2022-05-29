@@ -24,27 +24,6 @@ const hours = [
   4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 ];
 
-const data = [
-  {
-    name: '(주)표주레미콘',
-    amount: 120,
-    start_time: '2022-05-05T03:00:00.000Z',
-    end_time: '2022-05-05T04:00:00.000Z',
-  },
-  {
-    name: '(주)동서산업',
-    amount: 72,
-    start_time: '2022-05-05T03:50:00.000Z',
-    end_time: '2022-05-05T05:50:00.000Z',
-  },
-  {
-    name: '(주)표주레미콘',
-    amount: 120,
-    start_time: '2022-05-05T07:00:00.000Z',
-    end_time: '2022-05-05T09:00:00.000Z',
-  },
-];
-
 export default () => {
   const spaceInfo = useSelectedSpaceInfo();
 
