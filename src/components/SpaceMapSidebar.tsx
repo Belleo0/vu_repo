@@ -176,7 +176,9 @@ export default ({
       )}
 
       <Modal open={isSelectModalOpen} onClose={handleCloseSelectModal}>
-        <ModalContainer style={{ minWidth: 440, maxHeight: 620 }}>
+        <ModalContainer
+          style={{ minWidth: 440, maxHeight: 620, paddingTop: 50 }}
+        >
           <ModalTitle>MY 건설현장</ModalTitle>
           <CardWrap>
             {spaces &&
@@ -198,7 +200,7 @@ export default ({
             >
               취소
             </Button>
-            <Button onClick={handleSubmitSelectModal}>확인</Button>
+            <Button onClick={handleSubmitSelectModal}>선택하기</Button>
           </ShadowButtonWrap>
         </ModalContainer>
       </Modal>
@@ -328,7 +330,7 @@ const BottomButtonWrap = styled.div`
 
 const CardWrap = styled.div`
   margin-bottom: 20px;
-  max-height: 422px;
+  max-height: 402px;
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
