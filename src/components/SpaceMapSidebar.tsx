@@ -11,6 +11,7 @@ import useSpaces from '@api/useSpaces';
 import SelectSpaceCard from './SelectSpaceCard';
 import TextModal from './TextModal';
 import { useNavigate } from 'react-router-dom';
+import ScrollBox from './ScrollBox';
 
 export default ({
   factories,
@@ -175,7 +176,7 @@ export default ({
       )}
 
       <Modal open={isSelectModalOpen} onClose={handleCloseSelectModal}>
-        <ModalContainer>
+        <ModalContainer style={{ minWidth: 440, maxHeight: 620 }}>
           <ModalTitle>MY 건설현장</ModalTitle>
           <CardWrap>
             {spaces &&
@@ -327,6 +328,24 @@ const BottomButtonWrap = styled.div`
 
 const CardWrap = styled.div`
   margin-bottom: 20px;
-  max-height: 480px;
+  max-height: 422px;
   overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 17px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    height: 17%;
+    background-color: #c7c7c7;
+    /* 스크롤바 둥글게 설정    */
+    border-radius: 10px;
+
+    background-clip: padding-box;
+    border: 6px solid transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+  }
 `;
