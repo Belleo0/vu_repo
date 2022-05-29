@@ -19,23 +19,47 @@ const fieldMenus = [
   { label: '납품사 선정', path: '/supplier-choice' },
   { label: '주문', path: '/order' },
   { label: '캘린더', path: '/calendar' },
-  { label: '거래내역', path: '/transaction' },
+  {
+    label: '거래내역',
+    path: '/transaction',
+    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+  },
 ];
 
 const remiconMenus = [
   { label: 'MY 레미콘공장', path: '/my-space' },
-  { label: '건설현장 지도', path: '/field-map' },
+  {
+    label: '건설현장 지도',
+    path: '/field-map',
+    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+  },
   { label: '견적', path: '/estimation' },
   { label: '레미콘 납품', path: '/order' },
   { label: '캘린더', path: '/calendar' },
-  { label: '거래내역', path: '/transaction' },
+  {
+    label: '거래내역',
+    path: '/transaction',
+    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+  },
 ];
 
 const profileMenus = [
   { label: '회원정보 수정', path: '/mypage' },
-  { label: '조직관리', path: '' },
-  { label: '친구관리', path: '' },
-  { label: '알림설정', path: '' },
+  {
+    label: '조직관리',
+    path: '',
+    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+  },
+  {
+    label: '친구관리',
+    path: '',
+    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+  },
+  {
+    label: '알림설정',
+    path: '',
+    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+  },
 ];
 
 export default () => {
@@ -67,7 +91,7 @@ export default () => {
             <MenuItem
               key={v.path}
               active={v.path === pathname}
-              onClick={() => navigate(v.path)}
+              onClick={() => (v?.onClick ? v?.onClick() : navigate(v.path))}
             >
               {v.label}
             </MenuItem>
@@ -75,8 +99,12 @@ export default () => {
         </MenuWrap>
 
         <RightWrap>
-          <TextButton>자료실</TextButton>
-          <TextButton>고객센터</TextButton>
+          <TextButton onClick={() => window.alert(`TODO : 2차 범위입니다.`)}>
+            자료실
+          </TextButton>
+          <TextButton onClick={() => window.alert(`TODO : 2차 범위입니다.`)}>
+            고객센터
+          </TextButton>
           {isLogin ? (
             <>
               <IconContainer>
@@ -108,7 +136,9 @@ export default () => {
                     {profileMenus.map((item, i) => (
                       <ProfileMenu
                         key={item.label}
-                        onClick={() => navigate(item.path)}
+                        onClick={() =>
+                          item?.onClick ? item?.onClick() : navigate(item.path)
+                        }
                       >
                         {item.label}
                       </ProfileMenu>

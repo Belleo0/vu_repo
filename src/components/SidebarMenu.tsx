@@ -28,7 +28,9 @@ export default ({ sidemenus }: ISideMenus) => {
             <MenuItem
               key={item.path}
               isActive={item.path === pathname}
-              onClick={() => navigate(item.path)}
+              onClick={() =>
+                item?.onClick ? item.onClick() : navigate(item.path)
+              }
             >
               {item.label}
             </MenuItem>
