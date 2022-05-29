@@ -30,7 +30,7 @@ export default () => {
               <Title>건설현장</Title>
             ) : (
               <RemiconSpaceTitle>
-                23개 현장과 거래하고 있습니다.
+                {suppliers?.length}개 현장과 거래하고 있습니다.
               </RemiconSpaceTitle>
             )}
             {isFieldUser ? null : <Title>공장명</Title>}
