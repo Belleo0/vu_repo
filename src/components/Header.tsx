@@ -14,7 +14,17 @@ import { clearPolylineInfo } from '@data/map';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 
 const fieldMenus = [
-  { label: 'MY 건설현장', path: '/my-space' },
+  {
+    label: 'MY 건설현장',
+    path: '/my-space',
+    includePaths: [
+      '/add-construction-field/step-1',
+      '/add-construction-field/step-2',
+      '/add-construction-field/step-3',
+      '/add-construction-field/step-4',
+      '/add-construction-field/step-5',
+    ],
+  },
   { label: '레미콘 지도', path: '/remicon-map' },
   { label: '납품사 선정', path: '/supplier-choice' },
   { label: '주문', path: '/order' },
@@ -90,7 +100,9 @@ export default () => {
           {(isFieldUser ? fieldMenus : remiconMenus).map((v) => (
             <MenuItem
               key={v.path}
-              active={v.path === pathname}
+              active={[v.path, ...((v as any)?.includePaths || [])].includes(
+                pathname,
+              )}
               onClick={() => (v?.onClick ? v?.onClick() : navigate(v.path))}
             >
               {v.label}
@@ -225,7 +237,7 @@ const TextButton = styled.span`
   text-align: left;
   color: #000;
   word-break: nowrap;
-  margin-right: 26px;
+  margin-right: 30px;
   cursor: pointer;
 `;
 
@@ -235,7 +247,9 @@ const IconContainer = styled.div`
 `;
 
 const IconWrap = styled.div`
-  margin-right: 20px;
+  &:not(:last-child) {
+    margin-right: 20px;
+  }
 `;
 
 const Icon = styled.img`
