@@ -292,7 +292,9 @@ export default ({
                 style={
                   isClosed ? { borderColor: '#e3e3e3', color: '#e3e3e3' } : {}
                 }
-                onClick={() => setIsRequestModalOpen(true)}
+                onClick={
+                  isClosed ? () => null : () => setIsRequestModalOpen(true)
+                }
               >
                 물량배정 {isFieldUser ? '' : '요청'}
               </CircleButton>
