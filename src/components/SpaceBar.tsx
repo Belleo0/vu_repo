@@ -8,7 +8,7 @@ interface ISpaceBar {
   name: string;
   adminUserName: string;
   siteUserName: string;
-  address: string;
+  address?: string;
 }
 
 export default ({
