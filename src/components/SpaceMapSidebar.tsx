@@ -129,14 +129,16 @@ export default ({
           <TotalText>
             총 <b>{(factories || []).length}개</b> 의 레미콘 공장
           </TotalText>
-          <FilterSelect
-            options={[
-              { label: '거리순', value: '거리순' },
-              { label: '시간순', value: '시간순' },
-            ]}
-            value={order}
-            onChange={(v) => setOrder(v)}
-          />
+          {selectedFieldId !== null && (
+            <FilterSelect
+              options={[
+                { label: '거리순', value: '거리순' },
+                { label: '시간순', value: '시간순' },
+              ]}
+              value={order}
+              onChange={(v) => setOrder(v)}
+            />
+          )}
         </FilterWrap>
       </TopSectionWrap>
       {factories &&
