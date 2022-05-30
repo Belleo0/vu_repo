@@ -117,7 +117,10 @@ export default ({ data = [], revalidate }: IVendorTable) => {
           </ValueCell>
           <ValueCell>B/P 210m³/h x 2</ValueCell>
           <ValueCell>
-            <SaleUserName>{v?.factory_space?.site_user?.name}</SaleUserName>
+            <SaleUserName>
+              {v?.factory_space?.site_user?.name}{' '}
+              {v?.factory_space?.site_user?.position}
+            </SaleUserName>
           </ValueCell>
           <ValueCell>
             {v.status === 'REQUESTED' ? (

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import useIsFieldUser from '@hooks/useIsFieldUser';
+import TextModal from './TextModal';
 
 interface IOrderSpaceCard {
   draggable?: boolean;
@@ -13,6 +15,10 @@ interface IOrderSpaceCard {
 }
 
 export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
+  const isFieldUser = useIsFieldUser();
+
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
@@ -21,6 +27,10 @@ export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
     transition,
   };
 
+  const handleRemove = () => {};
+
+  console.log(isRemoveModalOpen);
+
   return (
     <Container ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <InfoContainer>
@@ -28,8 +38,20 @@ export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
           <Title>{name}</Title>
           <Address>{address}</Address>
         </InfoWrap>
-        <Icon src={getAssetURL('../assets/ic-move.svg')} />
+        <IconWrap>
+          {isFieldUser ? null : (
+            <Icon src={getAssetURL('../assets/ic-trash.svg')} />
+          )}
+          <Icon src={getAssetURL('../assets/ic-move.svg')} />
+        </IconWrap>
       </InfoContainer>
+      <TextModal
+        open={isRemoveModalOpen}
+        onSubmit={handleRemove}
+        onClose={() => setIsRemoveModalOpen(false)}
+        content={`레미콘 공장을 등록하시겠습니까?`}
+        submitText="공장 등록하기"
+      />
     </Container>
   );
 };
@@ -96,8 +118,12 @@ const InfoWrap = styled.div`
   flex-direction: column;
 `;
 
+const IconWrap = styled.div`
+  display: flex;
+`;
+
 const Icon = styled.img`
   width: 24px;
   height: 24px;
-  margin-left: 24px;
+  margin-left: 14px;
 `;

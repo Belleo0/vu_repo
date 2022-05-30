@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
-import SpaceLayout from '@layout/SpaceLayout';
+import FieldCreateLayout from '@layout/FieldCreateLayout';
 import Input from '@components/Input';
 import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
@@ -97,7 +97,7 @@ export default () => {
   };
 
   return (
-    <SpaceLayout>
+    <FieldCreateLayout>
       <Container>
         <TopTitleWrapper>
           <BorderNumberWrapper>
@@ -263,7 +263,7 @@ export default () => {
           )}
         </BottomBtnWrapper>
       </Container>
-    </SpaceLayout>
+    </FieldCreateLayout>
   );
 };
 

@@ -65,7 +65,7 @@ const LabelCell = styled.div`
 
 const ValueCell = styled.div`
   flex: 2;
-  padding: 17px 15px;
+  padding: 17px 20px;
 
   font-size: 16px;
   font-weight: 500;
