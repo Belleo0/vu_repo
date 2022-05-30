@@ -6,8 +6,6 @@ import React from 'react';
 export default () => {
   const userInfo = useUserInfo();
 
-  console.log(userInfo.company.company_type);
-
   return (
     <ProfileBox>
       <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />

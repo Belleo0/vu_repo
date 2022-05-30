@@ -8,7 +8,7 @@ export default () => {
   return (
     <AppSection>
       <AppContent>
-        <Typography5>Conbox 서비스를</Typography5>
+        <Typography5>CONAZ 서비스를</Typography5>
         <Typography5>앱에서도 사용하세요!</Typography5>
         <ButtonBox>
           <Button
