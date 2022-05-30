@@ -471,11 +471,9 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
 
-  min-height: calc(100vh - 80px);
-
+  margin-top: 150px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 `;
 

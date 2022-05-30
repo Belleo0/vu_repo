@@ -22,7 +22,6 @@ const heightPixel = {
   [MainHeightType.INABLE]: '631px',
   [MainHeightType.ABLE]: '797px',
 };
-
 const paddingPixel = {
   [MainHeightType.INABLE]: '30px 30px 50px',
   [MainHeightType.ABLE]: '40px 30px 50px 30px',
@@ -366,7 +365,7 @@ export default () => {
                 </LineWrapper>
 
                 <LineWrapper style={{ marginBottom: 0 }}>
-                  <RepeatTitle>사내 전화 (선택)</RepeatTitle>
+                  <RepeatTitle>사내 전화번호 (선택)</RepeatTitle>
                   <TextWrapper>
                     <Input
                       style={{ padding: '11px 20px', height: '42px' }}
@@ -398,18 +397,13 @@ export default () => {
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
-
-  min-height: calc(100vh - 80px);
-
+  margin-top: 150px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 `;
 
 const MainTitle = styled.div`
-  height: 32px;
   font-size: 22px;
   font-weight: bold;
   font-stretch: normal;
