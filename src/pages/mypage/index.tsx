@@ -340,7 +340,7 @@ export default () => {
                   </Button>
                 </ButtonInputBox>
               )}
-              <Divider style={{ marginTop: '20px' }} />
+              <Divider style={{ marginTop: '8px' }} />
 
               {/* 회사명 */}
               <LinedInput
