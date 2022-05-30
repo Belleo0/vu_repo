@@ -1,16 +1,16 @@
 import api from '@api';
-import { clearSelectedSpaceInfo, setSelectedSpaceInfo } from '@data/space';
+import { setSelectedSpaceInfo } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Button, { ButtonType } from './Button';
 import ProfileBox from './ProfileBox';
 import SearchInput from './SearchInput';
 import SpaceCard from './SpaceCard';
 import Modal, {
-  ModalButtonWrap,
+  CustomShadowButtonWrap,
   ModalContainer,
   ModalTitle,
   ShadowButtonWrap,
@@ -36,6 +36,9 @@ import useSpaces from '@api/useSpaces';
 import { useNavigate } from 'react-router-dom';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useIsFieldUser from '@hooks/useIsFieldUser';
+import FactoryCard from './FactoryCard';
+import useFactories from '@api/useFactories';
+import { debounce } from 'lodash';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -61,6 +64,7 @@ export default () => {
   }, [tabType]);
 
   const { data: spaces, mutate } = useSpaces(isHide);
+  const { data: factories } = useFactories();
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -73,6 +77,14 @@ export default () => {
     return spaces.filter((v) => v?.name?.includes(search));
   }, [spaces, search]);
 
+  const [searchFactory, setSearchFactory] = useState('');
+  const [forSearchFactory, setForSearchFactory] = useState('');
+
+  const searchedFactories = useMemo(() => {
+    if (!factories) return [];
+    return factories.filter((v) => v?.visible_name?.includes(forSearchFactory));
+  }, [factories, forSearchFactory]);
+
   const [isOrderChangeModalOpen, setIsOrderChangeModalOpen] = useState(false);
 
   const sensors = useSensors(
@@ -83,6 +95,12 @@ export default () => {
   );
 
   const [changeOrderSpaces, setChangeOrderSpaces] = useState<any[]>([]);
+
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [tempSelectedFactoryInfo, setTempSelectedFactoryInfo] =
+    useState<any>(null);
+
+  const [submitFactroyLoading, setSubmitFactroyLoading] = useState(false);
 
   const handleSubmitChangeOrderSpaceModal = async () => {
     const ids = changeOrderSpaces.map((v) => v.id);
@@ -152,6 +170,56 @@ export default () => {
     };
   }, []);
 
+  const handleCloseRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+    setTempSelectedFactoryInfo(null);
+    delayedUpdateCall('');
+    setSearchFactory('');
+  };
+
+  const handleSubmitFactory = async () => {
+    if (tempSelectedFactoryInfo === null) return;
+    if (submitFactroyLoading) return;
+    setSubmitFactroyLoading(true);
+
+    try {
+      await api.post(`/factory-spaces`, {
+        name: tempSelectedFactoryInfo?.visible_name,
+        basic_address: tempSelectedFactoryInfo?.address,
+        detail_address: '',
+        latitude: tempSelectedFactoryInfo?.latitude,
+        longitude: tempSelectedFactoryInfo?.longitude,
+        factory_info: {
+          tel: tempSelectedFactoryInfo?.tel,
+          fax: tempSelectedFactoryInfo?.fax,
+          no: tempSelectedFactoryInfo?.no,
+          capa: tempSelectedFactoryInfo?.capa,
+          total: tempSelectedFactoryInfo?.total,
+          truck_count: tempSelectedFactoryInfo?.truck_count,
+          cement_silo: tempSelectedFactoryInfo?.cement_silo,
+          start_at: tempSelectedFactoryInfo?.start_at,
+          ks_acquired_at: tempSelectedFactoryInfo?.ks_acquired_at,
+        },
+      });
+      mutate();
+      handleCloseRegisterModal();
+    } catch (err) {
+      console.log(err);
+      window.alert('에러 발생..');
+    } finally {
+      setSubmitFactroyLoading(false);
+    }
+  };
+
+  const delayedUpdateCall = useRef(
+    debounce((q) => setForSearchFactory(q), 300),
+  ).current;
+
+  const handleKeywordChange = (v: string) => {
+    delayedUpdateCall(v);
+    setSearchFactory(v);
+  };
+
   return (
     <Container>
       <ProfileBox />
@@ -170,10 +238,7 @@ export default () => {
           onClick={
             isFieldUser
               ? () => navigate('/add-construction-field/step-1')
-              : () =>
-                  window.alert(
-                    'TODO: 레미콘 공장 추가 모달.\n반영 예정 입니다.',
-                  )
+              : () => setIsRegisterModalOpen(true)
           }
         >
           {isFieldUser ? '건설현장 추가' : '공장 등록하기'}
@@ -234,6 +299,64 @@ export default () => {
           ))}
         </SearchedSpaceWrap>
       </SpaceContainer>
+      {/* 공장등록 모달 */}
+      {isRegisterModalOpen && (
+        <Modal open={isRegisterModalOpen} onClose={handleCloseRegisterModal}>
+          <ModalContainer
+            style={{
+              minWidth: 440,
+              maxHeight: 733,
+              padding: 0,
+              paddingTop: 50,
+            }}
+          >
+            <ModalTitle>공장 등록하기</ModalTitle>
+            <ModalHeaderWrap>
+              <SearchInput
+                placeholder="공장명을 입력해주세요."
+                containerStyle={{ marginBottom: 30 }}
+                value={searchFactory}
+                onChange={(e) => handleKeywordChange(e.target.value)}
+              />
+              <Label>목록({factories?.length})</Label>
+            </ModalHeaderWrap>
+
+            <CardWrap>
+              {searchedFactories &&
+                searchedFactories.map((v, i) => (
+                  <FactoryCard
+                    key={v.id}
+                    name={v?.visible_name}
+                    address={v?.address}
+                    ceoName={v?.ceo_name}
+                    active={tempSelectedFactoryInfo?.id === v?.id}
+                    onClick={() => setTempSelectedFactoryInfo(v)}
+                  />
+                ))}
+            </CardWrap>
+            <CustomShadowButtonWrap>
+              <Button
+                type={ButtonType.GRAY_BLACK}
+                onClick={handleCloseRegisterModal}
+                containerStyle={{ marginRight: 20 }}
+              >
+                취소
+              </Button>
+              <Button
+                type={
+                  tempSelectedFactoryInfo === null
+                    ? ButtonType.GRAY
+                    : ButtonType.PRIMARY
+                }
+                onClick={handleSubmitFactory}
+              >
+                선택하기
+              </Button>
+            </CustomShadowButtonWrap>
+          </ModalContainer>
+        </Modal>
+      )}
+      {/* 순서변경 모달 */}
       <Modal
         open={isOrderChangeModalOpen}
         onClose={handleCloseChangeOrderSpaceModal}
@@ -392,4 +515,43 @@ const SearchedSpaceWrap = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const CardWrap = styled.div`
+  height: 414px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 17px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    height: 17%;
+    background-color: #c7c7c7;
+    /* 스크롤바 둥글게 설정    */
+    border-radius: 10px;
+
+    background-clip: padding-box;
+    border: 6px solid transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+  }
+`;
+
+const Label = styled.span`
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: #222;
+`;
+
+const ModalHeaderWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0px 40px 14px 40px;
+  border-bottom: 1px solid #c7c7c7;
 `;
