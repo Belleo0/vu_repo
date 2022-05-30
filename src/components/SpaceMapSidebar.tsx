@@ -11,6 +11,7 @@ import useSpaces from '@api/useSpaces';
 import SelectSpaceCard from './SelectSpaceCard';
 import TextModal from './TextModal';
 import { useNavigate } from 'react-router-dom';
+import ScrollBox from './ScrollBox';
 
 export default ({
   factories,
@@ -129,14 +130,16 @@ export default ({
           <TotalText>
             총 <b>{(factories || []).length}개</b> 의 레미콘 공장
           </TotalText>
-          <FilterSelect
-            options={[
-              { label: '거리순', value: '거리순' },
-              { label: '시간순', value: '시간순' },
-            ]}
-            value={order}
-            onChange={(v) => setOrder(v)}
-          />
+          {selectedFieldId !== null && (
+            <FilterSelect
+              options={[
+                { label: '거리순', value: '거리순' },
+                { label: '시간순', value: '시간순' },
+              ]}
+              value={order}
+              onChange={(v) => setOrder(v)}
+            />
+          )}
         </FilterWrap>
       </TopSectionWrap>
       {factories &&
@@ -173,7 +176,9 @@ export default ({
       )}
 
       <Modal open={isSelectModalOpen} onClose={handleCloseSelectModal}>
-        <ModalContainer>
+        <ModalContainer
+          style={{ minWidth: 440, maxHeight: 620, paddingTop: 50 }}
+        >
           <ModalTitle>MY 건설현장</ModalTitle>
           <CardWrap>
             {spaces &&
@@ -195,7 +200,7 @@ export default ({
             >
               취소
             </Button>
-            <Button onClick={handleSubmitSelectModal}>확인</Button>
+            <Button onClick={handleSubmitSelectModal}>선택하기</Button>
           </ShadowButtonWrap>
         </ModalContainer>
       </Modal>
@@ -325,6 +330,24 @@ const BottomButtonWrap = styled.div`
 
 const CardWrap = styled.div`
   margin-bottom: 20px;
-  max-height: 480px;
+  max-height: 402px;
   overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 17px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    height: 17%;
+    background-color: #c7c7c7;
+    /* 스크롤바 둥글게 설정    */
+    border-radius: 10px;
+
+    background-clip: padding-box;
+    border: 6px solid transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+  }
 `;

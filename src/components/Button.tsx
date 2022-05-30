@@ -23,6 +23,7 @@ interface IButton {
   type?: ButtonType;
   children: React.ReactNode;
   containerStyle?: CSSProperties;
+  iconStyle?: CSSProperties;
   icon?: string;
 }
 
@@ -71,12 +72,19 @@ export default ({
   type = ButtonType.PRIMARY,
   children,
   containerStyle,
+  iconStyle,
   icon,
   ...props
 }: IButton & HTMLAttributes<HTMLDivElement>) => {
   return (
     <Container size={size} type={type} style={containerStyle} {...props}>
-      {icon && <Icon size={size} src={getAssetURL(`../assets/${icon}.svg`)} />}
+      {icon && (
+        <Icon
+          size={size}
+          style={iconStyle}
+          src={getAssetURL(`../assets/${icon}.svg`)}
+        />
+      )}
       {children}
     </Container>
   );

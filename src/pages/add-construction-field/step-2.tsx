@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 import styled from '@emotion/styled';
-import SpaceLayout from '@layout/SpaceLayout';
 import Input from '@components/Input';
 import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
+import FieldCreateLayout from '@layout/FieldCreateLayout';
 
 export default () => {
   const location = useLocation();
@@ -32,7 +32,7 @@ export default () => {
   };
 
   return (
-    <SpaceLayout>
+    <FieldCreateLayout>
       <Container>
         <TopTitleWrapper>
           <BorderNumberWrapper>
@@ -96,7 +96,7 @@ export default () => {
           )}
         </BottomBtnWrapper>
       </Container>
-    </SpaceLayout>
+    </FieldCreateLayout>
   );
 };
 

@@ -9,6 +9,8 @@ import moment from 'moment';
 import TextModal from './TextModal';
 import api from '@api';
 import { useNavigate } from 'react-router-dom';
+import EstimationSubmitModal from './EstimationSubmitModal';
+import { mutate } from 'swr';
 
 interface IVendorTable {
   data: any[];
@@ -18,32 +20,11 @@ interface IVendorTable {
 export default ({ data = [], revalidate }: IVendorTable) => {
   const navigate = useNavigate();
 
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
-
-  const [isRegisterModalOpen, setIsRegisterModalOpen] =
-    useState<boolean>(false);
-
-  const [registerEstimationInfo, setRegisterSpaceInfo] = useState<any>(null);
-
-  const [isAlreadyRegisterModalOpen, setIsAlreadyRegisterModalOpen] =
-    useState<boolean>(false);
   const [isNotJoinChatRoomModalOpen, setIsNotJoinChatRoomModalOpen] =
     useState<boolean>(false);
-  const [isNotRegisterModalOpen, setIsNotRegisterModalOpen] =
-    useState<boolean>(false);
 
-  const [
-    isNotRegisterEstimationModalOpen,
-    setIsNotRegisterEstimationModalOpen,
-  ] = useState<boolean>(false);
-
-  const handleClickRadio = (id: number) => {
-    if (selectedIds.includes(id)) {
-      setSelectedIds((prev) => prev.filter((v) => v !== id));
-    } else {
-      setSelectedIds((prev) => prev.concat(id));
-    }
-  };
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [selectedSubmitInfo, setSelectedSubmitInfo] = useState(null);
 
   const handleOrder = (id: number, isChatRoomJoined: number) => {
     if (Boolean(isChatRoomJoined)) {
@@ -53,18 +34,9 @@ export default ({ data = [], revalidate }: IVendorTable) => {
     }
   };
 
-  const handleSubmit = async () => {
-    await api.post(`/estimations/${registerEstimationInfo?.id}/register`);
-    revalidate();
-    setIsRegisterModalOpen(false);
-  };
-
-  const handleRemove = async () => {
-    await Promise.all(
-      selectedIds.map(async (v) => await api.delete(`/estimations/${v}`)),
-    );
-    await revalidate();
-    setSelectedIds([]);
+  const handleClickSubmitButton = (v: any) => {
+    setSelectedSubmitInfo(v);
+    setIsSubmitModalOpen(true);
   };
 
   return (
@@ -108,7 +80,12 @@ export default ({ data = [], revalidate }: IVendorTable) => {
           </ValueCell>
           <ValueCell style={{ maxWidth: 180 }}>
             {v.status === 'REQUESTED' ? (
-              <SubmitButton disabled={false}>견적제출</SubmitButton>
+              <SubmitButton
+                disabled={false}
+                onClick={() => handleClickSubmitButton(v)}
+              >
+                견적제출
+              </SubmitButton>
             ) : (
               <TotalAmount>{v?.percent}%</TotalAmount>
             )}
@@ -174,27 +151,14 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         onClose={() => setIsNotJoinChatRoomModalOpen(false)}
         content={`채팅방에 입장하려면 먼저 초대를 받아야 합니다.`}
       />
-      <TextModal
-        open={isNotRegisterModalOpen}
-        onClose={() => setIsNotRegisterModalOpen(false)}
-        content={`주문을 진행하려면\n먼저 거래업체로 등록해야 합니다.`}
-      />
-      <TextModal
-        open={isAlreadyRegisterModalOpen}
-        onClose={() => setIsAlreadyRegisterModalOpen(false)}
-        content={`이미 등록이 완료된 거래업체입니다.`}
-      />
-      <TextModal
-        open={isNotRegisterEstimationModalOpen}
-        onClose={() => setIsNotRegisterEstimationModalOpen(false)}
-        content={`레미콘사에서 견적이 등록되어야\n레미콘 공장 등록이 가능합니다.`}
-      />
-      <TextModal
-        open={isRegisterModalOpen}
-        onSubmit={handleSubmit}
-        onClose={() => setIsRegisterModalOpen(false)}
-        content={`레미콘 공장을 등록하시겠습니까?`}
-        submitText="공장 등록하기"
+      <EstimationSubmitModal
+        open={isSubmitModalOpen}
+        onClose={() => {
+          setIsSubmitModalOpen(false);
+          setSelectedSubmitInfo(null);
+        }}
+        data={selectedSubmitInfo}
+        revalidate={revalidate}
       />
     </Container>
   );

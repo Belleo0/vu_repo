@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import moment from 'moment';
+import ScrollBox from './ScrollBox';
 
 interface INotification {
   type: string;
@@ -32,7 +33,7 @@ export default ({ data }: INotifications) => {
   );
 };
 
-const NotificationBox = styled.div`
+const NotificationBox = styled(ScrollBox)`
   display: flex;
   flex-direction: column;
   width: 100%;

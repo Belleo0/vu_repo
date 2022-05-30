@@ -25,7 +25,11 @@ export default () => {
           <LicenseCheckButton>사업자정보확인</LicenseCheckButton>
           <br />
           주소 : 서울특별시 영등포구 국제금융로2길 24, 4층 <br />
-          대표 : 정진학{'   '}|{'   '}개인정보책임자 : 황부익{'   '}|{'   '}
+          대표 : 정진학{'   '}
+          <Divider />
+          {'   '}개인정보책임자 : 황부익{'   '}
+          <Divider />
+          {'   '}
           대표번호 : 02-6150-7000
         </InfoText>
         <CopyRightText>COPYRIGHT © 0All rights reserved.</CopyRightText>
@@ -116,4 +120,11 @@ const LicenseCheckButton = styled.span`
   color: #999;
   margin-left: 6px;
   cursor: pointer;
+`;
+
+const Divider = styled.span`
+  display: inline-block;
+  width: 1px;
+  height: 8px;
+  background-color: #c7c7c7;
 `;

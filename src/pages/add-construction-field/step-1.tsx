@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import Input from '@components/Input';
 import { useNavigate } from 'react-router-dom';
+import FieldCreateLayout from '@layout/FieldCreateLayout';
 
 export default () => {
   const [fieldNm, setFieldNm] = useState('');
@@ -27,7 +28,7 @@ export default () => {
   const setInputHandler = () => {};
 
   return (
-    <SpaceLayout>
+    <FieldCreateLayout>
       <Container>
         <TopTitleWrapper>
           <BorderNumberWrapper>
@@ -96,7 +97,7 @@ export default () => {
           )}
         </BottomBtnWrapper>
       </Container>
-    </SpaceLayout>
+    </FieldCreateLayout>
   );
 };
 

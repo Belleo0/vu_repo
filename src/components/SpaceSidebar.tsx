@@ -35,6 +35,7 @@ import FilterSelect from './FilterSelect';
 import useSpaces from '@api/useSpaces';
 import { useNavigate } from 'react-router-dom';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
+import useIsFieldUser from '@hooks/useIsFieldUser';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -42,6 +43,8 @@ enum TabTypeEnum {
 }
 
 export default () => {
+  const isFieldUser = useIsFieldUser();
+
   // const [mount, setMount] = useState(false);
   const dispatch = useDispatch();
 
@@ -153,9 +156,9 @@ export default () => {
     <Container>
       <ProfileBox />
       <SpaceFilterWrap>
-        <SpaceFilterName>건설현장</SpaceFilterName>
+        <SpaceFilterName>{isFieldUser ? '건설현장' : '공장명'}</SpaceFilterName>
         <SearchInput
-          placeholder="현장명을 입력해주세요."
+          placeholder={`${isFieldUser ? '현장명' : '공장명'}을 입력해주세요.`}
           containerStyle={{ marginBottom: 20 }}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -164,24 +167,33 @@ export default () => {
           type={ButtonType.PRIMARY}
           containerStyle={{ marginBottom: 30 }}
           icon="ic-plus-white"
-          onClick={() => navigate('/add-construction-field/step-1')}
+          onClick={
+            isFieldUser
+              ? () => navigate('/add-construction-field/step-1')
+              : () =>
+                  window.alert(
+                    'TODO: 레미콘 공장 추가 모달.\n반영 예정 입니다.',
+                  )
+          }
         >
-          건설현장 추가
+          {isFieldUser ? '건설현장 추가' : '공장 등록하기'}
         </Button>
-        <TabContainer>
-          <Tab
-            active={tabType === TabTypeEnum.DEFAULT}
-            onClick={() => handleChangeTabType(TabTypeEnum.DEFAULT)}
-          >
-            등록 현장 보기
-          </Tab>
-          <Tab
-            active={tabType === TabTypeEnum.HIDE}
-            onClick={() => handleChangeTabType(TabTypeEnum.HIDE)}
-          >
-            숨긴 현장 보기
-          </Tab>
-        </TabContainer>
+        {isFieldUser && (
+          <TabContainer>
+            <Tab
+              active={tabType === TabTypeEnum.DEFAULT}
+              onClick={() => handleChangeTabType(TabTypeEnum.DEFAULT)}
+            >
+              등록 현장 보기
+            </Tab>
+            <Tab
+              active={tabType === TabTypeEnum.HIDE}
+              onClick={() => handleChangeTabType(TabTypeEnum.HIDE)}
+            >
+              숨긴 현장 보기
+            </Tab>
+          </TabContainer>
+        )}
       </SpaceFilterWrap>
       <SpaceContainer>
         <SpaceFilterContainer>
@@ -197,8 +209,14 @@ export default () => {
             onChange={(v) => setOrder(v)}
           />
           <SpaceOrderWrap onClick={handleOpenChangeOrderSpaceModal}>
-            <SpaceOrderLabel>순서변경</SpaceOrderLabel>
-            <SpaceOrderIcon src={getAssetURL('../assets/ic-sort.svg')} />
+            <SpaceOrderLabel>
+              {isFieldUser ? '순서변경' : '편집'}
+            </SpaceOrderLabel>
+            <SpaceOrderIcon
+              src={getAssetURL(
+                `../assets/ic-${isFieldUser ? 'sort' : 'edit'}.svg`,
+              )}
+            />
           </SpaceOrderWrap>
         </SpaceFilterContainer>
         <SearchedSpaceWrap>
