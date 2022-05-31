@@ -124,3 +124,9 @@ export const ShadowButtonWrap = styled(ModalButtonWrap)`
   box-shadow: 0 -6px 16px 0 rgba(0, 0, 0, 0.06);
   padding: 20px 40px;
 `;
+
+export const CustomShadowButtonWrap = styled(ModalButtonWrap)`
+  width: 100%;
+  box-shadow: 0 -6px 16px 0 rgba(0, 0, 0, 0.06);
+  padding: 30px 40px;
+`;

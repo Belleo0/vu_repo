@@ -329,7 +329,6 @@ const BottomButtonWrap = styled.div`
 `;
 
 const CardWrap = styled.div`
-  margin-bottom: 20px;
   max-height: 402px;
   overflow-y: scroll;
 

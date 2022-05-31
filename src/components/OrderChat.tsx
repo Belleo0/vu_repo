@@ -19,6 +19,7 @@ import useIsFieldUser from '@hooks/useIsFieldUser';
 import OrderChatMemberModal from './OrderChatMemberModal';
 import TextModal from './TextModal';
 import { css } from '@emotion/react';
+import ScrollBox from './ScrollBox';
 
 export default ({
   messages,
@@ -246,9 +247,13 @@ export default ({
     <Container>
       <SideContainer>
         <SideTopSection>
-          <SideTitle>거래업체({spaces.length})</SideTitle>
+          <SideTitle>
+            {isFieldUser ? '거래업체' : '거래현장'}({spaces.length})
+          </SideTitle>
           <SearchInput
-            placeholder="업체명을 입력해 주세요"
+            placeholder={
+              isFieldUser ? '업체명을 입력해 주세요' : '현장명을 입력해 주세요'
+            }
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
