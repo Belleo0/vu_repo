@@ -44,7 +44,6 @@ const cursor = {
 
 export default () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const nxtStepHandler = () => {
     navigate('/auth/register/step-3', {
@@ -244,7 +243,9 @@ export default () => {
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
           <MainContentBox>
-            <LineWrapper style={{ margin: 0 }}>
+            <LineWrapper
+              style={emailCodeVisible ? {} : { marginBottom: '13px' }}
+            >
               <RepeatTitle>이메일</RepeatTitle>
               <TextWrapper>
                 <Input
@@ -280,7 +281,7 @@ export default () => {
 
             {emailCodeVisible ? (
               <LineWrapper>
-                <TextWrapper style={{ margin: '0 0 34px' }}>
+                <TextWrapper style={{ margin: '0 0 14px' }}>
                   <Input
                     containerStyle={{
                       width: '250px',
@@ -426,7 +427,7 @@ export default () => {
                     errorMessageStyle={
                       errorPhoneMsg === '2'
                         ? { color: '#ef0000' }
-                        : errorEmailMsg === '3'
+                        : errorPhoneMsg === '3'
                         ? { color: '#00b448' }
                         : {}
                     }
@@ -470,11 +471,9 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
 
-  min-height: calc(100vh - 80px);
-
+  margin-top: 150px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 `;
 

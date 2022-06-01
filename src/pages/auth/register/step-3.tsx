@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
 import Input from '@components/Input';
 import SearchInput from '@components/SearchInput';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { isNull } from 'lodash';
 import _ from 'lodash';
@@ -22,7 +22,6 @@ const heightPixel = {
   [MainHeightType.INABLE]: '631px',
   [MainHeightType.ABLE]: '797px',
 };
-
 const paddingPixel = {
   [MainHeightType.INABLE]: '30px 30px 50px',
   [MainHeightType.ABLE]: '40px 30px 50px 30px',
@@ -46,23 +45,25 @@ const cursor = {
 
 export default () => {
   const location = useLocation();
-  console.log(location.state);
+  const navigate = useNavigate();
 
   const userInviteType: boolean = false;
   const companyName: string = '동양건설';
   const companyType: string = 'cns';
 
   const requestSignUpHandler = async () => {
-    const data = await api.post('/auth/register', {
-      signname: (location.state as any)?.email,
-      password: (location.state as any)?.password,
-      name: (location.state as any)?.name,
-      phone: (location.state as any)?.phone,
-      position: position,
-      tel: tel,
-      company_id: 100,
-    });
-    console.log('requestSignUpHandler => ', data);
+    const data = await api
+      .post('/auth/register', {
+        signname: (location.state as any)?.signname,
+        password: (location.state as any)?.password,
+        name: (location.state as any)?.name,
+        phone: (location.state as any)?.phone,
+        position: position || '',
+        tel: tel || '',
+        company_id: 1,
+      })
+      .then((res) => navigate('/auth/login'))
+      .catch((err) => console.log(err));
   };
 
   const [company, setCompany] = useState<string>('');
@@ -188,7 +189,7 @@ export default () => {
                       onChange={(e) => {
                         isValidHandler(e.target.value, 'zipCode');
                       }}
-                      value={zipCode}
+                      value={zipCode || ''}
                       placeholder={'우편번호 검색'}
                     />
                     <SendButton
@@ -364,7 +365,7 @@ export default () => {
                 </LineWrapper>
 
                 <LineWrapper style={{ marginBottom: 0 }}>
-                  <RepeatTitle>사내 전화 (선택)</RepeatTitle>
+                  <RepeatTitle>사내 전화번호 (선택)</RepeatTitle>
                   <TextWrapper>
                     <Input
                       style={{ padding: '11px 20px', height: '42px' }}
@@ -396,18 +397,13 @@ export default () => {
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
-
-  min-height: calc(100vh - 80px);
-
+  margin-top: 150px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 `;
 
 const MainTitle = styled.div`
-  height: 32px;
   font-size: 22px;
   font-weight: bold;
   font-stretch: normal;
