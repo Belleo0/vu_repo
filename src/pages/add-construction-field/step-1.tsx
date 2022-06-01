@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import Input from '@components/Input';
 import { useNavigate } from 'react-router-dom';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
+import Modal from '@components/Modal';
+import DaumPostcode from 'react-daum-postcode';
+import api from '@api';
+import NaverMap from '@components/NaverMap';
+import NaverMapImageMarker from '@components/NaverMapImageMarker';
+import getAssetURL from '@utils/getAssetURL';
 
 export default () => {
   const [fieldNm, setFieldNm] = useState('');
   const [fieldAddr, setFieldAddr] = useState('');
   const [secFieldAddr, setSecFieldAddr] = useState('');
+
+  const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false);
+
+  const [position, setPosition] = useState<any>(null);
 
   const navigate = useNavigate();
 
@@ -19,6 +29,7 @@ export default () => {
         fieldNm: fieldNm,
         fieldAddr: fieldAddr,
         secFieldAddr: secFieldAddr,
+        position: position,
       },
     });
   };
@@ -26,6 +37,17 @@ export default () => {
   const step = fieldNm && fieldAddr && secFieldAddr ? true : false;
 
   const setInputHandler = () => {};
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await api.get('/geocodes/addresses', {
+        params: { address: fieldAddr },
+      });
+      setPosition(data?.result);
+    })();
+  }, [fieldAddr]);
+
+  console.log(position);
 
   return (
     <FieldCreateLayout>
@@ -69,7 +91,9 @@ export default () => {
               }}
               style={{ height: '42px', padding: '11px 20px' }}
             />
-            <FindBtn>찾기</FindBtn>
+            <FindBtn onClick={() => setIsPostcodeModalOpened(true)}>
+              찾기
+            </FindBtn>
           </FindInputBtnWrapper>
           <Input
             type="text"
@@ -86,7 +110,27 @@ export default () => {
             style={{ height: '42px', padding: '11px 20px' }}
           />
         </InputItemWrapper>
-        <MapContentWrapper>지도</MapContentWrapper>
+        <MapContentWrapper>
+          <NaverMap
+            lat={37.557733}
+            lng={126.9253985}
+            style={{ width: 540, height: 260 }}
+            zoom={12}
+          >
+            {position && (
+              <NaverMapImageMarker
+                lat={position?.latitude}
+                lng={position?.longitude}
+                content={
+                  <img
+                    src={getAssetURL('../assets/ic-field-marker.png')}
+                    style={{ width: 119, height: 72 }}
+                  />
+                }
+              />
+            )}
+          </NaverMap>
+        </MapContentWrapper>
 
         <BottomBtnWrapper>
           <InActiveBtn>이전</InActiveBtn>
@@ -97,6 +141,19 @@ export default () => {
           )}
         </BottomBtnWrapper>
       </Container>
+      <Modal
+        open={isPostcodeModalOpened}
+        onClose={() => setIsPostcodeModalOpened(false)}
+      >
+        <PostContainer style={{ width: 400, height: 600 }}>
+          <DaumPostcode
+            onComplete={(v) => {
+              setFieldAddr(v?.roadAddress || v?.autoJibunAddress);
+              setIsPostcodeModalOpened(false);
+            }}
+          />
+        </PostContainer>
+      </Modal>
     </FieldCreateLayout>
   );
 };
@@ -249,3 +306,5 @@ const ActiveBtn = styled.div`
   text-align: center;
   color: #fff;
 `;
+
+const PostContainer = styled.div``;
