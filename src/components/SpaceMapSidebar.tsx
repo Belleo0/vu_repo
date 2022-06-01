@@ -1,6 +1,6 @@
 import api from '@api';
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SearchInput from './SearchInput';
 import Button, { ButtonType } from './Button';
 import { css } from '@emotion/react';
@@ -12,6 +12,8 @@ import SelectSpaceCard from './SelectSpaceCard';
 import TextModal from './TextModal';
 import { useNavigate } from 'react-router-dom';
 import ScrollBox from './ScrollBox';
+import Postcode from '@actbase/react-daum-postcode';
+import DaumPostcode from 'react-daum-postcode';
 
 export default ({
   factories,
@@ -25,6 +27,8 @@ export default ({
   selectedFieldId,
   setSelectedSpaceInfo,
   handleClickFactoryCard,
+  address,
+  setAddress,
 }: any) => {
   const navigate = useNavigate();
 
@@ -43,6 +47,8 @@ export default ({
   const [isDuplicatedEstimation, setIsDuplicatedEstimation] = useState(false);
 
   const [duplicatedFactoryIds, setDuplicatedFactoryIds] = useState([]);
+
+  const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false);
 
   const handleOpenSelectModal = () => {
     if (spaces && spaces.length > 0) {
@@ -83,9 +89,9 @@ export default ({
           icon="ic-local"
           containerStyle={{ marginBottom: 30, cursor: 'pointer' }}
           style={{ cursor: 'pointer' }}
-          value={selectedFieldInfo?.basic_address || ''}
+          value={address}
           placeholder="주소를 입력해 주세요"
-          onClick={handleOpenSelectModal}
+          onClick={() => setIsPostcodeModalOpened(true)}
         />
         <Button
           icon="ic-more"
@@ -95,7 +101,7 @@ export default ({
         >
           MY 건설현장 불러오기
         </Button>
-        {selectedFieldId !== null && (
+        {!!factories?.field_position && (
           <>
             <Title>소요시간</Title>
             <DurationWrap>
@@ -128,7 +134,7 @@ export default ({
         )}
         <FilterWrap>
           <TotalText>
-            총 <b>{(factories || []).length}개</b> 의 레미콘 공장
+            총 <b>{(factories?.data || []).length}개</b> 의 레미콘 공장
           </TotalText>
           {selectedFieldId !== null && (
             <FilterSelect
@@ -143,7 +149,7 @@ export default ({
         </FilterWrap>
       </TopSectionWrap>
       {factories &&
-        factories.map((v: any, i: any) => (
+        factories.data?.map((v: any, i: any) => (
           <MapSpaceCard
             key={v.id}
             id={v.id}
@@ -158,6 +164,7 @@ export default ({
                 : () => handleClickFactoryCard(v.id)
             }
             selectedFieldId={selectedFieldId}
+            factories={factories}
           />
         ))}
       {selectedFieldId !== null && (
@@ -222,12 +229,27 @@ export default ({
         content={`이미 견적요청한 공장이 존재합니다.\n${duplicatedFactoryIds
           .map(
             (v) =>
-              (factories || []).filter((factory: any) => factory.id === v)[0]
-                .name,
+              (factories?.data || []).filter(
+                (factory: any) => factory.id === v,
+              )[0].name,
           )
           .join(', ')}`}
         onClose={() => setIsDuplicatedEstimation(false)}
       />
+      <Modal
+        open={isPostcodeModalOpened}
+        onClose={() => setIsPostcodeModalOpened(false)}
+      >
+        <PostContainer style={{ width: 400, height: 600 }}>
+          <DaumPostcode
+            onComplete={(v) => {
+              setSelectedFieldInfo(null);
+              setAddress(v?.roadAddress || v?.autoJibunAddress);
+              setIsPostcodeModalOpened(false);
+            }}
+          />
+        </PostContainer>
+      </Modal>
     </Container>
   );
 };
@@ -350,3 +372,5 @@ const CardWrap = styled.div`
     background-color: rgba(0, 0, 0, 0);
   }
 `;
+
+const PostContainer = styled.div``;
