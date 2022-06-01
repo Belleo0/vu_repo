@@ -66,6 +66,7 @@ const SearchIcon = styled.img`
   width: 32px;
   height: 32px;
   margin: 19px 24px 19px auto;
+  cursor: pointer;
 `;
 
 const Box = styled.div`

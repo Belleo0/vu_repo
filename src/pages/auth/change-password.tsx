@@ -4,17 +4,15 @@ import AuthLayout from '@layout/AuthLayout';
 import Input from '@components/Input';
 import Button, { ButtonType } from '@components/Button';
 import api, { setToken } from '@api';
-import { useDispatch } from 'react-redux';
 import { me } from '@data/auth';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ImgModal from '@components/ImgModal';
 import HelperTxt from '@components/HelperTxt';
 
 export default () => {
-  const dispatch = useDispatch();
-
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  let { key } = useParams();
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,7 +24,7 @@ export default () => {
   }, [newPassword]);
 
   const isConfirmPasswordValidated = useMemo(() => {
-    if (newPassword === confirmPassword) return true;
+    if (newPassword === confirmPassword && isPasswordValidated) return true;
     else return false;
   }, [newPassword, confirmPassword]);
 
@@ -36,7 +34,7 @@ export default () => {
 
   const handlePasswordEdit = async () => {
     try {
-      await api.post(`/auth/find-password${pathname}`, {
+      await api.post(`/auth/find-password/${key}`, {
         password: newPassword,
       });
       window.alert('저장완료');
@@ -83,7 +81,7 @@ export default () => {
           />
           <Button
             type={isFormValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
-            onClick={handlePasswordEdit}
+            onClick={() => (isFormValidated ? handlePasswordEdit() : null)}
             containerStyle={{ marginTop: 30 }}
           >
             재설정 완료

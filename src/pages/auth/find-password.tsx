@@ -41,9 +41,10 @@ export default () => {
   const handleFindPassword = async () => {
     try {
       const { data } = await api.post('/auth/find-password', {
-        username,
+        email: username,
       });
       if (data?.result === true) {
+        console.log('true');
         setIsSuccessModalOpen(true);
       }
     } catch (error) {

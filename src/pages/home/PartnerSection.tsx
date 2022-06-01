@@ -6,7 +6,7 @@ import getAssetURL from '@utils/getAssetURL';
 export default () => {
   return (
     <PartnerSection>
-      <Typography1>CON-BOX와 함께하는</Typography1>
+      <Typography1>CONAZ와 함께하는</Typography1>
       <Typography2>건설현장을 등록하고 레미콘 공장을 만나보세요</Typography2>
       <PartnerImgContainer>
         <PartnerImgBox>
