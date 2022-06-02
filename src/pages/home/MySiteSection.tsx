@@ -5,9 +5,9 @@ import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
 
-export default ({ searchedSpaces }: any, spaceCount: number) => {
+export default ({ myspaces }: any) => {
   const navigate = useNavigate();
-  const [isEmpty, setIsEmpty] = useState(spaceCount);
+  const mySpacesCount = myspaces?.length;
 
   return (
     <MySiteSection>
@@ -27,9 +27,9 @@ export default ({ searchedSpaces }: any, spaceCount: number) => {
             </MiniSiteAddButton>
           </Box>
         </TitleBox>
-        <SiteListContainer layout={isEmpty === 0}>
-          {searchedSpaces &&
-            searchedSpaces.map((v: any, i: any) => (
+        <SiteListContainer layout={mySpacesCount === 0}>
+          {myspaces &&
+            myspaces.map((v: any, i: any) => (
               <MySiteButton
                 key={`space-${v.id}-${i}`}
                 onClick={() => navigate('/my-space')}

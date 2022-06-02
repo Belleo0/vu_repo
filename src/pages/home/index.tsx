@@ -30,7 +30,14 @@ export default () => {
   const [search, setSearch] = useState('');
 
   const { data, error, mutate } = useSWR<any[]>([`/field-spaces`]);
-  const dataCount = data?.length;
+  const [myspaces, setMyspaces] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setMyspaces(data);
+    }
+    console.log(myspaces);
+  }, [data, myspaces]);
 
   return (
     <AuthLayout>
@@ -38,11 +45,7 @@ export default () => {
         {/* Section1 */}
         <SearchSection search={search} setSearch={setSearch} />
         {/* Section2 */}
-        {isLogin ? (
-          <MySiteSection searchedSpaces={data} spaceCount={dataCount} />
-        ) : (
-          <SiteSection />
-        )}
+        {isLogin ? <MySiteSection myspaces={myspaces} /> : <SiteSection />}
         {/* Section3 */}
         <InfoSection />
         {/* Section4 */}

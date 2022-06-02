@@ -213,7 +213,7 @@ export default () => {
         await api.put('/auth/login', {
           ...userData,
           signname: email,
-          password: confirmPassword,
+          password: newPassword,
           phone: phone,
         });
         setIsSubmittedForm(true);
@@ -641,9 +641,8 @@ const ProfileImage = styled.img`
 const Divider = styled.span`
   display: block;
   width: 100%;
-  height: 1px;
+  border-bottom: solid 1px #e3e3e3;
   margin-bottom: 28px;
-  background-color: #e3e3e3;
 `;
 
 const ButtonInputBox = styled.div`
