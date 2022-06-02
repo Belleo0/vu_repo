@@ -11,8 +11,6 @@ import useSpaces from '@api/useSpaces';
 import SelectSpaceCard from './SelectSpaceCard';
 import TextModal from './TextModal';
 import { useNavigate } from 'react-router-dom';
-import ScrollBox from './ScrollBox';
-import Postcode from '@actbase/react-daum-postcode';
 import DaumPostcode from 'react-daum-postcode';
 
 export default ({
