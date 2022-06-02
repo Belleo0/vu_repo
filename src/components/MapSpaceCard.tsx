@@ -13,6 +13,7 @@ interface IMapSpaceCard {
   duration: number;
   selected: boolean;
   onClick: () => any;
+  factories: any;
   selectedFieldId: null | number;
 }
 
@@ -24,9 +25,10 @@ export default ({
   duration,
   selected,
   onClick,
+  factories,
   selectedFieldId,
 }: IMapSpaceCard) => {
-  if (selectedFieldId === null)
+  if (!!!factories?.field_position)
     return (
       <WithoutInfoContainer>
         <Name>{name}</Name>

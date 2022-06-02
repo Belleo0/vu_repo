@@ -48,10 +48,13 @@ export default () => {
 
   const [bounds, setBounds] = useState<any>(null);
 
+  const [address, setAddress] = useState('');
+
   const { data: factoriesData, isLoading } = useFactoryMaps(
     selectedFieldId,
     duration,
     bounds,
+    address,
   );
 
   const previousFactories = usePrevious(factoriesData);
@@ -90,6 +93,14 @@ export default () => {
     console.log('changed selectedFactoryIds', selectedFactoryIds);
   }, [selectedFactoryIds]);
 
+  useEffect(() => {
+    if (selectedSpaceInfo) {
+      setAddress(selectedFieldInfo?.basic_address);
+    }
+  }, [selectedFieldInfo]);
+
+  console.log({ selectedFieldInfo, address });
+
   return (
     <SpaceMapLayout>
       <SpaceMapSidebar
@@ -104,6 +115,8 @@ export default () => {
         selectedFieldId={selectedFieldId}
         setSelectedSpaceInfo={setSelectedSpaceInfo}
         handleClickFactoryCard={handleClickFactoryCard}
+        address={address}
+        setAddress={setAddress}
       />
       <ContentWrap>
         <Content>
@@ -137,10 +150,10 @@ export default () => {
                 }
               />
             )}
-            {selectedFieldInfo && (
+            {!!factories?.field_position && (
               <NaverMapImageMarker
-                lat={selectedFieldInfo.latitude}
-                lng={selectedFieldInfo.longitude}
+                lat={factories?.field_position.latitude}
+                lng={factories?.field_position.longitude}
                 content={
                   <img
                     src={getAssetURL('../assets/ic-field-marker.png')}
@@ -151,7 +164,7 @@ export default () => {
             )}
 
             {factories &&
-              factories.map((v, i) => (
+              factories.data?.map((v: any, i: number) => (
                 <NaverMapSpaceMarker
                   key={v.id}
                   lat={v.latitude}
@@ -181,7 +194,7 @@ export default () => {
                         (!!v.direction && v.direction === polylineInfo) ||
                         selectedFactoryIds.includes(v.id)
                       }
-                      hideWithoutName={selectedFieldId !== null}
+                      hideWithoutName={!!factories?.field_position}
                     />
                   }
                 />

@@ -27,6 +27,8 @@ export default () => {
           payment_due_date: (location.state as any)?.paymentDate,
           need_amount: (location.state as any)?.need_amount,
           remarks: remarks,
+          latitude: (location.state as any)?.position?.latitude,
+          longitude: (location.state as any)?.position?.longitude,
         },
       })
       .then((res) => console.log(res))
