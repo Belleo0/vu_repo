@@ -28,13 +28,13 @@ export default () => {
       state: {
         fieldNm: fieldNm,
         fieldAddr: fieldAddr,
-        secFieldAddr: secFieldAddr,
+        secFieldAddr: secFieldAddr ? secFieldAddr : '',
         position: position,
       },
     });
   };
 
-  const step = fieldNm && fieldAddr && secFieldAddr ? true : false;
+  const step = fieldNm && fieldAddr ? true : false;
 
   const setInputHandler = () => {};
 
@@ -97,7 +97,7 @@ export default () => {
           </FindInputBtnWrapper>
           <Input
             type="text"
-            placeholder="상세주소를 입력해 주세요"
+            placeholder="상세주소를 입력해 주세요 (선택)"
             value={secFieldAddr}
             onChange={(e) => {
               setSecFieldAddr(e.target.value), console.log(e);
