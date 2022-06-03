@@ -33,15 +33,17 @@ export default () => {
   }, [isPasswordValidated, isConfirmPasswordValidated]);
 
   const handlePasswordEdit = async () => {
-    try {
-      await api.post(`/auth/find-password/${key}`, {
-        password: newPassword,
-      });
-      window.alert('저장완료');
-      navigate('/auth/login');
-    } catch (error) {
-      window.alert('저장 실패');
-    }
+    if (confirmPassword !== '' && confirmPassword) {
+      try {
+        await api.post(`/auth/find-password/${key}`, {
+          password: confirmPassword,
+        });
+        window.alert('저장완료');
+        navigate('/auth/login');
+      } catch (error) {
+        window.alert('저장 실패');
+      }
+    } else window.alert('저장 실패');
   };
 
   return (

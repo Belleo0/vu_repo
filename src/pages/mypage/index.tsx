@@ -210,13 +210,22 @@ export default () => {
   const handleEdit = async () => {
     if (email && phone) {
       try {
-        await api.put('/auth/login', {
-          ...userData,
-          signname: email,
-          password: newPassword,
-          phone: phone,
-        });
-        setIsSubmittedForm(true);
+        if (confirmPassword !== '' && confirmPassword) {
+          await api.put('/auth/login', {
+            ...userData,
+            signname: email,
+            phone: phone,
+            password: confirmPassword,
+          });
+          setIsSubmittedForm(true);
+        } else {
+          await api.put('/auth/login', {
+            ...userData,
+            signname: email,
+            phone: phone,
+          });
+          setIsSubmittedForm(true);
+        }
       } catch (error) {
         window.alert('저장 실패');
       }
