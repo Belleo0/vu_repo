@@ -420,7 +420,6 @@ const InActiveBtn = styled.div`
   height: 50px;
   background-color: #f2f2f2;
   border-radius: 6px;
-  cursor: pointer;
 
   font-size: 16px;
   font-weight: 500;

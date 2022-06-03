@@ -147,21 +147,6 @@ const BottomBtnWrapper = styled.div`
   margin-top: 349px;
 `;
 
-const InActiveBtn = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 260px;
-  height: 50px;
-  background-color: #f2f2f2;
-  border-radius: 6px;
-  cursor: pointer;
-
-  font-size: 16px;
-  font-weight: 500;
-  color: #999;
-`;
-
 const ActiveBtn = styled.div`
   display: flex;
   justify-content: center;

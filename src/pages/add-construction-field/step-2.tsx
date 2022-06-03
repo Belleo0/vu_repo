@@ -236,7 +236,6 @@ const InActiveBtn = styled.div`
   background-color: #f2f2f2;
   padding: 15px 0;
   border-radius: 6px;
-  cursor: pointer;
 
   text-align: center;
   font-family: Noto Sans KR;
