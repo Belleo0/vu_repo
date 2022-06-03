@@ -62,7 +62,7 @@ export default () => {
         </InputItemWrapper>
 
         <BottomBtnWrapper>
-          <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
+          <ActiveBtn onClick={() => prvPageHandler()}>이전</ActiveBtn>
           <ActiveBtn onClick={() => requestSignUp()}>완료</ActiveBtn>
         </BottomBtnWrapper>
       </Container>

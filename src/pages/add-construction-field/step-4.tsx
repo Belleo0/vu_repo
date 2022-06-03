@@ -292,7 +292,7 @@ export default () => {
         </HideContentWrapper>
 
         <BottomBtnWrapper>
-          <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
+          <ActiveBtn onClick={() => prvPageHandler()}>이전</ActiveBtn>
           {isValid ||
           (maturity &&
             maturityInput &&
