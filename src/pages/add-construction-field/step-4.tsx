@@ -101,16 +101,16 @@ export default () => {
     console.log(e);
     switch (e) {
       case 'cash':
-        setPaymentType('현금');
+        setPaymentType('CASH');
         break;
       case 'note':
-        setPaymentType('어음');
+        setPaymentType('NOTE');
         break;
       case 'bond':
-        setPaymentType('전자채권');
+        setPaymentType('BOND');
         break;
       case 'card':
-        setPaymentType('구매카드');
+        setPaymentType('CARD');
         break;
     }
   };
