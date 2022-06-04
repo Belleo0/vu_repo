@@ -210,13 +210,22 @@ export default () => {
   const handleEdit = async () => {
     if (email && phone) {
       try {
-        await api.put('/auth/login', {
-          ...userData,
-          signname: email,
-          password: confirmPassword,
-          phone: phone,
-        });
-        setIsSubmittedForm(true);
+        if (confirmPassword !== '' && confirmPassword) {
+          await api.put('/auth/login', {
+            ...userData,
+            signname: email,
+            phone: phone,
+            password: confirmPassword,
+          });
+          setIsSubmittedForm(true);
+        } else {
+          await api.put('/auth/login', {
+            ...userData,
+            signname: email,
+            phone: phone,
+          });
+          setIsSubmittedForm(true);
+        }
       } catch (error) {
         window.alert('저장 실패');
       }
@@ -641,9 +650,8 @@ const ProfileImage = styled.img`
 const Divider = styled.span`
   display: block;
   width: 100%;
-  height: 1px;
+  border-bottom: solid 1px #e3e3e3;
   margin-bottom: 28px;
-  background-color: #e3e3e3;
 `;
 
 const ButtonInputBox = styled.div`
