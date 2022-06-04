@@ -28,13 +28,13 @@ export default () => {
       state: {
         fieldNm: fieldNm,
         fieldAddr: fieldAddr,
-        secFieldAddr: secFieldAddr,
+        secFieldAddr: secFieldAddr ? secFieldAddr : '',
         position: position,
       },
     });
   };
 
-  const step = fieldNm && fieldAddr && secFieldAddr ? true : false;
+  const step = fieldNm && fieldAddr ? true : false;
 
   const setInputHandler = () => {};
 
@@ -97,7 +97,7 @@ export default () => {
           </FindInputBtnWrapper>
           <Input
             type="text"
-            placeholder="상세주소를 입력해 주세요"
+            placeholder="상세주소를 입력해 주세요 (선택)"
             value={secFieldAddr}
             onChange={(e) => {
               setSecFieldAddr(e.target.value), console.log(e);
@@ -275,35 +275,31 @@ const BottomBtnWrapper = styled.div`
 `;
 
 const InActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 260px;
   height: 50px;
   background-color: #f2f2f2;
-  padding: 15px 0;
   border-radius: 6px;
 
-  text-align: center;
   font-size: 16px;
   font-weight: 500;
-  letter-spacing: -0.32px;
-  text-align: center;
   color: #999;
 `;
 
 const ActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 260px;
   height: 50px;
   background-color: #258fff;
-  padding: 15px 0;
   border-radius: 6px;
   cursor: pointer;
 
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
-  text-align: center;
   color: #fff;
 `;
 
