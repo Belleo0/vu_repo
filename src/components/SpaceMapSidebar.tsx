@@ -12,6 +12,7 @@ import SelectSpaceCard from './SelectSpaceCard';
 import TextModal from './TextModal';
 import { useNavigate } from 'react-router-dom';
 import DaumPostcode from 'react-daum-postcode';
+import useIsLogin from '@hooks/useIsLogin';
 
 export default ({
   factories,
@@ -24,10 +25,13 @@ export default ({
   selectedFactoryIds,
   selectedFieldId,
   setSelectedSpaceInfo,
+  setIsInfoModalOpen,
   handleClickFactoryCard,
   address,
   setAddress,
 }: any) => {
+  const isLogin = useIsLogin();
+
   const navigate = useNavigate();
 
   const { data: spaces } = useSpaces('N');
@@ -91,14 +95,17 @@ export default ({
           placeholder="주소를 입력해 주세요"
           onClick={() => setIsPostcodeModalOpened(true)}
         />
-        <Button
-          icon="ic-more"
-          type={ButtonType.OUTLINE_THICK}
-          containerStyle={{ marginBottom: 30 }}
-          onClick={handleOpenSelectModal}
-        >
-          MY 건설현장 불러오기
-        </Button>
+        {isLogin && (
+          <Button
+            icon="ic-more"
+            type={ButtonType.OUTLINE_THICK}
+            containerStyle={{ marginBottom: 30 }}
+            onClick={handleOpenSelectModal}
+          >
+            MY 건설현장 불러오기
+          </Button>
+        )}
+
         {!!factories?.field_position && (
           <>
             <Title>소요시간</Title>
@@ -158,7 +165,13 @@ export default ({
             selected={selectedFactoryIds.includes(v.id)}
             onClick={
               selectedFieldId === null
-                ? () => setSelectedSpaceInfo(v)
+                ? () => {
+                    setIsInfoModalOpen(false);
+                    setSelectedSpaceInfo(v);
+                    setTimeout(() => {
+                      setIsInfoModalOpen(true);
+                    }, 250);
+                  }
                 : () => handleClickFactoryCard(v.id)
             }
             selectedFieldId={selectedFieldId}

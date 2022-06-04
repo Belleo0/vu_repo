@@ -64,7 +64,7 @@ export default [
     label: '레미콘 지도',
     path: '/remicon-map',
     component: lazy(() => import('@pages/remicon-map')),
-    permission: Permission.PRIVATE,
+    permission: Permission.PUBLIC,
   },
   {
     label: '건설현장 지도',
