@@ -34,6 +34,14 @@ export default () => {
     navigate('/add-construction-field/step-1');
   };
 
+  const onChangeXpositionVal = (e: any) => {
+    const tempArr = new Array();
+    if (parseInt(e) <= 120 && parseInt(e) >= 1) {
+      tempArr.push(parseInt(e));
+      setXPosition(tempArr);
+    }
+  };
+
   return (
     <FieldCreateLayout>
       <Container>
@@ -76,15 +84,16 @@ export default () => {
             <Range
               step={1}
               min={1}
-              rtl={false}
               max={120}
               values={xPosition}
-              onChange={(values) => setXPosition(values)}
+              onChange={(values) => {
+                console.log(values);
+
+                setXPosition(values);
+              }}
               renderTrack={({ props, children }) => (
                 <div
                   {...props}
-                  onMouseDown={props.onMouseDown}
-                  onTouchStart={props.onTouchStart}
                   ref={props.ref}
                   style={{
                     ...props.style,
@@ -125,7 +134,14 @@ export default () => {
           </SlideContentBox>
           <SliderBottomWrapper>
             <SliderBottomText>총</SliderBottomText>
-            <SliderBottomBox>{xPosition}</SliderBottomBox>
+            <SliderBottomBox
+              value={xPosition}
+              onChange={(e) => {
+                onChangeXpositionVal(e.target.value);
+              }}
+              min={1}
+              max={120}
+            />
             <SliderBottomRightText>개월</SliderBottomRightText>
           </SliderBottomWrapper>
         </BottomContentWrapper>
@@ -335,7 +351,7 @@ const SliderBottomWrapper = styled.div`
   justify-content: center;
 `;
 
-const SliderBottomBox = styled.div`
+const SliderBottomBox = styled.input`
   width: 98px;
   height: 50px;
   border: 2px solid #4490f7;
@@ -343,6 +359,7 @@ const SliderBottomBox = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  outline: none;
 
   font-size: 28px;
   font-weight: normal;
