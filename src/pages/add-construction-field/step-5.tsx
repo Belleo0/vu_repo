@@ -12,7 +12,7 @@ export default () => {
   const [remarks, setRemarks] = useState<string>('');
 
   const requestSignUp = () => {
-    console.log(location.state as any);
+    // console.log(location.state as any);
 
     api
       .post('/field-spaces', {
@@ -62,7 +62,12 @@ export default () => {
         </InputItemWrapper>
 
         <BottomBtnWrapper>
-          <ActiveBtn onClick={() => prvPageHandler()}>이전</ActiveBtn>
+          <InActiveBtn
+            style={{ color: '#222222', cursor: 'pointer' }}
+            onClick={() => prvPageHandler()}
+          >
+            이전
+          </InActiveBtn>
           <ActiveBtn onClick={() => requestSignUp()}>완료</ActiveBtn>
         </BottomBtnWrapper>
       </Container>
@@ -160,6 +165,20 @@ const ActiveBtn = styled.div`
   font-size: 16px;
   font-weight: 500;
   color: #fff;
+`;
+
+const InActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 260px;
+  height: 50px;
+  background-color: #f2f2f2;
+  border-radius: 6px;
+
+  font-size: 16px;
+  font-weight: 500;
+  color: #999;
 `;
 
 const InputStyle = styled.textarea`

@@ -87,8 +87,6 @@ export default () => {
               max={120}
               values={xPosition}
               onChange={(values) => {
-                console.log(values);
-
                 setXPosition(values);
               }}
               renderTrack={({ props, children }) => (
@@ -147,7 +145,12 @@ export default () => {
         </BottomContentWrapper>
 
         <BottomBtnWrapper>
-          <ActiveBtn onClick={() => prvPageHandler()}>이전</ActiveBtn>
+          <InActiveBtn
+            style={{ color: '#222222', cursor: 'pointer' }}
+            onClick={() => prvPageHandler()}
+          >
+            이전
+          </InActiveBtn>
           {step ? (
             <ActiveBtn onClick={() => nxtStepHandler()}>다음</ActiveBtn>
           ) : (
@@ -247,6 +250,9 @@ const BottomBtnWrapper = styled.div`
 `;
 
 const InActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 260px;
   height: 50px;
   background-color: #f2f2f2;
@@ -254,12 +260,8 @@ const InActiveBtn = styled.div`
   border-radius: 6px;
 
   text-align: center;
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
   text-align: center;
   color: #999;
 `;
@@ -272,13 +274,8 @@ const ActiveBtn = styled.div`
   border-radius: 6px;
   cursor: pointer;
 
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
-  text-align: center;
   color: #fff;
 `;
 

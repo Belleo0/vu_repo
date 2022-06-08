@@ -51,7 +51,12 @@ export default () => {
         </InputItemWrapper>
         <Caption>• 레미콘사가 견적을 제출하는데 참고할 수 있습니다.</Caption>
         <BottomBtnWrapper>
-          <ActiveBtn onClick={() => prvPageHandler()}>이전</ActiveBtn>
+          <InActiveBtn
+            style={{ color: '#222222', cursor: 'pointer' }}
+            onClick={() => prvPageHandler()}
+          >
+            이전
+          </InActiveBtn>
           <ActiveBtn onClick={() => nxtStepHandler()}>다음</ActiveBtn>
         </BottomBtnWrapper>
       </Container>
