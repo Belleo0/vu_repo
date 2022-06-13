@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import convertDistance from '@utils/convertDistance';
-import convertDuration from '@utils/convertDuration';
 import { css } from '@emotion/react';
 import getAssetURL from '@utils/getAssetURL';
-import EstimationStatusValue from './EstimationStatusValue';
 import moment from 'moment';
 import TextModal from './TextModal';
 import api from '@api';
 import { useNavigate } from 'react-router-dom';
+import Tooltip from './Tooltip';
+import { values } from 'lodash';
 
 interface IVendorTable {
   data: any[];
@@ -35,10 +34,32 @@ const textColors = {
 
 export default ({ data = [], revalidate }: IVendorTable) => {
   const navigate = useNavigate();
-  const dataList = data.map((v) => v.id);
+  const dataList = data.filter((v) => v.status !== '1');
+  const dataListIds = dataList.map((v) => v.id);
 
+  const [isFocused, setIsFocused] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [selectedAll, setSelectedAll] = useState<boolean>(false);
+
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
+
+  const onMouseOver = (id: number, status: string) => {
+    console.log(id, status);
+    if (status === '0') {
+      setIsFocused(true);
+    } else return null;
+  };
+
+  const onMouseLeave = () => {
+    setIsFocused(false);
+  };
+
+  const totalAmount = useMemo(() => {
+    return dataList.reduce(
+      (previousValue, currentValue) => previousValue + currentValue.amount,
+      0,
+    );
+  }, [data]);
 
   const handleClickRadio = (id: number) => {
     if (selectedIds.includes(id)) {
@@ -50,11 +71,15 @@ export default ({ data = [], revalidate }: IVendorTable) => {
 
   const handleClickAll = () => {
     setSelectedAll(!selectedAll);
-    setSelectedIds(selectedAll ? [] : (prev) => prev.concat(dataList));
+    setSelectedIds(selectedAll ? [] : (prev) => prev.concat(dataListIds));
   };
 
-  const handleConfirm = async () => {
+  const handleSelectedConfirm = async () => {
     setSelectedIds([]);
+  };
+
+  const handleConfirm = () => {
+    setConfirmModal(!confirmModal);
   };
 
   return (
@@ -68,20 +93,22 @@ export default ({ data = [], revalidate }: IVendorTable) => {
           <LabelCell style={{ marginLeft: 50 }}>실제납품수량</LabelCell>
           <LabelCell>확인</LabelCell>
           <LabelCell style={{ maxWidth: 150 }}>
-            <DeleteRadio active={selectedAll}>
+            <DeleteRadio
+              active={selectedIds.length === dataList.length}
+              onClick={handleClickAll}
+            >
               <DeleteIcon
                 src={
-                  selectedAll
+                  selectedIds === dataList
                     ? getAssetURL('../assets/ic-check-only-ic-white.svg')
                     : getAssetURL('../assets/ic-check-only-ic-grey.svg')
                 }
-                onClick={handleClickAll}
               />
             </DeleteRadio>
           </LabelCell>
         </CellWrap>
         {data.map((v) => (
-          <CellWrap key={v?.id} selected={!selectedIds}>
+          <CellWrap key={v?.id} selected={selectedIds.includes(v.id)}>
             <ValueCell>
               <SupplyDate>{v?.supplyDate}</SupplyDate>
             </ValueCell>
@@ -92,7 +119,10 @@ export default ({ data = [], revalidate }: IVendorTable) => {
             <ValueCell>{v?.size}</ValueCell>
             <ValueCell style={{ marginRight: 50 }}>{v?.preAmount}m³</ValueCell>
             <ValueCell style={{ marginLeft: 50 }}>
-              <SupplyAmount>{v?.amount}</SupplyAmount>m³
+              <SupplyAmount status={v?.status === '0'}>
+                {v?.amount}
+              </SupplyAmount>
+              m³
             </ValueCell>
             <ValueCell>
               <TotalAmount>
@@ -104,7 +134,9 @@ export default ({ data = [], revalidate }: IVendorTable) => {
                       ? ButtonType.DONE
                       : ButtonType.ABLE
                   }
-                  onClick={() => {}}
+                  onClick={handleConfirm}
+                  onMouseOver={() => onMouseOver(v.id, v.status)}
+                  onMouseLeave={onMouseLeave}
                 >
                   <LikeIcon
                     src={
@@ -120,6 +152,13 @@ export default ({ data = [], revalidate }: IVendorTable) => {
                     : v.status === '1'
                     ? '확인완료'
                     : '확인하기'}
+                  {isFocused && v.status === '0' && (
+                    <Tooltip>
+                      <Popper>
+                        레미콘사가 실제 납품수량을 등록한 후에 확인해주세요.
+                      </Popper>
+                    </Tooltip>
+                  )}
                 </SubmitButton>
               </TotalAmount>
             </ValueCell>
@@ -147,18 +186,27 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         <LabelCell style={{ marginLeft: '200px' }}>
           <TotalSupplyAmountTitle>실제 납품수량 합계</TotalSupplyAmountTitle>
           <TotalSupplyAmountValue>
-            <TotalSupplyAmount>472</TotalSupplyAmount> m³
+            <TotalSupplyAmount>{totalAmount}</TotalSupplyAmount> m³
           </TotalSupplyAmountValue>
         </LabelCell>
         <LabelCell style={{ maxWidth: 150 }}>
           <SelectConfirmButton
             disabled={selectedIds.length === 0}
-            onClick={selectedIds.length === 0 ? () => null : handleConfirm}
+            onClick={
+              selectedIds.length === 0 ? () => null : handleSelectedConfirm
+            }
           >
             선택확인
           </SelectConfirmButton>
         </LabelCell>
       </EndSection>
+      <TextModal
+        open={confirmModal}
+        onClose={() => handleConfirm()}
+        submitText={'확인'}
+        content={'확인완료를 취소하시겠습니까?'}
+        onSubmit={() => handleConfirm()}
+      />
     </>
   );
 };
@@ -433,12 +481,21 @@ const SupplyDate = styled.span`
   color: #777777;
 `;
 
-const SupplyAmount = styled.span`
+const SupplyAmount = styled.span<{ status: boolean }>`
   color: #ff5517;
   font-size: 16px;
   font-weight: 500;
   margin-right: 6px;
   letter-spacing: -0.32px;
+
+  ${({ status }) =>
+    status
+      ? css`
+          color: #c7c7c7;
+        `
+      : css`
+          color: #ff5517;
+        `}
 `;
 
 const LikeIcon = styled.img`
@@ -510,4 +567,15 @@ const SelectConfirmButton = styled.div<{ disabled: boolean }>`
           background-color: #000;
           color: #fff;
         `}
+`;
+
+const Popper = styled.div`
+  padding: 14px 16px;
+  color: #000;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: -0.28px;
+  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
 `;
