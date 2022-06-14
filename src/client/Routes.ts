@@ -138,4 +138,23 @@ export default [
     component: lazy(() => import('@pages/mypage')),
     permission: Permission.PRIVATE,
   },
+  {
+    label: '건설사 자료실',
+    path: '/reference-room',
+    component: lazy(() => import('@pages/reference-room')),
+    permission: Permission.PRIVATE,
+  },
+
+  {
+    label: '건설사 자료실 업체리스트',
+    path: '/reference-room/info',
+    component: lazy(() => import('@pages/reference-room/index2')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '건설사 자료실 레미콘 단가표',
+    path: '/reference-room/info/price',
+    component: lazy(() => import('@pages/reference-room/index3')),
+    permission: Permission.PRIVATE,
+  },
 ];
