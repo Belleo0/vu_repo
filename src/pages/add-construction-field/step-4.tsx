@@ -98,7 +98,7 @@ export default () => {
   useEffect(() => {}, [paymentType]);
 
   const onChangePaymentType = (e: any) => {
-    console.log(e);
+    // console.log(e);
     switch (e) {
       case 'cash':
         setPaymentType('CASH');
@@ -292,7 +292,12 @@ export default () => {
         </HideContentWrapper>
 
         <BottomBtnWrapper>
-          <ActiveBtn onClick={() => prvPageHandler()}>이전</ActiveBtn>
+          <InActiveBtn
+            style={{ color: '#222222', cursor: 'pointer' }}
+            onClick={() => prvPageHandler()}
+          >
+            이전
+          </InActiveBtn>
           {isValid ||
           (maturity &&
             maturityInput &&

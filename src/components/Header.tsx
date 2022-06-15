@@ -111,7 +111,7 @@ export default () => {
         </MenuWrap>
 
         <RightWrap>
-          <TextButton onClick={() => window.alert(`TODO : 2차 범위입니다.`)}>
+          <TextButton onClick={() => navigate('../reference-room')}>
             자료실
           </TextButton>
           <TextButton onClick={() => window.alert(`TODO : 2차 범위입니다.`)}>

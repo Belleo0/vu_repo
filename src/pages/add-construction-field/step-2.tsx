@@ -34,6 +34,14 @@ export default () => {
     navigate('/add-construction-field/step-1');
   };
 
+  const onChangeXpositionVal = (e: any) => {
+    const tempArr = new Array();
+    if (parseInt(e) <= 120 && parseInt(e) >= 1) {
+      tempArr.push(parseInt(e));
+      setXPosition(tempArr);
+    }
+  };
+
   return (
     <FieldCreateLayout>
       <Container>
@@ -76,15 +84,14 @@ export default () => {
             <Range
               step={1}
               min={1}
-              rtl={false}
               max={120}
               values={xPosition}
-              onChange={(values) => setXPosition(values)}
+              onChange={(values) => {
+                setXPosition(values);
+              }}
               renderTrack={({ props, children }) => (
                 <div
                   {...props}
-                  onMouseDown={props.onMouseDown}
-                  onTouchStart={props.onTouchStart}
                   ref={props.ref}
                   style={{
                     ...props.style,
@@ -125,13 +132,25 @@ export default () => {
           </SlideContentBox>
           <SliderBottomWrapper>
             <SliderBottomText>총</SliderBottomText>
-            <SliderBottomBox>{xPosition}</SliderBottomBox>
+            <SliderBottomBox
+              value={xPosition}
+              onChange={(e) => {
+                onChangeXpositionVal(e.target.value);
+              }}
+              min={1}
+              max={120}
+            />
             <SliderBottomRightText>개월</SliderBottomRightText>
           </SliderBottomWrapper>
         </BottomContentWrapper>
 
         <BottomBtnWrapper>
-          <ActiveBtn onClick={() => prvPageHandler()}>이전</ActiveBtn>
+          <InActiveBtn
+            style={{ color: '#222222', cursor: 'pointer' }}
+            onClick={() => prvPageHandler()}
+          >
+            이전
+          </InActiveBtn>
           {step ? (
             <ActiveBtn onClick={() => nxtStepHandler()}>다음</ActiveBtn>
           ) : (
@@ -231,6 +250,9 @@ const BottomBtnWrapper = styled.div`
 `;
 
 const InActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 260px;
   height: 50px;
   background-color: #f2f2f2;
@@ -238,12 +260,8 @@ const InActiveBtn = styled.div`
   border-radius: 6px;
 
   text-align: center;
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
   text-align: center;
   color: #999;
 `;
@@ -256,13 +274,8 @@ const ActiveBtn = styled.div`
   border-radius: 6px;
   cursor: pointer;
 
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
-  text-align: center;
   color: #fff;
 `;
 
@@ -335,7 +348,7 @@ const SliderBottomWrapper = styled.div`
   justify-content: center;
 `;
 
-const SliderBottomBox = styled.div`
+const SliderBottomBox = styled.input`
   width: 98px;
   height: 50px;
   border: 2px solid #4490f7;
@@ -343,6 +356,7 @@ const SliderBottomBox = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  outline: none;
 
   font-size: 28px;
   font-weight: normal;
