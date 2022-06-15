@@ -10,7 +10,7 @@ import MapSpaceCard from './MapSpaceCard';
 import useSpaces from '@api/useSpaces';
 import SelectSpaceCard from './SelectSpaceCard';
 import TextModal from './TextModal';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DaumPostcode from 'react-daum-postcode';
 import useIsLogin from '@hooks/useIsLogin';
 
@@ -32,6 +32,8 @@ export default ({
 }: any) => {
   const isLogin = useIsLogin();
 
+  const location = useLocation();
+
   const navigate = useNavigate();
 
   const { data: spaces } = useSpaces('N');
@@ -51,6 +53,13 @@ export default ({
   const [duplicatedFactoryIds, setDuplicatedFactoryIds] = useState([]);
 
   const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false);
+
+  useEffect(() => {
+    if ((location?.state as any)?.search) {
+      setIsPostcodeModalOpened(true);
+      navigate(location.pathname, {});
+    }
+  }, [location]);
 
   const handleOpenSelectModal = () => {
     if (spaces && spaces.length > 0) {

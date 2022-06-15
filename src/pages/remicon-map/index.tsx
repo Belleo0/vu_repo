@@ -98,8 +98,6 @@ export default () => {
     }
   }, [selectedFieldInfo]);
 
-  console.log({ selectedFieldInfo, address });
-
   return (
     <SpaceMapLayout>
       <SpaceMapSidebar
