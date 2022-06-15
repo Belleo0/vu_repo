@@ -9,6 +9,9 @@ import TransactionSpaceBar from '@components/TransactionSpaceBar';
 import TransactionTable from '@components/TransactionTable';
 import Button from '@components/Button';
 import TransactionFilter from '@components/TransactionFilter';
+import useIsFieldUser from '@hooks/useIsFieldUser';
+import FactoryTransactionTable from '@components/FactoryTransactionTable';
+import FactoryTransactionFilter from '@components/FactoryTransactionFilter';
 
 const transactions = [
   {
@@ -36,7 +39,7 @@ const transactions = [
     supplyDate: '2022.06.10',
     name: '(주)표주레미콘3',
     basic_address: '부산 영도구 해양로 225',
-    size: '25 - 24 - 150',
+    size: ['25 - 24 - 150'],
     preAmount: 120,
     amount: 124,
     status: '2',
@@ -64,6 +67,7 @@ const transactions = [
 ];
 
 export default () => {
+  const isFieldUser = useIsFieldUser();
   const selectedSpaceId = useSelectedSpaceId();
   const {
     data: { info, suppliers },
@@ -76,7 +80,7 @@ export default () => {
       {selectedSpaceId === undefined ? null : isLoading ? null : (
         <Container>
           <BarSection>
-            <Title>건설현장</Title>
+            {isFieldUser ? <Title>건설현장</Title> : <Title>공장명</Title>}
             <TransactionSpaceBar
               id={info?.id}
               name={info?.name}
@@ -84,10 +88,20 @@ export default () => {
             />
           </BarSection>
           <FilterSection>
-            <TransactionFilter />
+            {isFieldUser ? <TransactionFilter /> : <FactoryTransactionFilter />}
           </FilterSection>
           <BottomSection>
-            <TransactionTable data={transactions} revalidate={supplierMutate} />
+            {isFieldUser ? (
+              <TransactionTable
+                data={transactions}
+                revalidate={supplierMutate}
+              />
+            ) : (
+              <FactoryTransactionTable
+                data={transactions}
+                revalidate={supplierMutate}
+              />
+            )}
           </BottomSection>
         </Container>
       )}

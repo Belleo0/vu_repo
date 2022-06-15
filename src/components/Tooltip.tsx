@@ -19,7 +19,11 @@ export default ({
 }: PopoverComponentProps) => {
   const settingsWindowRef = useRef<HTMLDivElement>(null);
 
-  return <Container ref={settingsWindowRef}>{children}</Container>;
+  return (
+    <Container style={containerStyle} ref={settingsWindowRef}>
+      {children}
+    </Container>
+  );
 };
 
 const Container = styled.div`
