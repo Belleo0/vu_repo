@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import Input from '@components/Input';
 import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
+import { Range } from 'react-range';
 
 export default () => {
   const location = useLocation();
 
   const [constructionStartDate, setContructionStartDate] = useState<string>('');
   const [constructionEndDate, setContructionEndDate] = useState<string>('');
+  const [xPosition, setXPosition] = useState<any>([1]);
 
   const navigate = useNavigate();
   const step = constructionStartDate && constructionEndDate ? true : false;
@@ -21,14 +23,23 @@ export default () => {
         ...(location.state as any as any),
         constructionStartDate: constructionStartDate,
         constructionEndDate: constructionEndDate,
+        constructionRangeDate: xPosition,
       },
     });
   };
 
-  console.log('step-2 navigate State => ', location.state as any);
+  useEffect(() => {}, [xPosition]);
 
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-1');
+  };
+
+  const onChangeXpositionVal = (e: any) => {
+    const tempArr = new Array();
+    if (parseInt(e) <= 120 && parseInt(e) >= 1) {
+      tempArr.push(parseInt(e));
+      setXPosition(tempArr);
+    }
   };
 
   return (
@@ -70,25 +81,76 @@ export default () => {
         </InputItemWrapper>
         <BottomContentWrapper>
           <SlideContentBox>
-            <SlideItem>
-              <Slider>
-                <SliderCircle>
-                  <SliderCircleText>12</SliderCircleText>
-                </SliderCircle>
-              </Slider>
-            </SlideItem>
+            <Range
+              step={1}
+              min={1}
+              max={120}
+              values={xPosition}
+              onChange={(values) => {
+                setXPosition(values);
+              }}
+              renderTrack={({ props, children }) => (
+                <div
+                  {...props}
+                  ref={props.ref}
+                  style={{
+                    ...props.style,
+                    height: '10px',
+                    width: '500px',
+                    backgroundColor: '#fff',
+                    borderRadius: '50px',
+                    border: '1px solid #e3e3e3',
+                    marginBottom: '7px',
+                  }}
+                >
+                  {children}
+                </div>
+              )}
+              renderThumb={({ props }) => {
+                return (
+                  <>
+                    <div
+                      {...props}
+                      style={{
+                        outline: 'none',
+                        width: '22px',
+                        height: '22px',
+                        border: '3px solid #258fff',
+                        boxShadow: '0 0 10px 0 rgba(30, 117, 209, 0.42)',
+                        borderRadius: '50%',
+                        backgroundColor: '#fff',
+                      }}
+                    >
+                      <SliderCircleText>{xPosition}</SliderCircleText>
+                    </div>
+                  </>
+                );
+              }}
+            />
             <SliderText>1개월</SliderText>
             <SliderRightText>120개월</SliderRightText>
           </SlideContentBox>
           <SliderBottomWrapper>
             <SliderBottomText>총</SliderBottomText>
-            <SliderBottomBox>12</SliderBottomBox>
+            <SliderBottomBox
+              value={xPosition}
+              onChange={(e) => {
+                onChangeXpositionVal(e.target.value);
+              }}
+              min={1}
+              max={120}
+            />
             <SliderBottomRightText>개월</SliderBottomRightText>
           </SliderBottomWrapper>
         </BottomContentWrapper>
 
         <BottomBtnWrapper>
-          <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
+          <InActiveBtn
+            style={{ color: '#222222', cursor: 'pointer' }}
+            onClick={() => prvPageHandler()}
+          >
+            이전
+          </InActiveBtn>
           {step ? (
             <ActiveBtn onClick={() => nxtStepHandler()}>다음</ActiveBtn>
           ) : (
@@ -188,20 +250,18 @@ const BottomBtnWrapper = styled.div`
 `;
 
 const InActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 260px;
   height: 50px;
   background-color: #f2f2f2;
   padding: 15px 0;
   border-radius: 6px;
-  cursor: pointer;
 
   text-align: center;
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
   text-align: center;
   color: #999;
 `;
@@ -214,13 +274,8 @@ const ActiveBtn = styled.div`
   border-radius: 6px;
   cursor: pointer;
 
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
-  text-align: center;
   color: #fff;
 `;
 
@@ -246,55 +301,24 @@ const SlideContentBox = styled.div`
   padding-top: 23px;
 `;
 
-const SlideItem = styled.div`
-  // position: relative;
-  width: 500px;
-  height: 22px;
-  // border: 1px solid #e3e3e3;
-  // border-radius: 5px;
-  // background-color: #fff;
-  margin-bottom: 1px;
-`;
-
-const Slider = styled.div`
-  position: relative;
-  width: 500px;
-  height: 10px;
-  border: 1px solid #e3e3e3;
-  border-radius: 5px;
-  background-color: #fff;
-`;
-const SliderCircle = styled.div`
-  position: relative;
-  width: 22px;
-  height: 22px;
-  border: 3px solid #258fff;
-  box-shadow: 0 0 10px 0 rgba(30, 117, 209, 0.42);
-  border-radius: 50%;
-  background-color: #fff;
-  top: -7px;
-  left: 166px;
-`;
-
 const SliderCircleText = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  width: 18px;
   height: 24px;
-  margin-bottom: 2px;
+  width: 22px;
+  top: -28px;
+  left: -3px;
 
   font-size: 16px;
   font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
   text-align: center;
   color: #258fff;
-  bottom: 12px;
-  left: -1px;
 `;
 
 const SliderText = styled.span`
-  margin-right: 421px;
+  margin-right: 428px;
   font-family: Noto Sans KR;
   font-size: 13px;
   font-weight: normal;
@@ -324,22 +348,20 @@ const SliderBottomWrapper = styled.div`
   justify-content: center;
 `;
 
-const SliderBottomBox = styled.div`
+const SliderBottomBox = styled.input`
   width: 98px;
   height: 50px;
   border: 2px solid #4490f7;
-  padding: 5px 34px;
   border-radius: 6px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  outline: none;
 
-  font-family: Noto Sans KR;
   font-size: 28px;
   font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.56px;
   text-align: center;
   color: #258fff;
-  line-height: 1.2;
 `;
 const SliderBottomText = styled.span`
   margin: 12px 24px 12px 0;

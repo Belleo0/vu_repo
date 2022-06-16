@@ -25,7 +25,6 @@ import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 
 import { debounce } from 'lodash';
 import { usePrevious } from '@hooks/usePrevious';
-import Loading from '@components/Loading';
 
 export default () => {
   const dispatch = useDispatch();
@@ -99,8 +98,6 @@ export default () => {
     }
   }, [selectedFieldInfo]);
 
-  console.log({ selectedFieldInfo, address });
-
   return (
     <SpaceMapLayout>
       <SpaceMapSidebar
@@ -114,6 +111,7 @@ export default () => {
         selectedFactoryIds={selectedFactoryIds}
         selectedFieldId={selectedFieldId}
         setSelectedSpaceInfo={setSelectedSpaceInfo}
+        setIsInfoModalOpen={setIsInfoModalOpen}
         handleClickFactoryCard={handleClickFactoryCard}
         address={address}
         setAddress={setAddress}
@@ -177,8 +175,9 @@ export default () => {
                       distance={v?.direction?.distance}
                       duration={v?.direction?.duration}
                       onClick={() => {
-                        console.log('ddd');
-                        handleClickFactoryCard(v.id);
+                        if (selectedFieldId !== null) {
+                          handleClickFactoryCard(v.id);
+                        }
                       }}
                       onInfo={() => {
                         setIsInfoModalOpen(false);

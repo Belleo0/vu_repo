@@ -168,7 +168,7 @@ export default () => {
                     containerStyle={{ marginTop: '8px' }}
                     placeholder={
                       companyType == 'cns'
-                        ? '회사명을 검색해 주세요'
+                        ? '회사명을 입력해 주세요'
                         : '레미콘 공장명을 검색해 주세요'
                     }
                   />
@@ -291,7 +291,7 @@ export default () => {
               <>
                 <LineWrapper style={{ marginBottom: '31px' }}>
                   <RepeatTitle>
-                    {companyType == 'cns' ? '회사 주소' : '레미콘 공장 상호명'}
+                    {companyType == 'cns' ? '회사명' : '레미콘 공장 상호명'}
                   </RepeatTitle>
                   <SearchInput
                     containerStyle={{
@@ -306,7 +306,7 @@ export default () => {
                     value={company}
                     placeholder={
                       companyType == 'cns'
-                        ? '회사 주소'
+                        ? '회사명을 검색해 주세요'
                         : '레미콘 공장을 검색해 주세요'
                     }
                   />

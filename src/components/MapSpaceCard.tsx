@@ -38,7 +38,10 @@ export default ({
       </WithoutInfoContainer>
     );
   return (
-    <Container selected={selected} onClick={onClick}>
+    <Container
+      selected={selected}
+      onClick={selectedFieldId !== null ? onClick : () => null}
+    >
       <InfoContainer>
         <Index> {(index + 1).toString().padStart(2, '0')}</Index>
         <InfoWrap>
@@ -51,13 +54,15 @@ export default ({
           </DistanceWrap>
         </InfoWrap>
       </InfoContainer>
-      <CheckIcon
-        src={
-          selected
-            ? getAssetURL('../assets/ic-check-on.svg')
-            : getAssetURL('../assets/ic-check.svg')
-        }
-      />
+      {selectedFieldId !== null && (
+        <CheckIcon
+          src={
+            selected
+              ? getAssetURL('../assets/ic-check-on.svg')
+              : getAssetURL('../assets/ic-check.svg')
+          }
+        />
+      )}
     </Container>
   );
 };

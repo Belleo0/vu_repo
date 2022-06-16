@@ -49,7 +49,7 @@ export default () => {
   const [maturityInput, setMaturityInput] = useState<string>();
   const [paymentDate, setPaymentDate] = useState<string>();
   const [paymentDateInput, setPaymentDateInput] = useState<string>();
-  const [paymentType, setPaymentType] = useState<string>('CASH');
+  const [paymentType, setPaymentType] = useState<string>('default');
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
@@ -73,7 +73,6 @@ export default () => {
   };
 
   const paymentOptionHandler = (idx: number) => {
-    console.log(idx);
     if (idx == 1) {
       setIsValid(true);
       setStep(1);
@@ -94,6 +93,26 @@ export default () => {
   };
   const paymentDateInputHandler = (v: string) => {
     setPaymentDateInput(v);
+  };
+
+  useEffect(() => {}, [paymentType]);
+
+  const onChangePaymentType = (e: any) => {
+    // console.log(e);
+    switch (e) {
+      case 'cash':
+        setPaymentType('CASH');
+        break;
+      case 'note':
+        setPaymentType('NOTE');
+        break;
+      case 'bond':
+        setPaymentType('BOND');
+        break;
+      case 'card':
+        setPaymentType('CARD');
+        break;
+    }
   };
 
   return (
@@ -129,7 +148,26 @@ export default () => {
               <InputItemWrapper style={{ marginTop: '40px' }}>
                 <FieldName>결제수단</FieldName>
                 <BottomContentWrapper>
-                  <SelectWrapper placeholder="선택해 주세요" />
+                  <SelectWrapper
+                    onChange={(e) => onChangePaymentType(e.target.value)}
+                    value={paymentType}
+                  >
+                    <option value="default" disabled hidden>
+                      선택해 주세요
+                    </option>
+                    <option key={'cash'} value="cash">
+                      현금
+                    </option>
+                    <option key={'note'} value="note">
+                      어음
+                    </option>
+                    <option key={'bond'} value="bond">
+                      전자채권
+                    </option>
+                    <option key={'card'} value="card">
+                      구매카드
+                    </option>
+                  </SelectWrapper>
                 </BottomContentWrapper>
               </InputItemWrapper>
 
@@ -254,9 +292,18 @@ export default () => {
         </HideContentWrapper>
 
         <BottomBtnWrapper>
-          <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
+          <InActiveBtn
+            style={{ color: '#222222', cursor: 'pointer' }}
+            onClick={() => prvPageHandler()}
+          >
+            이전
+          </InActiveBtn>
           {isValid ||
-          (maturity && maturityInput && paymentDateInput && paymentDate) ? (
+          (maturity &&
+            maturityInput &&
+            paymentDateInput &&
+            paymentDate &&
+            paymentType) ? (
             <ActiveBtn onClick={() => nxtPageHandler()}>다음</ActiveBtn>
           ) : (
             <InActiveBtn>다음</InActiveBtn>
@@ -371,39 +418,31 @@ const HideContentWrapper = styled.div`
 `;
 
 const InActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 260px;
   height: 50px;
   background-color: #f2f2f2;
-  padding: 15px 0;
   border-radius: 6px;
-  cursor: pointer;
 
-  text-align: center;
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
-  text-align: center;
   color: #999;
 `;
 
 const ActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 260px;
   height: 50px;
   background-color: #258fff;
-  padding: 15px 0;
   border-radius: 6px;
   cursor: pointer;
 
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
-  text-align: center;
   color: #fff;
 `;
 
@@ -490,16 +529,16 @@ const OptionWrapper = styled.div`
 `;
 
 const DateSelectBorder = styled.div<{ type: OptionType }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 80px;
   height: 36px;
   cursor: pointer;
   border-radius: 18px;
-  padding: 8px 0;
 
-  line-height: 1.3;
   font-size: 14px;
   font-weight: 500;
-  text-align: center;
 
   ${({ type }) => css`
     background-color: ${optionBackgroundColors[type]};

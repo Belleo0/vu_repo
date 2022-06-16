@@ -64,7 +64,7 @@ export default [
     label: '레미콘 지도',
     path: '/remicon-map',
     component: lazy(() => import('@pages/remicon-map')),
-    permission: Permission.PRIVATE,
+    permission: Permission.PUBLIC,
   },
   {
     label: '건설현장 지도',
@@ -136,6 +136,49 @@ export default [
     label: '회원정보 수정',
     path: '/mypage',
     component: lazy(() => import('@pages/mypage')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '건설사 자료실',
+    path: '/reference-room',
+    component: lazy(() => import('@pages/reference-room')),
+    permission: Permission.PRIVATE,
+  },
+
+  {
+    label: '건설사 자료실 업체리스트',
+    path: '/reference-room/info',
+    component: lazy(() => import('@pages/reference-room/index2')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '건설사 자료실 레미콘 단가표',
+    path: '/reference-room/info/price',
+    component: lazy(() => import('@pages/reference-room/index3')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - 공지사항',
+    path: '/service-center/notice',
+    component: lazy(() => import('@pages/service-center/index')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - FAQ',
+    path: '/service-center/faq',
+    component: lazy(() => import('@pages/service-center/index2')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - 1:1 문의',
+    path: '/service-center/inquiry',
+    component: lazy(() => import('@pages/service-center/index3')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - 이벤트',
+    path: '/service-center/event',
+    component: lazy(() => import('@pages/service-center/index4')),
     permission: Permission.PRIVATE,
   },
 ];

@@ -12,7 +12,7 @@ export default () => {
   const [remarks, setRemarks] = useState<string>('');
 
   const requestSignUp = () => {
-    console.log(location.state as any);
+    // console.log(location.state as any);
 
     api
       .post('/field-spaces', {
@@ -62,7 +62,12 @@ export default () => {
         </InputItemWrapper>
 
         <BottomBtnWrapper>
-          <InActiveBtn onClick={() => prvPageHandler()}>이전</InActiveBtn>
+          <InActiveBtn
+            style={{ color: '#222222', cursor: 'pointer' }}
+            onClick={() => prvPageHandler()}
+          >
+            이전
+          </InActiveBtn>
           <ActiveBtn onClick={() => requestSignUp()}>완료</ActiveBtn>
         </BottomBtnWrapper>
       </Container>
@@ -147,50 +152,33 @@ const BottomBtnWrapper = styled.div`
   margin-top: 349px;
 `;
 
-const InActiveBtn = styled.div`
-  width: 260px;
-  height: 50px;
-  background-color: #f2f2f2;
-  padding: 15px 0;
-  border-radius: 6px;
-  cursor: pointer;
-
-  text-align: center;
-  font-family: Noto Sans KR;
-  font-size: 16px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
-  text-align: center;
-  color: #999;
-`;
-
 const ActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 260px;
   height: 50px;
   background-color: #258fff;
-  padding: 15px 0;
   border-radius: 6px;
   cursor: pointer;
 
-  font-family: Noto Sans KR;
   font-size: 16px;
   font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.32px;
-  text-align: center;
   color: #fff;
 `;
 
-const BottomContentWrapper = styled.div`
-  width: 260px;
-  height: 42px;
+const InActiveBtn = styled.div`
   display: flex;
-  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
+  width: 260px;
+  height: 50px;
+  background-color: #f2f2f2;
+  border-radius: 6px;
+
+  font-size: 16px;
+  font-weight: 500;
+  color: #999;
 `;
 
 const InputStyle = styled.textarea`
