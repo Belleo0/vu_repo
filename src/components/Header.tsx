@@ -114,7 +114,7 @@ export default () => {
           <TextButton onClick={() => navigate('../reference-room')}>
             자료실
           </TextButton>
-          <TextButton onClick={() => window.alert(`TODO : 2차 범위입니다.`)}>
+          <TextButton onClick={() => navigate('../service-center/notice')}>
             고객센터
           </TextButton>
           {isLogin ? (

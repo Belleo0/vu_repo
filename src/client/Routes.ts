@@ -157,4 +157,28 @@ export default [
     component: lazy(() => import('@pages/reference-room/index3')),
     permission: Permission.PRIVATE,
   },
+  {
+    label: '고객센터 - 공지사항',
+    path: '/service-center/notice',
+    component: lazy(() => import('@pages/service-center/index')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - FAQ',
+    path: '/service-center/faq',
+    component: lazy(() => import('@pages/service-center/index2')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - 1:1 문의',
+    path: '/service-center/inquiry',
+    component: lazy(() => import('@pages/service-center/index3')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - 이벤트',
+    path: '/service-center/event',
+    component: lazy(() => import('@pages/service-center/index4')),
+    permission: Permission.PRIVATE,
+  },
 ];
