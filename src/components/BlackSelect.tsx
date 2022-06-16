@@ -10,6 +10,7 @@ interface ISelect {
   placeholder?: string;
   onChange: (v: any) => any;
   containerStyle?: React.CSSProperties;
+  absoluteStyle?: React.CSSProperties;
 }
 
 export default ({
@@ -19,6 +20,7 @@ export default ({
   value,
   onChange,
   containerStyle = {},
+  absoluteStyle = {},
 }: ISelect) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -77,7 +79,7 @@ export default ({
         isOpen={isOpened}
         value={value}
         optionLength={options.length}
-        style={{ zIndex }}
+        style={{ zIndex, ...absoluteStyle }}
       >
         <AbsoluteValueContainer>
           <Value style={{ color: valueLabel === null ? '#c7c7c7' : '#000' }}>

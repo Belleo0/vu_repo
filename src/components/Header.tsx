@@ -32,7 +32,7 @@ const fieldMenus = [
   {
     label: '거래내역',
     path: '/transaction',
-    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+    // onClick: () => window.alert(`TODO : 2차 범위입니다.`),
   },
 ];
 
@@ -49,7 +49,7 @@ const remiconMenus = [
   {
     label: '거래내역',
     path: '/transaction',
-    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+    // onClick: () => window.alert(`TODO : 2차 범위입니다.`),
   },
 ];
 

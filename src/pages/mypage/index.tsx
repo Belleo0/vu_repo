@@ -14,6 +14,7 @@ import TextModal from '@components/TextModal';
 import useUserInfo from '@hooks/useUserInfo';
 import api from '@api';
 import FileUpload from '@components/FileUpload';
+import useSWR from 'swr';
 
 export default () => {
   const userInfo = useUserInfo();
@@ -139,18 +140,31 @@ export default () => {
   //api
   const handleRequestEmailCode = async () => {
     try {
-      const { data } = await api.post('/verifications/email', {
-        email: email,
+      const { data } = await api.get('/users/check-duplicated-email', {
+        params: { email: email },
       });
-      if (data?.result === true) {
-        setIsEmailModalOpen(true);
-        setIsEmailCode(true);
+      if (data?.result === false) {
+        const { data } = await api.post('/verifications/email', {
+          email: email,
+        });
+        if (data?.result === true) {
+          setIsEmailModalOpen(true);
+          setIsEmailCode(true);
+          setVerifyEmailCode('');
+          setIsEmailDone(false);
+          setIsEditing(true);
+        } else {
+          window.alert('오류발생');
+        }
+      } else if (data?.result === true) {
+        setIsErrorEmailModalOpen(true);
+        setIsEmailCode(false);
         setVerifyEmailCode('');
         setIsEmailDone(false);
         setIsEditing(true);
       }
     } catch (error) {
-      setIsErrorEmailModalOpen(true);
+      window.alert('오류발생');
     }
   };
 
