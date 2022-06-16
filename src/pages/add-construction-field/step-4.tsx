@@ -6,6 +6,7 @@ import Input from '@components/Input';
 import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
+import BlackSelect from '@components/BlackSelect';
 
 enum ButtonType {
   'ABLE',
@@ -49,7 +50,7 @@ export default () => {
   const [maturityInput, setMaturityInput] = useState<string>();
   const [paymentDate, setPaymentDate] = useState<string>();
   const [paymentDateInput, setPaymentDateInput] = useState<string>();
-  const [paymentType, setPaymentType] = useState<string>('default');
+  const [paymentType, setPaymentType] = useState<string | null>(null);
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
@@ -97,23 +98,15 @@ export default () => {
 
   useEffect(() => {}, [paymentType]);
 
-  const onChangePaymentType = (e: any) => {
-    // console.log(e);
-    switch (e) {
-      case 'cash':
-        setPaymentType('CASH');
-        break;
-      case 'note':
-        setPaymentType('NOTE');
-        break;
-      case 'bond':
-        setPaymentType('BOND');
-        break;
-      case 'card':
-        setPaymentType('CARD');
-        break;
-    }
-  };
+  const paymentOptions = [
+    {
+      label: '현금',
+      value: 'CASH',
+    },
+    { label: '어음', value: 'NOTE' },
+    { label: '전자채권', value: 'BOND' },
+    { label: '구매카드', value: 'CARD' },
+  ];
 
   return (
     <FieldCreateLayout>
@@ -145,92 +138,78 @@ export default () => {
         <HideContentWrapper>
           {step == 2 ? (
             <>
-              <InputItemWrapper style={{ marginTop: '40px' }}>
-                <FieldName>결제수단</FieldName>
-                <BottomContentWrapper>
-                  <SelectWrapper
-                    onChange={(e) => onChangePaymentType(e.target.value)}
-                    value={paymentType}
-                  >
-                    <option value="default" disabled hidden>
-                      선택해 주세요
-                    </option>
-                    <option key={'cash'} value="cash">
-                      현금
-                    </option>
-                    <option key={'note'} value="note">
-                      어음
-                    </option>
-                    <option key={'bond'} value="bond">
-                      전자채권
-                    </option>
-                    <option key={'card'} value="card">
-                      구매카드
-                    </option>
-                  </SelectWrapper>
-                </BottomContentWrapper>
-              </InputItemWrapper>
-
-              <InputItemWrapper
-                style={{ marginTop: '40px', width: '530px', height: '116px' }}
-              >
-                <FieldName>만기</FieldName>
-                <OptionWrapper>
-                  <DateSelectBorder
-                    type={
-                      maturity == '30' ? OptionType.ABLE : OptionType.INABLE
-                    }
-                    onClick={() => dateOptionHandler('30')}
-                  >
-                    30일
-                  </DateSelectBorder>
-                  <DateSelectBorder
-                    type={
-                      maturity == '60' ? OptionType.ABLE : OptionType.INABLE
-                    }
-                    onClick={() => dateOptionHandler('60')}
-                  >
-                    60일
-                  </DateSelectBorder>
-                  <DateSelectBorder
-                    type={
-                      maturity == '90' ? OptionType.ABLE : OptionType.INABLE
-                    }
-                    onClick={() => dateOptionHandler('90')}
-                  >
-                    90일
-                  </DateSelectBorder>
-                  <DateSelectBorder
-                    type={
-                      maturity == '120' ? OptionType.ABLE : OptionType.INABLE
-                    }
-                    onClick={() => dateOptionHandler('120')}
-                  >
-                    120일
-                  </DateSelectBorder>
-                  <DateSelectBorder
-                    type={
-                      maturity == '150' ? OptionType.ABLE : OptionType.INABLE
-                    }
-                    onClick={() => dateOptionHandler('150')}
-                  >
-                    150일
-                  </DateSelectBorder>
-                  <DateSelectBorder
-                    type={
-                      maturity == 'other' ? OptionType.ABLE : OptionType.INABLE
-                    }
-                    onClick={() => dateOptionHandler('other')}
-                  >
-                    기타
-                  </DateSelectBorder>
-                </OptionWrapper>
-                <InputStyle
-                  placeholder="숫자만 입력해 주세요"
-                  value={maturityInput}
-                  onChange={(e) => dateInputHandler(e.target.value)}
-                />
-              </InputItemWrapper>
+              <BlackSelect
+                absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
+                placeholder="선택해 주세요."
+                width={260}
+                options={paymentOptions}
+                value={paymentType}
+                onChange={(v) => setPaymentType(v)}
+              />
+              {paymentType !== 'CASH' && paymentType !== null ? (
+                <InputItemWrapper
+                  style={{ marginTop: '40px', width: '530px', height: '116px' }}
+                >
+                  <FieldName>만기</FieldName>
+                  <OptionWrapper>
+                    <DateSelectBorder
+                      type={
+                        maturity == '30' ? OptionType.ABLE : OptionType.INABLE
+                      }
+                      onClick={() => dateOptionHandler('30')}
+                    >
+                      30일
+                    </DateSelectBorder>
+                    <DateSelectBorder
+                      type={
+                        maturity == '60' ? OptionType.ABLE : OptionType.INABLE
+                      }
+                      onClick={() => dateOptionHandler('60')}
+                    >
+                      60일
+                    </DateSelectBorder>
+                    <DateSelectBorder
+                      type={
+                        maturity == '90' ? OptionType.ABLE : OptionType.INABLE
+                      }
+                      onClick={() => dateOptionHandler('90')}
+                    >
+                      90일
+                    </DateSelectBorder>
+                    <DateSelectBorder
+                      type={
+                        maturity == '120' ? OptionType.ABLE : OptionType.INABLE
+                      }
+                      onClick={() => dateOptionHandler('120')}
+                    >
+                      120일
+                    </DateSelectBorder>
+                    <DateSelectBorder
+                      type={
+                        maturity == '150' ? OptionType.ABLE : OptionType.INABLE
+                      }
+                      onClick={() => dateOptionHandler('150')}
+                    >
+                      150일
+                    </DateSelectBorder>
+                    <DateSelectBorder
+                      type={
+                        maturity == 'other'
+                          ? OptionType.ABLE
+                          : OptionType.INABLE
+                      }
+                      onClick={() => dateOptionHandler('other')}
+                    >
+                      기타
+                    </DateSelectBorder>
+                  </OptionWrapper>
+                  <InputStyle
+                    placeholder="숫자만 입력해 주세요"
+                    value={maturityInput}
+                    onChange={(e) => dateInputHandler(e.target.value)}
+                  />
+                </InputItemWrapper>
+              ) : null}
 
               <InputItemWrapper
                 style={{ marginTop: '40px', width: '350px', height: '116px' }}
@@ -299,11 +278,13 @@ export default () => {
             이전
           </InActiveBtn>
           {isValid ||
-          (maturity &&
-            maturityInput &&
-            paymentDateInput &&
-            paymentDate &&
-            paymentType) ? (
+          (paymentType !== 'CASH'
+            ? maturity &&
+              maturityInput &&
+              paymentDateInput &&
+              paymentDate &&
+              paymentType
+            : paymentDateInput && paymentDate && paymentType) ? (
             <ActiveBtn onClick={() => nxtPageHandler()}>다음</ActiveBtn>
           ) : (
             <InActiveBtn>다음</InActiveBtn>
