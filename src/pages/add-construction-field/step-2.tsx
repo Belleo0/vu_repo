@@ -1,23 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 
 import styled from '@emotion/styled';
-import Input from '@components/Input';
 import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
 import { Range } from 'react-range';
+import moment from 'moment';
+
+// const asd = `${moment(데이터).format('YYYY-MM-DD')}T00:00:00.000Z`;
+
+// console.log(asd);
 
 export default () => {
-  const location = useLocation();
-
-  const [constructionStartDate, setContructionStartDate] = useState<string>('');
-  const [constructionEndDate, setContructionEndDate] = useState<string>('');
+  const now = new Date();
+  const [constructionStartDate, setContructionStartDate] = useState<any>(
+    now.toLocaleDateString('en-CA'),
+  );
+  const [constructionEndDate, setContructionEndDate] = useState<any>();
   const [xPosition, setXPosition] = useState<any>([1]);
+
+  const location = useLocation();
 
   const navigate = useNavigate();
   const step = constructionStartDate && constructionEndDate ? true : false;
 
   const nxtStepHandler = () => {
+    console.log(constructionStartDate);
+    console.log(constructionEndDate);
     navigate('/add-construction-field/step-3', {
       state: {
         ...(location.state as any as any),
@@ -28,19 +37,65 @@ export default () => {
     });
   };
 
-  useEffect(() => {}, [xPosition]);
-
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-1');
   };
 
   const onChangeXpositionVal = (e: any) => {
     const tempArr = new Array();
+
     if (parseInt(e) <= 120 && parseInt(e) >= 1) {
       tempArr.push(parseInt(e));
       setXPosition(tempArr);
     }
   };
+
+  const onChangeXpositionRange = (e: any) => {
+    console.log(e);
+
+    setXPosition(e);
+
+    const temp = moment(now);
+    temp.add(parseInt(e), 'M');
+    setContructionEndDate(moment(temp).format('YYYY-MM-DD'));
+    console.log(constructionEndDate);
+  };
+
+  function getRoughMonths(startDate: any, endDate: any) {
+    const startYears = Number(moment(startDate).format('YYYY'));
+    const endYears = Number(moment(endDate).format('YYYY'));
+    const startMonths = Number(moment(startDate).format('MM'));
+    const endMonths = Number(moment(endDate).format('MM'));
+    const yearsDiff = endYears - startYears;
+    const monthsDiff = endMonths - startMonths;
+    return yearsDiff * 12 + monthsDiff;
+  }
+
+  const onChangeEndDate = (v: any) => {
+    setContructionEndDate(v);
+
+    const start = moment(constructionStartDate).format('YYYY-MM-DD');
+    const end = moment(v).format('YYYY-MM-DD');
+
+    const temp = getRoughMonths(start, end);
+    const nArr = new Array();
+    nArr.push(temp);
+    setXPosition(nArr);
+  };
+
+  useEffect(() => {
+    let year: any = now.getFullYear();
+    let month: any = now.getMonth() + 2;
+    let date: any = now.getDate();
+
+    if (month < 10) {
+      month = '0' + month;
+    }
+    const tmp_dtm = year + month + date;
+    const endDate = moment(tmp_dtm).format('YYYY-MM-DD');
+
+    setContructionEndDate(endDate);
+  }, []);
 
   return (
     <FieldCreateLayout>
@@ -54,28 +109,24 @@ export default () => {
         <InputItemWrapper style={{ width: '346px', height: '76px' }}>
           <FieldName>공사기간</FieldName>
           <DateWrapper>
-            <Input
+            <input
               type="date"
+              defaultValue={now.toLocaleDateString('en-CA')}
               onChange={(e) => {
                 setContructionStartDate(e.target.value);
               }}
-              containerStyle={{
-                width: '156px',
-                height: '42px',
-              }}
-              style={{ height: '42px' }}
+              style={{ width: '156px', height: '42px' }}
+              min={new Date().toISOString().split('T')[0]}
             />
             <DistanceIcon src={getAssetURL('../assets/ic-tilde.svg')} />
-            <Input
+            <input
               type="date"
+              defaultValue={constructionEndDate}
               onChange={(e) => {
-                setContructionEndDate(e.target.value);
+                onChangeEndDate(e.target.value);
               }}
-              containerStyle={{
-                width: '156px',
-                height: '42px',
-              }}
-              style={{ height: '42px' }}
+              min={new Date().toISOString().split('T')[0]}
+              style={{ width: '156px', height: '42px' }}
             />
           </DateWrapper>
         </InputItemWrapper>
@@ -87,7 +138,7 @@ export default () => {
               max={120}
               values={xPosition}
               onChange={(values) => {
-                setXPosition(values);
+                onChangeXpositionRange(values);
               }}
               renderTrack={({ props, children }) => (
                 <div
@@ -267,6 +318,9 @@ const InActiveBtn = styled.div`
 `;
 
 const ActiveBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 260px;
   height: 50px;
   background-color: #258fff;
