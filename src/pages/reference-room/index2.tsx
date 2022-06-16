@@ -152,8 +152,8 @@ export default () => {
           })}
         </LocationWrap>
         <NaverMap
-          lat={37.557733}
-          lng={126.9253985}
+          lat={37.3591614}
+          lng={127.1054221}
           zoom={15}
           style={{
             width: '1420px',
