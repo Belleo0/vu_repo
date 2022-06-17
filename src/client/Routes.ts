@@ -139,6 +139,12 @@ export default [
     permission: Permission.PRIVATE,
   },
   {
+    label: '조직관리',
+    path: '/member',
+    component: lazy(() => import('@pages/mypage/member')),
+    permission: Permission.PRIVATE,
+  },
+  {
     label: '건설사 자료실',
     path: '/reference-room',
     component: lazy(() => import('@pages/reference-room')),
@@ -164,6 +170,12 @@ export default [
     permission: Permission.PRIVATE,
   },
   {
+    label: '고객센터 - 공지사항 - 상세',
+    path: '/service-center/notice/:id',
+    component: lazy(() => import('@pages/service-center/notice/notice-detail')),
+    permission: Permission.PRIVATE,
+  },
+  {
     label: '고객센터 - FAQ',
     path: '/service-center/faq',
     component: lazy(() => import('@pages/service-center/index2')),
@@ -176,9 +188,31 @@ export default [
     permission: Permission.PRIVATE,
   },
   {
+    label: '고객센터 - 1:1 문의 - 생성',
+    path: '/service-center/inquiry/new',
+    component: lazy(
+      () => import('@pages/service-center/inquiry/Inquiry-create'),
+    ),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - 1:1 문의 - 상세',
+    path: '/service-center/inquiry/:id',
+    component: lazy(
+      () => import('@pages/service-center/inquiry/Inquiry-detail'),
+    ),
+    permission: Permission.PRIVATE,
+  },
+  {
     label: '고객센터 - 이벤트',
     path: '/service-center/event',
     component: lazy(() => import('@pages/service-center/index4')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - 이벤트 - 상세',
+    path: '/service-center/event/:id',
+    component: lazy(() => import('@pages/service-center/event/event-detail')),
     permission: Permission.PRIVATE,
   },
 ];

@@ -20,9 +20,13 @@ export default () => {
     <Container>
       <Title>자료실</Title>
       <Box
-        className={pathname === `/reference-room/info` ? 'active' : ''}
+        className={
+          pathname === `/reference-room` || pathname === `/reference-room/info`
+            ? 'active'
+            : ''
+        }
         onClick={() => {
-          navigate('/reference-room/info');
+          navigate('/reference-room');
         }}
       >
         <Label>업체리스트</Label>
