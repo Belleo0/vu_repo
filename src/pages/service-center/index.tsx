@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '@api';
 import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
@@ -10,8 +10,14 @@ import { temp_data } from './test';
 import PageNation from '../../components/PageNation';
 
 export default () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(1);
   console.log(currentPage);
+
+  const onClickRow = (id: number) => {
+    navigate(`/service-center/notice/${id}`);
+  };
+
   return (
     <ServiceCenterLayout>
       <Container>
@@ -21,21 +27,21 @@ export default () => {
           <GuideLineTitle>제목</GuideLineTitle>
           <GuideLineRegDtm>등록일</GuideLineRegDtm>
         </ListGuideLine>
-        <PageNation
-          perPage={10}
-          total={temp_data.length}
-          current={currentPage}
-          setCurrent={setCurrentPage}
-        />
-        {temp_data.map((v) => {
+        {temp_data.map((v, i) => {
           return (
-            <ContentList>
+            <ContentList key={i} onClick={() => onClickRow(i)}>
               <ContentNo>{v.no}</ContentNo>
               <ContentTitle>{v.title}</ContentTitle>
               <ContentRegDtm>{v.reg_dtm}</ContentRegDtm>
             </ContentList>
           );
         })}
+        <PageNation
+          perPage={10}
+          total={temp_data.length}
+          current={currentPage}
+          setCurrent={setCurrentPage}
+        />
       </Container>
     </ServiceCenterLayout>
   );
@@ -94,7 +100,6 @@ const ContentList = styled.div`
   align-items: center;
   justify-content: start;
   background-color: #fff;
-  width: 1420px;
   height: 80px;
   border-bottom: 1px solid #f2f2f2;
   cursor: pointer;
