@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="67" height="58" viewBox="0 0 67 58">
+    <defs>
+        <clipPath id="emhxghp3ma">
+            <path data-name="사각형 6601" transform="translate(504.121 999.086)" style="stroke:#707070;fill:#fff" d="M0 0h67v58H0z"/>
+        </clipPath>
+        <filter id="1f6gbfh0ub" x="1" y="4" width="64" height="112" filterUnits="userSpaceOnUse">
+            <feOffset dy="3"/>
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feFlood flood-opacity=".161"/>
+            <feComposite operator="in" in2="blur"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g transform="translate(-504.121 -999.086)" style="clip-path:url(#emhxghp3ma)">
+        <g style="filter:url(#1f6gbfh0ub)">
+            <rect data-name="사각형 525" width="46" height="94" rx="6" transform="translate(514.12 1009.09)" style="fill:#fff"/>
+        </g>
+        <g data-name="그룹 15419" transform="translate(528.525 1025.397)">
+            <rect data-name="사각형 6551" width="2" height="18" rx="1" transform="translate(7.595 -.311)" style="fill:#c7c7c7"/>
+            <rect data-name="사각형 6552" width="2" height="18" rx="1" transform="rotate(90 4.953 12.642)" style="fill:#c7c7c7"/>
+        </g>
+    </g>
+</svg>

@@ -29,8 +29,6 @@ export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
 
   const handleRemove = () => {};
 
-  console.log(isRemoveModalOpen);
-
   return (
     <Container ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <InfoContainer>

@@ -10,6 +10,7 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     principal: undefined,
+    isFieldView: true,
   },
   reducers: {
     setPrincipal: (state, action) => {
@@ -23,6 +24,9 @@ export const authSlice = createSlice({
       window.sessionStorage.clear();
       state.principal = undefined;
     },
+    setIsFieldView: (state, action) => {
+      state.isFieldView = action.payload;
+    },
   },
   extraReducers: {
     [me.fulfilled as any]: (state, action) => {
@@ -31,6 +35,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setPrincipal, clearPrincipal } = authSlice.actions;
+export const { setPrincipal, clearPrincipal, setIsFieldView } =
+  authSlice.actions;
 
 export default authSlice.reducer;

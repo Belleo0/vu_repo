@@ -25,6 +25,7 @@ import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 
 import { debounce } from 'lodash';
 import { usePrevious } from '@hooks/usePrevious';
+import NaverMapController from '@components/NaverMapController';
 
 export default () => {
   const dispatch = useDispatch();
@@ -207,6 +208,7 @@ export default () => {
                   }
                 />
               ))}
+            <NaverMapController />
           </NaverMap>
           <MapSpaceInfoModal
             open={isInfoModalOpen}

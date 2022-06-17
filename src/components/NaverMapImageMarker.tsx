@@ -13,9 +13,10 @@ export interface IMarker {
   lng: number;
   content: React.ReactNode;
   onClick?: (lat: number, lng: number) => void;
+  disableCenter?: boolean;
 }
 
-export default ({ lat, lng, content }: IMarker) => {
+export default ({ lat, lng, content, disableCenter }: IMarker) => {
   const { current: id } = useRef(Math.random().toString(36).slice(2));
   const [marker, setMarker] = useState<any>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -42,8 +43,9 @@ export default ({ lat, lng, content }: IMarker) => {
     });
 
     setMarker(marker);
-
-    (map as any).setCenter(position);
+    if (!disableCenter) {
+      (map as any).setCenter(position);
+    }
 
     ReactDOMClient.hydrateRoot(document.getElementById(id)!, content as any);
 
