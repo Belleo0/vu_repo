@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import { useNavigate } from 'react-router-dom';
 
 interface ISearchBar {
   search: string;
   setSearch: any;
+  handleSearch: () => any;
 }
 
-export default ({}: ISearchBar) => {
-  const navigate = useNavigate();
+export default ({ search, setSearch, handleSearch }: ISearchBar) => {
   return (
     <SearchSection>
       <SubTitle>건설산업의 새로운 플랫폼을 제시합니다</SubTitle>
@@ -18,11 +17,20 @@ export default ({}: ISearchBar) => {
         <SearchInput>
           <Input
             placeholder="건설현장 주소를 입력하세요"
-            onClick={() =>
-              navigate('/remicon-map', { state: { search: true } })
-            }
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+            }}
           />
-          <SearchIcon src={getAssetURL('../assets/ic-search.svg')} />
+          <SearchIcon
+            src={getAssetURL('../assets/ic-search.svg')}
+            onClick={handleSearch}
+          />
         </SearchInput>
       </Box>
     </SearchSection>
