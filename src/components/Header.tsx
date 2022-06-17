@@ -106,6 +106,7 @@ export default () => {
               active={[v.path, ...((v as any)?.includePaths || [])].includes(
                 pathname,
               )}
+              //@ts-ignore
               onClick={() => (v?.onClick ? v?.onClick() : navigate(v.path))}
             >
               {v.label}
