@@ -25,6 +25,7 @@ import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 
 import { debounce } from 'lodash';
 import { usePrevious } from '@hooks/usePrevious';
+import NaverMapController from '@components/NaverMapController';
 
 export default () => {
   const dispatch = useDispatch();
@@ -48,12 +49,13 @@ export default () => {
   const [bounds, setBounds] = useState<any>(null);
 
   const [address, setAddress] = useState('');
+  const [realAddress, setRealAddress] = useState('');
 
   const { data: factoriesData, isLoading } = useFactoryMaps(
     selectedFieldId,
     duration,
     bounds,
-    address,
+    realAddress,
   );
 
   const previousFactories = usePrevious(factoriesData);
@@ -98,6 +100,13 @@ export default () => {
     }
   }, [selectedFieldInfo]);
 
+  useEffect(() => {
+    if (factoriesData?.message === '주소 위치를 찾을 수 없습니다.') {
+      window.alert('주소 위치를 찾을 수 없습니다.');
+      setRealAddress('');
+    }
+  }, [factoriesData]);
+
   return (
     <SpaceMapLayout>
       <SpaceMapSidebar
@@ -115,6 +124,7 @@ export default () => {
         handleClickFactoryCard={handleClickFactoryCard}
         address={address}
         setAddress={setAddress}
+        setRealAddress={setRealAddress}
       />
       <ContentWrap>
         <Content>
@@ -198,6 +208,7 @@ export default () => {
                   }
                 />
               ))}
+            <NaverMapController />
           </NaverMap>
           <MapSpaceInfoModal
             open={isInfoModalOpen}

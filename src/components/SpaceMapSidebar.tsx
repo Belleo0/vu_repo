@@ -29,6 +29,7 @@ export default ({
   handleClickFactoryCard,
   address,
   setAddress,
+  setRealAddress,
 }: any) => {
   const isLogin = useIsLogin();
 
@@ -55,8 +56,10 @@ export default ({
   const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false);
 
   useEffect(() => {
-    if ((location?.state as any)?.search) {
-      setIsPostcodeModalOpened(true);
+    if ((location?.state as any)?.searchText) {
+      const tempAddress = (location?.state as any)?.searchText;
+      setAddress(tempAddress);
+      setRealAddress(tempAddress);
       navigate(location.pathname, {});
     }
   }, [location]);
@@ -96,13 +99,16 @@ export default ({
     <Container>
       <TopSectionWrap>
         <SearchInput
-          disabled={true}
           icon="ic-local"
           containerStyle={{ marginBottom: 30, cursor: 'pointer' }}
-          style={{ cursor: 'pointer' }}
           value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              setRealAddress(address);
+            }
+          }}
           placeholder="주소를 입력해 주세요"
-          onClick={() => setIsPostcodeModalOpened(true)}
         />
         {isLogin && (
           <Button
@@ -162,31 +168,33 @@ export default ({
           )}
         </FilterWrap>
       </TopSectionWrap>
-      {factories &&
-        factories.data?.map((v: any, i: any) => (
-          <MapSpaceCard
-            key={v.id}
-            id={v.id}
-            index={i}
-            name={v?.name}
-            distance={v?.direction?.distance}
-            duration={v?.direction?.duration}
-            selected={selectedFactoryIds.includes(v.id)}
-            onClick={
-              selectedFieldId === null
-                ? () => {
-                    setIsInfoModalOpen(false);
-                    setSelectedSpaceInfo(v);
-                    setTimeout(() => {
-                      setIsInfoModalOpen(true);
-                    }, 250);
-                  }
-                : () => handleClickFactoryCard(v.id)
-            }
-            selectedFieldId={selectedFieldId}
-            factories={factories}
-          />
-        ))}
+      <MapSpaceCardWrap>
+        {factories &&
+          factories.data?.map((v: any, i: any) => (
+            <MapSpaceCard
+              key={v.id}
+              id={v.id}
+              index={i}
+              name={v?.name}
+              distance={v?.direction?.distance}
+              duration={v?.direction?.duration}
+              selected={selectedFactoryIds.includes(v.id)}
+              onClick={
+                selectedFieldId === null
+                  ? () => {
+                      setIsInfoModalOpen(false);
+                      setSelectedSpaceInfo(v);
+                      setTimeout(() => {
+                        setIsInfoModalOpen(true);
+                      }, 250);
+                    }
+                  : () => handleClickFactoryCard(v.id)
+              }
+              selectedFieldId={selectedFieldId}
+              factories={factories}
+            />
+          ))}
+      </MapSpaceCardWrap>
       {selectedFieldId !== null && (
         <BottomButtonWrap>
           <Button
@@ -275,6 +283,8 @@ export default ({
 };
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 380px;
   height: 100%;
@@ -394,3 +404,10 @@ const CardWrap = styled.div`
 `;
 
 const PostContainer = styled.div``;
+
+const MapSpaceCardWrap = styled.div`
+  flex: 1;
+
+  /* max-height: calc(100% - 123px); */
+  overflow-y: scroll;
+`;

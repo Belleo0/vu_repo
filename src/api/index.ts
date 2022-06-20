@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const getAPIHost = () => {
   return 'https://conaz-core-api.02.dance';
-  // return 'http://localhost:8080';
+  // return 'http://localhost:8090';
 };
 
 export const getSocketHost = () => {

@@ -19,6 +19,7 @@ import PartnerSection from './PartnerSection';
 import GuideSection from './GuideSection';
 import AppSection from './AppSection';
 import MySiteSection from './MySiteSection';
+import { useNavigate } from 'react-router-dom';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -26,6 +27,7 @@ enum TabTypeEnum {
 }
 
 export default () => {
+  const navigate = useNavigate();
   const isLogin = useIsLogin();
   const [search, setSearch] = useState('');
 
@@ -39,11 +41,21 @@ export default () => {
     console.log(myspaces);
   }, [data, myspaces]);
 
+  const handleSearch = () => {
+    if (search.length === 0)
+      return window.alert('건설현장 주소를 입력해주세요.');
+    navigate('/remicon-map', { state: { searchText: search } });
+  };
+
   return (
     <AuthLayout>
       <Container>
         {/* Section1 */}
-        <SearchSection search={search} setSearch={setSearch} />
+        <SearchSection
+          search={search}
+          setSearch={setSearch}
+          handleSearch={handleSearch}
+        />
         {/* Section2 */}
         {isLogin ? <MySiteSection myspaces={myspaces} /> : <SiteSection />}
         {/* Section3 */}

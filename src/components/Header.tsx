@@ -7,11 +7,12 @@ import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import useIsLogin from '@hooks/useIsLogin';
 import useUserInfo from '@hooks/useUserInfo';
-import { useDispatch } from 'react-redux';
-import { clearPrincipal } from '@data/auth';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { clearPrincipal, setIsFieldView } from '@data/auth';
 import { clearSelectedSpaceInfo } from '@data/space';
 import { clearPolylineInfo } from '@data/map';
 import useIsFieldUser from '@hooks/useIsFieldUser';
+import Select from './Select';
 
 const fieldMenus = [
   {
@@ -82,6 +83,8 @@ export default () => {
 
   const dispatch = useDispatch();
 
+  const { isFieldView } = useSelector((s: any) => s.auth, shallowEqual);
+
   const handleLogout = () => {
     navigate('/auth/login');
     dispatch(clearPrincipal());
@@ -102,7 +105,7 @@ export default () => {
               active={[v.path, ...((v as any)?.includePaths || [])].includes(
                 pathname,
               )}
-              onClick={() => (v?.onClick ? v?.onClick() : navigate(v.path))}
+              onClick={() => navigate(v.path)}
             >
               {v.label}
             </MenuItem>
@@ -164,6 +167,14 @@ export default () => {
               <LoginButton onClick={() => navigate('/auth/login')}>
                 로그인
               </LoginButton>
+              <Select
+                value={isFieldView}
+                onChange={(v) => dispatch(setIsFieldView(v))}
+                options={[
+                  { label: '건설사', value: true },
+                  { label: '레미콘사', value: false },
+                ]}
+              />
             </>
           )}
         </RightWrap>
