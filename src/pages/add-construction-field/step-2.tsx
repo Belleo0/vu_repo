@@ -120,7 +120,6 @@ export default () => {
                 onChangeStartDate(e.target.value);
               }}
               style={{ width: '156px', height: '42px' }}
-              min={new Date().toISOString().split('T')[0]}
             />
             <DistanceIcon src={getAssetURL('../assets/ic-tilde.svg')} />
             <input
@@ -129,9 +128,8 @@ export default () => {
               onChange={(e) => {
                 onChangeEndDate(e.target.value);
               }}
-              min={new Date().toISOString().split('T')[0]}
-              style={{ width: '156px', height: '42px' }}
-            />
+              min={constructionStartDate}
+              style={{ width: '156px', height: '42px' }} />
           </DateWrapper>
         </InputItemWrapper>
         <BottomContentWrapper>
