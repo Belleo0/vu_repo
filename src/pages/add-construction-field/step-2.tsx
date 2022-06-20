@@ -7,16 +7,12 @@ import FieldCreateLayout from '@layout/FieldCreateLayout';
 import { Range } from 'react-range';
 import moment from 'moment';
 
-// const asd = `${moment(데이터).format('YYYY-MM-DD')}T00:00:00.000Z`;
-
-// console.log(asd);
-
 export default () => {
-  const now = new Date();
+  let now: any = new Date();
   const [constructionStartDate, setContructionStartDate] = useState<any>(
     now.toLocaleDateString('en-CA'),
   );
-  const [constructionEndDate, setContructionEndDate] = useState<any>();
+  const [constructionEndDate, setConstructionEndDate] = useState<any>();
   const [xPosition, setXPosition] = useState<any>([1]);
 
   const location = useLocation();
@@ -25,13 +21,15 @@ export default () => {
   const step = constructionStartDate && constructionEndDate ? true : false;
 
   const nxtStepHandler = () => {
-    console.log(constructionStartDate);
-    console.log(constructionEndDate);
     navigate('/add-construction-field/step-3', {
       state: {
         ...(location.state as any as any),
-        constructionStartDate: constructionStartDate,
-        constructionEndDate: constructionEndDate,
+        constructionStartDate: `${moment(constructionStartDate).format(
+          'YYYY-MM-DD',
+        )}T00:00:00.000Z`,
+        constructionEndDate: `${moment(constructionEndDate).format(
+          'YYYY-MM-DD',
+        )}T00:00:00.000Z`,
         constructionRangeDate: xPosition,
       },
     });
@@ -51,14 +49,14 @@ export default () => {
   };
 
   const onChangeXpositionRange = (e: any) => {
-    console.log(e);
-
     setXPosition(e);
+    const originDate = moment(constructionEndDate).date();
+    let temp: any = moment(now);
 
-    const temp = moment(now);
-    temp.add(parseInt(e), 'M');
-    setContructionEndDate(moment(temp).format('YYYY-MM-DD'));
-    console.log(constructionEndDate);
+    temp.set('date', originDate);
+    temp = moment(temp.add(parseInt(e), 'M')).format('YYYY-MM-DD');
+
+    setConstructionEndDate(temp);
   };
 
   function getRoughMonths(startDate: any, endDate: any) {
@@ -72,7 +70,7 @@ export default () => {
   }
 
   const onChangeEndDate = (v: any) => {
-    setContructionEndDate(v);
+    setConstructionEndDate(v);
 
     const start = moment(constructionStartDate).format('YYYY-MM-DD');
     const end = moment(v).format('YYYY-MM-DD');
@@ -81,6 +79,12 @@ export default () => {
     const nArr = new Array();
     nArr.push(temp);
     setXPosition(nArr);
+  };
+
+  const onChangeStartDate = (v: any) => {
+    setContructionStartDate(v);
+
+    now = moment(constructionStartDate).format('YYYY-MM-DD');
   };
 
   useEffect(() => {
@@ -94,7 +98,7 @@ export default () => {
     const tmp_dtm = year + month + date;
     const endDate = moment(tmp_dtm).format('YYYY-MM-DD');
 
-    setContructionEndDate(endDate);
+    setConstructionEndDate(endDate);
   }, []);
 
   return (
@@ -113,10 +117,9 @@ export default () => {
               type="date"
               defaultValue={now.toLocaleDateString('en-CA')}
               onChange={(e) => {
-                setContructionStartDate(e.target.value);
+                onChangeStartDate(e.target.value);
               }}
               style={{ width: '156px', height: '42px' }}
-              min={new Date().toISOString().split('T')[0]}
             />
             <DistanceIcon src={getAssetURL('../assets/ic-tilde.svg')} />
             <input
@@ -125,9 +128,8 @@ export default () => {
               onChange={(e) => {
                 onChangeEndDate(e.target.value);
               }}
-              min={new Date().toISOString().split('T')[0]}
-              style={{ width: '156px', height: '42px' }}
-            />
+              min={constructionStartDate}
+              style={{ width: '156px', height: '42px' }} />
           </DateWrapper>
         </InputItemWrapper>
         <BottomContentWrapper>
