@@ -74,13 +74,12 @@ export default () => {
           {fqa_data.map((v, i) => {
             return (
               <ContentWrap key={i}>
-                <ContentList>
+                <ContentList onClick={() => setIsOpen((prev) => !prev)}>
                   <ContentNo>{v.category}</ContentNo>
                   <ContentTitle>{v.title}</ContentTitle>
                   <Icon
                     isOpen={isOpen}
                     src={getAssetURL('../assets/ic-arrow.svg')}
-                    onClick={() => setIsOpen((prev) => !prev)}
                   />
                 </ContentList>
                 {isOpen && (

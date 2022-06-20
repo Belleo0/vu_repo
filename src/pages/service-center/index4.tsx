@@ -7,7 +7,7 @@ import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from './test';
 
-import PageNation from '../../components/PageNation';
+import PageNation from '../../components/PageNation1';
 
 export default () => {
   const navigate = useNavigate();
@@ -35,12 +35,6 @@ export default () => {
             </ContentList>
           );
         })}
-        <PageNation
-          perPage={10}
-          total={temp_data.length}
-          current={currentPage}
-          setCurrent={setCurrentPage}
-        />
       </Container>
     </ServiceCenterLayout>
   );

@@ -6,7 +6,7 @@ import api from '@api';
 import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
-import PageNation from '@components/PageNation';
+import PageNation from '@components/PageNation1';
 import Button, { ButtonType } from '@components/Button';
 
 export default () => {
@@ -21,7 +21,7 @@ export default () => {
   return (
     <ServiceCenterLayout>
       <Container>
-        <TopList>2022 코나즈 출시 이벤트</TopList>
+        <TopList>이벤트</TopList>
         <TitleWrap>
           <Title>6월, 고객센터 운영 시간 변동 안내</Title>
           <TitleRightWrap>

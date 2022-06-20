@@ -6,7 +6,7 @@ import api from '@api';
 import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
-import PageNation from '@components/PageNation';
+import PageNation from '@components/PageNation1';
 import Button, { ButtonType } from '@components/Button';
 import getAssetURL from '@utils/getAssetURL';
 
