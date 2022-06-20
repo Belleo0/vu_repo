@@ -14,6 +14,8 @@ export default () => {
   const requestSignUp = () => {
     // console.log(location.state as any);
 
+    let resFlag = false;
+
     api
       .post('/field-spaces', {
         name: (location.state as any)?.fieldNm,
@@ -31,8 +33,12 @@ export default () => {
           longitude: (location.state as any)?.position?.longitude,
         },
       })
-      .then((res) => console.log(res))
+      .then((res) => (resFlag = true))
       .catch((e) => console.log(e));
+
+    setTimeout(function () {
+      if (resFlag) navigate('/my-space');
+    }, 1000);
   };
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-4');

@@ -8,7 +8,7 @@ import { Range } from 'react-range';
 import moment from 'moment';
 
 export default () => {
-  const now = new Date();
+  let now: any = new Date();
   const [constructionStartDate, setContructionStartDate] = useState<any>(
     now.toLocaleDateString('en-CA'),
   );
@@ -81,6 +81,12 @@ export default () => {
     setXPosition(nArr);
   };
 
+  const onChangeStartDate = (v: any) => {
+    setContructionStartDate(v);
+
+    now = moment(constructionStartDate).format('YYYY-MM-DD');
+  };
+
   useEffect(() => {
     let year: any = now.getFullYear();
     let month: any = now.getMonth() + 2;
@@ -111,7 +117,7 @@ export default () => {
               type="date"
               defaultValue={now.toLocaleDateString('en-CA')}
               onChange={(e) => {
-                setContructionStartDate(e.target.value);
+                onChangeStartDate(e.target.value);
               }}
               style={{ width: '156px', height: '42px' }}
               min={new Date().toISOString().split('T')[0]}
