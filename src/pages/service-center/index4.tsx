@@ -8,15 +8,18 @@ import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from './test';
 
 import PageNation from '../../components/PageNation1';
+import usePagination from '@hooks/usePagination';
+import Pagination from '@components/Pagination';
 
 export default () => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  console.log(currentPage);
 
   const onClickRow = (id: number) => {
     navigate(`/service-center/event/${id}`);
   };
+
+  const pagination = usePagination(temp_data);
+
   return (
     <ServiceCenterLayout>
       <Container>
@@ -26,7 +29,7 @@ export default () => {
           <GuideLineTitle>제목</GuideLineTitle>
           <GuideLineRegDtm>등록일</GuideLineRegDtm>
         </ListGuideLine>
-        {temp_data.map((v, i) => {
+        {pagination.items.map((v: any, i: any) => {
           return (
             <ContentList key={i} onClick={() => onClickRow(i)}>
               <ContentNo>{v.no}</ContentNo>
@@ -35,6 +38,13 @@ export default () => {
             </ContentList>
           );
         })}
+        <Pagination
+          limit={pagination.limit}
+          skip={pagination.skip}
+          totalCount={pagination.totalCount}
+          onChangeSkip={pagination.setSkip}
+          onChangeLimit={pagination.setLimit}
+        />
       </Container>
     </ServiceCenterLayout>
   );

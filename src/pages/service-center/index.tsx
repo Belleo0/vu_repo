@@ -18,23 +18,7 @@ export default () => {
     navigate(`/service-center/notice/${id}`);
   };
 
-  const [skip, setSkip] = useState<any>(0);
-  const [limit, setLimit] = useState<any>(10);
-  const [items, setItems] = useState<any>([]);
-  const [totalCount, setTotalCount] = useState<any>(temp_data.length);
-
-  const prevState = usePrevious({ skip });
-
-  useEffect(() => {
-    setItems(temp_data);
-  }, [skip, limit]);
-
-  useEffect(() => {
-    if (prevState && prevState.skip === 0) {
-      setItems(temp_data);
-    }
-    setSkip(0);
-  }, [limit]);
+  const pagination = usePagination(temp_data);
 
   return (
     <ServiceCenterLayout>
@@ -45,7 +29,7 @@ export default () => {
           <GuideLineTitle>제목</GuideLineTitle>
           <GuideLineRegDtm>등록일</GuideLineRegDtm>
         </ListGuideLine>
-        {items.map((v: any, i: any) => {
+        {pagination.items.map((v: any, i: any) => {
           return (
             <ContentList key={i} onClick={() => onClickRow(i)}>
               <ContentNo>{v.no}</ContentNo>
@@ -55,11 +39,11 @@ export default () => {
           );
         })}
         <Pagination
-          limit={limit}
-          skip={skip}
-          totalCount={totalCount}
-          onChangeSkip={setSkip}
-          onChangeLimit={setLimit}
+          limit={pagination.limit}
+          skip={pagination.skip}
+          totalCount={pagination.totalCount}
+          onChangeSkip={pagination.setSkip}
+          onChangeLimit={pagination.setLimit}
         />
       </Container>
     </ServiceCenterLayout>

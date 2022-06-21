@@ -10,6 +10,7 @@ import getAssetURL from '@utils/getAssetURL';
 import Button, { ButtonType } from '@components/Button';
 import TextModal from '@components/TextModal';
 import ImgModal from '@components/ImgModal';
+import Textarea from '@components/Textarea';
 
 const typeOptions = [
   {
@@ -25,6 +26,8 @@ export default () => {
   const navigate = useNavigate();
 
   const [inquiryType, setInquiryType] = useState<string | null>(null);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [image, setImage] = useState('');
   const [isBlocking, setIsBlocking] = useState(false);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
@@ -51,15 +54,20 @@ export default () => {
             onChange={(v) => setInquiryType(v)}
           />
           <SubTitle>제목</SubTitle>
-          <Input
+          <Textarea
             placeholder="제목을 입력해 주세요"
+            inputStyle={{ height: 42 }}
             withoutErrorMessage={true}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <SubTitle>내용</SubTitle>
-          <Input
+          <Textarea
             placeholder="내용을 입력해 주세요"
             withoutErrorMessage={true}
             inputStyle={{ height: 200 }}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
           />
           <SubTitle>
             첨부파일<HelpText>(최대 5장까지 등록 가능합니다.)</HelpText>
@@ -69,9 +77,8 @@ export default () => {
               image={image}
               setImage={setImage}
               buttonStyle={UploadButton}
-            >
-              <Icon src={getAssetURL('../assets/ic-plus.svg')} />
-            </FileUpload>
+              icon={'ic-plus'}
+            />
           </FileUploadWrap>
           <ButtonBox>
             <Button
@@ -163,8 +170,10 @@ const FileUploadWrap = styled.div`
 const UploadButton = {
   width: '120px',
   height: '120px',
+  display: 'flex',
+  justifyContent: 'center',
 
-  justifyContent: 'flex-start',
+  alignItems: 'center',
   margin: '20 0',
 
   borderRadius: '12px',

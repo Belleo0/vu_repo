@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import getAssetURL from '@utils/getAssetURL';
 import { values } from 'lodash';
 import React, {
   ChangeEvent,
@@ -12,6 +13,8 @@ interface IFileUpload {
   image: any;
   setImage: any;
   buttonStyle?: CSSProperties;
+  iconStyle?: CSSProperties;
+  icon?: string;
 }
 
 export default ({
@@ -19,6 +22,8 @@ export default ({
   setImage,
   label,
   buttonStyle,
+  icon,
+  iconStyle,
 }: IFileUpload & HTMLAttributes<HTMLDivElement>) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files;
@@ -27,9 +32,13 @@ export default ({
   };
 
   return (
-    <Container>
-      <UploadButton style={buttonStyle} htmlFor="file">
-        {label}
+    <Container htmlFor="file">
+      <UploadButton style={buttonStyle}>
+        {icon ? (
+          <Icon style={iconStyle} src={getAssetURL(`../assets/${icon}.svg`)} />
+        ) : (
+          label
+        )}
       </UploadButton>
       <input
         type="file"
@@ -43,22 +52,28 @@ export default ({
   );
 };
 
-const Container = styled.div`
+const Container = styled.label<{ htmlFor: string }>`
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin: 14px 0;
   width: 100%;
 `;
 
-const UploadButton = styled.label<{ htmlFor: string }>`
+const UploadButton = styled.span`
   width: 84px;
   height: 36px;
   font-size: 13px;
   padding: 10px 0;
-  margin: 14px 0;
   border-radius: 6px;
   border: solid 1px #000;
   background-color: #fff;
   cursor: pointer;
   text-align: center;
   letter-spacing: -0.26px;
+`;
+
+const Icon = styled.img`
+  width: 36px;
+  height: 36px;
 `;

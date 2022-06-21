@@ -35,15 +35,14 @@ export default () => {
   const navigate = useNavigate();
 
   const [location, setLocation] = useState<string>('전체');
-  const [openProfileNav, setOpenProfileNav] = useState<any>(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenAnswer, setIsOpenAnswer] = useState<any>({});
 
   const handleLocationClick = (val: any | null) => {
     setLocation(val);
   };
 
-  const onClickRow = (id: number) => {
-    navigate(`/service-center/notice/${id}`);
+  const handleToggleAnswer = (id: number) => {
+    setIsOpenAnswer((prev: any) => ({ ...prev, [id]: !prev[id] }));
   };
 
   useEffect(() => {
@@ -74,22 +73,19 @@ export default () => {
           {fqa_data.map((v, i) => {
             return (
               <ContentWrap key={i}>
-                <ContentList onClick={() => setIsOpen((prev) => !prev)}>
+                <ContentList onClick={() => handleToggleAnswer(i)}>
                   <ContentNo>{v.category}</ContentNo>
                   <ContentTitle>{v.title}</ContentTitle>
                   <Icon
-                    isOpen={isOpen}
-                    src={getAssetURL('../assets/ic-arrow.svg')}
+                    src={
+                      isOpenAnswer[i]
+                        ? getAssetURL('../assets/ic-arrow-up.svg')
+                        : getAssetURL('../assets/ic-arrow.svg')
+                    }
                   />
                 </ContentList>
-                {isOpen && (
-                  <AnswerBox>
-                    아래의 경우, 휴대폰 인증이 불가할 수 있습니다. ■ 이미 인증된
-                    정보가 있는 경우 휴대폰 인증 단계에서 '이미 콘박스에
-                    가입되어 있는 휴대폰 번호입니다'라는 안내가 보인다면, 이미
-                    해당 명의자의 정보로 인증된 다른 계정이 존재한다는
-                    의미입니다.
-                  </AnswerBox>
+                {isOpenAnswer[i] && v.answer && (
+                  <AnswerBox>{v.answer}</AnswerBox>
                 )}
               </ContentWrap>
             );
@@ -180,17 +176,7 @@ const ContentTitle = styled.div`
 
 const ContentWrap = styled.div``;
 
-// const Icon = styled.img`
-//   width: 24px;
-//   height: 24px;
-//   display: flex;
-//   justify-content: flex-end;
-
-//   margin-left: auto;
-//   margin-right: 38px;
-// `;
-
-const Icon = styled.img<{ isOpen: boolean }>`
+const Icon = styled.img`
   width: 24px;
   height: 24px;
   margin-left: 24px;
@@ -200,15 +186,6 @@ const Icon = styled.img<{ isOpen: boolean }>`
 
   margin-left: auto;
   margin-right: 38px;
-
-  ${({ isOpen }) =>
-    isOpen
-      ? css`
-          transform: rotate(180deg);
-        `
-      : css`
-          transform: rotate(0deg);
-        `}
 `;
 
 const AnswerBox = styled.div`

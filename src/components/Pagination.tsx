@@ -7,7 +7,7 @@ interface IPagenation {
   onChangeLimit?: any;
   onChangeSkip?: any;
   limit: number;
-  skip?: number;
+  skip: number;
   totalCount: number;
   limitOptions?: number;
 }
@@ -58,7 +58,9 @@ export default ({
               ? getAssetURL('../assets/ic-arrow-gray-left.svg')
               : getAssetURL('../assets/ic-arrow-left.svg')
           }
-          onClick={() => onChangeSkip((currentPage - 2) * limit)}
+          onClick={() =>
+            currentPage === 1 ? null : onChangeSkip((currentPage - 2) * limit)
+          }
         />
         {btns}
         <Icon
@@ -67,7 +69,11 @@ export default ({
               ? getAssetURL('../assets/ic-arrow-gray-right.svg')
               : getAssetURL('../assets/ic-arrow-right.svg')
           }
-          onClick={() => onChangeSkip(currentPage * limit)}
+          onClick={() =>
+            currentPage === totalPage || totalPage <= 1
+              ? null
+              : onChangeSkip(currentPage * limit)
+          }
         />
         {/* <Icon
           // disabled={currentPage === totalPage || totalPage <= 1}
