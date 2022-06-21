@@ -13,7 +13,7 @@ export default () => {
     now.toLocaleDateString('en-CA'),
   );
   const [constructionEndDate, setConstructionEndDate] = useState<any>();
-  const [xPosition, setXPosition] = useState<any>([1]);
+  const [xPosition, setXPosition] = useState<any>([12]);
 
   const location = useLocation();
 
@@ -88,8 +88,8 @@ export default () => {
   };
 
   useEffect(() => {
-    let year: any = now.getFullYear();
-    let month: any = now.getMonth() + 2;
+    let year: any = now.getFullYear() + 1;
+    let month: any = now.getMonth() + 1;
     let date: any = now.getDate();
 
     if (month < 10) {
@@ -129,7 +129,8 @@ export default () => {
                 onChangeEndDate(e.target.value);
               }}
               min={constructionStartDate}
-              style={{ width: '156px', height: '42px' }} />
+              style={{ width: '156px', height: '42px' }}
+            />
           </DateWrapper>
         </InputItemWrapper>
         <BottomContentWrapper>
