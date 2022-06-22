@@ -47,8 +47,6 @@ export default () => {
     })();
   }, [fieldAddr]);
 
-  console.log(position);
-
   return (
     <FieldCreateLayout>
       <Container>
@@ -65,7 +63,7 @@ export default () => {
             placeholder="현장명을 입력해 주세요"
             value={fieldNm}
             onChange={(e) => {
-              setFieldNm(e.target.value), console.log(e);
+              setFieldNm(e.target.value);
             }}
             containerStyle={{
               width: '540px',
@@ -83,7 +81,7 @@ export default () => {
               placeholder="현장주소를 입력해 주세요"
               value={fieldAddr}
               onChange={(e) => {
-                setFieldAddr(e.target.value), console.log(e);
+                setFieldAddr(e.target.value);
               }}
               containerStyle={{
                 width: '430px',
@@ -100,7 +98,7 @@ export default () => {
             placeholder="상세주소를 입력해 주세요 (선택)"
             value={secFieldAddr}
             onChange={(e) => {
-              setSecFieldAddr(e.target.value), console.log(e);
+              setSecFieldAddr(e.target.value);
             }}
             containerStyle={{
               width: '540px',

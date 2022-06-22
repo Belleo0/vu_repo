@@ -10,12 +10,10 @@ export default () => {
   const location = useLocation();
   const [chkText, setChkText] = useState<any>(0);
   const [remarks, setRemarks] = useState<string>('');
+  let submitFlag = false;
 
   const requestSignUp = () => {
-    // console.log(location.state as any);
-
-    let resFlag = false;
-
+    submitFlag = true;
     api
       .post('/field-spaces', {
         name: (location.state as any)?.fieldNm,
@@ -33,12 +31,8 @@ export default () => {
           longitude: (location.state as any)?.position?.longitude,
         },
       })
-      .then((res) => (resFlag = true))
-      .catch((e) => console.log(e));
-
-    setTimeout(function () {
-      if (resFlag) navigate('/my-space');
-    }, 1000);
+      .then((res) => ((submitFlag = true), navigate('/my-space')))
+      .catch(() => (submitFlag = false));
   };
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-4');
@@ -74,7 +68,9 @@ export default () => {
           >
             이전
           </InActiveBtn>
-          <ActiveBtn onClick={() => requestSignUp()}>완료</ActiveBtn>
+          <ActiveBtn onClick={() => (!submitFlag ? requestSignUp() : null)}>
+            완료
+          </ActiveBtn>
         </BottomBtnWrapper>
       </Container>
     </FieldCreateLayout>
