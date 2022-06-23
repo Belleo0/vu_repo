@@ -46,13 +46,16 @@ export default () => {
   const [step, setStep] = useState<number>(0);
   const location = useLocation();
 
-  const [maturity, setMaturity] = useState<string>();
-  const [maturityInput, setMaturityInput] = useState<string>();
-  const [paymentDate, setPaymentDate] = useState<string>();
-  const [paymentDateInput, setPaymentDateInput] = useState<string>();
+  const [maturity, setMaturity] = useState('');
+  const [maturityInput, setMaturityInput] = useState('');
+  const [paymentDate, setPaymentDate] = useState('');
+  const [paymentDateInput, setPaymentDateInput] = useState('');
   const [paymentType, setPaymentType] = useState<string | null>(null);
 
   const [isValid, setIsValid] = useState<boolean>(false);
+
+  // const [maturityFlag, setMaturityFlag] = useState(false);
+  // const [paymentFlag, setPaymentFlag] = useState(false);
 
   const navigate = useNavigate();
 
@@ -61,9 +64,9 @@ export default () => {
       state: {
         ...(location.state as any),
         maturity: maturity,
-        maturityInput: maturityInput,
+        maturityInput: maturity ? null : maturityInput,
         paymentDate: paymentDate,
-        paymentDateInput: paymentDateInput,
+        paymentDateInput: paymentDate ? null : paymentDateInput,
         paymentType: paymentType,
       },
     });
@@ -84,29 +87,45 @@ export default () => {
   };
 
   const dateOptionHandler = (v: string) => {
+    // console.log('dateOptionHandler=> ', v);
+
     setMaturity(v);
   };
   const dateInputHandler = (v: string) => {
+    // console.log('dateInputHandler=> ', v);
+
     setMaturityInput(v);
   };
   const paymentDateOptionHandler = (v: string) => {
+    // console.log('paymentDateOptionHandler=> ', v);
+
     setPaymentDate(v);
   };
   const paymentDateInputHandler = (v: string) => {
+    // console.log('paymentDateInputHandler=> ', v);
     setPaymentDateInput(v);
   };
 
-  useEffect(() => {}, [paymentType]);
-
   const paymentOptions = [
-    {
-      label: '현금',
-      value: 'CASH',
-    },
+    { label: '현금', value: 'CASH' },
     { label: '어음', value: 'NOTE' },
     { label: '전자채권', value: 'BOND' },
     { label: '구매카드', value: 'CARD' },
   ];
+
+  useEffect(() => {
+    if (step === 2) {
+      if (paymentType === 'CASH') {
+        if (paymentDate !== '') {
+          setIsValid(true);
+        }
+      } else {
+        if (paymentDate !== '' && maturity !== '') {
+          setIsValid(true);
+        }
+      }
+    }
+  }, [maturity, paymentDate]);
 
   return (
     <FieldCreateLayout>
@@ -135,9 +154,11 @@ export default () => {
             </Button>
           </BottomContentWrapper>
         </InputItemWrapper>
+
         <HideContentWrapper>
           {step == 2 ? (
             <>
+              <FieldName>결제수단</FieldName>
               <BlackSelect
                 absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
                 placeholder="선택해 주세요."
@@ -194,23 +215,22 @@ export default () => {
                     </DateSelectBorder>
                     <DateSelectBorder
                       type={
-                        maturity == 'other'
-                          ? OptionType.ABLE
-                          : OptionType.INABLE
+                        maturity == '기타' ? OptionType.ABLE : OptionType.INABLE
                       }
-                      onClick={() => dateOptionHandler('other')}
+                      onClick={() => dateOptionHandler('기타')}
                     >
                       기타
                     </DateSelectBorder>
                   </OptionWrapper>
                   <InputStyle
-                    placeholder="숫자만 입력해 주세요"
+                    placeholder={maturity === '' ? '숫자만 입력해 주세요' : ''}
                     value={maturityInput}
+                    disabled={maturity !== '' ? true : false}
+                    type={'number'}
                     onChange={(e) => dateInputHandler(e.target.value)}
                   />
                 </InputItemWrapper>
               ) : null}
-
               <InputItemWrapper
                 style={{ marginTop: '40px', width: '350px', height: '116px' }}
               >
@@ -245,25 +265,41 @@ export default () => {
                   </DateSelectBorder>
                   <DateSelectBorder
                     type={
-                      paymentDate == 'other'
+                      paymentDate == '기타'
                         ? OptionType.ABLE
                         : OptionType.INABLE
                     }
-                    onClick={() => paymentDateOptionHandler('other')}
+                    onClick={() => paymentDateOptionHandler('기타')}
                   >
                     기타
                   </DateSelectBorder>
                 </OptionWrapper>
                 <InputStyle
-                  placeholder="숫자만 입력해 주세요"
+                  placeholder={paymentDate === '' ? '숫자만 입력해 주세요' : ''}
+                  type={'number'}
                   value={paymentDateInput}
+                  disabled={paymentDate !== '' ? true : false}
                   onChange={(e) => paymentDateInputHandler(e.target.value)}
                 />
               </InputItemWrapper>
-              <Caption>
-                • 거래처가 세금계산서를 발행 후 60일 뒤, 어음(30일)을
-                지급합니다.
-              </Caption>
+              {paymentType === 'NOTE' ? (
+                <Caption>
+                  • 거래처가 세금계산서를 발행 후 {maturity || '만기'}일 뒤,
+                  어음(
+                  {paymentDate || '청구'}일)을 지급합니다.
+                </Caption>
+              ) : null}
+              {paymentType === 'CASH' ? (
+                paymentDate === '' ? (
+                  <NonSelectCaption>
+                    결제조건을 모두 선택해주세요.
+                  </NonSelectCaption>
+                ) : null
+              ) : paymentDate === '' || maturity === '' ? (
+                <NonSelectCaption>
+                  결제조건을 모두 선택해주세요.
+                </NonSelectCaption>
+              ) : null}
             </>
           ) : (
             <></>
@@ -277,14 +313,7 @@ export default () => {
           >
             이전
           </InActiveBtn>
-          {isValid ||
-          (paymentType !== 'CASH'
-            ? maturity &&
-              maturityInput &&
-              paymentDateInput &&
-              paymentDate &&
-              paymentType
-            : paymentDateInput && paymentDate && paymentType) ? (
+          {isValid ? (
             <ActiveBtn onClick={() => nxtPageHandler()}>다음</ActiveBtn>
           ) : (
             <InActiveBtn>다음</InActiveBtn>
@@ -546,6 +575,18 @@ const Caption = styled.div`
   margin-top: 14px;
 
   font-size: 13px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: -0.26px;
+  text-align: left;
+  color: #ff4d4d;
+`;
+const NonSelectCaption = styled.div`
+  height: 19px;
+  margin-top: 10px;
+
+  font-size: 11px;
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
