@@ -106,6 +106,7 @@ export default ({
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
               setRealAddress(address);
+              setSelectedFieldInfo(null);
             }
           }}
           placeholder="주소를 입력해 주세요"

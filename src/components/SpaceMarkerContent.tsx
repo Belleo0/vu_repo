@@ -197,6 +197,11 @@ const PlaceName = styled.span`
   text-align: left;
   color: #000;
   margin-bottom: 6px;
+
+  width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const DurationWrap = styled.div`

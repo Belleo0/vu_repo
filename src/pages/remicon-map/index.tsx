@@ -46,6 +46,11 @@ export default () => {
     return selectedFieldInfo.id;
   }, [selectedFieldInfo]);
 
+  const selectedFieldAddress = useMemo(() => {
+    if (!selectedFieldInfo) return null;
+    return selectedFieldInfo.basic_address;
+  }, [selectedFieldInfo]);
+
   const [bounds, setBounds] = useState<any>(null);
 
   const [address, setAddress] = useState('');
@@ -91,14 +96,10 @@ export default () => {
   );
 
   useEffect(() => {
-    console.log('changed selectedFactoryIds', selectedFactoryIds);
-  }, [selectedFactoryIds]);
-
-  useEffect(() => {
-    if (selectedSpaceInfo) {
-      setAddress(selectedFieldInfo?.basic_address);
+    if (selectedFieldAddress !== null) {
+      setAddress(selectedFieldAddress);
     }
-  }, [selectedFieldInfo]);
+  }, [selectedFieldAddress]);
 
   useEffect(() => {
     if (factoriesData?.message === '주소 위치를 찾을 수 없습니다.') {
@@ -168,6 +169,7 @@ export default () => {
                     style={{ width: 119, height: 72 }}
                   />
                 }
+                disableCenter={false}
               />
             )}
 
