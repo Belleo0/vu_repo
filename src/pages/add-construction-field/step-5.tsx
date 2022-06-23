@@ -4,12 +4,14 @@ import styled from '@emotion/styled';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '@api';
+import Modal from '@components/TextModal';
 
 export default () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [chkText, setChkText] = useState<any>(0);
   const [remarks, setRemarks] = useState<string>('');
+  const [successOpenModal, setSuccessOpenModal] = useState(false);
   let submitFlag = false;
 
   const requestSignUp = () => {
@@ -45,9 +47,23 @@ export default () => {
     setChkText(length);
   };
 
+  const successCloseModal = () => {
+    if (!submitFlag) {
+      requestSignUp();
+    }
+    setSuccessOpenModal(false);
+  };
+
   return (
     <FieldCreateLayout>
       <Container>
+        <Modal
+          open={successOpenModal}
+          onClose={() => successCloseModal()}
+          submitText={'확인'}
+          content={'건설현장 등록이 완료되었습니다.'}
+        />
+
         <TopTitleWrapper>
           <BorderNumberWrapper>
             <BorderNumber>5</BorderNumber>
@@ -68,7 +84,11 @@ export default () => {
           >
             이전
           </InActiveBtn>
-          <ActiveBtn onClick={() => (!submitFlag ? requestSignUp() : null)}>
+          <ActiveBtn
+            onClick={() => {
+              setSuccessOpenModal(true);
+            }}
+          >
             완료
           </ActiveBtn>
         </BottomBtnWrapper>

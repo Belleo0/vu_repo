@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
 import { useLocation, useNavigate } from 'react-router-dom';
-import getAssetURL from '@utils/getAssetURL';
 
 export default () => {
   const [requirement, setRequirement] = useState<string>();

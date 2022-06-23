@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
-import Input from '@components/Input';
 import { useLocation, useNavigate } from 'react-router-dom';
-import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
 import BlackSelect from '@components/BlackSelect';
 
@@ -63,7 +61,7 @@ export default () => {
     navigate('/add-construction-field/step-5', {
       state: {
         ...(location.state as any),
-        maturity: maturity,
+        maturity: paymentType === 'CASH' ? '' : maturity,
         maturityInput: maturity ? null : maturityInput,
         paymentDate: paymentDate,
         paymentDateInput: paymentDate ? null : paymentDateInput,
