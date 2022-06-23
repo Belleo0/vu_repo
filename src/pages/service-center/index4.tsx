@@ -7,7 +7,6 @@ import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from './test';
 
-import PageNation from '../../components/PageNation1';
 import usePagination from '@hooks/usePagination';
 import Pagination from '@components/Pagination';
 

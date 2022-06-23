@@ -72,7 +72,12 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
 
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isEditAmount, setIsEditAmount] = useState<boolean>(false);
+  const [isEditAmount, setIsEditAmount] = useState<any>({});
+
+  const handleToggleAnswer = (id: number) => {
+    console.log(id);
+    setIsEditAmount((prev: any) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const onMouseOver = (status: string) => {
     if (status === '1') {
@@ -224,7 +229,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
             </ValueCell>
             <ValueCell>{v?.size}</ValueCell>
             <ValueCell>{v?.preAmount}m³</ValueCell>
-            {isEditAmount ? (
+            {isEditAmount[v?.id] ? (
               <ValueCell>
                 <BlackInput
                   placeholder="000"
@@ -284,7 +289,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                       ? null
                       : v.status === '1'
                       ? null
-                      : handleEditAmount();
+                      : handleToggleAnswer(v?.id);
                   }}
                 >
                   {v.status === '0'

@@ -16,46 +16,54 @@ import api from '@api';
 import FileUpload from '@components/FileUpload';
 import useSWR from 'swr';
 import MemberSideBar from '@components/MemberSideBar';
+import TransactionSpaceBar from '@components/TransactionSpaceBar';
+import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
+import useMySpaceInfo from '@api/useMySpaceInfo';
+import MemberSpaceBar from '@components/MemberSpaceBar';
 
 export default () => {
   const userInfo = useUserInfo();
   const navigate = useNavigate();
+  const selectedSpaceId = useSelectedSpaceId();
+
+  const {
+    data: { info, suppliers },
+    isLoading,
+    supplierMutate,
+  } = useMySpaceInfo(selectedSpaceId);
 
   return (
     <MypageLayout>
       <Container>
         <Title>조직관리</Title>
-        <MemberSideBar />
+        <MemberWrap>
+          <SideBarSection>
+            <MemberSideBar />
+          </SideBarSection>
+          <RightSection>
+            <MemberSpaceBar
+              id={info?.id}
+              name={info?.name}
+              address={info?.basic_address}
+            />
+            <MemberListBox>
+              <MemberCell>
+                <ProfileImage
+                  src={getAssetURL('../assets/default-profile.jpeg')}
+                />
+              </MemberCell>
+            </MemberListBox>
+          </RightSection>
+        </MemberWrap>
       </Container>
     </MypageLayout>
   );
 };
 
 const Container = styled.div`
-  width: 650px;
+  width: 100%;
   height: 100%;
   padding: 60px;
-`;
-
-const MyInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const MyInfoSection = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const MyInfoFormBox = styled.div`
-  width: 370px;
-`;
-
-const ProfileImageBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: 50px;
 `;
 
 const Title = styled.span`
@@ -68,77 +76,40 @@ const Title = styled.span`
   margin-bottom: 40px;
 `;
 
+const MemberWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const MemberListBox = styled.div`
+  background-color: #fff;
+  border-left: 1px solid #e3e3e3;
+`;
+
+const SideBarSection = styled.div`
+  width: 360px;
+`;
+
+const RightSection = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const MemberCell = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  height: 148px;
+  background-color: #fff;
+  border-bottom: 1px solid #f2f2f2;
+  padding: 0px 40px;
+`;
+
 const ProfileImage = styled.img`
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   border: solid 1px #e3e3e3;
   border-radius: 100px;
 `;
-
-const Divider = styled.span`
-  display: block;
-  width: 100%;
-  border-bottom: solid 1px #e3e3e3;
-  margin-bottom: 28px;
-`;
-
-const ButtonInputBox = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  margin-top: 60px;
-  margin-bottom: 50px;
-`;
-
-const Withdrawal = styled.span`
-  width: 51px;
-  height: 20px;
-  font-size: 14px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.5;
-  letter-spacing: -0.28px;
-  text-align: left;
-  color: #999;
-  border-bottom: 1px solid #999;
-  cursor: pointer;
-`;
-
-const emailInputStyle = {
-  backgroundColor: '#f2f2f2',
-  borderRadius: '6px',
-  '&: focus': {
-    backgroundColor: '#ffffff',
-  },
-};
-
-const emailEditInputStyle = {
-  backgroundColor: '#ffffff',
-};
-
-const buttonStyle = {
-  width: '45%',
-  height: '40px',
-  fontSize: '14px',
-  fontWeight: '500',
-  padding: '11px 0',
-  marginLeft: '10px',
-  marginTop: '5px',
-};
-
-const buttonStyle2 = {
-  width: '45%',
-  height: '40px',
-  fontSize: '14px',
-  fontWeight: '500',
-  padding: '11px 0',
-  marginLeft: '10px',
-  marginBottom: '20px',
-};

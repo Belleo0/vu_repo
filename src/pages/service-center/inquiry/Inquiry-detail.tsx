@@ -6,7 +6,6 @@ import api from '@api';
 import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
-import PageNation from '@components/PageNation1';
 import Button, { ButtonType } from '@components/Button';
 import getAssetURL from '@utils/getAssetURL';
 
@@ -39,10 +38,13 @@ export default () => {
         <ContentWrap>
           <Content>휴대폰 인증이 되지 않습니다. 해결방안 부탁드립니다.</Content>
           <ImageListWrap>
-            <ImageContent src={getAssetURL('../assets/default-profile.jpeg')} />
-            <ImageContent src={getAssetURL('../assets/default-profile.jpeg')} />
-            <ImageContent src={getAssetURL('../assets/default-profile.jpeg')} />
-            <ImageContent />
+            <ImageContent src={getAssetURL('../assets/img/img_inquiry.png')} />
+            <ImageContent
+              src={getAssetURL('../assets/img/img_inquiry_2.png')}
+            />
+            <ImageContent
+              src={getAssetURL('../assets/img/img_inquiry_3.png')}
+            />
           </ImageListWrap>
           <AnswerBox>
             안녕하세요. 코나즈입니다. 이미 인증된 정보가 있는 경우, 휴대폰

@@ -124,7 +124,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
               </SupplyAmount>
               m³
             </ValueCell>
-            <ValueCell>
+            <ValueCell style={{ maxWidth: 150 }}>
               <TotalAmount>
                 <SubmitButton
                   type={

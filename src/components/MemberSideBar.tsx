@@ -10,6 +10,8 @@ import { Container } from './Atoms';
 import SpaceCard from './SpaceCard';
 import useSpaces from '@api/useSpaces';
 import { useDispatch } from 'react-redux';
+import MemberCard from './MemberCard';
+import ScrollBox from './ScrollBox';
 
 enum ChipTypeEnum {
   DEFAULT,
@@ -66,7 +68,7 @@ export default () => {
       <SpaceFilterWrap>
         <SearchInput
           placeholder={'검색어를 입력해 주세요.'}
-          containerStyle={{ marginBottom: 20 }}
+          containerStyle={{ marginBottom: 26 }}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -76,13 +78,13 @@ export default () => {
               active={tabType === TabTypeEnum.DEFAULT}
               onClick={() => handleChangeTabType(TabTypeEnum.DEFAULT)}
             >
-              레미콘 공장(99)
+              건설현장 (99)
             </Tab>
             <Tab
               active={tabType === TabTypeEnum.HIDE}
               onClick={() => handleChangeTabType(TabTypeEnum.HIDE)}
             >
-              구성원(99)
+              구성원 (99)
             </Tab>
           </TabContainer>
         )}
@@ -109,7 +111,7 @@ export default () => {
       </ChipWrap>
       <SearchedSpaceWrap>
         {searchedSpaces.map((v, i) => (
-          <SpaceCard
+          <MemberCard
             key={`space-${v.id}-${i}`}
             info={v}
             id={v.id}
@@ -128,15 +130,19 @@ export default () => {
 const SpeceBarWrap = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 360px;
+  height: 720px;
+  max-height: 720px;
   max-width: 360px;
-  height: 100%;
   border-top: 1px solid #c7c7c7;
   background-color: white;
 `;
 
 const SpaceFilterWrap = styled.div`
   display: block;
+
+  height: 136px;
+
   padding: 30px 30px 0px 30px;
   border-bottom: 1px solid #e3e3e3;
 `;
@@ -199,14 +205,25 @@ const Chip = styled.div<{ active: boolean }>`
         `}
 `;
 
-const SearchedSpaceWrap = styled.div`
+const SearchedSpaceWrap = styled(ScrollBox)`
   display: flex;
   flex: 1;
   flex-direction: column;
+  padding: 10px 10px 20px 20px;
+
   width: 100%;
-  margin: 14px 20px;
   overflow-y: scroll;
-  &::-webkit-scrollbar {
+  /* &::-webkit-scrollbar {
     display: none;
-  }
+  } */
+`;
+
+const NotificationBox = styled(ScrollBox)`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: white;
+  height: 100%;
+  max-height: 360px;
+  overflow-y: scroll;
 `;
