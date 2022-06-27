@@ -78,6 +78,7 @@ export default () => {
             <Input
               type="text"
               placeholder="현장주소를 입력해 주세요"
+              disabled
               value={fieldAddr}
               onChange={(e) => {
                 setFieldAddr(e.target.value);
@@ -85,8 +86,14 @@ export default () => {
               containerStyle={{
                 width: '430px',
                 height: '42px',
+                cursor: 'pointer',
               }}
-              style={{ height: '42px', padding: '11px 20px' }}
+              style={{
+                height: '42px',
+                padding: '11px 20px',
+                cursor: 'pointer',
+              }}
+              onClick={() => setIsPostcodeModalOpened(true)}
             />
             <FindBtn onClick={() => setIsPostcodeModalOpened(true)}>
               찾기

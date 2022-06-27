@@ -21,6 +21,8 @@ export default () => {
         name: (location.state as any)?.fieldNm,
         basic_address: (location.state as any)?.fieldAddr,
         detail_address: (location.state as any)?.secFieldAddr,
+        latitude: (location.state as any)?.position?.latitude,
+        longitude: (location.state as any)?.position?.longitude,
         field_info: {
           start_at: (location.state as any)?.constructionStartDate,
           end_at: (location.state as any)?.constructionEndDate,
@@ -29,8 +31,6 @@ export default () => {
           payment_due_date: (location.state as any)?.paymentDate,
           need_amount: (location.state as any)?.need_amount,
           remarks: remarks,
-          latitude: (location.state as any)?.position?.latitude,
-          longitude: (location.state as any)?.position?.longitude,
         },
       })
       .then((res) => ((submitFlag = true), navigate('/my-space')))

@@ -21,6 +21,7 @@ export default ({
   errorMessage,
   withoutErrorMessage = false,
   disabled = false,
+  onClick = () => null,
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   label?: React.ReactNode;
@@ -42,7 +43,7 @@ export default ({
   };
 
   return (
-    <RealContainer style={containerStyle}>
+    <RealContainer style={containerStyle} onClick={onClick}>
       {label && (
         <LableBox>
           {label && <Label>{label}</Label>}
