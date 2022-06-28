@@ -6,7 +6,6 @@ import api from '@api';
 import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
-import PageNation from '@components/PageNation1';
 import Button, { ButtonType } from '@components/Button';
 
 export default () => {
@@ -37,9 +36,7 @@ export default () => {
         </TitleWrap>
         <ContentWrap>
           <Content>
-            {
-              '휴대폰 인증이 되지 않습니다. 해결방안 부탁드립니다.\n 안녕하세요 코나즈입니다. '
-            }
+            {`휴대폰 인증이 되지 않습니다. 해결방안 부탁드립니다.\n 안녕하세요 코나즈입니다. `}
           </Content>
         </ContentWrap>
       </Container>
@@ -123,4 +120,7 @@ const Content = styled.div`
   letter-spacing: -0.3px;
   text-align: left;
   color: #222;
+
+  padding-bottom: 105px;
+  white-space: pre-line;
 `;

@@ -42,16 +42,11 @@ export default ({
     <Container isActive={isActive} isOpen={isOpen}>
       <InfoContainer onClick={() => dispatch(setSelectedSpaceInfo(info))}>
         <InfoWrap>
-          <Title>{name}</Title>
-          {isFieldUser && <Address>{address}</Address>}
+          <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
         </InfoWrap>
         <PeopleCountWrap>
-          <Icon
-            src={getAssetURL('../assets/ic-people-black.svg')}
-            isOpen={isOpen}
-            onClick={() => setIsOpen((prev) => !prev)}
-          />
-          <PeopleCountText>999명</PeopleCountText>
+          <Title>{name}</Title>
+          <Position>대리</Position>
         </PeopleCountWrap>
       </InfoContainer>
     </Container>
@@ -99,7 +94,6 @@ const Container = styled.div<{
 
 const InfoContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
   padding: 20px;
@@ -111,7 +105,8 @@ const Title = styled.span`
   letter-spacing: -0.32px;
   text-align: left;
   color: #222;
-  margin-bottom: 8px;
+
+  margin-right: 4px;
 
   max-width: 225px;
   overflow: hidden;
@@ -123,17 +118,11 @@ const Title = styled.span`
   }
 `;
 
-const Address = styled.span`
+const Position = styled.div`
   font-size: 14px;
+  font-weight: normal;
   letter-spacing: -0.28px;
-  text-align: left;
-  color: #999;
-
-  max-width: 225px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 16px;
+  color: #444;
 `;
 
 const InfoWrap = styled.div`
@@ -176,7 +165,6 @@ const BottomButton = styled.span`
 
 const PeopleCountWrap = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
@@ -187,4 +175,13 @@ const PeopleCountText = styled.div`
   letter-spacing: -0.26px;
   text-align: center;
   color: #000;
+`;
+
+const ProfileImage = styled.img`
+  width: 48px;
+  height: 48px;
+  border: solid 1px #e3e3e3;
+  border-radius: 100px;
+
+  margin-right: 14px;
 `;

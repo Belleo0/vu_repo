@@ -199,4 +199,6 @@ const AnswerBox = styled.div`
   letter-spacing: -0.3px;
   text-align: left;
   color: #222;
+
+  white-space: pre-line;
 `;

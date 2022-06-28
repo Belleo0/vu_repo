@@ -21,9 +21,9 @@ import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
 import MemberSpaceBar from '@components/MemberSpaceBar';
 import MemberListTable from '@components/MemberListTable';
-import useIsFieldUser from '@hooks/useIsFieldUser';
+import FriendSideBar from '@components/FriendSideBar';
 
-const memberData = [
+const friendData = [
   {
     name: '김건설',
     company: '(주)대성건설',
@@ -33,60 +33,6 @@ const memberData = [
     phone: '02) 2134-5678',
     email: 'conbox@conbox.com',
     status: 0,
-  },
-  {
-    name: '김수현',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 1,
-  },
-  {
-    name: '이하진',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
-  },
-  {
-    name: '제임스',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
-  },
-  {
-    name: '코나즈',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
-  },
-  {
-    name: '코나즈',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
-  },
-  {
-    name: '코나즈',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
   },
 ];
 
@@ -104,18 +50,13 @@ export default () => {
   return (
     <MypageLayout>
       <Container>
-        <Title>조직관리</Title>
+        <Title>친구관리</Title>
         <MemberWrap>
           <SideBarSection>
-            <MemberSideBar />
+            <FriendSideBar />
           </SideBarSection>
           <RightSection>
-            <MemberSpaceBar
-              id={info?.id}
-              name={info?.name}
-              address={info?.basic_address}
-            />
-            <MemberListTable data={memberData} />
+            <MemberListTable data={friendData} />
           </RightSection>
         </MemberWrap>
       </Container>
@@ -156,5 +97,6 @@ const RightSection = styled.div`
   max-height: 720px;
   display: flex;
   flex-direction: column;
+  border-top: solid 1px #c7c7c7;
   border-left: 1px solid #e3e3e3;
 `;

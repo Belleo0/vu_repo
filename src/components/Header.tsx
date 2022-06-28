@@ -63,12 +63,10 @@ const profileMenus = [
   {
     label: '친구관리',
     path: '/friend',
-    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
   },
   {
     label: '알림설정',
     path: '/notification',
-    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
   },
 ];
 

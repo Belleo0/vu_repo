@@ -145,6 +145,18 @@ export default [
     permission: Permission.PRIVATE,
   },
   {
+    label: '조직관리',
+    path: '/friend',
+    component: lazy(() => import('@pages/mypage/friend')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '알림 설정',
+    path: '/notification',
+    component: lazy(() => import('@pages/mypage/notification')),
+    permission: Permission.PRIVATE,
+  },
+  {
     label: '건설사 자료실',
     path: '/reference-room',
     component: lazy(() => import('@pages/reference-room')),

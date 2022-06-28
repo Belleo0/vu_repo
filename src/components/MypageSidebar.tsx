@@ -14,12 +14,12 @@ export default () => {
     {
       label: '친구관리',
       path: '/friend',
-      onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+      // onClick: () => window.alert(`TODO : 2차 범위입니다.`),
     },
     {
       label: '알림 설정',
       path: '/notification',
-      onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+      // onClick: () => window.alert(`TODO : 2차 범위입니다.`),
     },
   ];
 

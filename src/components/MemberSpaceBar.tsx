@@ -38,6 +38,12 @@ export default ({ id, name, address }: ISpaceBar) => {
           </InfoRow>
         )}
       </InfoContainer>
+      <ButtonWrap>
+        <Button>
+          <ButtonIcon src={getAssetURL('../assets/ic-more.svg')} /> 이 공장에
+          멤버 초대하기
+        </Button>
+      </ButtonWrap>
     </SpaceBar>
   );
 };
@@ -45,13 +51,14 @@ export default ({ id, name, address }: ISpaceBar) => {
 const SpaceBar = styled.div`
   display: flex;
   align-items: center;
+
   width: 100%;
-  height: 137px;
+  min-height: 137px;
+
   padding: 20px;
   background-color: #fff;
   border-top: 1px solid #c7c7c7;
   border-bottom: 1px solid #e3e3e3;
-  border-left: 1px solid #e3e3e3;
 `;
 
 const Icon = styled.img`
@@ -63,6 +70,8 @@ const Icon = styled.img`
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
+
+  margin-right: auto;
 `;
 
 const InfoRow = styled.div`
@@ -100,17 +109,41 @@ const PersonName = styled.span`
   color: #000;
 `;
 
+// const Button = styled.span`
+//   padding: 10px 27px;
+//   border-radius: 18px;
+//   border: solid 1px #c7c7c7;
+//   background-color: #fff;
+//   cursor: pointer;
+//   margin-left: 30px;
+
+//   font-size: 14px;
+//   font-weight: 500;
+//   letter-spacing: -0.28px;
+//   text-align: center;
+//   color: #000;
+// `;
+
+const ButtonWrap = styled.div``;
+
 const Button = styled.span`
-  padding: 10px 27px;
-  border-radius: 18px;
-  border: solid 1px #c7c7c7;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 11px 18px;
+  border-radius: 6px;
+  border: solid 2px #4490f7;
   background-color: #fff;
-  cursor: pointer;
-  margin-left: 30px;
+  color: #4490f7;
 
   font-size: 14px;
   font-weight: 500;
-  letter-spacing: -0.28px;
-  text-align: center;
-  color: #000;
+
+  cursor: pointer;
+`;
+
+const ButtonIcon = styled.img`
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
 `;

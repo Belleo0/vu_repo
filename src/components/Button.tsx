@@ -16,6 +16,8 @@ export enum ButtonType {
   GRAY_BLACK,
   BLACK,
   BLACK_WHITE,
+  BLACK_OUTLINE,
+  DISABLED,
 }
 
 interface IButton {
@@ -35,6 +37,8 @@ const backgroundColors = {
   [ButtonType.GRAY_BLACK]: '#f2f2f2',
   [ButtonType.BLACK]: '#ffffff',
   [ButtonType.BLACK_WHITE]: '#000000',
+  [ButtonType.BLACK_OUTLINE]: 'inherit',
+  [ButtonType.DISABLED]: '#f2f2f2',
 };
 
 const borderWidths = {
@@ -45,6 +49,8 @@ const borderWidths = {
   [ButtonType.GRAY_BLACK]: 1,
   [ButtonType.BLACK]: 1,
   [ButtonType.BLACK_WHITE]: 1,
+  [ButtonType.BLACK_OUTLINE]: 1,
+  [ButtonType.DISABLED]: 1,
 };
 
 const borderColors = {
@@ -55,6 +61,8 @@ const borderColors = {
   [ButtonType.GRAY_BLACK]: '#f2f2f2',
   [ButtonType.BLACK]: '#000000',
   [ButtonType.BLACK_WHITE]: 'inherit',
+  [ButtonType.BLACK_OUTLINE]: '#000000',
+  [ButtonType.DISABLED]: 'inherit',
 };
 
 const textColors = {
@@ -65,6 +73,8 @@ const textColors = {
   [ButtonType.GRAY_BLACK]: '#000000',
   [ButtonType.BLACK]: '#000000',
   [ButtonType.BLACK_WHITE]: '#ffffff',
+  [ButtonType.BLACK_OUTLINE]: '#000000',
+  [ButtonType.DISABLED]: '#999999',
 };
 
 export default ({
@@ -118,7 +128,7 @@ const Container = styled.div<{ size: ButtonSize; type: ButtonType }>`
           font-size: 16px;
         `
       : css`
-          padding: 11px 16px;
+          padding: 8px 16px;
           font-size: 14px;
         `}
 `;

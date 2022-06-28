@@ -12,6 +12,7 @@ import useSpaces from '@api/useSpaces';
 import { useDispatch } from 'react-redux';
 import MemberCard from './MemberCard';
 import ScrollBox from './ScrollBox';
+import FriendCard from './FriendCard';
 
 enum ChipTypeEnum {
   DEFAULT,
@@ -77,41 +78,19 @@ export default () => {
             active={tabType === TabTypeEnum.DEFAULT}
             onClick={() => handleChangeTabType(TabTypeEnum.DEFAULT)}
           >
-            건설현장 (99)
+            친구목록 (99)
           </Tab>
           <Tab
             active={tabType === TabTypeEnum.HIDE}
             onClick={() => handleChangeTabType(TabTypeEnum.HIDE)}
           >
-            구성원 (99)
+            받은요청 (03)
           </Tab>
         </TabContainer>
       </SpaceFilterWrap>
-      {isFieldUser && (
-        <ChipWrap>
-          <Chip
-            active={chipType === ChipTypeEnum.DEFAULT}
-            onClick={() => handleChangeChipType(ChipTypeEnum.DEFAULT)}
-          >
-            전체
-          </Chip>
-          <Chip
-            active={chipType === ChipTypeEnum.ACTIVE}
-            onClick={() => handleChangeChipType(ChipTypeEnum.ACTIVE)}
-          >
-            등록 건설현장
-          </Chip>
-          <Chip
-            active={chipType === ChipTypeEnum.HIDE}
-            onClick={() => handleChangeChipType(ChipTypeEnum.HIDE)}
-          >
-            숨김 건설현장
-          </Chip>
-        </ChipWrap>
-      )}
       <SearchedSpaceWrap>
         {searchedSpaces.map((v, i) => (
-          <MemberCard
+          <FriendCard
             key={`space-${v.id}-${i}`}
             info={v}
             id={v.id}
@@ -176,40 +155,11 @@ const Tab = styled.div<{ active: boolean }>`
         `}
 `;
 
-const ChipWrap = styled.div`
-  display: flex;
-  margin: 14px 20px 0px 20px;
-`;
-
-const Chip = styled.div<{ active: boolean }>`
-  padding: 6px 12px 7px;
-  border-radius: 20px;
-  background-color: #000;
-
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.26px;
-  cursor: pointer;
-
-  margin-right: 8px;
-
-  ${({ active }) =>
-    active
-      ? css`
-          color: #ffff;
-        `
-      : css`
-          color: #c7c7c7;
-          background-color: #fff;
-          border: solid 1px #c7c7c7;
-        `}
-`;
-
 const SearchedSpaceWrap = styled(ScrollBox)`
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 20px 6px 20px 20px;
+  padding: 30px 6px 20px 20px;
 
   width: 100%;
   overflow-y: scroll;

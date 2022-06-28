@@ -21,7 +21,7 @@ export default () => {
   return (
     <ServiceCenterLayout>
       <Container>
-        <TopList>공지사항</TopList>
+        <TopList>1:1문의</TopList>
         <TitleWrap>
           <Title>휴대폰 인증이 안되는 이유와 해결방법은 무엇인가요?</Title>
           <TitleRightWrap>

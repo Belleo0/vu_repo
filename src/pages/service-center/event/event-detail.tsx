@@ -6,7 +6,6 @@ import api from '@api';
 import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
-import PageNation from '@components/PageNation1';
 import Button, { ButtonType } from '@components/Button';
 
 export default () => {
@@ -37,9 +36,7 @@ export default () => {
         </TitleWrap>
         <ContentWrap>
           <Content>
-            {
-              '안녕하세요, 코나즈입니다.2022년 새롭게 선보이는 코나즈 건설사/레미콘사를 가입해주신 회원 여러분께 감사의 인사를 드립니다.'
-            }
+            {`안녕하세요, 코나즈입니다. \n2022년 새롭게 선보이는 코나즈 건설사/레미콘사를 가입해주신 회원 여러분께 감사의 인사를 드립니다.`}
           </Content>
         </ContentWrap>
       </Container>
@@ -56,7 +53,6 @@ const Container = styled.div`
 `;
 
 const TopList = styled.div`
-  width: 1420px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -123,4 +119,8 @@ const Content = styled.div`
   letter-spacing: -0.3px;
   text-align: left;
   color: #222;
+
+  white-space: pre-line;
+
+  padding-bottom: 105px;
 `;

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+    <g data-name="add person_ic">
+        <g data-name="Icon feather-user-plus">
+            <path data-name="패스 5327" d="M12.226 26.79v-1.43a2.86 2.86 0 0 0-2.86-2.86H4.36a2.86 2.86 0 0 0-2.86 2.86v1.43" transform="translate(.533 -10.43)" style="stroke:#999999;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;fill:none"/>
+            <path data-name="패스 5328" d="M12.47 7.36A2.86 2.86 0 1 1 9.61 4.5a2.86 2.86 0 0 1 2.86 2.86z" transform="translate(-1.964 -1.011)" style="stroke:#999999;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;fill:none"/>
+            <path data-name="패스 5329" d="M30 12v4.29" transform="translate(-13.381 -4.936)" style="stroke:#999999;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;fill:none"/>
+            <path data-name="패스 5330" d="M29.79 16.5H25.5" transform="translate(-11.026 -7.291)" style="stroke:#999999;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;fill:none"/>
+        </g>
+        <path data-name="사각형 6049" style="fill:none" d="M0 0h20v20H0z"/>
+    </g>
+</svg>
