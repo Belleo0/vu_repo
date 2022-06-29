@@ -36,10 +36,15 @@ export default () => {
 
   useEffect(() => {
     if (data) {
-      setMyspaces(data);
+      const stableSpaces = data.map((el, i) => [el, i]);
+      stableSpaces.sort((a, b) => {
+        return b[1] - a[1];
+      });
+      const sortedSpaces = stableSpaces.map((el) => el[0]);
+      setMyspaces(sortedSpaces);
     }
     console.log(myspaces);
-  }, [data, myspaces]);
+  }, [data]);
 
   const handleSearch = () => {
     if (search.length === 0)
