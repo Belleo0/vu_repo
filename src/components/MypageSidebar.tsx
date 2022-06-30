@@ -8,18 +8,18 @@ export default () => {
     { label: '회원정보 수정', path: '/mypage' },
     {
       label: '조직관리',
-      path: '',
-      onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+      path: '/member',
+      // onClick: () => window.alert(`TODO : 2차 범위입니다.`),
     },
     {
       label: '친구관리',
-      path: '',
-      onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+      path: '/friend',
+      // onClick: () => window.alert(`TODO : 2차 범위입니다.`),
     },
     {
       label: '알림 설정',
-      path: '',
-      onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+      path: '/notification',
+      // onClick: () => window.alert(`TODO : 2차 범위입니다.`),
     },
   ];
 

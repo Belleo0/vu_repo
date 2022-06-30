@@ -37,7 +37,7 @@ export default () => {
     return polylineInfo?.path[Math.floor(polylineInfo?.path.length / 2)];
   }, [polylineInfo]);
 
-  const [duration, setDuration] = useState<string>('null');
+  const [duration, setDuration] = useState<string>('60');
 
   const [selectedFieldInfo, setSelectedFieldInfo] = useState<any>(null);
 

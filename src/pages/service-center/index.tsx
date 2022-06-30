@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '@api';
 import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from './test';
 
-import PageNation from '../../components/PageNation';
+import usePagination from '@hooks/usePagination';
+import Pagination from '@components/Pagination';
+import { usePrevious } from '@hooks/usePrevious';
 
 export default () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  console.log(currentPage);
+  const navigate = useNavigate();
+
+  const onClickRow = (id: number) => {
+    navigate(`/service-center/notice/${id}`);
+  };
+
+  const pagination = usePagination(temp_data);
+
   return (
     <ServiceCenterLayout>
       <Container>
@@ -21,21 +29,22 @@ export default () => {
           <GuideLineTitle>제목</GuideLineTitle>
           <GuideLineRegDtm>등록일</GuideLineRegDtm>
         </ListGuideLine>
-        <PageNation
-          perPage={10}
-          total={temp_data.length}
-          current={currentPage}
-          setCurrent={setCurrentPage}
-        />
-        {temp_data.map((v) => {
+        {pagination.items.map((v: any, i: any) => {
           return (
-            <ContentList>
+            <ContentList key={i} onClick={() => onClickRow(i)}>
               <ContentNo>{v.no}</ContentNo>
               <ContentTitle>{v.title}</ContentTitle>
               <ContentRegDtm>{v.reg_dtm}</ContentRegDtm>
             </ContentList>
           );
         })}
+        <Pagination
+          limit={pagination.limit}
+          skip={pagination.skip}
+          totalCount={pagination.totalCount}
+          onChangeSkip={pagination.setSkip}
+          onChangeLimit={pagination.setLimit}
+        />
       </Container>
     </ServiceCenterLayout>
   );
@@ -45,7 +54,6 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   padding: 60px 60px 97px 60px;
-
   user-select: none;
 `;
 
@@ -94,7 +102,6 @@ const ContentList = styled.div`
   align-items: center;
   justify-content: start;
   background-color: #fff;
-  width: 1420px;
   height: 80px;
   border-bottom: 1px solid #f2f2f2;
   cursor: pointer;

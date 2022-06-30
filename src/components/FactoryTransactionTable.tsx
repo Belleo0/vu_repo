@@ -72,7 +72,12 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
 
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [amountEdit, setAmountEdit] = useState<boolean>(false);
+  const [isEditAmount, setIsEditAmount] = useState<any>({});
+
+  const handleToggleAnswer = (id: number) => {
+    console.log(id);
+    setIsEditAmount((prev: any) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const onMouseOver = (status: string) => {
     if (status === '1') {
@@ -98,7 +103,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
   const handleAddSpecRow = (index: number) => {
     console.log('index', index);
     setEditData((prev) => {
-      editData.splice(index, 0, renderSpecInput());
+      editData.splice(index, 0, defaultSpec);
       return editData;
     });
     // setSpecs((prev) => {
@@ -134,6 +139,10 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
         return mappedData;
       });
     }
+  };
+
+  const handleEditAmount = () => {
+    setIsEditAmount(true);
   };
 
   const renderSpecInput = () => {
@@ -206,7 +215,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
           <LabelCell style={{ maxWidth: 25 }}>{''}</LabelCell>
           <LabelCell style={{ minWidth: 280 }}>확인</LabelCell>
         </CellWrap>
-        {data.map((v) => (
+        {data.map((v, i) => (
           <CellWrap key={v?.id} selected={selectedIds.includes(v.id)}>
             <ValueCell>
               <SupplyDate>{v?.supplyDate}</SupplyDate>
@@ -220,10 +229,28 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
             </ValueCell>
             <ValueCell>{v?.size}</ValueCell>
             <ValueCell>{v?.preAmount}m³</ValueCell>
-            <ValueCell>
-              <SupplyAmount>{v?.amount}</SupplyAmount>
-              m³
-            </ValueCell>
+            {isEditAmount[v?.id] ? (
+              <ValueCell>
+                <BlackInput
+                  placeholder="000"
+                  containerStyle={{
+                    width: 64,
+                    marginRight: 4,
+                    color: '#258fff',
+                  }}
+                  value={v.quantity === 0 ? '' : v.quantity}
+                  onChange={(e) =>
+                    handleChangeSpecValue(i, 'quantity', e.target.value)
+                  }
+                />
+                m³
+              </ValueCell>
+            ) : (
+              <ValueCell>
+                <SupplyAmount>{v?.amount}</SupplyAmount>
+                m³
+              </ValueCell>
+            )}
             <ValueCell style={{ maxWidth: 25 }}>
               {v.status === '1' && (
                 <SpecRowIcon
@@ -257,7 +284,13 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                       ? ButtonType.DONE
                       : ButtonType.ABLE
                   }
-                  onClick={handleConfirm}
+                  onClick={() => {
+                    v.status === '0'
+                      ? null
+                      : v.status === '1'
+                      ? null
+                      : handleToggleAnswer(v?.id);
+                  }}
                 >
                   {v.status === '0'
                     ? '확인완료'

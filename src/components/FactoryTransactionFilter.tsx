@@ -59,6 +59,7 @@ export default () => {
         업체별
         <BlackSelect
           containerStyle={{ minWidth: 130, maxWidth: 240, marginLeft: 20 }}
+          absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           options={filterOptions}
           value={filter}
           onChange={(v) => setFilter(v)}
@@ -76,6 +77,7 @@ export default () => {
         현장별
         <BlackSelect
           containerStyle={{ minWidth: 130, maxWidth: 240, marginLeft: 20 }}
+          absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           options={filterOptions}
           value={filter}
           onChange={(v) => setFilter(v)}

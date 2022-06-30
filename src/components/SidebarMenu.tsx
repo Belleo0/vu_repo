@@ -5,13 +5,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-// const menus = [
-//   { label: '회원정보 수정', path: '/mypage' },
-//   { label: '조직관리', path: '' },
-//   { label: '친구관리', path: '' },
-//   { label: '알림 설정', path: '' },
-// ];
-
 interface ISideMenus {
   sidemenus: any[];
 }

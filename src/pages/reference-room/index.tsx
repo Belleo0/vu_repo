@@ -9,6 +9,7 @@ import _02 from '../../assets/02_img.png';
 import _03 from '../../assets/03_img.png';
 import _04 from '../../assets/04_img.png';
 import _05 from '../../assets/05_img.png';
+import ReferenceRoomLayout from '@layout/ReferenceRoomLayout';
 
 export default () => {
   const [item, setItem] = useState('');
@@ -29,7 +30,7 @@ export default () => {
   }, [item]);
 
   return (
-    <FieldCreateLayout>
+    <ReferenceRoomLayout>
       <Container>
         <TopListText>업체리스트</TopListText>
         <SubListText>업체선택</SubListText>
@@ -64,7 +65,6 @@ export default () => {
             onClick={(e) => {
               nxtStepHandler('파일');
             }}
-            style={{ margin: 0 }}
           >
             <CardLeftWrap>
               <CardTitleKR>파일</CardTitleKR>
@@ -76,7 +76,6 @@ export default () => {
             onClick={(e) => {
               nxtStepHandler('골재');
             }}
-            style={{ marginTop: '10px' }}
           >
             <CardLeftWrap>
               <CardTitleKR>골재</CardTitleKR>
@@ -92,7 +91,6 @@ export default () => {
             onClick={(e) => {
               nxtStepHandler('펌프카');
             }}
-            style={{ marginTop: '10px' }}
           >
             <CardLeftWrap>
               <CardTitleKR>펌프카</CardTitleKR>
@@ -102,7 +100,7 @@ export default () => {
           </ContentCard>
         </ContentCardWrap>
       </Container>
-    </FieldCreateLayout>
+    </ReferenceRoomLayout>
   );
 };
 
@@ -131,8 +129,8 @@ const SubListText = styled.div`
 `;
 
 const ContentCardWrap = styled.div`
-  width: 1420px;
-  height: 420px;
+  /* width: 1420px; */
+  /* height: 420px; */
   display: flex;
   margin-top: 24px;
   flex-wrap: wrap;
@@ -147,7 +145,9 @@ const ContentCard = styled.div`
   flex-direction: row;
   width: 460px;
   height: 200px;
+
   margin-right: 20px;
+  margin-bottom: 20px;
   border: 2px solid #fff;
   border-radius: 12px;
   box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.06);

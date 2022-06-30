@@ -40,7 +40,8 @@ export default ({
   return (
     <Container
       selected={selected}
-      onClick={selectedFieldId !== null ? onClick : () => null}
+      onClick={!!factories?.field_position ? onClick : () => null}
+      // onClick={selectedFieldId !== null ? onClick : () => null}
     >
       <InfoContainer>
         <Index> {(index + 1).toString().padStart(2, '0')}</Index>
@@ -54,7 +55,8 @@ export default ({
           </DistanceWrap>
         </InfoWrap>
       </InfoContainer>
-      {selectedFieldId !== null && (
+      {/* {selectedFieldId !== null && ( */}
+      {!!factories?.field_position && (
         <CheckIcon
           src={
             selected

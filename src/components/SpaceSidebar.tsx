@@ -1,5 +1,5 @@
 import api from '@api';
-import { setSelectedSpaceInfo } from '@data/space';
+import space, { setSelectedSpaceInfo } from '@data/space';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
@@ -74,15 +74,60 @@ export default () => {
 
   const searchedSpaces = useMemo(() => {
     if (!spaces) return [];
-    return spaces.filter((v) => v?.name?.includes(search));
-  }, [spaces, search]);
+    else if (order === '최신순') {
+      const stableSpaces = spaces.map((el, i) => [el, i]);
+      stableSpaces.sort((a, b) => {
+        return b[1] - a[1];
+      });
+      const sortedSpaces = stableSpaces.map((el) => el[0]);
+      return sortedSpaces.filter((v) => v?.name?.includes(search));
+    } else if (order === '오래된순') {
+      const sortedSpaces = spaces.sort((a, b) => {
+        return a.id - b.id;
+      });
+      return sortedSpaces.filter((v) => v?.name?.includes(search));
+    } else if (order === '이름순') {
+      const sortedSpaces = spaces.sort((a, b) => {
+        return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
+      });
+      console.log('이름순 sortedSpaces', sortedSpaces);
+      return sortedSpaces.filter((v) => v?.name?.includes(search));
+    } else if (order === '사용자화') {
+      return spaces.filter((v) => v?.name?.includes(search));
+    } else return [];
+  }, [spaces, order, search]);
 
   const [searchFactory, setSearchFactory] = useState('');
   const [forSearchFactory, setForSearchFactory] = useState('');
 
+  // const searchedFactories = useMemo(() => {
+  //   if (!factories) return [];
+  //   return factories.filter((v) => v?.visible_name?.includes(forSearchFactory));
+  // }, [factories, forSearchFactory]);
+
   const searchedFactories = useMemo(() => {
     if (!factories) return [];
-    return factories.filter((v) => v?.visible_name?.includes(forSearchFactory));
+    else if (order === '최신순') {
+      const stableFactory = factories.map((el, i) => [el, i]);
+      stableFactory.sort((a, b) => {
+        return b[1] - a[1];
+      });
+      const sortedFactory = stableFactory.map((el) => el[0]);
+      return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
+    } else if (order === '오래된순') {
+      const sortedFactory = factories.sort((a, b) => {
+        return a.id - b.id;
+      });
+      return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
+    } else if (order === '이름순') {
+      const sortedFactory = factories.sort((a, b) => {
+        return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
+      });
+      console.log('이름순 sortedSpaces', sortedFactory);
+      return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
+    } else if (order === '사용자화') {
+      return factories.filter((v) => v?.name?.includes(forSearchFactory));
+    } else return [];
   }, [factories, forSearchFactory]);
 
   const [isOrderChangeModalOpen, setIsOrderChangeModalOpen] = useState(false);
@@ -122,6 +167,8 @@ export default () => {
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
 
+    console.log('active, over: ', active, over);
+
     if (active.id !== over.id) {
       setChangeOrderSpaces((items) => {
         const oldIndex = items.indexOf(
@@ -135,7 +182,6 @@ export default () => {
         return result;
       });
     }
-
     // setActiveId(null);
   };
 
@@ -452,7 +498,7 @@ const Tab = styled.div<{ active: boolean }>`
           font-size: 15px;
           letter-spacing: -0.3px;
           color: #999;
-        `})}
+        `}
 `;
 
 const SpaceContainer = styled.div`
