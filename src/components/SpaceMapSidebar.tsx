@@ -30,6 +30,7 @@ export default ({
   address,
   setAddress,
   setRealAddress,
+  orderByFactories,
 }: any) => {
   const isLogin = useIsLogin();
 
@@ -97,22 +98,22 @@ export default ({
     }
   };
 
-  const orderByFactories = useMemo(() => {
-    if (factories) {
-      const data = factories?.data;
-      if (order === '거리순') {
-        const sortedData = data.sort((a: any, b: any) => {
-          return a.direction?.distance - b.direction?.distance;
-        });
-        return sortedData;
-      } else if (order === '시간순') {
-        const sortedData = data.sort((a: any, b: any) => {
-          return a.direction?.duration - b.direction?.duration;
-        });
-        return sortedData;
-      }
-    } else return;
-  }, [factories, order]);
+  // const orderByFactories = useMemo(() => {
+  //   if (factories) {
+  //     const data = factories?.data;
+  //     if (order === '거리순') {
+  //       const sortedData = data.sort((a: any, b: any) => {
+  //         return a.direction?.distance - b.direction?.distance;
+  //       });
+  //       return sortedData;
+  //     } else if (order === '시간순') {
+  //       const sortedData = data.sort((a: any, b: any) => {
+  //         return a.direction?.duration - b.direction?.duration;
+  //       });
+  //       return sortedData;
+  //     }
+  //   } else return;
+  // }, [factories, order]);
 
   return (
     <Container>
