@@ -107,6 +107,23 @@ export default () => {
     }
   }, [factoriesData]);
 
+  const orderByFactories = useMemo(() => {
+    if (factories) {
+      const data = factories?.data;
+      if (order === '거리순') {
+        const sortedData = data.sort((a: any, b: any) => {
+          return a.direction?.distance - b.direction?.distance;
+        });
+        return sortedData;
+      } else if (order === '시간순') {
+        const sortedData = data.sort((a: any, b: any) => {
+          return a.direction?.duration - b.direction?.duration;
+        });
+        return sortedData;
+      }
+    } else return;
+  }, [factories, order]);
+
   return (
     <SpaceMapLayout>
       <SpaceMapSidebar
@@ -125,6 +142,7 @@ export default () => {
         address={address}
         setAddress={setAddress}
         setRealAddress={setRealAddress}
+        orderByFactories={orderByFactories}
       />
       <ContentWrap>
         <Content>
@@ -172,7 +190,7 @@ export default () => {
             )}
 
             {factories &&
-              factories.data?.map((v: any, i: number) => (
+              orderByFactories?.map((v: any, i: number) => (
                 <NaverMapSpaceMarker
                   key={v.id}
                   lat={v.latitude}
@@ -184,8 +202,13 @@ export default () => {
                       address={v?.basic_address}
                       distance={v?.direction?.distance}
                       duration={v?.direction?.duration}
+                      // onClick={() => {
+                      //   if (selectedFieldId !== null) {
+                      //     handleClickFactoryCard(v.id);
+                      //   }
+                      // }}
                       onClick={() => {
-                        if (selectedFieldId !== null) {
+                        if (!!factories?.field_position) {
                           handleClickFactoryCard(v.id);
                         }
                       }}
