@@ -6,6 +6,10 @@ import AuthLayout from '@layout/AuthLayout';
 import Input from '@components/Input';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
+import getAssetURL from '@utils/getAssetURL';
+import Modal from '@components/RegisterTextModal';
+import data from '@data';
+import { stringify } from 'query-string';
 
 enum ButtonType {
   'ABLE',
@@ -44,10 +48,12 @@ const cursor = {
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const nxtStepHandler = () => {
     navigate('/auth/register/step-3', {
       state: {
+        ...(location.state as any),
         signname: email,
         password: password,
         name: name,
@@ -65,30 +71,32 @@ export default () => {
     chkPw: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/,
   };
 
-  const [email, setEmail] = useState<string>('');
-  const [emailCode, setEmailCode] = useState<string>('');
-  const [emailValid, setEmailValid] = useState<boolean>(false);
-  const [emailCodeVisible, setEmailCodeVisible] = useState<boolean>(false);
-  const [isEmailDone, setIsEmailDone] = useState<boolean>(false);
+  const [email, setEmail] = useState('');
+  const [emailCode, setEmailCode] = useState('');
+  const [emailValid, setEmailValid] = useState(false);
+  const [emailCodeVisible, setEmailCodeVisible] = useState(false);
+  const [isEmailDone, setIsEmailDone] = useState(false);
 
-  const [password, setPassword] = useState<string>('');
-  const [password2, setPassword2] = useState<string>('');
-  const [isPasswordDone, setIsPassWordDone] = useState<boolean>(false);
-  const [isPasswordDone2, setIsPassWordDone2] = useState<boolean>(false);
+  const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
+  const [isPasswordDone, setIsPassWordDone] = useState(false);
+  const [isPasswordDone2, setIsPassWordDone2] = useState(false);
 
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState('');
 
-  const [phone, setPhone] = useState<string>('');
-  const [phoneCode, setPhoneCode] = useState<string>('');
-  const [phoneValid, setPhoneValid] = useState<boolean>(false);
-  const [phoneCodeRecent, setPhoneCodeRecent] = useState<boolean>(false);
-  const [isPhoneDone, setIsPhoneDone] = useState<boolean>(false);
-  const [phoneCodeVisible, setPhoneCodeVisible] = useState<boolean>(false);
+  const [phone, setPhone] = useState('');
+  const [phoneCode, setPhoneCode] = useState('');
+  const [phoneValid, setPhoneValid] = useState(false);
+  const [phoneCodeRecent, setPhoneCodeRecent] = useState(false);
+  const [isPhoneDone, setIsPhoneDone] = useState(false);
+  const [phoneCodeVisible, setPhoneCodeVisible] = useState(false);
 
-  const [errorEmailMsg, setErrorEmailMsg] = useState<string>('1');
-  const [errorPhoneMsg, setErrorPhoneMsg] = useState<string>('1');
+  const [errorEmailMsg, setErrorEmailMsg] = useState('1');
+  const [errorPhoneMsg, setErrorPhoneMsg] = useState('1');
 
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const [isValid, setIsValid] = useState(false);
+
+  const [emailDupModal, setEmailDupModal] = useState(false);
 
   const isValidHandler = (e: any, type: string) => {
     switch (type) {
@@ -151,14 +159,13 @@ export default () => {
           setPhoneCodeRecent(true);
           setPhoneCodeVisible(true);
         }
-      })
-      .catch((err) => console.log(err));
+      });
   };
 
   const requestPhoneCodeValidateHandler = async () => {
     const tempPh = phone.replace(/-/g, '');
     await api
-      .post('/verifications/phone', {
+      .post('/verifications/phone/verify', {
         phone: tempPh,
         key: phoneCode,
       })
@@ -166,29 +173,33 @@ export default () => {
         if (res.data.result) {
           setIsPhoneDone(true);
           setErrorPhoneMsg('3');
-        } else {
-          setErrorPhoneMsg('2');
         }
       })
-      .catch((err) => console.log(err));
+      .catch(() => {
+        setErrorPhoneMsg('2');
+      });
   };
 
   const requestEmailValidateHandler = async () => {
-    await api
-      .post('/verifications/email', {
-        email: email,
-      })
-      .then((res) => {
-        if (res.data.result) {
-          setEmailCodeVisible(true);
-        }
-      })
-      .catch((err) => console.log(err));
+    const chkDupEmail = await dupEmailCheck();
+    if (chkDupEmail) {
+      setEmailDupModal(true);
+    } else {
+      await api
+        .post('/verifications/email', {
+          email: email,
+        })
+        .then((res) => {
+          if (res.data.result) {
+            setEmailCodeVisible(true);
+          }
+        });
+    }
   };
 
   const requestEmailCodeValidateHandler = async () => {
     await api
-      .post('/verifications/email', {
+      .post('/verifications/email/verify', {
         email: email,
         key: emailCode,
       })
@@ -196,12 +207,16 @@ export default () => {
         if (res.data.result) {
           setIsEmailDone(true);
           setErrorEmailMsg('3');
-        } else {
-          setErrorEmailMsg('2');
         }
       })
-      .catch((err) => console.log(err));
+      .catch(() => {
+        setErrorEmailMsg('2');
+      });
   };
+
+  useEffect(() => {
+    console.log(errorEmailMsg);
+  }, [errorEmailMsg]);
 
   useEffect(() => {
     if (email.length <= 0 || !email.includes('@') || !email.includes('.')) {
@@ -228,18 +243,45 @@ export default () => {
     isPhoneDone && isEmailDone && isPasswordDone2 && setIsValid(true);
   }, [isPhoneDone, isEmailDone, isPasswordDone, isPasswordDone2]);
 
+  const successCloseModal = () => {
+    setEmailDupModal(false);
+  };
+
+  const dupEmailCheck = async () => {
+    let data = false;
+    await api
+      .get('/users/check-duplicated-email', {
+        params: { email: email },
+      })
+      .then((res) => {
+        data = res?.data.result;
+      });
+    return data;
+  };
+
   return (
     <AuthLayout>
       <Container>
+        {emailDupModal ? (
+          <Modal
+            open={emailDupModal}
+            onClose={() => {
+              successCloseModal();
+            }}
+            submitText={'확인'}
+            content={'이미 가입된 이메일입니다.'}
+            wrapperStyle={{ height: '240px' }}
+          />
+        ) : null}
         <MainTitle>
           {companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
         </MainTitle>
         <TermsWrapper>
           <ProgressBar>
-            <ProgressCircle>1</ProgressCircle>
-            <ProgressDashed />
+            <ProgressCircleOff>1</ProgressCircleOff>
+            <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
             <ProgressCircle>2</ProgressCircle>
-            <ProgressDashed />
+            <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
           <MainContentBox>
@@ -520,25 +562,7 @@ const ProgressCircle = styled.div`
   color: #fff;
 `;
 
-const ProgressCircleOff = styled.div`
-  width: 24px;
-  height: 24px;
-  padding: 4px 0;
-  background-color: #fff;
-  border-radius: 50%;
-
-  font-size: 14px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  letter-spacing: -0.28px;
-  text-align: center;
-  color: #999999;
-  border: 1px solid #999;
-`;
-
-const ProgressDashed = styled.div`
-  border-top: 2px dashed #999999;
+const ProgressDashed = styled.img`
   width: 14px;
   hieght: 1px;
   margin: 0 6px;
@@ -598,6 +622,7 @@ const TextWrapper = styled.div`
 const SendButton = styled.div<{ type: AbleType }>`
   width: 120px;
   height: 42px;
+  margin-top: -5px;
   margin-left: 10px;
   margin-bottom: 16px;
   padding: 11px 0;
@@ -617,11 +642,16 @@ const SendButton = styled.div<{ type: AbleType }>`
   `}
 `;
 
-// const CustomInput = styled.input`
-//   display: flex;
-//   width: 100%;
-//   border-radius: 6px;
-//   background-color: white;
-//   border: solid 1px #c7c7c7;
-//   margin-bottom: 8px;
-// `;
+const ProgressCircleOff = styled.div`
+  width: 24px;
+  height: 24px;
+  padding: 4px 0;
+  background-color: #fff;
+  border-radius: 50%;
+
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  color: #999999;
+  border: 1px solid #999;
+`;

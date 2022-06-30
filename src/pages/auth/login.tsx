@@ -95,7 +95,7 @@ export default () => {
               비밀번호 찾기
             </TextButton>
             <TextButtonDivider />
-            <TextButton onClick={() => navigate('/auth/register/step-1')}>
+            <TextButton onClick={() => navigate('/auth/register/step-0')}>
               회원가입
             </TextButton>
           </TextButtonWrap>
