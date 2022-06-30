@@ -13,6 +13,12 @@ export default [
     permission: Permission.PUBLIC,
   },
   {
+    label: '회원가입 Step 0 타입 선택',
+    path: '/auth/register/step-0',
+    component: lazy(() => import('@pages/auth/register/step-0')),
+    permission: Permission.PUBLIC,
+  },
+  {
     label: '회원가입 Step 1',
     path: '/auth/register/step-1',
     component: lazy(() => import('@pages/auth/register/step-1')),
