@@ -46,9 +46,9 @@ export default () => {
     }
   };
 
-  const [isAllChk, setIsAllChk] = useState<boolean>(false);
-  const [chkList, setChkList] = useState<any>([]);
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const [isAllChk, setIsAllChk] = useState<boolean>(false); // 전체동의
+  const [chkList, setChkList] = useState<any>([]); // usr가 선택한 리스트를 넣어둔다
+  const [isValid, setIsValid] = useState<boolean>(false); //require값이 모두 chkList에 들어가 있는지 확인
 
   const allChkHandler = (chk: boolean) => {
     setIsAllChk(!isAllChk);

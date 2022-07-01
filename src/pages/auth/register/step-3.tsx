@@ -48,26 +48,29 @@ export default () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [company, setCompany] = useState<string | any>({});
-  const [position, setPosition] = useState<string>('');
-  const [department, setDepartment] = useState<string>('');
-  const [tel, setTel] = useState<string>('');
-  const [zipCode, setZipCode] = useState<string>('');
-  const [companyAdress, setCompanyAdress] = useState<string>('');
-  const [companyAdress2, setCompanyAdress2] = useState<string>('');
+  // # Basic State
+  const [company, setCompany] = useState<string | any>({}); // 회사이름
+  const [position, setPosition] = useState<string>(''); // 직위 / 직급
+  const [department, setDepartment] = useState<string>(''); // 부서
+  const [tel, setTel] = useState<string>(''); // 사내 전화번호
+  const [zipCode, setZipCode] = useState<string>(''); // 우편번호 (직접입력 시)
+  const [companyAdress, setCompanyAdress] = useState<string>(''); // 기본주소  (직접입력 시)
+  const [companyAdress2, setCompanyAdress2] = useState<string>(''); // 상세주소  (직접입력 시)
 
-  const [isUserInsert, setIsUserInsert] = useState<boolean>(false);
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const [isValid, setIsValid] = useState<boolean>(false); // 전체 유효성 확인
 
-  const [successOpenModal, setSuccessOpenModal] = useState(false);
-  const [searchCompanyOpenModal, setSearchCompanyOpenModal] = useState(false);
+  const [isUserInsert, setIsUserInsert] = useState<boolean>(false); // 회사 직접등록
+
+  // #Modal
+  const [successOpenModal, setSuccessOpenModal] = useState(false); // 완료 modal controller
+  const [searchCompanyOpenModal, setSearchCompanyOpenModal] = useState(false); // 회사검색 modal controller
+
+  const [companyList, setCompanyList] = useState<any>(); // 유저 소속에 따른 회사 리스트
 
   const userInviteType: boolean = false;
-  const companyName: string = '동양건설';
+  const companyName: string = '동양건설'; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
   const companyType: string =
-    (location.state as any)?.userType === 1 ? 'con' : 'rem';
-
-  const [companyList, setCompanyList] = useState<any>();
+    (location.state as any)?.userType === 1 ? 'con' : 'rem'; // 유저 소속에 따른 타입 1: 건설사, 2: 레미콘사
 
   // console.log('location => ', location.state);
 
