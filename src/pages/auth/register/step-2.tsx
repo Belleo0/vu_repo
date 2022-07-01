@@ -62,41 +62,42 @@ export default () => {
     });
   };
 
-  const companyName: string = '';
+  const companyName: string = ''; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
 
   const validItem = {
+    // 정규식 모음
     chkEmail:
       /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
     chkPhone: /^[0-9\b -]{0,13}$/,
     chkPw: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/,
   };
 
-  const [email, setEmail] = useState('');
-  const [emailCode, setEmailCode] = useState('');
-  const [emailValid, setEmailValid] = useState(false);
-  const [emailCodeVisible, setEmailCodeVisible] = useState(false);
-  const [isEmailDone, setIsEmailDone] = useState(false);
+  const [email, setEmail] = useState(''); // 이메일
+  const [emailCode, setEmailCode] = useState(''); // 이메일 인증번호
+  const [emailValid, setEmailValid] = useState(false); // 이메일 유효성 확인
+  const [emailCodeVisible, setEmailCodeVisible] = useState(false); // 이메일 인증 view controller
+  const [isEmailDone, setIsEmailDone] = useState(false); // 이메일 및 인증번호 유효성 확인
 
-  const [password, setPassword] = useState('');
-  const [password2, setPassword2] = useState('');
-  const [isPasswordDone, setIsPassWordDone] = useState(false);
-  const [isPasswordDone2, setIsPassWordDone2] = useState(false);
+  const [password, setPassword] = useState(''); // 비밀번호
+  const [password2, setPassword2] = useState(''); // 비밀번호 재입력
+  const [isPasswordDone, setIsPassWordDone] = useState(false); // 비밀번호 유효성 확인
+  const [isPasswordDone2, setIsPassWordDone2] = useState(false); // 비밀번호 재입력 유효성 확인
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState(''); // 이름
 
-  const [phone, setPhone] = useState('');
-  const [phoneCode, setPhoneCode] = useState('');
-  const [phoneValid, setPhoneValid] = useState(false);
-  const [phoneCodeRecent, setPhoneCodeRecent] = useState(false);
-  const [isPhoneDone, setIsPhoneDone] = useState(false);
-  const [phoneCodeVisible, setPhoneCodeVisible] = useState(false);
+  const [phone, setPhone] = useState(''); // 휴대폰
+  const [phoneCode, setPhoneCode] = useState(''); // 휴대폰 인증번호
+  const [phoneValid, setPhoneValid] = useState(false); // 휴대폰 유효성 확인
+  const [phoneCodeRecent, setPhoneCodeRecent] = useState(false); // 휴대폰 인증번호 재전송
+  const [phoneCodeVisible, setPhoneCodeVisible] = useState(false); // 휴대폰 인증 view controller
+  const [isPhoneDone, setIsPhoneDone] = useState(false); // 휴대폰 및 인증번호 유효성 확인
 
-  const [errorEmailMsg, setErrorEmailMsg] = useState('1');
-  const [errorPhoneMsg, setErrorPhoneMsg] = useState('1');
+  const [errorEmailMsg, setErrorEmailMsg] = useState('1'); // 이메일 관련 에러처리 1: 미입력 상태, 2: 입력값 유효하지 않은 상태, 3: 유효상태
+  const [errorPhoneMsg, setErrorPhoneMsg] = useState('1'); // 휴대폰 관련 에러처리 1: 미입력 상태, 2: 입력값 유효하지 않은 상태, 3: 유효상태
 
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(false); // 전체 유효성 확인
 
-  const [emailDupModal, setEmailDupModal] = useState(false);
+  const [emailDupModal, setEmailDupModal] = useState(false); // 이메일 중복검사
 
   const isValidHandler = (e: any, type: string) => {
     switch (type) {
@@ -213,10 +214,6 @@ export default () => {
         setErrorEmailMsg('2');
       });
   };
-
-  useEffect(() => {
-    console.log(errorEmailMsg);
-  }, [errorEmailMsg]);
 
   useEffect(() => {
     if (email.length <= 0 || !email.includes('@') || !email.includes('.')) {
