@@ -12,9 +12,15 @@ interface IFilterSelect {
   value: any;
   onChange: (value: any) => any;
   options: IOption[];
+  containerStyles?: React.CSSProperties;
 }
 
-export default ({ value, onChange, options }: IFilterSelect) => {
+export default ({
+  value,
+  onChange,
+  options,
+  containerStyles,
+}: IFilterSelect) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -35,7 +41,10 @@ export default ({ value, onChange, options }: IFilterSelect) => {
 
   return (
     <SpaceOrderWrap ref={ref}>
-      <SpaceOrderLabelWrap onClick={() => setIsFilterOpen((prev) => !prev)}>
+      <SpaceOrderLabelWrap
+        style={{ ...containerStyles }}
+        onClick={() => setIsFilterOpen((prev) => !prev)}
+      >
         <SpaceOrderLabel>{value}</SpaceOrderLabel>
         <SpaceOrderIcon
           isOpen={isFilterOpen}

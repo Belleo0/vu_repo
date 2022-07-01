@@ -26,6 +26,9 @@ import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 import { debounce } from 'lodash';
 import { usePrevious } from '@hooks/usePrevious';
 import NaverMapController from '@components/NaverMapController';
+import FieldMapSidebar from '@components/FieldMapSidebar';
+import NaverMapFieldStatus from '@components/NaverMapFieldStatus';
+import NaverMapFieldAddress from '@components/NaverMapFieldAddress';
 
 export default () => {
   const dispatch = useDispatch();
@@ -69,7 +72,7 @@ export default () => {
 
   const [selectedSpaceInfo, setSelectedSpaceInfo] = useState(null);
 
-  const [order, setOrder] = useState('거리순');
+  const [order, setOrder] = useState('최신순');
 
   const delayedUpdateCall = useRef(debounce((q) => setBounds(q), 1000)).current;
 
@@ -109,7 +112,7 @@ export default () => {
 
   return (
     <SpaceMapLayout>
-      <SpaceMapSidebar
+      <FieldMapSidebar
         factories={factories}
         order={order}
         setOrder={setOrder}
@@ -208,7 +211,9 @@ export default () => {
                   }
                 />
               ))}
+            <NaverMapFieldAddress />
             <NaverMapController />
+            <NaverMapFieldStatus />
           </NaverMap>
           <MapSpaceInfoModal
             open={isInfoModalOpen}
