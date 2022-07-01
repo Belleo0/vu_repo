@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import BlackInput from './BlackInput';
 import BlackSelect from './BlackSelect';
@@ -62,6 +62,7 @@ export default () => {
           options={filterOptions}
           value={filter}
           onChange={(v) => setFilter(v)}
+          absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
         />
       </FactoryFilterWrap>
       <ButtonsWrap style={{ justifyContent: 'flex-end' }}>

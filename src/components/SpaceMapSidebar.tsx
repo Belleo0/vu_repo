@@ -1,6 +1,6 @@
 import api from '@api';
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import SearchInput from './SearchInput';
 import Button, { ButtonType } from './Button';
 import { css } from '@emotion/react';
@@ -30,6 +30,7 @@ export default ({
   address,
   setAddress,
   setRealAddress,
+  orderByFactories,
 }: any) => {
   const isLogin = useIsLogin();
 
@@ -38,6 +39,8 @@ export default ({
   const navigate = useNavigate();
 
   const { data: spaces } = useSpaces('N');
+
+  // const [orderByFactories, setOrderByFactories] = useState<any[]>([]);
 
   const [tempSelectedFieldInfo, setTempSelectedFieldInfo] = useState<any>(null);
 
@@ -94,6 +97,23 @@ export default ({
       setIsFinishRequestEstimation(true);
     }
   };
+
+  // const orderByFactories = useMemo(() => {
+  //   if (factories) {
+  //     const data = factories?.data;
+  //     if (order === '거리순') {
+  //       const sortedData = data.sort((a: any, b: any) => {
+  //         return a.direction?.distance - b.direction?.distance;
+  //       });
+  //       return sortedData;
+  //     } else if (order === '시간순') {
+  //       const sortedData = data.sort((a: any, b: any) => {
+  //         return a.direction?.duration - b.direction?.duration;
+  //       });
+  //       return sortedData;
+  //     }
+  //   } else return;
+  // }, [factories, order]);
 
   return (
     <Container>
@@ -157,7 +177,8 @@ export default ({
           <TotalText>
             총 <b>{(factories?.data || []).length}개</b> 의 레미콘 공장
           </TotalText>
-          {selectedFieldId !== null && (
+          {/* {selectedFieldId !== null && ( */}
+          {!!factories?.field_position && (
             <FilterSelect
               options={[
                 { label: '거리순', value: '거리순' },
@@ -171,7 +192,7 @@ export default ({
       </TopSectionWrap>
       <MapSpaceCardWrap>
         {factories &&
-          factories.data?.map((v: any, i: any) => (
+          orderByFactories?.map((v: any, i: any) => (
             <MapSpaceCard
               key={v.id}
               id={v.id}
@@ -181,22 +202,32 @@ export default ({
               duration={v?.direction?.duration}
               selected={selectedFactoryIds.includes(v.id)}
               onClick={
-                selectedFieldId === null
-                  ? () => {
+                !!factories?.field_position
+                  ? () => handleClickFactoryCard(v.id)
+                  : () => {
                       setIsInfoModalOpen(false);
                       setSelectedSpaceInfo(v);
                       setTimeout(() => {
                         setIsInfoModalOpen(true);
                       }, 250);
                     }
-                  : () => handleClickFactoryCard(v.id)
+                // selectedFieldId === null
+                //   ? () => {
+                //       setIsInfoModalOpen(false);
+                //       setSelectedSpaceInfo(v);
+                //       setTimeout(() => {
+                //         setIsInfoModalOpen(true);
+                //       }, 250);
+                //     }
+                //   : () => handleClickFactoryCard(v.id)
               }
               selectedFieldId={selectedFieldId}
               factories={factories}
             />
           ))}
       </MapSpaceCardWrap>
-      {selectedFieldId !== null && (
+      {/* {selectedFieldId !== null && ( */}
+      {!!factories?.field_position && (
         <BottomButtonWrap>
           <Button
             type={

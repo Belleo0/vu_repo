@@ -13,6 +13,12 @@ export default [
     permission: Permission.PUBLIC,
   },
   {
+    label: '회원가입 Step 0 타입 선택',
+    path: '/auth/register/step-0',
+    component: lazy(() => import('@pages/auth/register/step-0')),
+    permission: Permission.PUBLIC,
+  },
+  {
     label: '회원가입 Step 1',
     path: '/auth/register/step-1',
     component: lazy(() => import('@pages/auth/register/step-1')),
@@ -139,6 +145,24 @@ export default [
     permission: Permission.PRIVATE,
   },
   {
+    label: '조직관리',
+    path: '/member',
+    component: lazy(() => import('@pages/mypage/member')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '조직관리',
+    path: '/friend',
+    component: lazy(() => import('@pages/mypage/friend')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '알림 설정',
+    path: '/notification',
+    component: lazy(() => import('@pages/mypage/notification')),
+    permission: Permission.PRIVATE,
+  },
+  {
     label: '건설사 자료실',
     path: '/reference-room',
     component: lazy(() => import('@pages/reference-room')),
@@ -164,6 +188,12 @@ export default [
     permission: Permission.PRIVATE,
   },
   {
+    label: '고객센터 - 공지사항 - 상세',
+    path: '/service-center/notice/:id',
+    component: lazy(() => import('@pages/service-center/notice/notice-detail')),
+    permission: Permission.PRIVATE,
+  },
+  {
     label: '고객센터 - FAQ',
     path: '/service-center/faq',
     component: lazy(() => import('@pages/service-center/index2')),
@@ -176,9 +206,31 @@ export default [
     permission: Permission.PRIVATE,
   },
   {
+    label: '고객센터 - 1:1 문의 - 생성',
+    path: '/service-center/inquiry/new',
+    component: lazy(
+      () => import('@pages/service-center/inquiry/Inquiry-create'),
+    ),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - 1:1 문의 - 상세',
+    path: '/service-center/inquiry/:id',
+    component: lazy(
+      () => import('@pages/service-center/inquiry/Inquiry-detail'),
+    ),
+    permission: Permission.PRIVATE,
+  },
+  {
     label: '고객센터 - 이벤트',
     path: '/service-center/event',
     component: lazy(() => import('@pages/service-center/index4')),
+    permission: Permission.PRIVATE,
+  },
+  {
+    label: '고객센터 - 이벤트 - 상세',
+    path: '/service-center/event/:id',
+    component: lazy(() => import('@pages/service-center/event/event-detail')),
     permission: Permission.PRIVATE,
   },
 ];

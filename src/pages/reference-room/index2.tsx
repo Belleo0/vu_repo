@@ -156,7 +156,7 @@ export default () => {
           lng={127.1054221}
           zoom={15}
           style={{
-            width: '1420px',
+            width: 'auto',
             height: '520px',
             marginTop: '40px',
           }}
@@ -198,7 +198,7 @@ export default () => {
 };
 
 const Container = styled.div`
-  width: 1420px;
+  /* width: 1420px; */
   height: 100%;
   padding: 52px 60px 97px 60px;
 
@@ -209,7 +209,7 @@ const TopList = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 1420px;
+  /* width: 1420px; */
 `;
 const TopListText = styled.div`
   font-size: 18px;
@@ -234,7 +234,7 @@ const TopListBtn = styled.div`
 `;
 
 const LocationWrap = styled.div`
-  width: 1420px;
+  /* width: 1420px; */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -252,7 +252,7 @@ const SearchWrap = styled.div`
 `;
 
 const LineGuard = styled.div`
-  width: 1420px;
+  /* width: 1420px; */
   height: 1px;
   margin: 20px 0 30px;
   background-color: #c7c7c7;
@@ -293,7 +293,7 @@ const BottomContentGuideLine = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: start;
-  width: 1420px;
+  /* width: 1420px; */
   height: 54px;
   background-color: #fff;
   border-top: 1px solid #c7c7c7;
@@ -311,7 +311,7 @@ const BottomContentList = styled.div`
   align-items: center;
   justify-content: start;
   background-color: #fff;
-  width: 1420px;
+  /* width: 1420px; */
   height: 54px;
   border-bottom: 1px solid #f2f2f2;
 

@@ -22,12 +22,16 @@ export default (props: IImgModal) => {
   return (
     <Modal {...props}>
       <ModalContainer>
-        <IconContainer onClick={props.onClose}>
-          <Icon src={getAssetURL('../assets/ic-del.svg')} />
-        </IconContainer>
-        <ImageContainer>
-          <Image src={getAssetURL(`${props.imgUrl}`)} />
-        </ImageContainer>
+        {props.imgUrl ? (
+          <IconContainer onClick={props.onClose}>
+            <Icon src={getAssetURL('../assets/ic-del.svg')} />
+          </IconContainer>
+        ) : null}
+        {props.imgUrl ? (
+          <ImageContainer>
+            <Image src={getAssetURL(`${props.imgUrl}`)} />
+          </ImageContainer>
+        ) : null}
         <ModalTitle>{props?.title}</ModalTitle>
         {props.content && (
           <ModalText>
@@ -37,7 +41,7 @@ export default (props: IImgModal) => {
         )}
         <ModalRedText>{props?.redContent}</ModalRedText>
         <ModalButtonWrap>
-          {/* {props.onSubmit && (
+          {props.onSubmit ? (
             <Button
               type={ButtonType.GRAY_BLACK}
               onClick={props.onClose}
@@ -45,7 +49,7 @@ export default (props: IImgModal) => {
             >
               취소
             </Button>
-          )} */}
+          ) : null}
           {props.submitText && (
             <Button onClick={props?.onSubmit ? props.onSubmit : props.onClose}>
               {props?.submitText || '확인'}

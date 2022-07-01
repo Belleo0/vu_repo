@@ -15,6 +15,7 @@ import PrivateWrapper from './PrivateWrapper';
 import api from '@api';
 
 import Loading from '@components/Loading';
+import styled from '@emotion/styled';
 
 const Container = () => {
   const dispatch = useDispatch();
@@ -50,10 +51,14 @@ const Container = () => {
             element={
               v.permission === Permission.PRIVATE ? (
                 <PrivateWrapper>
-                  <v.component />
+                  <MainContainer>
+                    <v.component />
+                  </MainContainer>
                 </PrivateWrapper>
               ) : (
-                <v.component />
+                <MainContainer>
+                  <v.component />
+                </MainContainer>
               )
             }
           />
@@ -82,5 +87,9 @@ function App() {
     </SWRConfig>
   );
 }
+
+const MainContainer = styled.div`
+  min-width: 1640px;
+`;
 
 export default App;

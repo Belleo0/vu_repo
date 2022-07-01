@@ -7,8 +7,9 @@ import Input from '@components/Input';
 import SearchInput from '@components/SearchInput';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
-import { isNull } from 'lodash';
-import _ from 'lodash';
+import getAssetURL from '@utils/getAssetURL';
+import Modal from '@components/RegisterTextModal';
+import SearchCompanyModal from '@components/SearchCompanyModal';
 
 enum ButtonType {
   'ABLE',
@@ -47,12 +48,51 @@ export default () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // # Basic State
+  const [company, setCompany] = useState<string | any>({}); // 회사이름
+  const [position, setPosition] = useState<string>(''); // 직위 / 직급
+  const [department, setDepartment] = useState<string>(''); // 부서
+  const [tel, setTel] = useState<string>(''); // 사내 전화번호
+  const [zipCode, setZipCode] = useState<string>(''); // 우편번호 (직접입력 시)
+  const [companyAdress, setCompanyAdress] = useState<string>(''); // 기본주소  (직접입력 시)
+  const [companyAdress2, setCompanyAdress2] = useState<string>(''); // 상세주소  (직접입력 시)
+
+  const [isValid, setIsValid] = useState<boolean>(false); // 전체 유효성 확인
+
+  const [isUserInsert, setIsUserInsert] = useState<boolean>(false); // 회사 직접등록
+
+  // #Modal
+  const [successOpenModal, setSuccessOpenModal] = useState(false); // 완료 modal controller
+  const [searchCompanyOpenModal, setSearchCompanyOpenModal] = useState(false); // 회사검색 modal controller
+
+  const [companyList, setCompanyList] = useState<any>(); // 유저 소속에 따른 회사 리스트
+
   const userInviteType: boolean = false;
-  const companyName: string = '동양건설';
-  const companyType: string = 'cns';
+  const companyName: string = '동양건설'; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
+  const companyType: string =
+    (location.state as any)?.userType === 1 ? 'con' : 'rem'; // 유저 소속에 따른 타입 1: 건설사, 2: 레미콘사
+
+  // console.log('location => ', location.state);
+
+  useEffect(() => {
+    api.get('/companies').then((res) => {
+      const temp: any = res.data.result;
+      let obj = null;
+      if (!userInviteType && companyType === 'rem') {
+        obj = temp.filter((v: any) => {
+          return v.company_type == 'REMICON';
+        });
+      } else {
+        obj = temp.filter((v: any) => {
+          return v.company_type == 'CONSTRUCTION';
+        });
+      }
+      setCompanyList(obj);
+    });
+  }, []);
 
   const requestSignUpHandler = async () => {
-    const data = await api
+    await api
       .post('/auth/register', {
         signname: (location.state as any)?.signname,
         password: (location.state as any)?.password,
@@ -60,29 +100,15 @@ export default () => {
         phone: (location.state as any)?.phone,
         position: position || '',
         tel: tel || '',
-        company_id: 1,
+        company_id: company.id,
       })
-      .then((res) => navigate('/auth/login'))
-      .catch((err) => console.log(err));
+      .then((res) => setSuccessOpenModal(true));
   };
-
-  const [company, setCompany] = useState<string>('');
-  const [position, setPosition] = useState<string>('');
-  const [department, setDepartment] = useState<string>('');
-  const [tel, setTel] = useState<string>('');
-  const [zipCode, setZipCode] = useState<string>('');
-  const [companyAdress, setCompanyAdress] = useState<string>('');
-  const [companyAdress2, setCompanyAdress2] = useState<string>('');
-
-  const [isUserInsert, setIsUserInsert] = useState<boolean>(false);
-  const [isValid, setIsValid] = useState<boolean>(false);
-
   const isValidHandler = (e: any, type: string) => {
-    // console.log('isValidHandler => ', e, ' || ', type);
     switch (type) {
       case 'company':
         setCompany(e);
-        if (!isUserInsert) {
+        if (!isUserInsert && !company === undefined) {
           setIsValid(() => true);
         }
         break;
@@ -136,9 +162,40 @@ export default () => {
     }
   });
 
+  const successCloseModal = () => {
+    navigate('/');
+  };
+
+  const searchCompanyClose = () => {
+    setSearchCompanyOpenModal(false);
+  };
+
+  useEffect(() => {
+    if (company.name) setIsValid(true);
+  }, [company]);
+
   return (
     <AuthLayout>
       <Container>
+        {successOpenModal && (
+          <Modal
+            open={successOpenModal}
+            onClose={() => successCloseModal()}
+            submitText={'확인'}
+            content={'회원가입이 완료되었습니다.'}
+            bottomContent={'메인 페이지로 이동합니다.'}
+          />
+        )}
+        {searchCompanyOpenModal && (
+          <SearchCompanyModal
+            open={searchCompanyOpenModal}
+            onClose={() => {
+              searchCompanyClose();
+            }}
+            data={companyList}
+            setChkCompany={setCompany}
+          />
+        )}
         <MainTitle>
           {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
         </MainTitle>
@@ -146,10 +203,10 @@ export default () => {
           type={isUserInsert ? MainHeightType.ABLE : MainHeightType.INABLE}
         >
           <ProgressBar>
-            <ProgressCircle>1</ProgressCircle>
-            <ProgressDashed />
-            <ProgressCircle>2</ProgressCircle>
-            <ProgressDashed />
+            <ProgressCircleOff>1</ProgressCircleOff>
+            <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
+            <ProgressCircleOff>2</ProgressCircleOff>
+            <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
             <ProgressCircle>3</ProgressCircle>
           </ProgressBar>
           <MainContentBox>
@@ -157,7 +214,7 @@ export default () => {
               <>
                 <LineWrapper style={{ margin: 0 }}>
                   <RepeatTitle>
-                    {companyType == 'cns' ? '회사명' : '레미콘 공장 상호명'}
+                    {companyType == 'con' ? '회사명' : '레미콘 공장 상호명'}
                   </RepeatTitle>
                   <Input
                     style={{ padding: '11px 20px', height: '42px' }}
@@ -167,7 +224,7 @@ export default () => {
                     value={company}
                     containerStyle={{ marginTop: '8px' }}
                     placeholder={
-                      companyType == 'cns'
+                      companyType == 'con'
                         ? '회사명을 입력해 주세요'
                         : '레미콘 공장명을 검색해 주세요'
                     }
@@ -175,7 +232,7 @@ export default () => {
                 </LineWrapper>
                 <LineWrapper>
                   <RepeatTitle>
-                    {companyType == 'cns' ? '회사 주소' : '공장 주소'}
+                    {companyType == 'con' ? '회사 주소' : '공장 주소'}
                   </RepeatTitle>
                   <TextWrapper>
                     <Input
@@ -212,7 +269,7 @@ export default () => {
                     }}
                     value={companyAdress}
                     placeholder={
-                      companyType == 'cns'
+                      companyType == 'con'
                         ? '회사 주소를 입력해 주세요'
                         : '공장 주소를 입력해 주세요'
                     }
@@ -291,7 +348,7 @@ export default () => {
               <>
                 <LineWrapper style={{ marginBottom: '31px' }}>
                   <RepeatTitle>
-                    {companyType == 'cns' ? '회사명' : '레미콘 공장 상호명'}
+                    {companyType == 'con' ? '회사명' : '레미콘 공장 상호명'}
                   </RepeatTitle>
                   <SearchInput
                     containerStyle={{
@@ -303,19 +360,22 @@ export default () => {
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'company');
                     }}
-                    value={company}
+                    value={company.name}
                     placeholder={
-                      companyType == 'cns'
+                      companyType == 'con'
                         ? '회사명을 검색해 주세요'
                         : '레미콘 공장을 검색해 주세요'
                     }
+                    onClick={() => {
+                      setSearchCompanyOpenModal(true);
+                    }}
                   />
                   {userInviteType ? (
                     <></>
                   ) : (
                     <CaptionWrapper>
                       <Caption>
-                        {companyType == 'cns'
+                        {companyType == 'con'
                           ? '등록된 회사가 없다면 직접 등록해 주세요.'
                           : '공장이 아닌 본사(사무소) 소속인 경우 직접 등록해 주세요.'}
                       </Caption>
@@ -383,12 +443,18 @@ export default () => {
               </>
             )}
           </MainContentBox>
-          <Button
-            type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
-            onClick={isValid ? () => requestSignUpHandler() : isNull}
-          >
-            회원가입
-          </Button>
+          {isValid ? (
+            <Button
+              type={ButtonType.ABLE}
+              onClick={() => {
+                requestSignUpHandler();
+              }}
+            >
+              회원가입
+            </Button>
+          ) : (
+            <Button type={ButtonType.INABLE}>회원가입</Button>
+          )}
         </TermsWrapper>
       </Container>
     </AuthLayout>
@@ -452,11 +518,24 @@ const ProgressCircle = styled.div`
   color: #fff;
 `;
 
-const ProgressDashed = styled.div`
-  border-top: 2px dashed #999999;
+const ProgressDashed = styled.img`
   width: 14px;
   hieght: 1px;
   margin: 0 6px;
+`;
+
+const ProgressCircleOff = styled.div`
+  width: 24px;
+  height: 24px;
+  padding: 4px 0;
+  background-color: #fff;
+  border-radius: 50%;
+
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  color: #999999;
+  border: 1px solid #999;
 `;
 
 const MainContentBox = styled.div`

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
 
@@ -32,27 +32,25 @@ const cursor = {
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const companyName: string = '동양건설';
 
   const nxtStepHandler = () => {
-    isValid ? navigate('/auth/register/step-2') : null;
+    if (isValid) {
+      navigate('/auth/register/step-2', {
+        state: {
+          ...(location.state as any),
+        },
+      });
+    }
   };
 
-  const [chk, setChk] = useState<any>({
-    all: false,
-    require1: false,
-    require2: false,
-    other1: false,
-    other2: false,
-  });
-
-  const [isAllChk, setIsAllChk] = useState<boolean>(false);
-  const [chkList, setChkList] = useState<any>([]);
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const [isAllChk, setIsAllChk] = useState<boolean>(false); // 전체동의
+  const [chkList, setChkList] = useState<any>([]); // usr가 선택한 리스트를 넣어둔다
+  const [isValid, setIsValid] = useState<boolean>(false); //require값이 모두 chkList에 들어가 있는지 확인
 
   const allChkHandler = (chk: boolean) => {
-    console.log('allChkHandler => ', chk);
     setIsAllChk(!isAllChk);
 
     if (chk) {
@@ -71,7 +69,6 @@ export default () => {
   };
 
   const chkHandler = (type: string, chk: boolean) => {
-    console.log('chkHandler => ', type, chk, isAllChk);
     if (isAllChk && !chk) {
       setIsAllChk(false);
     }

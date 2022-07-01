@@ -58,18 +58,15 @@ const profileMenus = [
   { label: '회원정보 수정', path: '/mypage' },
   {
     label: '조직관리',
-    path: '',
-    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+    path: '/member',
   },
   {
     label: '친구관리',
-    path: '',
-    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+    path: '/friend',
   },
   {
     label: '알림설정',
-    path: '',
-    onClick: () => window.alert(`TODO : 2차 범위입니다.`),
+    path: '/notification',
   },
 ];
 
