@@ -112,7 +112,7 @@ const ContentRegDtm = styled.div`
   letter-spacing: -0.28px;
   color: #777;
 `;
-const ContentStatus = styled.div<{ status: Boolean }>`
+const ContentStatus = styled.div<{ status: boolean }>`
   width: 174px;
 
   font-size: 14px;

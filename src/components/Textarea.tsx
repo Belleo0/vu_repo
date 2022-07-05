@@ -36,7 +36,7 @@ export default ({
 
   const [inputValue, setInputValue] = useState<any>(value);
 
-  const changeHandler = (ev: ChangeEvent<HTMLTextAreaElement>) => {
+  const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
     setInputValue(ev.target.value);
     onChange && onChange(ev); // optional로 인한 코드
   };
@@ -51,9 +51,12 @@ export default ({
       )}
       <Container isFocus={isFocused} style={inputStyle}>
         <Input
+          //@ts-ignore
           onFocus={() => setIsFocused(true)}
+          //@ts-ignore
           onBlur={() => setIsFocused(false)}
           value={value}
+          //@ts-ignore
           onChange={changeHandler}
           disabled={disabled}
           {...props}
