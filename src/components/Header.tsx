@@ -148,9 +148,7 @@ export default () => {
                     {profileMenus.map((item, i) => (
                       <ProfileMenu
                         key={item.label}
-                        onClick={() =>
-                          item?.onClick ? item?.onClick() : navigate(item.path)
-                        }
+                        onClick={() => navigate(item.path)}
                       >
                         {item.label}
                       </ProfileMenu>
