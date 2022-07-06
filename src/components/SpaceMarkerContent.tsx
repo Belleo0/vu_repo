@@ -142,6 +142,9 @@ const Container = styled.div`
   position: relative;
   width: 175px;
   height: 64px;
+  &: hover {
+    z-index: 9999;
+  }
 `;
 
 const Image = styled.img`
