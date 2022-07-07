@@ -26,6 +26,7 @@ import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 import { debounce } from 'lodash';
 import { usePrevious } from '@hooks/usePrevious';
 import NaverMapController from '@components/NaverMapController';
+import useGeolocation from '@hooks/useGeolocation';
 
 export default () => {
   const dispatch = useDispatch();
