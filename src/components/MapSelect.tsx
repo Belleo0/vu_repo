@@ -2,9 +2,11 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import ScrollBox from './ScrollBox';
 
 interface ISelect {
   width?: number;
+  height?: number;
   options: { label: string; value: unknown }[];
   value: unknown;
   placeholder?: string;
@@ -15,6 +17,7 @@ interface ISelect {
 
 export default ({
   width,
+  height,
   options,
   placeholder,
   value,
@@ -67,11 +70,19 @@ export default ({
 
   return (
     <Container
-      style={{ width: width || 'auto', ...containerStyle }}
+      style={{
+        width: width || 'auto',
+        height: height || 'auto',
+        ...containerStyle,
+      }}
       ref={ref}
       onClick={handleClickContainer}
     >
-      <Value style={{ color: valueLabel === null ? '#c7c7c7' : '#000' }}>
+      <Value
+        style={{
+          color: valueLabel === null ? '#c7c7c7' : '#000',
+        }}
+      >
         {valueLabel === null ? placeholder : valueLabel}
       </Value>
       <Icon src={getAssetURL('../assets/ic-arrow-bottom.svg')} />
@@ -79,19 +90,14 @@ export default ({
         isOpen={isOpened}
         value={value}
         optionLength={options.length}
+        maxHeight={height}
         style={{ zIndex, ...absoluteStyle }}
       >
-        <AbsoluteValueContainer>
+        <AbsoluteValueContainer maxHeight={height}>
           <Value style={{ color: valueLabel === null ? '#c7c7c7' : '#000' }}>
             {valueLabel === null ? placeholder : valueLabel}
           </Value>
-          <Icon
-            src={
-              isOpened
-                ? getAssetURL('../assets/ic-arrow-up.svg')
-                : getAssetURL('../assets/ic-arrow-bottom.svg')
-            }
-          />
+          <Icon src={getAssetURL('../assets/ic-arrow-bottom.svg')} />
         </AbsoluteValueContainer>
         <OptionBox>
           {options.map((v) => (
@@ -137,8 +143,10 @@ const AbsoluteWrap = styled.div<{
   isOpen: boolean;
   value: unknown;
   optionLength: number;
+  maxHeight: any;
 }>`
   display: flex;
+  align-items: center;
   flex-direction: column;
   position: absolute;
   top: -1px;
@@ -151,10 +159,14 @@ const AbsoluteWrap = styled.div<{
   z-index: 500;
   overflow: hidden;
 
-  ${({ isOpen, optionLength }) =>
+  ${({ isOpen, optionLength, maxHeight }) =>
     isOpen
       ? css`
           max-height: ${42 + 28 * optionLength}px;
+        `
+      : maxHeight
+      ? css`
+          height: ${maxHeight}px;
         `
       : css`
           max-height: 37px;
@@ -169,12 +181,22 @@ const AbsoluteWrap = styled.div<{
   transition: max-height 0.15s ease-in-out;
 `;
 
-const AbsoluteValueContainer = styled.div`
+const AbsoluteValueContainer = styled.div<{
+  maxHeight: any;
+}>`
   display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+
+  ${({ maxHeight }) =>
+    maxHeight
+      ? css`
+          margin-top: 7px;
+        `
+      : css`
+          margin-top: 0px;
+        `}
 `;
 
 const OptionText = styled.span<{ active: boolean }>`
@@ -202,27 +224,4 @@ const OptionBox = styled.div`
   height: 200px;
 
   margin-top: 14px;
-  overflow-y: scroll;
-
-  /* 스크롤바 설정*/
-  &::-webkit-scrollbar {
-    width: 17px;
-  }
-
-  /* 스크롤바 막대 설정*/
-  &::-webkit-scrollbar-thumb {
-    height: 17%;
-    background-color: #c7c7c7;
-    /* 스크롤바 둥글게 설정    */
-    border-radius: 10px;
-
-    background-clip: padding-box;
-    border: 6px solid transparent;
-  }
-
-  /* 스크롤바 뒷 배경 설정*/
-  &::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0);
-    margin: 0;
-  }
 `;

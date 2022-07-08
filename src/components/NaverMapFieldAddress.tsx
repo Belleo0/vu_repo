@@ -2,30 +2,39 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useGeolocation from '@hooks/useGeolocation';
 import getAssetURL from '@utils/getAssetURL';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import BlackSelect from './BlackSelect';
 import FilterSelect from './FilterSelect';
+import MapSelect from './MapSelect';
 import { MapContext } from './NaverMap';
 import NaverMapImageMarker from './NaverMapImageMarker';
+
+interface IMapAddr {
+  currentAddrDetail?: any;
+  searchedAddr?: any;
+  setCurrentAddrDetail?: any;
+}
 
 // @ts-ignore
 const { naver } = window;
 
-export default () => {
+export default ({
+  currentAddrDetail,
+  searchedAddr,
+  setCurrentAddrDetail,
+}: IMapAddr) => {
   const map: any = useContext(MapContext);
-  const { loaded, coordinates, error } = useGeolocation();
-
   const [mapFilter, setMapFilter] = useState('일반지도');
 
   return (
     <Container>
       <NaverMapAddressWrap>
-        <District>부산광역시</District>
+        <District>{currentAddrDetail.sido}</District>
         <Icon src={getAssetURL('../assets/ic-arrow-right.svg')} />
-        <District>동구</District>
+        <District>{currentAddrDetail.sigugun}</District>
       </NaverMapAddressWrap>
       <NaverMapSelectWrap>
-        <BlackSelect
+        <MapSelect
           options={[
             { label: '일반지도', value: '일반지도' },
             { label: '항공지도', value: '항공지도' },
@@ -33,6 +42,7 @@ export default () => {
           value={mapFilter}
           onChange={(v) => setMapFilter(v)}
           width={120}
+          height={46}
           absoluteStyle={{ border: 0 }}
         />
       </NaverMapSelectWrap>

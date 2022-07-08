@@ -29,9 +29,15 @@ import NaverMapController from '@components/NaverMapController';
 import FieldMapSidebar from '@components/FieldMapSidebar';
 import NaverMapFieldStatus from '@components/NaverMapFieldStatus';
 import NaverMapFieldAddress from '@components/NaverMapFieldAddress';
+import useGeolocation from '@hooks/useGeolocation';
+
+// @ts-ignore
+const { naver } = window;
 
 export default () => {
   const dispatch = useDispatch();
+
+  const { error, coordinates, loaded } = useGeolocation();
 
   const { polylineInfo } = useSelector((s: any) => s.map, shallowEqual);
 
@@ -43,6 +49,9 @@ export default () => {
   const [duration, setDuration] = useState<string>('60');
 
   const [selectedFieldInfo, setSelectedFieldInfo] = useState<any>(null);
+  const [selectedFactoryInfo, setSelectedFactoryInfo] = useState<string | null>(
+    null,
+  );
 
   const selectedFieldId = useMemo(() => {
     if (!selectedFieldInfo) return null;
@@ -93,6 +102,50 @@ export default () => {
     [selectedFactoryIds],
   );
 
+  const [currentAddress, setCurrentAddress] = useState<any>('');
+  const [currentAddrDetail, setCurrentAddrDetail] = useState({
+    sido: '',
+    sigugun: '',
+  });
+
+  // reversegeocode 현재 좌표 -> 주소로
+  useEffect(() => {
+    if (coordinates?.lat !== 0 && coordinates?.lng !== 0) {
+      console.log('coordinates', coordinates);
+
+      naver.maps.Service.reverseGeocode(
+        {
+          location: new naver.maps.LatLng(coordinates?.lat, coordinates?.lng),
+        },
+        function (status: any, response: any) {
+          if (status !== naver.maps.Service.Status.OK) {
+            return alert('문제가 발생했습니다.');
+          }
+
+          let result = response.result; // 검색 결과의 컨테이너
+          let items = result.items; // 검색 결과의 배열
+
+          // do Something
+          console.log('주소 결과', items);
+          console.log('주소 결과 배열::::', items?.[0].address);
+          setCurrentAddress(items?.[0].address);
+
+          const sido = items?.[0].addrdetail.sido;
+          const sigugun = items?.[0].addrdetail.sigugun;
+          setCurrentAddrDetail({
+            sido: sido,
+            sigugun: sigugun,
+          });
+          console.log('currentAddrDetail', currentAddrDetail);
+        },
+      );
+
+      console.log('현재주소 currentAddress', currentAddress);
+      setRealAddress(currentAddress);
+      setAddress(currentAddress);
+    }
+  }, [coordinates, currentAddress]);
+
   useEffect(() => {
     console.log('changed selectedFactoryIds', selectedFactoryIds);
   }, [selectedFactoryIds]);
@@ -118,6 +171,8 @@ export default () => {
         setOrder={setOrder}
         duration={duration}
         setDuration={setDuration}
+        selectedFactoryInfo={selectedFactoryInfo}
+        setSelectedFactoryInfo={setSelectedFactoryInfo}
         selectedFieldInfo={selectedFieldInfo}
         setSelectedFieldInfo={setSelectedFieldInfo}
         selectedFactoryIds={selectedFactoryIds}
@@ -134,7 +189,7 @@ export default () => {
           <NaverMap
             lat={37.557733}
             lng={126.9253985}
-            zoom={15}
+            zoom={12}
             style={{ width: '100%', height: 'calc(100vh - 80px)' }}
             boundChange={({ _min, _max }) => {
               const data = {
@@ -211,7 +266,8 @@ export default () => {
                   }
                 />
               ))}
-            <NaverMapFieldAddress />
+            <NaverMapFieldAddress currentAddrDetail={currentAddrDetail} />
+
             <NaverMapController />
             <NaverMapFieldStatus />
           </NaverMap>
