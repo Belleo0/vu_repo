@@ -329,7 +329,6 @@ export default () => {
               searchedAddr={factories?.field_position}
             />
             <NaverMapController />
-            <NaverMapFieldStatus />
           </NaverMap>
           <MapSpaceInfoModal
             open={isInfoModalOpen}
