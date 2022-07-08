@@ -85,6 +85,8 @@ export const ModalContainer = styled.div`
   padding: 30px 40px;
   border-radius: 20px;
   background-color: #fff;
+
+  overflow: hidden;
 `;
 
 export const ModalText = styled.span`

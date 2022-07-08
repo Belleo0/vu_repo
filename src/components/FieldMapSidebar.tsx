@@ -19,6 +19,18 @@ import getAssetURL from '@utils/getAssetURL';
 import MapFieldCard from './MapFieldCard';
 import ScrollBox from './ScrollBox';
 import FieldFilterModal from './FieldFilterModal';
+import useFactories from '@api/useFactories';
+import BlackInput from './BlackInput';
+import {
+  FieldPerOptions,
+  FieldReportOptions,
+} from '@constance/FieldFilterOptions';
+import FieldMapFilterModal from './FieldMapFilterModal';
+
+enum ChipTypeEnum {
+  DEFAULT,
+  ACTIVE,
+}
 
 export default ({
   factories,
@@ -26,6 +38,8 @@ export default ({
   setDuration,
   order,
   setOrder,
+  selectedFactoryInfo,
+  setSelectedFactoryInfo,
   selectedFieldInfo,
   setSelectedFieldInfo,
   selectedFactoryIds,
@@ -46,7 +60,7 @@ export default ({
 
   const { data: spaces } = useSpaces('N');
 
-  // const [orderByFactories, setOrderByFactories] = useState<any[]>([]);
+  const [factoryOptions, setFactoryOptions] = useState<any>([]);
 
   const [tempSelectedFieldInfo, setTempSelectedFieldInfo] = useState<any>(null);
 
@@ -74,6 +88,16 @@ export default ({
       navigate(location.pathname, {});
     }
   }, [location]);
+
+  useEffect(() => {
+    if (factories?.data) {
+      const factoryOption = factories?.data.map((v: any) => ({
+        label: v.name,
+        value: v.id,
+      }));
+      setFactoryOptions(factoryOption);
+    }
+  }, [factories]);
 
   const handleOpenSelectModal = () => {
     if (spaces && spaces.length > 0) {
@@ -112,9 +136,11 @@ export default ({
         <BlackSelect
           placeholder="레미콘 공장을 선택하세요"
           width={320}
-          value={slumpOptions}
-          onChange={() => {}}
-          options={slumpOptions}
+          value={selectedFactoryInfo}
+          onChange={(v) => {
+            setSelectedFactoryInfo(v);
+          }}
+          options={factoryOptions}
           absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           containerStyle={{ marginBottom: 40 }}
         />
@@ -195,35 +221,11 @@ export default ({
             />
           ))}
       </MapSpaceCardWrap>
-      <Modal open={isFieldFilterModal} onClose={handleCloseFilterModal}>
-        <ModalContainer
-          style={{ minWidth: 440, maxHeight: 620, paddingTop: 50 }}
-        >
-          <ModalTitle>MY 건설현장</ModalTitle>
-          <CardWrap>
-            {spaces &&
-              spaces.map((v, i) => (
-                <SelectSpaceCard
-                  key={v.id}
-                  name={v?.name}
-                  address={v?.basic_address}
-                  selected={v?.id === tempSelectedFieldInfo?.id}
-                  onClick={() => setTempSelectedFieldInfo(v)}
-                />
-              ))}
-          </CardWrap>
-          <ShadowButtonWrap>
-            <Button
-              type={ButtonType.GRAY_BLACK}
-              onClick={handleCloseFilterModal}
-              containerStyle={{ marginRight: 20 }}
-            >
-              취소
-            </Button>
-            <Button onClick={handleSubmitSelectModal}>선택하기</Button>
-          </ShadowButtonWrap>
-        </ModalContainer>
-      </Modal>
+      <FieldMapFilterModal
+        open={isFieldFilterModal}
+        onClose={handleCloseFilterModal}
+        handleSubmit={handleSubmitSelectModal}
+      />
       <TextModal
         open={isNotFoundSpaceModal}
         content={`등록된 건설현장 정보가 없습니다.\n건설현장을 등록하시겠습니까?`}

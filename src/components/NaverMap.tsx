@@ -10,8 +10,10 @@ import React, {
 const { naver } = window;
 
 interface IProps {
-  lat: number;
-  lng: number;
+  // lat: number;
+  // lng: number;
+  lat: any;
+  lng: any;
   zoomChange?: (v: any) => void;
   boundChange?: (v: any) => void;
   style: React.CSSProperties;

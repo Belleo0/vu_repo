@@ -123,7 +123,6 @@ export default () => {
       const sortedFactory = factories.sort((a, b) => {
         return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
       });
-      console.log('이름순 sortedSpaces', sortedFactory);
       return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
     } else if (order === '사용자화') {
       return factories.filter((v) => v?.name?.includes(forSearchFactory));
@@ -188,7 +187,7 @@ export default () => {
   const setSelectedIdWithFirstId = () => {
     if (spaces && spaces?.length > 0) {
       // console.log('data?.result?.[0]?.id', spaces?.[0]?.id);
-      dispatch(setSelectedSpaceInfo(spaces?.[0]));
+      dispatch(setSelectedSpaceInfo(searchedSpaces?.[0]));
       setIsMounted(true);
     }
   };
@@ -198,12 +197,13 @@ export default () => {
       !!!selectedSpaceId &&
       isMounted === false &&
       spaces &&
-      spaces.length > 0
+      spaces.length > 0 &&
+      searchedSpaces
     ) {
       setSelectedIdWithFirstId();
       // setIsFilterOpen(false);
     }
-  }, [tabType, spaces, isMounted]);
+  }, [tabType, spaces, isMounted, searchedSpaces]);
 
   const handleChangeTabType = (type: TabTypeEnum) => {
     setTabType(type);

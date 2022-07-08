@@ -40,8 +40,6 @@ export default ({
 
   const { data: spaces } = useSpaces('N');
 
-  // const [orderByFactories, setOrderByFactories] = useState<any[]>([]);
-
   const [tempSelectedFieldInfo, setTempSelectedFieldInfo] = useState<any>(null);
 
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
@@ -98,23 +96,6 @@ export default ({
     }
   };
 
-  // const orderByFactories = useMemo(() => {
-  //   if (factories) {
-  //     const data = factories?.data;
-  //     if (order === '거리순') {
-  //       const sortedData = data.sort((a: any, b: any) => {
-  //         return a.direction?.distance - b.direction?.distance;
-  //       });
-  //       return sortedData;
-  //     } else if (order === '시간순') {
-  //       const sortedData = data.sort((a: any, b: any) => {
-  //         return a.direction?.duration - b.direction?.duration;
-  //       });
-  //       return sortedData;
-  //     }
-  //   } else return;
-  // }, [factories, order]);
-
   return (
     <Container>
       <TopSectionWrap>
@@ -129,6 +110,10 @@ export default ({
               setSelectedFieldInfo(null);
             }
           }}
+          onClick={() => {
+            setRealAddress(address);
+            setSelectedFieldInfo(null);
+          }}
           placeholder="주소를 입력해 주세요"
         />
         {isLogin && (
@@ -142,37 +127,37 @@ export default ({
           </Button>
         )}
 
-        {!!factories?.field_position && (
-          <>
-            <Title>소요시간</Title>
-            <DurationWrap>
-              <Duration
-                active={duration === 'null'}
-                onClick={() => setDuration('null')}
-              >
-                전체
-              </Duration>
-              <Duration
-                active={duration === '30'}
-                onClick={() => setDuration('30')}
-              >
-                30분
-              </Duration>
-              <Duration
-                active={duration === '60'}
-                onClick={() => setDuration('60')}
-              >
-                60분
-              </Duration>
-              <Duration
-                active={duration === '90'}
-                onClick={() => setDuration('90')}
-              >
-                90분
-              </Duration>
-            </DurationWrap>
-          </>
-        )}
+        {/* {!!factories?.field_position && (
+          <> */}
+        <Title>소요시간</Title>
+        <DurationWrap>
+          <Duration
+            active={!!factories?.field_position ? duration === 'null' : false}
+            onClick={() => setDuration('null')}
+          >
+            전체
+          </Duration>
+          <Duration
+            active={!!factories?.field_position ? duration === '30' : false}
+            onClick={() => setDuration('30')}
+          >
+            30분
+          </Duration>
+          <Duration
+            active={!!factories?.field_position ? duration === '60' : false}
+            onClick={() => setDuration('60')}
+          >
+            60분
+          </Duration>
+          <Duration
+            active={!!factories?.field_position ? duration === '90' : false}
+            onClick={() => setDuration('90')}
+          >
+            90분
+          </Duration>
+        </DurationWrap>
+        {/* </>
+        )} */}
         <FilterWrap>
           <TotalText>
             총 <b>{(factories?.data || []).length}개</b> 의 레미콘 공장
@@ -227,20 +212,22 @@ export default ({
           ))}
       </MapSpaceCardWrap>
       {/* {selectedFieldId !== null && ( */}
-      {!!factories?.field_position && (
-        <BottomButtonWrap>
-          <Button
-            type={
-              selectedFactoryIds.length > 0
-                ? ButtonType.PRIMARY
-                : ButtonType.GRAY
-            }
-            onClick={handleRequestEstimation}
-          >
-            견적 요청하기
-          </Button>
-        </BottomButtonWrap>
-      )}
+      {/* {!!factories?.field_position && ( */}
+      <BottomButtonWrap>
+        <Button
+          type={
+            selectedFactoryIds.length > 0 ? ButtonType.PRIMARY : ButtonType.GRAY
+          }
+          onClick={
+            selectedFieldId !== null && isLogin
+              ? handleRequestEstimation
+              : handleOpenSelectModal
+          }
+        >
+          견적 요청하기
+        </Button>
+      </BottomButtonWrap>
+      {/* )} */}
 
       <Modal open={isSelectModalOpen} onClose={handleCloseSelectModal}>
         <ModalContainer
