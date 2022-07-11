@@ -23,6 +23,8 @@ export default ({ data = [], revalidate }: IVendorTable) => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] =
     useState<boolean>(false);
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+
   const [registerEstimationInfo, setRegisterSpaceInfo] = useState<any>(null);
 
   const [isAlreadyRegisterModalOpen, setIsAlreadyRegisterModalOpen] =
@@ -65,6 +67,7 @@ export default ({ data = [], revalidate }: IVendorTable) => {
     );
     await revalidate();
     setSelectedIds([]);
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -73,7 +76,11 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         <LabelCell style={{ maxWidth: 130 }}>
           <DeleteButton
             disabled={selectedIds.length === 0}
-            onClick={selectedIds.length === 0 ? () => null : handleRemove}
+            onClick={
+              selectedIds.length === 0
+                ? () => null
+                : () => setIsDeleteModalOpen(true)
+            }
           >
             삭제
           </DeleteButton>
@@ -203,6 +210,13 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         onClose={() => setIsRegisterModalOpen(false)}
         content={`레미콘 공장을 등록하시겠습니까?`}
         submitText="공장 등록하기"
+      />
+      <TextModal
+        open={isDeleteModalOpen}
+        onSubmit={handleRemove}
+        onClose={() => setIsDeleteModalOpen(false)}
+        content={`레미콘 공장을 삭제하시겠습니까?`}
+        submitText="공장 삭제하기"
       />
     </Container>
   );
