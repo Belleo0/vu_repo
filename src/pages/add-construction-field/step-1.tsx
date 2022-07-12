@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 import Input from '@components/Input';
@@ -17,6 +17,7 @@ export default () => {
   const [secFieldAddr, setSecFieldAddr] = useState('');
 
   const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false);
+  const el = useRef();
 
   const [position, setPosition] = useState<any>(null);
 
@@ -34,8 +35,6 @@ export default () => {
   };
 
   const step = fieldNm && fieldAddr ? true : false;
-
-  const setInputHandler = () => {};
 
   useEffect(() => {
     (async () => {
@@ -152,9 +151,10 @@ export default () => {
         <PostContainer style={{ width: 400, height: 600 }}>
           <DaumPostcode
             onComplete={(v) => {
-              setFieldAddr(v?.roadAddress || v?.autoJibunAddress);
+              setFieldAddr(v?.jibunAddress || v?.autoJibunAddress);
               setIsPostcodeModalOpened(false);
             }}
+            autoClose={true}
           />
         </PostContainer>
       </Modal>

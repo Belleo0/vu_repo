@@ -33,7 +33,7 @@ export default () => {
           remarks: remarks,
         },
       })
-      .then((res) => ((submitFlag = true), navigate('/my-space')))
+      .then((res) => ((submitFlag = true), navigate('/supplier-choice')))
       .catch(() => (submitFlag = false));
   };
   const prvPageHandler = () => {
