@@ -52,9 +52,6 @@ export default () => {
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
-  // const [maturityFlag, setMaturityFlag] = useState(false);
-  // const [paymentFlag, setPaymentFlag] = useState(false);
-
   const navigate = useNavigate();
 
   const nxtPageHandler = () => {
@@ -124,6 +121,25 @@ export default () => {
       }
     }
   }, [maturity, paymentDate]);
+
+  useEffect(() => {
+    if (step === 2) {
+      if (
+        paymentType !== 'CASH' &&
+        paymentDateInput !== '' &&
+        maturityInput !== ''
+      ) {
+        setIsValid(true);
+      }
+    }
+  }, [maturityInput, paymentDateInput]);
+
+  useEffect(() => {
+    setMaturity('');
+    setMaturityInput('');
+    setPaymentDate('');
+    setPaymentDateInput('');
+  }, [paymentType]);
 
   return (
     <FieldCreateLayout>
@@ -222,7 +238,7 @@ export default () => {
                   </OptionWrapper>
                   <InputStyle
                     placeholder={maturity === '' ? '숫자만 입력해 주세요' : ''}
-                    value={maturityInput}
+                    value={maturity === '' ? maturityInput : ''}
                     disabled={maturity !== '' ? true : false}
                     type={'number'}
                     onChange={(e) => dateInputHandler(e.target.value)}
@@ -275,16 +291,16 @@ export default () => {
                 <InputStyle
                   placeholder={paymentDate === '' ? '숫자만 입력해 주세요' : ''}
                   type={'number'}
-                  value={paymentDateInput}
+                  value={paymentDate === '' ? paymentDateInput : ''}
                   disabled={paymentDate !== '' ? true : false}
                   onChange={(e) => paymentDateInputHandler(e.target.value)}
                 />
               </InputItemWrapper>
               {paymentType === 'NOTE' ? (
                 <Caption>
-                  • 거래처가 세금계산서를 발행 후 {maturity || '만기'}일 뒤,
+                  • 거래처가 세금계산서를 발행 후 {paymentDate || '청구'}일 뒤,
                   어음(
-                  {paymentDate || '청구'}일)을 지급합니다.
+                  {maturity || '만기'}일)을 지급합니다.
                 </Caption>
               ) : null}
               {paymentType === 'CASH' ? (

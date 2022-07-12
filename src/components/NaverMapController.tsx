@@ -37,12 +37,7 @@ export default () => {
           disableCenter
           lat={coordinates!.lat}
           lng={coordinates!.lng}
-          content={
-            <img
-              src={getAssetURL('../assets/ic-my-position@3x.png')}
-              style={{ width: 51, height: 75 }}
-            />
-          }
+          content={<></>}
         />
       )}
       <ZoomWrap>
