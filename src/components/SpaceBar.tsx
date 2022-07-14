@@ -25,9 +25,11 @@ export default ({
       <InfoContainer>
         <InfoRow style={{ marginBottom: 12 }}>
           <SpaceName>{name}</SpaceName>
-          <Button onClick={() => window.alert(`TODO : 2차 범위입니다.`)}>
-            편집
-          </Button>
+          {isFieldUser && (
+            <Button onClick={() => window.alert(`TODO : 2차 범위입니다.`)}>
+              편집
+            </Button>
+          )}
         </InfoRow>
         {isFieldUser ? (
           <InfoRow>

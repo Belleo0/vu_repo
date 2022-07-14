@@ -56,15 +56,6 @@ export default ({
 
   const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false);
 
-  useEffect(() => {
-    if ((location?.state as any)?.searchText) {
-      const tempAddress = (location?.state as any)?.searchText;
-      setAddress(tempAddress);
-      setRealAddress(tempAddress);
-      navigate(location.pathname, {});
-    }
-  }, [location]);
-
   const handleOpenSelectModal = () => {
     if (spaces && spaces.length > 0) {
       setIsSelectModalOpen(true);
@@ -95,6 +86,8 @@ export default ({
       setIsFinishRequestEstimation(true);
     }
   };
+
+  console.log(selectedFieldInfo);
 
   return (
     <Container>
