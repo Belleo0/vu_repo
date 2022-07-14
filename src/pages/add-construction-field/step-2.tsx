@@ -60,6 +60,12 @@ export default () => {
     if (parseInt(e) <= 120 && parseInt(e) >= 1) {
       tempArr.push(parseInt(e));
       setXPosition(tempArr);
+
+      let temp: any = moment(now);
+
+      temp = moment(temp.add(parseInt(e), 'M')).format('YYYY-MM-DD');
+
+      setConstructionEndDate(temp);
     }
   };
 
