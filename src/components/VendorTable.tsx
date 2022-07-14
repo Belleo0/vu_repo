@@ -10,6 +10,7 @@ import TextModal from './TextModal';
 import api from '@api';
 import { useNavigate } from 'react-router-dom';
 import SupplySpaceInfoModal from './SupplySpaceInfoModal';
+import UserInfoModal from './UserInfoModal';
 
 interface IVendorTable {
   data: any[];
@@ -36,11 +37,14 @@ export default ({ data = [], revalidate }: IVendorTable) => {
     useState<boolean>(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [selectedSpaceInfo, setSelectedSpaceInfo] = useState(null);
+  const [companyName, setCompanyName] = useState(null);
 
   const [
     isNotRegisterEstimationModalOpen,
     setIsNotRegisterEstimationModalOpen,
   ] = useState<boolean>(false);
+
+  const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false);
 
   const handleClickRadio = (id: number) => {
     if (selectedIds.includes(id)) {
@@ -72,6 +76,9 @@ export default ({ data = [], revalidate }: IVendorTable) => {
     setSelectedIds([]);
     setIsDeleteModalOpen(false);
   };
+
+  console.log('selectedSpaceInfo', selectedSpaceInfo);
+  console.log('data', data);
 
   return (
     <Container>
@@ -136,7 +143,15 @@ export default ({ data = [], revalidate }: IVendorTable) => {
           </ValueCell>
           <ValueCell>B/P 210m³/h x 2</ValueCell>
           <ValueCell>
-            <SaleUserName>
+            <SaleUserName
+              onClick={() => {
+                setSelectedSpaceInfo(v?.factory_space?.site_user);
+                setCompanyName(v?.factory_space?.company?.name);
+                setTimeout(() => {
+                  setIsUserModalOpen(true);
+                }, 250);
+              }}
+            >
               {v?.factory_space?.site_user?.name}{' '}
               {v?.factory_space?.site_user?.position}
             </SaleUserName>
@@ -234,6 +249,12 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         open={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
         data={selectedSpaceInfo}
+      />
+      <UserInfoModal
+        open={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+        data={selectedSpaceInfo}
+        companyName={companyName}
       />
     </Container>
   );
