@@ -11,6 +11,9 @@ import api from '@api';
 import { useNavigate } from 'react-router-dom';
 import EstimationSubmitModal from './EstimationSubmitModal';
 import { mutate } from 'swr';
+import SupplySpaceInfoModal from './SupplySpaceInfoModal';
+import EstimationFieldInfoModal from './EstimationFieldInfoModal';
+import UserInfoModal from './UserInfoModal';
 
 interface IVendorTable {
   data: any[];
@@ -25,6 +28,12 @@ export default ({ data = [], revalidate }: IVendorTable) => {
 
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [selectedSubmitInfo, setSelectedSubmitInfo] = useState(null);
+
+  const [selectedSpaceInfo, setSelectedSpaceInfo] = useState(null);
+  const [companyName, setCompanyName] = useState(null);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+
+  const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false);
 
   const handleOrder = (id: number, isChatRoomJoined: number) => {
     if (Boolean(isChatRoomJoined)) {
@@ -63,7 +72,15 @@ export default ({ data = [], revalidate }: IVendorTable) => {
               {v?.field_space?.company.name}
             </FactoryCompanyName>
           </ValueCell>
-          <ValueCell style={{ flexDirection: 'column' }}>
+          <ValueCell
+            onClick={() => {
+              setSelectedSpaceInfo(v);
+              setTimeout(() => {
+                setIsInfoModalOpen(true);
+              }, 250);
+            }}
+            style={{ flexDirection: 'column' }}
+          >
             <FactoryCompanyName>{v?.field_space?.name}</FactoryCompanyName>
             <FactoryAddress>{v?.field_space?.basic_address}</FactoryAddress>
           </ValueCell>
@@ -73,7 +90,15 @@ export default ({ data = [], revalidate }: IVendorTable) => {
             <Duration>{convertDuration(v?.direction?.duration)}분</Duration>
           </ValueCell>
           <ValueCell style={{ maxWidth: 120 }}>
-            <SaleUserName>
+            <SaleUserName
+              onClick={() => {
+                setCompanyName(v?.field_space?.company?.name);
+                setSelectedSpaceInfo(v?.field_space?.site_user);
+                setTimeout(() => {
+                  setIsUserModalOpen(true);
+                }, 250);
+              }}
+            >
               {v?.field_space?.site_user?.name}{' '}
               {v?.field_space?.site_user?.position}
             </SaleUserName>
@@ -160,6 +185,17 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         data={selectedSubmitInfo}
         revalidate={revalidate}
       />
+      <EstimationFieldInfoModal
+        open={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+        data={selectedSpaceInfo}
+      />
+      <UserInfoModal
+        open={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+        data={selectedSpaceInfo}
+        companyName={companyName}
+      />
     </Container>
   );
 };
@@ -213,6 +249,8 @@ const FactoryCompanyName = styled.span`
   text-align: center;
   color: #222;
   margin-bottom: 6px;
+
+  cursor: pointer;
 `;
 
 const FactoryAddress = styled.span`
