@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import Loading from '@components/Loading';
 import SpaceMapLayout from '@layout/SpaceMapLayout';
 import NaverMap from '@components/NaverMap';
 import NaverMapSpaceMarker from '@components/NaverMapSpaceMarker';
@@ -25,6 +26,7 @@ import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 
 import { debounce } from 'lodash';
 import { usePrevious } from '@hooks/usePrevious';
+import { useLocation, useNavigate } from 'react-router-dom';
 import NaverMapController from '@components/NaverMapController';
 import useGeolocation from '@hooks/useGeolocation';
 import NaverMapFieldAddress from '@components/NaverMapFieldAddress';
@@ -60,10 +62,8 @@ export default () => {
 
   const [bounds, setBounds] = useState<any>(null);
 
-  const [address, setAddress] = useState('서울특별시 마포구 양화로 178-5');
-  const [realAddress, setRealAddress] = useState(
-    '서울특별시 마포구 양화로 178-5',
-  );
+  const [address, setAddress] = useState('');
+  const [realAddress, setRealAddress] = useState('');
 
   const { data: factoriesData, isLoading } = useFactoryMaps(
     selectedFieldId,
@@ -88,6 +88,9 @@ export default () => {
   const delayedUpdateCall = useRef(debounce((q) => setBounds(q), 1000)).current;
 
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+
+  const [longitude, setLongitude] = useState<any>(0);
+  const [latitude, setLatitude] = useState<any>(0);
 
   const handleClickFactoryCard = useCallback(
     (id: number) => {
@@ -122,79 +125,86 @@ export default () => {
     sido: '',
     sigugun: '',
   });
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // reversegeocode 현재 좌표 -> 주소로
   useEffect(() => {
-    if (coordinates?.lat !== 0 && coordinates?.lng !== 0) {
-      console.log('coordinates', coordinates);
+    if ((location?.state as any)?.searchText) {
+      const tempAddress = (location?.state as any)?.searchText;
+      const tempSelectedFieldInfo = (location?.state as any)?.selectedSpaceInfo;
 
-      naver.maps.Service.reverseGeocode(
+      console.log({ tempAddress });
+      console.log({ tempSelectedFieldInfo });
+      console.log({ location });
+
+      naver.maps.Service.geocode(
         {
-          location: new naver.maps.LatLng(coordinates?.lat, coordinates?.lng),
+          query: tempAddress,
         },
-        function (status: any, response: any) {
+        (status: any, response: any) => {
           if (status !== naver.maps.Service.Status.OK) {
             return alert('문제가 발생했습니다.');
           }
+          const result = response.v2.addresses[0];
+          const sido = result.addressElements.find((element: any) =>
+            element.types.includes('SIDO'),
+          ).longName;
+          const sigugun = result.addressElements.find((element: any) =>
+            element.types.includes('SIGUGUN'),
+          ).longName;
 
-          let result = response.result; // 검색 결과의 컨테이너
-          let items = result.items; // 검색 결과의 배열
-
-          // do Something
-          console.log('주소 결과', items);
-          console.log('주소 결과 배열::::', items?.[0].address);
-          setCurrentAddress(items?.[0].address);
-
-          const sido = items?.[0].addrdetail.sido;
-          const sigugun = items?.[0].addrdetail.sigugun;
+          setCurrentAddress(tempAddress);
           setCurrentAddrDetail({
             sido: sido,
             sigugun: sigugun,
           });
-          console.log('currentAddrDetail', currentAddrDetail);
+          setRealAddress(tempAddress);
+          setAddress(tempAddress);
+          setSelectedFieldInfo(tempSelectedFieldInfo);
+          setLongitude(result.x);
+          setLatitude(result.y);
         },
       );
+    } else {
+      if (coordinates?.lat !== 0 && coordinates?.lng !== 0) {
+        console.log('coordinates', coordinates);
+        naver.maps.Service.reverseGeocode(
+          {
+            location: new naver.maps.LatLng(coordinates?.lat, coordinates?.lng),
+          },
+          function (status: any, response: any) {
+            if (status !== naver.maps.Service.Status.OK) {
+              return alert('문제가 발생했습니다.');
+            }
 
-      console.log('현재주소 currentAddress', currentAddress);
-      setRealAddress(currentAddress);
-      setAddress(currentAddress);
+            const result = response.result.items?.[0]; // 검색결과 단일
+            const address = result.address;
+            const sido = result.addrdetail.sido;
+            const sigugun = result.addrdetail.sigugun;
+
+            setCurrentAddress(address);
+            setCurrentAddrDetail({
+              sido: sido,
+              sigugun: sigugun,
+            });
+            setRealAddress(address);
+            setAddress(address);
+            setLongitude(coordinates?.lng);
+            setLatitude(coordinates?.lat);
+          },
+        );
+      }
     }
-  }, [coordinates, currentAddress]);
+  }, [coordinates, location]);
 
-  // reversegeocode 현재 검색한 주소 좌표 -> 주소로
   // useEffect(() => {
-  //   if (factories?.field_position) {
-  //     console.log('field_position', factories?.field_position);
-
-  //     let position = factories?.field_position;
-  //     console.log('position', position);
-
-  //     naver.maps.Service.reverseGeocode(
-  //       {
-  //         location: new naver.maps.LatLng(position?.lat, position?.lng),
-  //       },
-  //       function (status: any, response: any) {
-  //         if (status !== naver.maps.Service.Status.OK) {
-  //           return alert('문제가 발생했습니다.');
-  //         }
-
-  //         let result = response.result; // 검색 결과의 컨테이너
-  //         let items = result.items; // 검색 결과의 배열
-
-  //         // do Something
-
-  //         const sido = items?.[0].addrdetail.sido;
-  //         const sigugun = items?.[0].addrdetail.sigugun;
-  //         setCurrentAddrDetail({
-  //           sido: sido,
-  //           sigugun: sigugun,
-  //         });
-  //         console.log('currentAddrDetail', currentAddrDetail);
-  //       },
-  //     );
-  //   }
-  //   return;
-  // }, []);
+  //   navigate(location.pathname, {
+  //     state: {
+  //       // ...(location.state as any),
+  //       searchText: realAddress,
+  //     },
+  //   });
+  // }, [realAddress]);
 
   const orderByFactories = useMemo(() => {
     if (factories) {
@@ -212,6 +222,14 @@ export default () => {
       }
     } else return;
   }, [factories, order]);
+
+  if (!coordinates?.lat || !coordinates?.lng) {
+    return <Loading />;
+  }
+
+  if (!longitude || !latitude) {
+    return null;
+  }
 
   return (
     <SpaceMapLayout>
@@ -236,10 +254,8 @@ export default () => {
       <ContentWrap>
         <Content>
           <NaverMap
-            // lat={37.557733}
-            // lng={126.9253985}
-            lat={coordinates?.lat}
-            lng={coordinates?.lng}
+            lat={latitude}
+            lng={longitude}
             zoom={12}
             style={{ width: '100%', height: 'calc(100vh - 80px)' }}
             boundChange={({ _min, _max }) => {

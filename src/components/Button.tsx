@@ -18,6 +18,7 @@ export enum ButtonType {
   BLACK_WHITE,
   BLACK_OUTLINE,
   DISABLED,
+  ORANGE,
 }
 
 interface IButton {
@@ -39,6 +40,7 @@ const backgroundColors = {
   [ButtonType.BLACK_WHITE]: '#000000',
   [ButtonType.BLACK_OUTLINE]: 'inherit',
   [ButtonType.DISABLED]: '#f2f2f2',
+  [ButtonType.ORANGE]: '#ff7d00',
 };
 
 const borderWidths = {
@@ -51,6 +53,7 @@ const borderWidths = {
   [ButtonType.BLACK_WHITE]: 1,
   [ButtonType.BLACK_OUTLINE]: 1,
   [ButtonType.DISABLED]: 1,
+  [ButtonType.ORANGE]: 1,
 };
 
 const borderColors = {
@@ -63,6 +66,7 @@ const borderColors = {
   [ButtonType.BLACK_WHITE]: 'inherit',
   [ButtonType.BLACK_OUTLINE]: '#000000',
   [ButtonType.DISABLED]: 'inherit',
+  [ButtonType.ORANGE]: 'inherit',
 };
 
 const textColors = {
@@ -75,6 +79,7 @@ const textColors = {
   [ButtonType.BLACK_WHITE]: '#ffffff',
   [ButtonType.BLACK_OUTLINE]: '#000000',
   [ButtonType.DISABLED]: '#999999',
+  [ButtonType.ORANGE]: '#ffffff',
 };
 
 export default ({

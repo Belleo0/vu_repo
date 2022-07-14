@@ -9,6 +9,7 @@ import moment from 'moment';
 import TextModal from './TextModal';
 import api from '@api';
 import { useNavigate } from 'react-router-dom';
+import SupplySpaceInfoModal from './SupplySpaceInfoModal';
 
 interface IVendorTable {
   data: any[];
@@ -33,6 +34,8 @@ export default ({ data = [], revalidate }: IVendorTable) => {
     useState<boolean>(false);
   const [isNotRegisterModalOpen, setIsNotRegisterModalOpen] =
     useState<boolean>(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [selectedSpaceInfo, setSelectedSpaceInfo] = useState(null);
 
   const [
     isNotRegisterEstimationModalOpen,
@@ -111,7 +114,16 @@ export default ({ data = [], revalidate }: IVendorTable) => {
             </DeleteRadio>
           </ValueCell>
           <ValueCell style={{ flexDirection: 'column' }}>
-            <FactoryCompanyName>{v?.factory_space?.name}</FactoryCompanyName>
+            <FactoryCompanyName
+              onClick={() => {
+                setSelectedSpaceInfo(v);
+                setTimeout(() => {
+                  setIsInfoModalOpen(true);
+                }, 250);
+              }}
+            >
+              {v?.factory_space?.name}
+            </FactoryCompanyName>
             <FactoryAddress>{v?.factory_space?.basic_address}</FactoryAddress>
           </ValueCell>
           <ValueCell style={{ flexDirection: 'column' }}>
@@ -215,8 +227,13 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         open={isDeleteModalOpen}
         onSubmit={handleRemove}
         onClose={() => setIsDeleteModalOpen(false)}
-        content={`레미콘 공장을 삭제하시겠습니까?`}
-        submitText="공장 삭제하기"
+        content={`납품사를 삭제하시겠습니까?`}
+        submitText="삭제"
+      />
+      <SupplySpaceInfoModal
+        open={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+        data={selectedSpaceInfo}
       />
     </Container>
   );
@@ -271,6 +288,8 @@ const FactoryCompanyName = styled.span`
   text-align: center;
   color: #222;
   margin-bottom: 6px;
+
+  cursor: pointer;
 `;
 
 const FactoryAddress = styled.span`
