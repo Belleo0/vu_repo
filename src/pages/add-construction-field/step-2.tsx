@@ -9,11 +9,13 @@ import moment from 'moment';
 
 export default () => {
   let now: any = new Date();
+
   const [constructionStartDate, setContructionStartDate] = useState<any>(
     now.toLocaleDateString('en-CA'),
   );
   const [constructionEndDate, setConstructionEndDate] = useState<any>();
   const [xPosition, setXPosition] = useState<any>([12]);
+  const [maxCalendar, setMaxCalendar] = useState<string>('');
 
   const location = useLocation();
 
@@ -34,6 +36,12 @@ export default () => {
       },
     });
   };
+
+  useEffect(() => {
+    setMaxCalendar(
+      moment(constructionStartDate).add(120, 'M').format('YYYY-MM-DD'),
+    );
+  }, [constructionStartDate]);
 
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-1');
@@ -119,6 +127,7 @@ export default () => {
               onChange={(e) => {
                 onChangeStartDate(e.target.value);
               }}
+              value={constructionStartDate || ''}
               style={{ width: '156px', height: '42px' }}
             />
             <DistanceIcon src={getAssetURL('../assets/ic-tilde.svg')} />
@@ -128,8 +137,10 @@ export default () => {
               onChange={(e) => {
                 onChangeEndDate(e.target.value);
               }}
-              min={constructionStartDate}
+              value={constructionEndDate || ''}
               style={{ width: '156px', height: '42px' }}
+              min={constructionStartDate}
+              max={maxCalendar}
             />
           </DateWrapper>
         </InputItemWrapper>

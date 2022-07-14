@@ -20,6 +20,7 @@ import GuideSection from './GuideSection';
 import AppSection from './AppSection';
 import MySiteSection from './MySiteSection';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -33,6 +34,10 @@ export default () => {
 
   const { data, error, mutate } = useSWR<any[]>([`/field-spaces`]);
   const [myspaces, setMyspaces] = useState<any[]>([]);
+
+  const [state, setState] = useLocalStorage('@add-construction-field', {
+    searchItem: search,
+  });
 
   useEffect(() => {
     if (data) {
@@ -49,8 +54,13 @@ export default () => {
   const handleSearch = () => {
     if (search.length === 0)
       return window.alert('건설현장 주소를 입력해주세요.');
+
     navigate('/remicon-map', { state: { searchText: search } });
   };
+
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, searchItem: search }));
+  }, [search]);
 
   return (
     <AuthLayout>

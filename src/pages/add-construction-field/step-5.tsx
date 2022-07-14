@@ -1,18 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '@api';
 import Modal from '@components/TextModal';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 
 export default () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [chkText, setChkText] = useState<any>(0);
-  const [remarks, setRemarks] = useState<string>('');
+
+  const [remarks, setRemarks] = useState('');
+
   const [successOpenModal, setSuccessOpenModal] = useState(false);
   let submitFlag = false;
+
+  const [state, setState] = useLocalStorage('@add-construction-field', {
+    remarks,
+  });
+
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, remarks }));
+  }, [remarks]);
+
+  useEffect(() => {
+    if (state?.remarks) setRemarks(state.remarks);
+  }, [state]);
 
   const requestSignUp = () => {
     submitFlag = true;
@@ -33,7 +49,10 @@ export default () => {
           remarks: remarks,
         },
       })
-      .then((res) => ((submitFlag = true), navigate('/my-space')))
+      .then(() => {
+        (submitFlag = true), navigate('/supplier-choice');
+        localStorage.removeItem('@add-construction-field');
+      })
       .catch(() => (submitFlag = false));
   };
   const prvPageHandler = () => {
@@ -73,7 +92,11 @@ export default () => {
 
         <InputItemWrapper>
           <FieldName>특기사항 입력 (선택)</FieldName>
-          <InputStyle onChange={(e) => chkTextLength(e)} maxLength={500} />
+          <InputStyle
+            value={remarks}
+            onChange={(e) => chkTextLength(e)}
+            maxLength={500}
+          />
           <LengthCaption>{chkText}/500</LengthCaption>
         </InputItemWrapper>
 

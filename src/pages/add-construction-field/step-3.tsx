@@ -3,13 +3,18 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 
 export default () => {
-  const [requirement, setRequirement] = useState<string>();
+  const [requirement, setRequirement] = useState<any>();
 
   const navigate = useNavigate();
 
   const location = useLocation();
+
+  const [state, setState] = useLocalStorage('@add-construction-field', {
+    requirement,
+  });
 
   const nxtStepHandler = () => {
     navigate('/add-construction-field/step-4', {
@@ -19,6 +24,14 @@ export default () => {
       },
     });
   };
+
+  useEffect(() => {
+    setRequirement(state.requirement);
+  }, [state]);
+
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, requirement }));
+  }, [requirement]);
 
   const prvPageHandler = () => {
     navigate('/add-construction-field/step-2');

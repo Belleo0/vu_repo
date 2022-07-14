@@ -5,6 +5,7 @@ import FieldCreateLayout from '@layout/FieldCreateLayout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import BlackSelect from '@components/BlackSelect';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 
 enum ButtonType {
   'ABLE',
@@ -41,21 +42,90 @@ const textColors = {
 };
 
 export default () => {
-  const [step, setStep] = useState<number>(0);
   const location = useLocation();
+  const [step, setStep] = useState<number>(0);
 
   const [maturity, setMaturity] = useState('');
   const [maturityInput, setMaturityInput] = useState('');
   const [paymentDate, setPaymentDate] = useState('');
   const [paymentDateInput, setPaymentDateInput] = useState('');
   const [paymentType, setPaymentType] = useState<string | null>(null);
+  // const [input, setInput] = useState({
+  //   step: 0,
+  //   maturity: '',
+  //   maturityInput: '',
+  //   paymentDate: '',
+  //   paymentDateInput: '',
+  //   paymentType: '',
+  // });
+
+  // const [state, setState] = useLocalStorage('@add-construction-field', {
+  //   maturity: input.maturity,
+  //   maturityInput: input.maturityInput,
+  //   paymentDate: input.paymentDate,
+  //   paymentDateInput: input.paymentDateInput,
+  //   paymentType: input.paymentType,
+  // });
+  const [state, setState] = useLocalStorage('@add-construction-field', {
+    maturity,
+    maturityInput,
+    paymentDate,
+    paymentDateInput,
+    paymentType,
+  });
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
-  // const [maturityFlag, setMaturityFlag] = useState(false);
-  // const [paymentFlag, setPaymentFlag] = useState(false);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(state);
+    console.log(paymentDate);
+    console.log(state.maturity);
+    console.log(state.paymentDate);
+  }, [state]);
+
+  useEffect(() => {
+    setMaturity(state.maturity);
+    setMaturityInput(state.maturityInput);
+    setPaymentDate(state.paymentDate);
+    setPaymentDateInput(state.paymentDateInput);
+    setPaymentType(state.paymentType);
+    setStep(state.step);
+  }, []);
+
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, maturity }));
+  }, [maturity]);
+
+  useEffect(() => {
+    setState((prev: any) => ({
+      ...prev,
+      maturityInput,
+    }));
+  }, [maturityInput]);
+
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, paymentDate }));
+  }, [paymentDate]);
+
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, step }));
+  }, [step]);
+
+  useEffect(() => {
+    setState((prev: any) => ({
+      ...prev,
+      paymentDateInput,
+    }));
+  }, [paymentDateInput]);
+
+  useEffect(() => {
+    setState((prev: any) => ({
+      ...prev,
+      paymentType,
+    }));
+  }, [paymentType]);
 
   const nxtPageHandler = () => {
     navigate('/add-construction-field/step-5', {
@@ -85,22 +155,15 @@ export default () => {
   };
 
   const dateOptionHandler = (v: string) => {
-    // console.log('dateOptionHandler=> ', v);
-
     setMaturity(v);
   };
   const dateInputHandler = (v: string) => {
-    // console.log('dateInputHandler=> ', v);
-
     setMaturityInput(v);
   };
   const paymentDateOptionHandler = (v: string) => {
-    // console.log('paymentDateOptionHandler=> ', v);
-
     setPaymentDate(v);
   };
   const paymentDateInputHandler = (v: string) => {
-    // console.log('paymentDateInputHandler=> ', v);
     setPaymentDateInput(v);
   };
 
@@ -124,6 +187,18 @@ export default () => {
       }
     }
   }, [maturity, paymentDate]);
+
+  useEffect(() => {
+    if (step === 2) {
+      if (
+        paymentType !== 'CASH' &&
+        paymentDateInput !== '' &&
+        maturityInput !== ''
+      ) {
+        setIsValid(true);
+      }
+    }
+  }, [maturityInput, paymentDateInput]);
 
   return (
     <FieldCreateLayout>
@@ -222,7 +297,7 @@ export default () => {
                   </OptionWrapper>
                   <InputStyle
                     placeholder={maturity === '' ? '숫자만 입력해 주세요' : ''}
-                    value={maturityInput}
+                    value={maturity === '' ? maturityInput : ''}
                     disabled={maturity !== '' ? true : false}
                     type={'number'}
                     onChange={(e) => dateInputHandler(e.target.value)}
@@ -275,16 +350,16 @@ export default () => {
                 <InputStyle
                   placeholder={paymentDate === '' ? '숫자만 입력해 주세요' : ''}
                   type={'number'}
-                  value={paymentDateInput}
+                  value={paymentDate === '' ? paymentDateInput : ''}
                   disabled={paymentDate !== '' ? true : false}
                   onChange={(e) => paymentDateInputHandler(e.target.value)}
                 />
               </InputItemWrapper>
               {paymentType === 'NOTE' ? (
                 <Caption>
-                  • 거래처가 세금계산서를 발행 후 {maturity || '만기'}일 뒤,
+                  • 거래처가 세금계산서를 발행 후 {paymentDate || '청구'}일 뒤,
                   어음(
-                  {paymentDate || '청구'}일)을 지급합니다.
+                  {maturity || '만기'}일)을 지급합니다.
                 </Caption>
               ) : null}
               {paymentType === 'CASH' ? (
