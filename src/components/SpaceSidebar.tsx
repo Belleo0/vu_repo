@@ -100,10 +100,10 @@ export default () => {
   const [searchFactory, setSearchFactory] = useState('');
   const [forSearchFactory, setForSearchFactory] = useState('');
 
-  // const searchedFactories = useMemo(() => {
-  //   if (!factories) return [];
-  //   return factories.filter((v) => v?.visible_name?.includes(forSearchFactory));
-  // }, [factories, forSearchFactory]);
+  const registerSearchedFactories = useMemo(() => {
+    if (!factories) return [];
+    return factories.filter((v) => v?.visible_name?.includes(forSearchFactory));
+  }, [factories, forSearchFactory]);
 
   const searchedFactories = useMemo(() => {
     if (!factories) return [];
@@ -368,8 +368,8 @@ export default () => {
             </ModalHeaderWrap>
 
             <CardWrap>
-              {searchedFactories &&
-                searchedFactories.map((v, i) => (
+              {registerSearchedFactories &&
+                registerSearchedFactories.map((v, i) => (
                   <FactoryCard
                     key={v.id}
                     name={v?.visible_name}

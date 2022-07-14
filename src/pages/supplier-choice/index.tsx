@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import SpaceBar from '@components/SpaceBar';
@@ -6,14 +6,57 @@ import MyFieldVendorTable from '@components/MyFieldVendorTable';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
 import VendorTable from '@components/VendorTable';
+import SupplySpaceBar from '@components/SupplySpaceBar';
+import useFactories from '@api/useFactories';
+import useFactoryMaps from '@api/useFactoryMaps';
+import { usePrevious } from '@hooks/usePrevious';
 
 export default () => {
   const selectedSpaceId = useSelectedSpaceId();
+  const [order, setOrder] = useState('거리순');
+  const [duration, setDuration] = useState<string>('null');
+  const [bounds, setBounds] = useState<any>(null);
+  const [realAddress, setRealAddress] = useState('');
+  const [searchFactory, setSearchFactory] = useState('');
+
   const {
     data: { info, suppliers },
     isLoading,
     supplierMutate,
   } = useMySpaceInfo(selectedSpaceId);
+
+  const { data: factoriesData } = useFactoryMaps(
+    selectedSpaceId,
+    duration,
+    bounds,
+    realAddress,
+  );
+
+  const previousFactories = usePrevious(factoriesData);
+
+  const factories = useMemo(() => {
+    if (factoriesData) return factoriesData;
+    return previousFactories;
+  }, [factoriesData]);
+
+  const [selectedFactoryIds, setSelectedFactoryIds] = useState<number[]>([]);
+
+  const orderByFactories = useMemo(() => {
+    if (factories) {
+      const data = factories?.data;
+      if (order === '거리순') {
+        const sortedData = data.sort((a: any, b: any) => {
+          return a.direction?.distance - b.direction?.distance;
+        });
+        return sortedData;
+      } else if (order === '시간순') {
+        const sortedData = data.sort((a: any, b: any) => {
+          return a.direction?.duration - b.direction?.duration;
+        });
+        return sortedData;
+      }
+    } else return;
+  }, [factories, order]);
 
   return (
     <SpaceLayout>
@@ -21,12 +64,21 @@ export default () => {
         <Container>
           <BarSection>
             <Title>건설현장</Title>
-            <SpaceBar
+            <SupplySpaceBar
               id={info?.id}
               name={info?.name}
               adminUserName={info?.admin_user?.name}
               siteUserName={info?.site_user?.name}
               address={info?.basic_address}
+              selectedFieldInfo={info}
+              setSelectedFactoryIds={setSelectedFactoryIds}
+              selectedSpaceId={selectedSpaceId}
+              selectedFactoryIds={selectedFactoryIds}
+              orderByFactories={orderByFactories}
+              factories={factories}
+              order={order}
+              setOrder={setOrder}
+              revalidate={supplierMutate}
             />
           </BarSection>
           <BottomSection>
