@@ -38,6 +38,13 @@ export default () => {
   };
 
   useEffect(() => {
+    window.addEventListener('beforeunload', function (e) {
+      e.preventDefault();
+      e.returnValue = '';
+    });
+  }, []);
+
+  useEffect(() => {
     setMaxCalendar(
       moment(constructionStartDate).add(120, 'M').format('YYYY-MM-DD'),
     );

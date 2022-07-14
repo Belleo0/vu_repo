@@ -26,6 +26,13 @@ export default () => {
   };
 
   useEffect(() => {
+    window.addEventListener('beforeunload', function (e) {
+      e.preventDefault();
+      e.returnValue = '';
+    });
+  }, []);
+
+  useEffect(() => {
     setRequirement(state.requirement);
   }, [state]);
 
