@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import Input from '@components/Input';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
 import Modal from '@components/Modal';
 import DaumPostcode from 'react-daum-postcode';
@@ -10,17 +10,27 @@ import api from '@api';
 import NaverMap from '@components/NaverMap';
 import NaverMapImageMarker from '@components/NaverMapImageMarker';
 import getAssetURL from '@utils/getAssetURL';
+import { useLocalStorage } from '@hooks/useLocalStorage';
+import TextModal from '@components/TextModal';
 
 export default () => {
   const [fieldNm, setFieldNm] = useState('');
   const [fieldAddr, setFieldAddr] = useState('');
   const [secFieldAddr, setSecFieldAddr] = useState('');
-
   const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false);
-  const el = useRef();
+  const [position, setPosition] = useState<any>();
+  const [searchItem, setSearchItem] = useState<any>();
+  const [isOutModalFlag, setIsOutModalFlag] = useState(false);
 
-  const [position, setPosition] = useState<any>(null);
+  const [state, setState] = useLocalStorage('@add-construction-field', {
+    fieldNm,
+    fieldAddr,
+    secFieldAddr,
+    position,
+    searchItem,
+  });
 
+  const location = useLocation();
   const navigate = useNavigate();
 
   const nxtStepHandler = () => {
@@ -35,6 +45,39 @@ export default () => {
   };
 
   const step = fieldNm && fieldAddr ? true : false;
+
+  useEffect(() => {
+    console.log(isOutModalFlag);
+  }, [isOutModalFlag]);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', function (e) {
+      e.preventDefault();
+      setIsOutModalFlag(true);
+      e.returnValue = '';
+    });
+  }, []);
+
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, fieldAddr }));
+  }, [fieldAddr]);
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, position }));
+  }, [position]);
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, fieldNm }));
+  }, [fieldNm]);
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, secFieldAddr }));
+  }, [secFieldAddr]);
+
+  useEffect(() => {
+    if (state?.fieldAddr) setFieldAddr(state.fieldAddr);
+    if (state?.position) setPosition(state.position);
+    if (state?.fieldNm) setFieldNm(state.fieldNm);
+    if (state?.secFieldAddr) setSecFieldAddr(state.secFieldAddr);
+    if (state?.searchItem) setSearchItem(state.searchItem);
+  }, [state]);
 
   useEffect(() => {
     (async () => {
@@ -154,6 +197,7 @@ export default () => {
               setFieldAddr(v?.jibunAddress || v?.autoJibunAddress);
               setIsPostcodeModalOpened(false);
             }}
+            defaultQuery={searchItem || ''}
             autoClose={true}
           />
         </PostContainer>

@@ -9,6 +9,7 @@ import moment from 'moment';
 
 export default () => {
   let now: any = new Date();
+
   const [constructionStartDate, setContructionStartDate] = useState<any>(
     now.toLocaleDateString('en-CA'),
   );
