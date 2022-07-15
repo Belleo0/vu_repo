@@ -34,7 +34,7 @@ export default () => {
 
   useEffect(() => {
     setRequirement(state.requirement);
-  }, [state]);
+  }, []);
 
   useEffect(() => {
     setState((prev: any) => ({ ...prev, requirement }));
