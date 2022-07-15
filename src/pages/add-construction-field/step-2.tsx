@@ -6,9 +6,12 @@ import getAssetURL from '@utils/getAssetURL';
 import FieldCreateLayout from '@layout/FieldCreateLayout';
 import { Range } from 'react-range';
 import moment from 'moment';
+import { useLocalStorage } from '@hooks/useLocalStorage';
 
 export default () => {
   let now: any = new Date();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [constructionStartDate, setContructionStartDate] = useState<any>(
     now.toLocaleDateString('en-CA'),
@@ -17,9 +20,20 @@ export default () => {
   const [xPosition, setXPosition] = useState<any>([12]);
   const [maxCalendar, setMaxCalendar] = useState<string>('');
 
-  const location = useLocation();
+  const [state, setState] = useLocalStorage('@add-construction-field', {
+    xPosition,
+  });
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (state.xPosition !== undefined) {
+      setXPosition(new Array(state.xPosition));
+    }
+  }, []);
+
+  useEffect(() => {
+    setState((prev: any) => ({ ...prev, xPosition: xPosition.map(Number) }));
+  }, [xPosition]);
+
   const step = constructionStartDate && constructionEndDate ? true : false;
 
   const nxtStepHandler = () => {
@@ -71,12 +85,7 @@ export default () => {
 
   const onChangeXpositionRange = (e: any) => {
     setXPosition(e);
-    const originDate = moment(constructionEndDate).date();
-    let temp: any = moment(now);
-
-    temp.set('date', originDate);
-    temp = moment(temp.add(parseInt(e), 'M')).format('YYYY-MM-DD');
-
+    const temp = moment(constructionStartDate).add(e, 'M').format('YYYY-MM-DD');
     setConstructionEndDate(temp);
   };
 
@@ -106,6 +115,11 @@ export default () => {
     setContructionStartDate(v);
 
     now = moment(constructionStartDate).format('YYYY-MM-DD');
+
+    const asd = moment(v).add(xPosition.map(Number), 'M').format('YYYY-MM-DD');
+    console.log(asd);
+
+    setConstructionEndDate(asd);
   };
 
   useEffect(() => {
