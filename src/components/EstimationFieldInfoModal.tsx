@@ -6,28 +6,25 @@ import Button, { ButtonType } from './Button';
 import Modal from './Modal';
 
 export default ({ open, data, onClose }: any) => {
-  console.log('Modaldata,', data?.field_space);
-
-  const fieldInfo = data?.field_space;
-  const fieldInfoName = fieldInfo?.name;
+  console.log('Modaldata,', data);
 
   return (
     <Modal open={open} onClose={onClose}>
       <Container>
-        {data && data?.field_space && (
+        {data && (
           <Contents>
             <TitleWrap>
               <Title>건설사 정보</Title>
             </TitleWrap>
             <BaseInfoSection>
-              <InfoTitle>{fieldInfoName}</InfoTitle>
+              <InfoTitle>{data.name}</InfoTitle>
               <InfoRow>
                 <InfoLabel>주소</InfoLabel>
-                <InfoContent>{fieldInfo.basic_address}</InfoContent>
+                <InfoContent>{data.address}</InfoContent>
               </InfoRow>
               <InfoRow>
                 <InfoLabel>대표자</InfoLabel>
-                <InfoContent>{fieldInfo.company.ceo_name}</InfoContent>
+                <InfoContent>{data.ceo_name}</InfoContent>
               </InfoRow>
               <InfoRow>
                 <InfoLabel>전화번호</InfoLabel>

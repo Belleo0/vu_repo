@@ -23,6 +23,13 @@ export default () => {
   });
 
   useEffect(() => {
+    window.addEventListener('beforeunload', function (e) {
+      e.preventDefault();
+      e.returnValue = '';
+    });
+  }, []);
+
+  useEffect(() => {
     setState((prev: any) => ({ ...prev, remarks }));
   }, [remarks]);
 
@@ -45,7 +52,7 @@ export default () => {
           payment_method: (location.state as any)?.paymentType,
           payment_expire_date: (location.state as any)?.maturity,
           payment_due_date: (location.state as any)?.paymentDate,
-          need_amount: (location.state as any)?.need_amount,
+          need_amount: (location.state as any)?.requirement,
           remarks: remarks,
         },
       })

@@ -175,6 +175,13 @@ export default () => {
   ];
 
   useEffect(() => {
+    window.addEventListener('beforeunload', function (e) {
+      e.preventDefault();
+      e.returnValue = '';
+    });
+  }, []);
+
+  useEffect(() => {
     if (step === 2) {
       if (paymentType === 'CASH') {
         if (paymentDate !== '') {

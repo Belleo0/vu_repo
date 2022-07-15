@@ -20,7 +20,6 @@ export default () => {
   const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false);
   const [position, setPosition] = useState<any>();
   const [searchItem, setSearchItem] = useState<any>();
-  const [isOutModalFlag, setIsOutModalFlag] = useState(false);
 
   const [state, setState] = useLocalStorage('@add-construction-field', {
     fieldNm,
@@ -47,13 +46,8 @@ export default () => {
   const step = fieldNm && fieldAddr ? true : false;
 
   useEffect(() => {
-    console.log(isOutModalFlag);
-  }, [isOutModalFlag]);
-
-  useEffect(() => {
     window.addEventListener('beforeunload', function (e) {
       e.preventDefault();
-      setIsOutModalFlag(true);
       e.returnValue = '';
     });
   }, []);
