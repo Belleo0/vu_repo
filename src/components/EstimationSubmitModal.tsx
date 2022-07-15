@@ -16,7 +16,7 @@ interface ISpec {
   norminal_strength: number;
 }
 
-const defaultSpec = { value: 0, slump: 0, norminal_strength: 0 };
+const defaultSpec = { value: 25, slump: 0, norminal_strength: 0 };
 
 enum PaymentMethodEnum {
   CASH = '현금',
@@ -157,11 +157,11 @@ export default ({ open, onClose, revalidate, data }: any) => {
                   ]
                 }
               </RowValue>
-              <SmallButton
+              {/* <SmallButton
                 onClick={() => window.alert(`TODO : 2차 범위입니다.`)}
               >
                 변경
-              </SmallButton>
+              </SmallButton> */}
             </RowWrap>
           </InfoSection>
           <ContentsWrap>

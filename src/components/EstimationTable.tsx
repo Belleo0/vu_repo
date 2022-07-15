@@ -68,19 +68,18 @@ export default ({ data = [], revalidate }: IVendorTable) => {
             <DateValue>{moment(v?.created_at).format('YYYY.MM.DD')}</DateValue>
           </ValueCell>
           <ValueCell style={{ flexDirection: 'column', maxWidth: 180 }}>
-            <FactoryCompanyName>
+            <FactoryCompanyName
+              onClick={() => {
+                setSelectedSpaceInfo(v?.field_space?.company);
+                setTimeout(() => {
+                  setIsInfoModalOpen(true);
+                }, 250);
+              }}
+            >
               {v?.field_space?.company.name}
             </FactoryCompanyName>
           </ValueCell>
-          <ValueCell
-            onClick={() => {
-              setSelectedSpaceInfo(v);
-              setTimeout(() => {
-                setIsInfoModalOpen(true);
-              }, 250);
-            }}
-            style={{ flexDirection: 'column' }}
-          >
+          <ValueCell style={{ flexDirection: 'column' }}>
             <FactoryCompanyName>{v?.field_space?.name}</FactoryCompanyName>
             <FactoryAddress>{v?.field_space?.basic_address}</FactoryAddress>
           </ValueCell>

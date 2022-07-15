@@ -4,6 +4,7 @@ import convertDistance from '@utils/convertDistance';
 import convertDuration from '@utils/convertDuration';
 import { useNavigate } from 'react-router-dom';
 import TextModal from './TextModal';
+import UserInfoModal from './UserInfoModal';
 
 interface IVendorTable {
   data: any[];
@@ -14,6 +15,9 @@ export default ({ data = [] }: IVendorTable) => {
 
   const [isNotJoinChatRoomModalOpen, setIsNotJoinChatRoomModalOpen] =
     useState<boolean>(false);
+  const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false);
+  const [companyName, setCompanyName] = useState(null);
+  const [selectedSpaceInfo, setSelectedSpaceInfo] = useState(null);
 
   const handleOrder = (id: number, isChatRoomJoined: number) => {
     if (Boolean(isChatRoomJoined)) {
@@ -44,7 +48,17 @@ export default ({ data = [] }: IVendorTable) => {
             <Duration>{convertDuration(v?.direction?.duration)}분</Duration>
           </ValueCell>
           <ValueCell>
-            <SaleUserName>{v?.factory_space?.site_user?.name}</SaleUserName>
+            <SaleUserName
+              onClick={() => {
+                setSelectedSpaceInfo(v?.factory_space?.site_user);
+                setCompanyName(v?.factory_space?.company?.name);
+                setTimeout(() => {
+                  setIsUserModalOpen(true);
+                }, 250);
+              }}
+            >
+              {v?.factory_space?.site_user?.name}
+            </SaleUserName>
           </ValueCell>
           <ValueCell>
             {/* <TotalAmount>{v.total_amount?.toLocaleString('ko')}m³</TotalAmount> */}
@@ -63,6 +77,12 @@ export default ({ data = [] }: IVendorTable) => {
         open={isNotJoinChatRoomModalOpen}
         onClose={() => setIsNotJoinChatRoomModalOpen(false)}
         content={`채팅방에 입장하려면 먼저 초대를 받아야 합니다.`}
+      />
+      <UserInfoModal
+        open={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+        data={selectedSpaceInfo}
+        companyName={companyName}
       />
     </Container>
   );
