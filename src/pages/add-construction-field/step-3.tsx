@@ -26,8 +26,15 @@ export default () => {
   };
 
   useEffect(() => {
+    window.addEventListener('beforeunload', function (e) {
+      e.preventDefault();
+      e.returnValue = '';
+    });
+  }, []);
+
+  useEffect(() => {
     setRequirement(state.requirement);
-  }, [state]);
+  }, []);
 
   useEffect(() => {
     setState((prev: any) => ({ ...prev, requirement }));
