@@ -41,13 +41,17 @@ export default ({
   const [startAt, setStartAt] = useState<string | null>(null);
   const [endAt, setEndAt] = useState<string | null>(null);
 
-  const [specs, setSpecs] = useState<ISpec[]>([defaultSpec, defaultSpec]);
+  const [specs, setSpecs] = useState<ISpec[]>([defaultSpec]);
 
   const [checkbox, setCheckbox] = useState({
     mulcha: false,
     multal: false,
     inducer: false,
   });
+
+  useEffect(() => {
+    console.log(specs);
+  }, [specs]);
 
   const totalAmount = useMemo(() => {
     return specs.reduce(
@@ -62,7 +66,6 @@ export default ({
     if (date === '') return false;
     if (startAt === null) return false;
     if (endAt === null) return false;
-    if (specs[0].value === 0) return false;
     if (specs[0].slump === 0) return false;
     if (specs[0].norminal_strength === 0) return false;
     if (specs[0].quantity === 0) return false;
@@ -73,15 +76,15 @@ export default ({
   const [loading, setLoading] = useState(false);
 
   const handleChangeSpecValue = (index: number, key: string, value: string) => {
-    console.log(value);
+    console.log(index, key, value);
+
     if (/\d/.test(value) || value === '') {
       setSpecs((prev) => {
         const mappedData = Array.from(prev).map((v, i) =>
           i !== index
             ? v
-            : { ...v, [key]: parseInt(value === '' ? '0' : value, 10) },
+            : { ...v, [key]: parseInt(value === '' ? '25' : value, 10) },
         );
-
         return mappedData;
       });
     }
@@ -96,9 +99,6 @@ export default ({
   };
 
   const handleRemoveSpecRow = (index: number) => {
-    // if (index === 0 && specs.length <= 2) {
-    //   handleAddSpecRow(specs.length - 1);
-    // }
     if (specs.length > 1) {
       setSpecs((prev) => {
         const array = Array.from(prev);
@@ -212,7 +212,7 @@ export default ({
             <FormRow>
               <FormLabel>배정시간</FormLabel>
               <BlackSelect
-                placeholder="오전 09:00"
+                placeholder="오전 06:00"
                 width={107}
                 options={assignmentTimeOptions}
                 value={startAt}
@@ -220,7 +220,7 @@ export default ({
               />
               <WaveIcon src={getAssetURL('../assets/ic-wave-mark.svg')} />
               <BlackSelect
-                placeholder="오전 09:00"
+                placeholder="오후 21:00"
                 width={107}
                 options={assignmentTimeOptions}
                 value={endAt}
@@ -235,7 +235,7 @@ export default ({
                     maxLength={2}
                     placeholder="00"
                     containerStyle={{ width: 40 }}
-                    value={v.value === 0 ? '' : v.value}
+                    value={25}
                     onChange={(e) =>
                       handleChangeSpecValue(i, 'value', e.target.value)
                     }
@@ -273,13 +273,13 @@ export default ({
                     }
                   />
                   <AmountLabel>m³</AmountLabel>
-                  {specs.length !== 1 && (
+                  {specs.length > 1 && i !== 0 && (
                     <SpecRowIcon
                       src={getAssetURL('../assets/ic-minus-02.svg')}
                       onClick={() => handleRemoveSpecRow(i)}
                     />
                   )}
-                  {(specs.length === 1 || i !== 0) && (
+                  {specs.length > 0 && (
                     <SpecRowIcon
                       src={getAssetURL('../assets/ic-plus-02.svg')}
                       onClick={() => handleAddSpecRow(i)}

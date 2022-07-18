@@ -1,26 +1,53 @@
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import React, { CSSProperties, InputHTMLAttributes } from 'react';
+import React, {
+  ChangeEvent,
+  CSSProperties,
+  InputHTMLAttributes,
+  useEffect,
+  useState,
+} from 'react';
 
 export default ({
   icon,
   containerStyle,
   searchIconStyle,
   onClick,
+  onChange,
+  value = '',
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & {
   icon?: string;
   containerStyle?: CSSProperties;
   searchIconStyle?: CSSProperties;
 }) => {
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
+  const [inputValue, setInputValue] = useState<any>(value);
+
+  const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(ev.target.value);
+    onChange && onChange(ev); // optional로 인한 코드
+  };
+
   return (
     <Container style={containerStyle} onClick={onClick}>
       {icon && <Icon src={getAssetURL(`../assets/${icon}.svg`)} />}
-      <Input {...props} />
-      <SearchIcon
-        style={searchIconStyle}
-        src={getAssetURL('../assets/ic-search.svg')}
-      />
+      <Input value={value} onChange={changeHandler} {...props} />
+      {inputValue === '' ? (
+        <SearchIcon
+          style={searchIconStyle}
+          src={getAssetURL('../assets/ic-search.svg')}
+        />
+      ) : (
+        <ClearIcon
+          src={getAssetURL('../assets/del_ic.svg')}
+          onClick={() => {
+            changeHandler({ target: { value: '' } } as any);
+          }}
+        />
+      )}
     </Container>
   );
 };
@@ -47,6 +74,11 @@ const Input = styled.input`
 
 const SearchIcon = styled.img`
   margin-right: 12px;
+`;
+
+const ClearIcon = styled.img`
+  margin-right: 12px;
+  cursor: pointer;
 `;
 
 const Icon = styled.img`

@@ -1,21 +1,29 @@
+import data from '@data';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import Modal from './Modal';
 import SearchInput from './SearchInput';
 
-export default ({ open, onClose, data, setChkCompany }: any) => {
+///^[가-힣\(\)\s]*$/.test(search)
+
+export default ({ open, onClose, data, setChkCompany, companyType }: any) => {
   const [search, setSearch] = useState('');
-  const [checkCompany, setCheckCompany] = useState<any>();
+  const [checkedCompanyId, setCheckedCompanyId] = useState<any>();
 
   const searchedData = useMemo(() => {
-    if (!data) return [];
-    return data.filter((v: any) => v?.name?.includes(search));
+    if (!data) {
+      return [];
+    } else if (!search) {
+      return data;
+    } else {
+      return data.filter((v: any) =>
+        companyType === 'con'
+          ? v?.basic_address?.includes(search)
+          : v?.visible_name?.includes(search),
+      );
+    }
   }, [data, search]);
-
-  const pushCompanyChkList = (v: any) => {
-    setCheckCompany(v);
-  };
 
   const onClickConfirm = (v: any) => {
     setChkCompany(v);
@@ -36,39 +44,19 @@ export default ({ open, onClose, data, setChkCompany }: any) => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </SearchInputWrap>
-        <SubTitle>목록({data?.length})</SubTitle>
+        <SubTitle>
+          목록({searchedData ? searchedData.length : data?.length})
+        </SubTitle>
         {searchedData.length > 0 && <Divider />}
         <UsersWrap>
-          {searchedData?.map((company: any) => (
-            <>
-              <UserContentWrap key={company.id}>
-                <UserContainer
-                  onClick={() => {
-                    pushCompanyChkList(company);
-                  }}
-                >
-                  <CompanyName>{company.name}</CompanyName>
-                  <CompanyAddr>{company.address}</CompanyAddr>
-                  <CompanyCeoWrap>
-                    <CompanyCeoTitle>대표자</CompanyCeoTitle>
-                    <CompanyCeoLineGuard />
-                    <CompanyCeoName>{company.ceo_name}</CompanyCeoName>
-                  </CompanyCeoWrap>
-                </UserContainer>
-                <CIconWrap>
-                  {checkCompany?.id === company.id ? (
-                    <CIcon
-                      src={getAssetURL('../assets/blue_check_ic_on.svg')}
-                    />
-                  ) : (
-                    <CIcon
-                      src={getAssetURL('../assets/blue_check_ic_off.svg')}
-                    />
-                  )}
-                </CIconWrap>
-              </UserContentWrap>
-              <BottomLineGuard />
-            </>
+          {searchedData?.map((v: any, idx: any) => (
+            <Item
+              key={idx}
+              setCheckedCompanyId={setCheckedCompanyId}
+              checkedCompanyId={checkedCompanyId}
+              data={v}
+              companyType={companyType}
+            />
           ))}
         </UsersWrap>
         <ButtonWrap>
@@ -81,7 +69,7 @@ export default ({ open, onClose, data, setChkCompany }: any) => {
           </CancelButton>
           <ConfirmButton
             onClick={() => {
-              onClickConfirm(checkCompany);
+              onClickConfirm(checkedCompanyId);
             }}
           >
             등록하기
@@ -90,6 +78,53 @@ export default ({ open, onClose, data, setChkCompany }: any) => {
       </Container>
     </Modal>
   );
+};
+
+const Item = ({
+  setCheckedCompanyId,
+  checkedCompanyId,
+  data,
+  companyType,
+}: any) => {
+  const component = useMemo(() => {
+    return (
+      <>
+        <UserContentWrap
+          onClick={() => {
+            setCheckedCompanyId(data.id);
+          }}
+        >
+          <UserContainer>
+            <CompanyName>
+              {companyType === 'con' ? data.company.name : data.visible_name}
+            </CompanyName>
+            <CompanyAddr>
+              {companyType === 'con'
+                ? data.basic_address || data.company.address
+                : data.address}
+            </CompanyAddr>
+            <CompanyCeoWrap>
+              <CompanyCeoTitle>대표자</CompanyCeoTitle>
+              <CompanyCeoLineGuard />
+              <CompanyCeoName>
+                {companyType === 'con' ? data.company.ceo_name : data.ceo_name}
+              </CompanyCeoName>
+            </CompanyCeoWrap>
+          </UserContainer>
+          <CIconWrap>
+            {checkedCompanyId === data.id ? (
+              <CIcon src={getAssetURL('../assets/blue_check_ic_on.svg')} />
+            ) : (
+              <CIcon src={getAssetURL('../assets/blue_check_ic_off.svg')} />
+            )}
+          </CIconWrap>
+        </UserContentWrap>
+        <BottomLineGuard />
+      </>
+    );
+  }, [checkedCompanyId === data.id, data]);
+
+  return component;
 };
 
 const Container = styled.div`
@@ -146,10 +181,9 @@ const Divider = styled.span`
 `;
 
 const UsersWrap = styled.div`
-  display: flex;
-  flex-direction: column;
   height: 419px;
   width: 100%;
+  overflow-y: scroll;
 `;
 
 const UserContainer = styled.div`

@@ -10,11 +10,11 @@ import './styles/index.css';
 import './styles/reset.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RecoilRoot>
-      <React.Suspense fallback={<Loading />}>
-        <App />
-      </React.Suspense>
-    </RecoilRoot>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <RecoilRoot>
+    <React.Suspense fallback={<Loading />}>
+      <App />
+    </React.Suspense>
+  </RecoilRoot>,
+  // </React.StrictMode>,
 );
