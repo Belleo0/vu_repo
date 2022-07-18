@@ -20,7 +20,7 @@ export default () => {
   const [searchFactory, setSearchFactory] = useState('');
 
   const {
-    data: { info, suppliers },
+    data: { info, suppliers, estimations },
     isLoading,
     supplierMutate,
   } = useMySpaceInfo(selectedSpaceId);
@@ -83,7 +83,11 @@ export default () => {
           </BarSection>
           <BottomSection>
             <Title>납품사 ({suppliers?.length})</Title>
-            <VendorTable data={suppliers} revalidate={supplierMutate} />
+            <VendorTable
+              data={suppliers}
+              estimations={estimations}
+              revalidate={supplierMutate}
+            />
             <Notice>• 거래업체로 등록하면 주문 기능이 활성화됩니다.</Notice>
           </BottomSection>
         </Container>
