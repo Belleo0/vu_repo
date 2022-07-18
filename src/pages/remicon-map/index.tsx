@@ -223,10 +223,6 @@ export default () => {
     } else return;
   }, [factories, order]);
 
-  if (error) {
-    return window.alert('위치 서비스를 활성화 해주세요.');
-  }
-
   if (!coordinates?.lat || !coordinates?.lng) {
     return <Loading />;
   }

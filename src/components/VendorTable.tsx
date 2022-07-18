@@ -11,16 +11,19 @@ import api from '@api';
 import { useNavigate } from 'react-router-dom';
 import SupplySpaceInfoModal from './SupplySpaceInfoModal';
 import UserInfoModal from './UserInfoModal';
+import EstimationInfoModal from './EstimationInfoModal';
 
 interface IVendorTable {
   data: any[];
+  estimations: any[];
   revalidate: any;
 }
 
-export default ({ data = [], revalidate }: IVendorTable) => {
+export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
   const navigate = useNavigate();
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [estimationInfo, setEstimationInfo] = useState<any>(null);
 
   const [isRegisterModalOpen, setIsRegisterModalOpen] =
     useState<boolean>(false);
@@ -45,6 +48,16 @@ export default ({ data = [], revalidate }: IVendorTable) => {
   ] = useState<boolean>(false);
 
   const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false);
+  const [isEstimationModalOpen, setIsEstimationModalOpen] =
+    useState<boolean>(false);
+
+  const selectedEstimation = (id: any) => {
+    if (id && estimations) {
+      const selectedEstimationInfo = estimations.find((v) => v.id === id);
+      console.log('selectedEstimationInfo!!!!!!', selectedEstimationInfo);
+      return selectedEstimationInfo;
+    }
+  };
 
   const handleClickRadio = (id: number) => {
     if (selectedIds.includes(id)) {
@@ -79,6 +92,7 @@ export default ({ data = [], revalidate }: IVendorTable) => {
 
   console.log('selectedSpaceInfo', selectedSpaceInfo);
   console.log('data', data);
+  console.log('estimationInfo', estimationInfo);
 
   return (
     <Container>
@@ -168,6 +182,11 @@ export default ({ data = [], revalidate }: IVendorTable) => {
               <PriceRateWrap>
                 <PriceRateIcon
                   src={getAssetURL('../assets/ic-price-rate.svg')}
+                  onClick={() => {
+                    setSelectedSpaceInfo(v);
+                    setEstimationInfo(selectedEstimation(v.id));
+                    setIsEstimationModalOpen(true);
+                  }}
                 />
                 <PriceRateValue>{v?.percent}%</PriceRateValue>
               </PriceRateWrap>
@@ -255,6 +274,12 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         onClose={() => setIsUserModalOpen(false)}
         data={selectedSpaceInfo}
         companyName={companyName}
+      />
+      <EstimationInfoModal
+        open={isEstimationModalOpen}
+        onClose={() => setIsEstimationModalOpen(false)}
+        data={selectedSpaceInfo}
+        estimation={estimationInfo}
       />
     </Container>
   );
@@ -457,6 +482,7 @@ const PriceRateIcon = styled.img`
   width: 24px;
   height: 24px;
   margin-right: 7px;
+  cursor: pointer;
 `;
 
 const PriceRateValue = styled.span`
