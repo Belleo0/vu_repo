@@ -71,24 +71,27 @@ export default () => {
   const companyName: string = '동양건설'; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
   const companyType: string =
     (location.state as any)?.userType === 1 ? 'con' : 'rem'; // 유저 소속에 따른 타입 1: 건설사, 2: 레미콘사
+  console.log((location.state as any)?.userType);
 
-  // console.log('location => ', location.state);
-
-  useEffect(() => {
-    api.get('/companies').then((res) => {
-      const temp: any = res.data.result;
-      let obj = null;
-      if (!userInviteType && companyType === 'rem') {
-        obj = temp.filter((v: any) => {
-          return v.company_type == 'REMICON';
-        });
-      } else {
-        obj = temp.filter((v: any) => {
-          return v.company_type == 'CONSTRUCTION';
-        });
+  const getCompanyList = async () => {
+    if (companyType === 'con') {
+      try {
+        const { data } = await api.get('/fields');
+        setCompanyList(data.result);
+      } catch (e) {
+        console.error(e);
       }
-      setCompanyList(obj);
-    });
+    } else {
+      try {
+        const { data } = await api.get('/temp-factories');
+        setCompanyList(data.result);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+  useEffect(() => {
+    getCompanyList();
   }, []);
 
   const requestSignUpHandler = async () => {
@@ -176,26 +179,23 @@ export default () => {
 
   return (
     <AuthLayout>
+      <SearchCompanyModal
+        open={searchCompanyOpenModal}
+        onClose={() => {
+          searchCompanyClose();
+        }}
+        data={companyList}
+        setChkCompany={setCompany}
+        companyType={companyType}
+      />
+      <Modal
+        open={successOpenModal}
+        onClose={() => successCloseModal()}
+        submitText={'확인'}
+        content={'회원가입이 완료되었습니다.'}
+        bottomContent={'메인 페이지로 이동합니다.'}
+      />
       <Container>
-        {successOpenModal && (
-          <Modal
-            open={successOpenModal}
-            onClose={() => successCloseModal()}
-            submitText={'확인'}
-            content={'회원가입이 완료되었습니다.'}
-            bottomContent={'메인 페이지로 이동합니다.'}
-          />
-        )}
-        {searchCompanyOpenModal && (
-          <SearchCompanyModal
-            open={searchCompanyOpenModal}
-            onClose={() => {
-              searchCompanyClose();
-            }}
-            data={companyList}
-            setChkCompany={setCompany}
-          />
-        )}
         <MainTitle>
           {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
         </MainTitle>
@@ -490,7 +490,6 @@ const TermsWrapper = styled.div<{ type: MainHeightType }>`
     height: ${heightPixel[type]};
     padding: ${paddingPixel[type]};
   `}
-}
 `;
 
 const ProgressBar = styled.span`

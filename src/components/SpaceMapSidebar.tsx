@@ -86,15 +86,17 @@ export default ({
       setIsFinishRequestEstimation(true);
     }
   };
-
-  console.log(selectedFieldInfo);
-
+  //선택된 건설현장:
   return (
     <Container>
       <TopSectionWrap>
         <SearchInput
           icon="ic-local"
-          containerStyle={{ marginBottom: 30, cursor: 'pointer' }}
+          containerStyle={
+            tempSelectedFieldInfo
+              ? { cursor: 'pointer' }
+              : { marginBottom: 30, cursor: 'pointer' }
+          }
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           onKeyPress={(e) => {
@@ -109,6 +111,13 @@ export default ({
           }}
           placeholder="주소를 입력해 주세요"
         />
+        {tempSelectedFieldInfo && (
+          <SelectedFieldWrap>
+            <SelectedFieldTitle>선택된 건설현장</SelectedFieldTitle>
+            <SelectedGuard />
+            <SelectedFieldName>{tempSelectedFieldInfo?.name}</SelectedFieldName>
+          </SelectedFieldWrap>
+        )}
         {isLogin && (
           <Button
             icon="ic-more"
@@ -119,9 +128,6 @@ export default ({
             MY 건설현장 불러오기
           </Button>
         )}
-
-        {/* {!!factories?.field_position && (
-          <> */}
         <Title>소요시간</Title>
         <DurationWrap>
           <Duration
@@ -419,7 +425,36 @@ const PostContainer = styled.div``;
 
 const MapSpaceCardWrap = styled.div`
   flex: 1;
-
   /* max-height: calc(100% - 123px); */
   overflow-y: scroll;
+`;
+
+const SelectedFieldWrap = styled.div`
+  width: 100%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 8px 0 16px 0;
+`;
+
+const SelectedFieldTitle = styled.div`
+  font-size: 16px;
+  letter-spacing: -0.28px;
+  color: #999;
+  text-align: left;
+`;
+const SelectedFieldName = styled.div`
+  font-size: 16px;
+  letter-spacing: -0.32px;
+  text-align: right;
+  color: #000;
+`;
+
+const SelectedGuard = styled.div`
+  display: block;
+  width: 1px;
+  height: 8px;
+  background-color: #c7c7c7;
+  margin: 0px 8px;
 `;

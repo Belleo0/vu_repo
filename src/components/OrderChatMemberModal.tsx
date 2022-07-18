@@ -3,9 +3,12 @@ import getAssetURL from '@utils/getAssetURL';
 import { useMemo, useState } from 'react';
 import Modal from './Modal';
 import SearchInput from './SearchInput';
+import UserInfoModal from './UserInfoModal';
 
 export default ({ open, onClose, data }: any) => {
   const [search, setSearch] = useState('');
+  const [userOpenedModal, setUserOpenedModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>();
 
   const searchedData = useMemo(() => {
     if (!data) return [];
@@ -14,6 +17,12 @@ export default ({ open, onClose, data }: any) => {
 
   return (
     <Modal open={open} onClose={onClose}>
+      <UserInfoModal
+        open={userOpenedModal}
+        onClose={() => setUserOpenedModal(false)}
+        data={selectedUser}
+        companyName={data?.company?.name}
+      />
       <Container>
         <TopSection>
           <XIcon src={getAssetURL('../assets/ic-del.svg')} onClick={onClose} />
@@ -30,7 +39,12 @@ export default ({ open, onClose, data }: any) => {
         {searchedData.length > 0 && <Divider />}
         <UsersWrap>
           {searchedData?.map((user: any) => (
-            <UserContainer>
+            <UserContainer
+              onClick={() => {
+                setUserOpenedModal(true);
+                setSelectedUser(user);
+              }}
+            >
               <UserImg src={getAssetURL('../assets/default-profile.jpeg')} />
               <UserInfoWrap>
                 <CompanyName>{user?.company?.name}</CompanyName>
@@ -110,6 +124,7 @@ const UserContainer = styled.div`
   &:not(:last-child) {
     border-bottom: 1px solid #f2f2f2;
   }
+  cursor: pointer;
 `;
 
 const UserImg = styled.img`

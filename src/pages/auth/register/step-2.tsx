@@ -8,8 +8,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import getAssetURL from '@utils/getAssetURL';
 import Modal from '@components/RegisterTextModal';
-import data from '@data';
-import { stringify } from 'query-string';
 
 enum ButtonType {
   'ABLE',
@@ -61,6 +59,8 @@ export default () => {
       },
     });
   };
+
+  console.log(location.state);
 
   const companyName: string = ''; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
 
@@ -496,7 +496,7 @@ export default () => {
           </MainContentBox>
           <Button
             type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
-            onClick={() => (isValid ? nxtStepHandler() : null)}
+            onClick={() => (!isValid ? nxtStepHandler() : null)}
           >
             다음
           </Button>

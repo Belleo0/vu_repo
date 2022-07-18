@@ -64,7 +64,7 @@ export default ({
 
   const [message, setMessage] = useState('');
 
-  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(true);
   const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
 
   const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
@@ -161,14 +161,14 @@ export default ({
     });
     socket.on('connect', () => {
       socket.on('success', function () {
-        console.log('Socket 접속 성공');
+        // console.log('Socket 접속 성공');
       });
       socket.on('state', function (args: any) {
-        console.log('참고 상태 : ', args); // 참고용 데이터입니다.
+        // console.log('참고 상태 : ', args); // 참고용 데이터입니다.
       });
       socket.on('chat_message', function (args: any) {
         const data: any = JSON.stringify(args);
-        console.log('메세지 데이터: ', data); // 실제 메세지 데이터입니다.
+        // console.log('메세지 데이터: ', data); // 실제 메세지 데이터입니다.
 
         if (data?.id) {
           mutateMessages(
@@ -210,7 +210,7 @@ export default ({
   }, [socketState, chatRoomId]);
 
   useEffect(() => {
-    console.log('messages가 바뀜', messages);
+    // console.log('messages가 바뀜', messages);
   }, [messages]);
 
   const handleClose = async () => {

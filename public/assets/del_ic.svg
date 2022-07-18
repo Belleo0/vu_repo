@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+    <path data-name="패스 38156" d="M.814 0A.7.7 0 0 1 1.5.726l-.117 13.962a.729.729 0 0 1-.7.739A.7.7 0 0 1 0 14.7L.117.739A.729.729 0 0 1 .814 0z" transform="rotate(45 2.626 19.996)" style="fill:#444"/>
+    <path data-name="패스 38157" d="M.686 0a.729.729 0 0 1 .7.739L1.5 14.7a.7.7 0 0 1-.685.726.729.729 0 0 1-.7-.739L0 .727A.7.7 0 0 1 .686 0z" transform="rotate(-45 8.145 -2.282)" style="fill:#444"/>
+    <path style="fill:none" d="M0 0h20v20H0z"/>
+</svg>

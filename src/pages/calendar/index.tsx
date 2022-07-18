@@ -18,6 +18,7 @@ import { useEffect, useMemo, useState } from 'react';
 const calendarTypeOptions = [
   { label: '일', value: CalendarTypeState.DAY },
   { label: '주', value: CalendarTypeState.WEEK },
+  { label: '월', value: CalendarTypeState.MONTH },
 ];
 
 const hours = [
