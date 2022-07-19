@@ -64,7 +64,7 @@ export default ({
 
   const [message, setMessage] = useState('');
 
-  const [isRequestModalOpen, setIsRequestModalOpen] = useState(true);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
 
   const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
