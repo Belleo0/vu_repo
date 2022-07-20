@@ -50,22 +50,6 @@ export default () => {
   const [paymentDate, setPaymentDate] = useState('');
   const [paymentDateInput, setPaymentDateInput] = useState('');
   const [paymentType, setPaymentType] = useState<string | null>(null);
-  // const [input, setInput] = useState({
-  //   step: 0,
-  //   maturity: '',
-  //   maturityInput: '',
-  //   paymentDate: '',
-  //   paymentDateInput: '',
-  //   paymentType: '',
-  // });
-
-  // const [state, setState] = useLocalStorage('@add-construction-field', {
-  //   maturity: input.maturity,
-  //   maturityInput: input.maturityInput,
-  //   paymentDate: input.paymentDate,
-  //   paymentDateInput: input.paymentDateInput,
-  //   paymentType: input.paymentType,
-  // });
   const [state, setState] = useLocalStorage('@add-construction-field', {
     maturity,
     maturityInput,
@@ -77,13 +61,6 @@ export default () => {
   const [isValid, setIsValid] = useState<boolean>(false);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(state);
-    console.log(paymentDate);
-    console.log(state.maturity);
-    console.log(state.paymentDate);
-  }, [state]);
 
   useEffect(() => {
     setMaturity(state.maturity);
