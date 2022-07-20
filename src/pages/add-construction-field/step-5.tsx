@@ -6,10 +6,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import api from '@api';
 import Modal from '@components/TextModal';
 import { useLocalStorage } from '@hooks/useLocalStorage';
+import { useDispatch } from 'react-redux';
+import { setSelectedSpaceInfo } from '@data/space';
 
 export default () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const [chkText, setChkText] = useState<any>(0);
 
@@ -37,6 +40,10 @@ export default () => {
     if (state?.remarks) setRemarks(state.remarks);
   }, [state]);
 
+  useEffect(() => {
+    console.log(location.state);
+  }, []);
+
   const requestSignUp = () => {
     submitFlag = true;
     api
@@ -57,8 +64,7 @@ export default () => {
         },
       })
       .then(() => {
-        (submitFlag = true), navigate('/supplier-choice');
-        localStorage.removeItem('@add-construction-field');
+        handleConfirm();
       })
       .catch(() => (submitFlag = false));
   };
@@ -79,6 +85,19 @@ export default () => {
     }
     setSuccessOpenModal(false);
   };
+
+  async function handleConfirm() {
+    submitFlag = true;
+    const {
+      data: { result },
+    } = await api.get('field-spaces');
+    if (result) {
+      const currentArr = result.at(-1);
+      dispatch(setSelectedSpaceInfo(currentArr));
+      localStorage.removeItem('@add-construction-field');
+      navigate('/supplier-choice');
+    }
+  }
 
   return (
     <FieldCreateLayout>
