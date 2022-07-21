@@ -14,12 +14,16 @@ import {
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
-
+import pickCalendarModal from '@components/CalendarModal';
 const calendarTypeOptions = [
   { label: '일', value: CalendarTypeState.DAY },
   { label: '주', value: CalendarTypeState.WEEK },
   { label: '월', value: CalendarTypeState.MONTH },
 ];
+
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import { pick } from 'lodash';
 
 const hours = [
   4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
@@ -34,6 +38,8 @@ export default () => {
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [selectedBarInfo, setSelectedBarInfo] = useState(null);
+
+  const [pickCalendar, setPickCalendar] = useState(false);
 
   const { data: assignments, mutate } = useAssignments(
     dates?.[0],
@@ -80,6 +86,20 @@ export default () => {
     }
   };
 
+  const handlePickCalendar = (v: any) => {
+    console.log(v);
+
+    if (type === CalendarTypeState.DAY) {
+      const date = v;
+      const nextDate = new Date(new Date(date).setDate(date.getDate()));
+      setDates([nextDate]);
+    } else {
+      const date = v;
+      const nextWeek = new Date(date.valueOf());
+      setDates(generateWeekData(nextWeek));
+    }
+  };
+
   const handleCalendarModalClose = () => {
     setIsModalOpened(false);
     setSelectedBarInfo(null);
@@ -101,12 +121,30 @@ export default () => {
                 src={getAssetURL('../assets/ic-arrow-left.svg')}
                 onClick={handlePrev}
               />
-              <WeekText>{weekInfo}</WeekText>
+              <WeekText
+                onClick={() => {
+                  setPickCalendar(!pickCalendar);
+                }}
+              >
+                {weekInfo}
+              </WeekText>
               <WeekIcon
                 src={getAssetURL('../assets/ic-arrow-right.svg')}
                 onClick={handleNext}
               />
             </WeekWrap>
+            {pickCalendar && (
+              <CalendarWrapper>
+                <Calendar
+                  onChange={(v: any) => {
+                    handlePickCalendar(v);
+                    setPickCalendar(false);
+                  }}
+                  closeCalendar={pickCalendar}
+                  locale={'en'}
+                />
+              </CalendarWrapper>
+            )}
             <TodayButton onClick={handleToday}>오늘</TodayButton>
             <Select
               width={64}
@@ -284,6 +322,9 @@ const WeekText = styled.span`
   letter-spacing: -0.36px;
   text-align: left;
   color: #222;
+  cursor: pointer;
+
+  position: relative;
 `;
 
 const WeekIcon = styled.img`
@@ -309,4 +350,82 @@ const TodayButton = styled.span`
   color: #000;
   cursor: pointer;
   user-select: none;
+`;
+
+const CalendarWrapper = styled.div`
+  position: absolute;
+  z-index: 9999;
+  margin-top: 5px;
+  top: 180px;
+  right: 150px;
+
+  .react-calendar {
+    border-radius: 18px;
+    border: 1px solid #e3e3e3;
+  }
+
+  .react-calendar,
+  .react-calendar *,
+  .react-calendar *:before,
+  .react-calendar *:after {
+    text-decoration: none;
+  }
+  .react-calendar__month-view__weekdays__weekday {
+    background-color: #f2f2f2;
+  }
+
+  .react-calendar__navigation button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .react-calendar__tile:enabled:hover {
+    background-color: #e6f0ff;
+  }
+
+  .react-calendar__tile:enabled:focus {
+    background-color: #e6f0ff;
+  }
+
+  .react-calendar__tile--now {
+    background-color: #258fff;
+    color: #fff;
+  }
+  .react-calendar__tile {
+    height: 23px;
+    width: 23px;
+    padding: 0px;
+    flex: 0;
+  }
+
+  .react-calendar__navigation button:enabled:hover {
+    background-color: #e6f0ff;
+  }
+  .react-calendar__month-view__days__day--weekend {
+    color: #000;
+  }
+
+  .react-calendar__navigation {
+    background-color: #e3e3e3;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    margin: 0;
+    height: 42px;
+  }
+
+  .react-calendar__month-view__weekdays__weekday {
+    width: 37px;
+    height: 33px;
+  }
+
+  .react-calendar
+    .react-calendar
+    *
+    .react-calendar
+    *:before
+    .react-calendar
+    *:after {
+    width: 23px;
+    height: 23px;
+  }
 `;
