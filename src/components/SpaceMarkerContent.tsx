@@ -142,7 +142,7 @@ const Container = styled.div`
   position: relative;
   width: 175px;
   height: 64px;
-  &: hover {
+  &:hover {
     z-index: 9999;
   }
 `;

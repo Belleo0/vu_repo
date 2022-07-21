@@ -35,19 +35,18 @@ export default ({
     <Container style={containerStyle} onClick={onClick}>
       {icon && <Icon src={getAssetURL(`../assets/${icon}.svg`)} />}
       <Input value={value} onChange={changeHandler} {...props} />
-      {inputValue === '' ? (
-        <SearchIcon
-          style={searchIconStyle}
-          src={getAssetURL('../assets/ic-search.svg')}
-        />
-      ) : (
+      {inputValue !== '' && (
         <ClearIcon
-          src={getAssetURL('../assets/del_ic.svg')}
+          src={getAssetURL('../assets/ic-circle-x.svg')}
           onClick={() => {
             changeHandler({ target: { value: '' } } as any);
           }}
         />
       )}
+      <SearchIcon
+        style={searchIconStyle}
+        src={getAssetURL('../assets/ic-search.svg')}
+      />
     </Container>
   );
 };

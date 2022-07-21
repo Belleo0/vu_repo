@@ -12,6 +12,9 @@ import { useNavigate } from 'react-router-dom';
 import SupplySpaceInfoModal from './SupplySpaceInfoModal';
 import UserInfoModal from './UserInfoModal';
 import EstimationInfoModal from './EstimationInfoModal';
+import RemiconUnitPriceListModal from './RemiconUnitPriceListModal';
+import Tooltip from './Tooltip';
+import Button, { ButtonType } from './Button';
 
 interface IVendorTable {
   data: any[];
@@ -24,6 +27,9 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [estimationInfo, setEstimationInfo] = useState<any>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const [isPopperOpen, setIsPopperOpen] = useState<boolean>(false);
 
   const [isRegisterModalOpen, setIsRegisterModalOpen] =
     useState<boolean>(false);
@@ -49,6 +55,8 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
 
   const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false);
   const [isEstimationModalOpen, setIsEstimationModalOpen] =
+    useState<boolean>(false);
+  const [isUnitPriceModalOpen, setIsUnitPriceModalOpen] =
     useState<boolean>(false);
 
   const selectedEstimation = (id: any) => {
@@ -114,7 +122,44 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
         <LabelCell>거리/시간</LabelCell>
         <LabelCell>생산설비</LabelCell>
         <LabelCell>영업사원</LabelCell>
-        <LabelCell>단가율</LabelCell>
+        <LabelCell>
+          단가율
+          <Icon
+            src={getAssetURL('../assets/ic-question.svg')}
+            onClick={() => setIsPopperOpen(!isPopperOpen)}
+            onMouseOver={(e) => {
+              setPosition({ x: e.clientX, y: e.clientY });
+            }}
+          />
+          {isPopperOpen && (
+            <Tooltip
+              containerStyle={{
+                top: position.y,
+                left: position.x,
+              }}
+            >
+              <Popper>
+                <PopperTitle>단가율</PopperTitle>
+                <Button
+                  type={ButtonType.OUTLINE}
+                  containerStyle={{
+                    width: 130,
+                    height: 36,
+                    borderRadius: 33,
+                    margin: 'auto',
+                  }}
+                  onClick={() => {
+                    setIsUnitPriceModalOpen(true);
+                    setIsPopperOpen(false);
+                  }}
+                >
+                  지역단가표
+                  <Icon src={getAssetURL('../assets/ic-arrow-right.svg')} />
+                </Button>
+              </Popper>
+            </Tooltip>
+          )}
+        </LabelCell>
         <LabelCell>납품사 등록</LabelCell>
         <LabelCell>주문</LabelCell>
       </CellWrap>
@@ -281,6 +326,11 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
         data={selectedSpaceInfo}
         estimation={estimationInfo}
       />
+      <RemiconUnitPriceListModal
+        open={isUnitPriceModalOpen}
+        onClose={() => setIsUnitPriceModalOpen(false)}
+        estimation={estimationInfo}
+      />
     </Container>
   );
 };
@@ -302,6 +352,10 @@ const CellWrap = styled.div`
 const LabelCell = styled.div`
   flex: 1;
   padding: 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   font-size: 14px;
   letter-spacing: -0.28px;
@@ -536,5 +590,49 @@ const RequestedAtValue = styled.span`
   font-weight: 600;
   letter-spacing: -0.32px;
   text-align: left;
+  color: #000;
+`;
+
+const Icon = styled.img`
+  width: 16px;
+  margin-left: 6px;
+
+  cursor: pointer;
+`;
+
+const Popper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  position: absolute;
+  text-align: center;
+
+  width: 170px;
+
+  padding: 14px 0px;
+  color: #000;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: -0.28px;
+  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+`;
+
+const PopperTitle = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.28px;
+  color: #222;
+
+  margin-bottom: 20px;
+`;
+
+const PopperContent = styled.div`
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.62;
+  letter-spacing: -0.26px;
   color: #000;
 `;
