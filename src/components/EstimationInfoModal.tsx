@@ -6,6 +6,7 @@ import Button, { ButtonSize, ButtonType } from './Button';
 import Modal from './Modal';
 import convertDistance from '@utils/convertDistance';
 import convertDuration from '@utils/convertDuration';
+import { makeComma } from '@utils/makeComma';
 
 export default ({ open, data, estimation, onClose }: any) => {
   const field = estimation?.field_space;
@@ -57,7 +58,7 @@ export default ({ open, data, estimation, onClose }: any) => {
                   <Slump>{estimation?.slump_1}</Slump>
                   <SpecDivider />
                   <Slump>{estimation?.norminal_strength_1}</Slump>
-                  <TotalPrice>{estimation?.price_1}-원</TotalPrice>
+                  <TotalPrice>{makeComma(estimation?.price_1)}원</TotalPrice>
                 </SpecRow>
                 <SpecRow>
                   <Slump>25</Slump>
@@ -65,7 +66,7 @@ export default ({ open, data, estimation, onClose }: any) => {
                   <Slump>{estimation?.slump_2}</Slump>
                   <SpecDivider />
                   <Slump>{estimation?.norminal_strength_2}</Slump>
-                  <TotalPrice>{estimation?.price_2}-원</TotalPrice>
+                  <TotalPrice>{makeComma(estimation?.price_2)}원</TotalPrice>
                 </SpecRow>
                 <SpecRow>
                   <Slump>25</Slump>
@@ -73,7 +74,7 @@ export default ({ open, data, estimation, onClose }: any) => {
                   <Slump>{estimation?.slump_3}</Slump>
                   <SpecDivider />
                   <Slump>{estimation?.norminal_strength_3}</Slump>
-                  <TotalPrice>{estimation?.price_3}-원</TotalPrice>
+                  <TotalPrice>{makeComma(estimation?.price_3)}원</TotalPrice>
                 </SpecRow>
                 <TextButton>+부산지역 단가표</TextButton>
               </Box>

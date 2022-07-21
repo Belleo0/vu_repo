@@ -39,6 +39,7 @@ import useIsFieldUser from '@hooks/useIsFieldUser';
 import FactoryCard from './FactoryCard';
 import useFactories from '@api/useFactories';
 import { debounce } from 'lodash';
+import TextModal from './TextModal';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -145,6 +146,8 @@ export default () => {
     useState<any>(null);
 
   const [submitFactroyLoading, setSubmitFactroyLoading] = useState(false);
+  const [duplicatedFactoryModalOpen, setDuplicatedFactoryModalOpen] =
+    useState(false);
 
   const handleSubmitChangeOrderSpaceModal = async () => {
     const ids = changeOrderSpaces.map((v) => v.id);
@@ -226,8 +229,15 @@ export default () => {
   const handleSubmitFactory = async () => {
     if (tempSelectedFactoryInfo === null) return;
     if (submitFactroyLoading) return;
+    if (
+      searchedSpaces.find(
+        (v: any) => v.name === tempSelectedFactoryInfo?.visible_name,
+      )
+    ) {
+      setDuplicatedFactoryModalOpen(true);
+      return;
+    }
     setSubmitFactroyLoading(true);
-
     try {
       await api.post(`/factory-spaces`, {
         name: tempSelectedFactoryInfo?.visible_name,
@@ -265,6 +275,8 @@ export default () => {
     delayedUpdateCall(v);
     setSearchFactory(v);
   };
+
+  console.log('searchedSpaces', searchedSpaces);
 
   return (
     <Container>
@@ -444,6 +456,14 @@ export default () => {
           </ShadowButtonWrap>
         </ModalContainer>
       </Modal>
+      <TextModal
+        open={duplicatedFactoryModalOpen}
+        content={`이미 등록한 공장이 존재합니다.\n중복 등록할 수 없습니다.`}
+        onClose={() => {
+          setDuplicatedFactoryModalOpen(false);
+          setTempSelectedFactoryInfo('');
+        }}
+      />
     </Container>
   );
 };

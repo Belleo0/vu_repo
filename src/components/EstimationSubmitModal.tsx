@@ -1,22 +1,26 @@
 import api from '@api';
 import { norminalStrengthOptions, slumpOptions } from '@constance/SpecOptions';
+import { BusanUnitPrice } from '@constance/UnitPriceData';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
+import { makeComma } from '@utils/makeComma';
 import moment from 'moment';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import BlackInput from './BlackInput';
 import BlackSelect from './BlackSelect';
 import BlackTextarea from './BlackTextarea';
 import Button, { ButtonSize, ButtonType } from './Button';
 import Modal from './Modal';
+import RemiconUnitPriceListModal from './RemiconUnitPriceListModal';
 
 interface ISpec {
   value: number; /// 키 수정해야함ㅜㅜ
   slump: number;
   norminal_strength: number;
+  price: number;
 }
 
-const defaultSpec = { value: 25, slump: 0, norminal_strength: 0 };
+const defaultSpec = { value: 25, slump: 0, norminal_strength: 0, price: 0 };
 
 enum PaymentMethodEnum {
   CASH = '현금',
@@ -26,7 +30,7 @@ enum PaymentMethodEnum {
 }
 
 export default ({ open, onClose, revalidate, data }: any) => {
-  console.log(data);
+  // console.log(data);
   const [loading, setLoading] = useState(false);
 
   const [percent, setPercent] = useState('');
@@ -37,6 +41,9 @@ export default ({ open, onClose, revalidate, data }: any) => {
     defaultSpec,
     defaultSpec,
   ]);
+
+  const [isUnitPriceModalOpen, setIsUnitPriceModalOpen] =
+    useState<boolean>(false);
 
   const isValidated = useMemo(() => {
     if (percent === '') return false;
@@ -56,8 +63,25 @@ export default ({ open, onClose, revalidate, data }: any) => {
     return true;
   }, [percent, specs]);
 
+  // const handleChangeSpecValue = (index: number, key: string, value: string) => {
+  //   console.log('index: ', index, 'key: ', key, 'value: ', value);
+
+  //   if (/\d/.test(value) || value === '') {
+  //     console.log('specs!!!!', specs);
+  //     setSpecs((prev) => {
+  //       const mappedData = Array.from(prev).map((v, i) =>
+  //         i !== index
+  //           ? v
+  //           : { ...v, [key]: parseInt(value === '' ? '0' : value, 10) },
+  //       );
+  //       console.log('mappedData', mappedData);
+
+  //       return mappedData;
+  //     });
+  //   }
+  // };
+
   const handleChangeSpecValue = (index: number, key: string, value: string) => {
-    console.log(value);
     if (/\d/.test(value) || value === '') {
       setSpecs((prev) => {
         const mappedData = Array.from(prev).map((v, i) =>
@@ -66,9 +90,36 @@ export default ({ open, onClose, revalidate, data }: any) => {
             : { ...v, [key]: parseInt(value === '' ? '0' : value, 10) },
         );
 
-        return mappedData;
+        const unitPrice = BusanUnitPrice.filter((v) =>
+          v
+            ? v.slump === mappedData[index].slump &&
+              v.mPa === mappedData[index].norminal_strength
+            : mappedData[index].price,
+        );
+
+        const price =
+          typeof unitPrice?.[0]?.price === 'number'
+            ? calculateSpecPrice(unitPrice?.[0]?.price, percent)
+            : 0;
+
+        const temp = mappedData.map((v, i) => {
+          return {
+            ...v,
+            price: i === index ? price : v.price,
+          };
+        });
+
+        return temp;
       });
     }
+  };
+
+  const calculateSpecPrice = (price: number, percent: any): number => {
+    if (percent !== '' && percent !== '100') {
+      const specPrice = Math.floor((price * (percent / 100)) / 100) * 100;
+      return specPrice;
+    }
+    return price;
   };
 
   const handleSubmit = async () => {
@@ -96,6 +147,23 @@ export default ({ open, onClose, revalidate, data }: any) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const temp1 = specs.map((spec) => {
+      const originalPrice =
+        BusanUnitPrice.find(
+          (x) => x.slump === spec.slump && x.mPa === spec.norminal_strength,
+        )?.price || 0;
+
+      return originalPrice;
+    });
+
+    const percentPrice = temp1.map((x: any) => calculateSpecPrice(x, percent));
+
+    setSpecs((prev) =>
+      [...prev].map((x, i) => ({ ...x, price: percentPrice[i] })),
+    );
+  }, [percent]);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -184,7 +252,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
                 <PercentText>%</PercentText>
               </BoxTopSection>
               {specs.map((v, i) => (
-                <SpecRow>
+                <SpecRow key={i}>
                   <BlackInput
                     maxLength={2}
                     placeholder="00"
@@ -213,12 +281,17 @@ export default ({ open, onClose, revalidate, data }: any) => {
                       handleChangeSpecValue(i, 'norminal_strength', v)
                     }
                     options={norminalStrengthOptions}
-                    containerStyle={{ marginRight: 24 }}
                   />
-                  <TotalPrice>-원</TotalPrice>
+                  <TotalPrice>{makeComma(v.price)}원</TotalPrice>
                 </SpecRow>
               ))}
-              <TextButton>+부산지역 단가표</TextButton>
+              <TextButton
+                onClick={() => {
+                  setIsUnitPriceModalOpen(true);
+                }}
+              >
+                +부산지역 단가표
+              </TextButton>
             </Box>
             <Label>특기사항</Label>
             <BlackTextarea
@@ -248,6 +321,10 @@ export default ({ open, onClose, revalidate, data }: any) => {
             견적 제출하기
           </Button>
         </BottomSection>
+        <RemiconUnitPriceListModal
+          open={isUnitPriceModalOpen}
+          onClose={() => setIsUnitPriceModalOpen(false)}
+        />
       </Container>
     </Modal>
   );
