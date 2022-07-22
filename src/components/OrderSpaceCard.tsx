@@ -6,6 +6,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import TextModal from './TextModal';
+import api from '@api';
 
 interface IOrderSpaceCard {
   draggable?: boolean;
@@ -17,6 +18,7 @@ interface IOrderSpaceCard {
 export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
   const isFieldUser = useIsFieldUser();
 
+  const [loading, setLoading] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -27,7 +29,19 @@ export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
     transition,
   };
 
-  const handleRemove = () => {};
+  const handleRemove = async () => {
+    if (loading) return;
+    console.log('id', id);
+    if (!id) return;
+    try {
+      setLoading(true);
+      await api.delete(`/factory-spaces/${id}`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Container ref={setNodeRef} style={style} {...attributes} {...listeners}>
@@ -38,17 +52,29 @@ export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
         </InfoWrap>
         <IconWrap>
           {isFieldUser ? null : (
-            <Icon src={getAssetURL('../assets/ic-trash.svg')} />
+            <Icon
+              onClick={() => setIsRemoveModalOpen(true)}
+              src={getAssetURL('../assets/ic-trash.svg')}
+            />
           )}
           <Icon src={getAssetURL('../assets/ic-move.svg')} />
         </IconWrap>
       </InfoContainer>
-      <TextModal
+      {/* <TextModal
         open={isRemoveModalOpen}
         onSubmit={handleRemove}
         onClose={() => setIsRemoveModalOpen(false)}
         content={`레미콘 공장을 등록하시겠습니까?`}
         submitText="공장 등록하기"
+      /> */}
+      <TextModal
+        open={isRemoveModalOpen}
+        onSubmit={handleRemove}
+        onClose={() => setIsRemoveModalOpen(false)}
+        content={`해당 공장을 삭제하시겠습니까?\n
+        삭제 시 관련된 현장, 거래, 멤버 및 모든 정보가\n
+        삭제됩니다.`}
+        submitText="삭제"
       />
     </Container>
   );
