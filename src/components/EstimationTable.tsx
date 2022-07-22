@@ -14,6 +14,7 @@ import { mutate } from 'swr';
 import SupplySpaceInfoModal from './SupplySpaceInfoModal';
 import EstimationFieldInfoModal from './EstimationFieldInfoModal';
 import UserInfoModal from './UserInfoModal';
+import EstimationInfoModal from './EstimationInfoModal';
 
 interface IVendorTable {
   data: any[];
@@ -23,6 +24,7 @@ interface IVendorTable {
 export default ({ data = [], revalidate }: IVendorTable) => {
   const navigate = useNavigate();
 
+  const [estimationInfo, setEstimationInfo] = useState<any>(null);
   const [isNotJoinChatRoomModalOpen, setIsNotJoinChatRoomModalOpen] =
     useState<boolean>(false);
 
@@ -34,6 +36,16 @@ export default ({ data = [], revalidate }: IVendorTable) => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false);
+  const [isEstimationModalOpen, setIsEstimationModalOpen] =
+    useState<boolean>(false);
+
+  const selectedEstimation = (id: any) => {
+    if (id && data) {
+      const selectedEstimationInfo = data.find((v) => v.id === id);
+      console.log('selectedEstimationInfo!!!!!!', selectedEstimationInfo);
+      return selectedEstimationInfo;
+    }
+  };
 
   const handleOrder = (id: number, isChatRoomJoined: number) => {
     if (Boolean(isChatRoomJoined)) {
@@ -117,6 +129,16 @@ export default ({ data = [], revalidate }: IVendorTable) => {
           <ValueCell style={{ maxWidth: 130 }}>
             {['REQUESTED', 'RESPONDED'].includes(v.status) ? (
               <RequestedAtWrap>
+                {v.status === 'REQUESTED' ? null : (
+                  <PriceRateIcon
+                    src={getAssetURL('../assets/ic-price-rate.svg')}
+                    onClick={() => {
+                      setSelectedSpaceInfo(v);
+                      setEstimationInfo(selectedEstimation(v.id));
+                      setIsEstimationModalOpen(true);
+                    }}
+                  />
+                )}
                 <RequestedAtLabel>
                   견적{v.status === 'REQUESTED' ? '요청 접수' : '제출'}
                 </RequestedAtLabel>
@@ -126,6 +148,14 @@ export default ({ data = [], revalidate }: IVendorTable) => {
               </RequestedAtWrap>
             ) : (
               <RequestedAtWrap>
+                <PriceRateIcon
+                  src={getAssetURL('../assets/ic-price-rate.svg')}
+                  onClick={() => {
+                    setSelectedSpaceInfo(v);
+                    setEstimationInfo(selectedEstimation(v.id));
+                    setIsEstimationModalOpen(true);
+                  }}
+                />
                 <RequestedAtLabel style={{ color: '#ff5517', fontSize: 15 }}>
                   납품사 등록완료
                 </RequestedAtLabel>
@@ -154,9 +184,7 @@ export default ({ data = [], revalidate }: IVendorTable) => {
           <ValueCell style={{ maxWidth: 120 }}>
             <ChatButton
               active={v?.is_chat_room_joined}
-              onClick={() =>
-                handleOrder(v?.chat_room_id, v?.is_chat_room_joined)
-              }
+              onClick={() => handleOrder(v?.id, v?.is_chat_room_joined)}
             >
               <ChatIcon
                 src={getAssetURL(
@@ -188,6 +216,12 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         open={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
         data={selectedSpaceInfo}
+      />
+      <EstimationInfoModal
+        open={isEstimationModalOpen}
+        onClose={() => setIsEstimationModalOpen(false)}
+        data={selectedSpaceInfo}
+        estimation={estimationInfo}
       />
       <UserInfoModal
         open={isUserModalOpen}
@@ -421,4 +455,11 @@ const ChatIcon = styled.img`
   width: 20px;
   height: 20px;
   margin: 0 4px 0 0;
+`;
+
+const PriceRateIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  margin-right: 7px;
+  cursor: pointer;
 `;
