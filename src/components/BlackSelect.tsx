@@ -81,7 +81,7 @@ export default ({
         isOpen={isOpened}
         value={value}
         optionLength={options.length}
-        initalMaxHeight={initalMaxHeight}
+        initalMaxHeight={initalMaxHeight as number}
         style={{ zIndex, ...absoluteStyle }}
       >
         <AbsoluteValueContainer>
