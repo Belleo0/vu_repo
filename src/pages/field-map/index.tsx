@@ -93,7 +93,7 @@ export default () => {
 
   const [selectedFactoryIds, setSelectedFactoryIds] = useState<number[]>([]);
 
-  const [selectedSpaceInfo, setSelectedSpaceInfo] = useState(null);
+  const [selectedSpaceInfo, setSelectedSpaceInfo] = useState<any>(null);
 
   const [order, setOrder] = useState('최신순');
 
