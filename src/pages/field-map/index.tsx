@@ -205,7 +205,7 @@ export default () => {
           <NaverMap
             lat={37.557733}
             lng={126.9253985}
-            zoom={18}
+            zoom={17}
             style={{ width: '100%', height: 'calc(100vh - 80px)' }}
             boundChange={({ _min, _max }) => {
               const data = {
