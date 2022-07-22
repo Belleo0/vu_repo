@@ -5,11 +5,10 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import Modal from './Modal';
 import SearchInput from './SearchInput';
 
-///^[가-힣\(\)\s]*$/.test(search)
-
 export default ({ open, onClose, data, setChkCompany, companyType }: any) => {
   const [search, setSearch] = useState('');
   const [checkedCompanyId, setCheckedCompanyId] = useState<any>();
+  // console.log('data =>', data, 'companyType => ', companyType);
 
   const searchedData = useMemo(() => {
     if (!data) {
@@ -26,7 +25,7 @@ export default ({ open, onClose, data, setChkCompany, companyType }: any) => {
   }, [data, search]);
 
   const onClickConfirm = (v: any) => {
-    setChkCompany(v);
+    setChkCompany(data.find((el: any) => el.id === v));
     onClose();
   };
 

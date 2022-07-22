@@ -357,11 +357,14 @@ const CalendarWrapper = styled.div`
   z-index: 9999;
   margin-top: 5px;
   top: 180px;
-  right: 150px;
+  right: 203px;
 
   .react-calendar {
     border-radius: 18px;
     border: 1px solid #e3e3e3;
+    width: 261px;
+    height: 283px;
+    overflow: hidden;
   }
 
   .react-calendar,
@@ -392,8 +395,7 @@ const CalendarWrapper = styled.div`
     color: #fff;
   }
   .react-calendar__tile {
-    height: 23px;
-    width: 23px;
+    height: 40px;
     padding: 0px;
     flex: 0;
   }
