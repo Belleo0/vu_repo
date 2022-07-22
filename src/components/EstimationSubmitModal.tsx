@@ -231,6 +231,10 @@ export default ({ open, onClose, revalidate, data }: any) => {
                 변경
               </SmallButton> */}
             </RowWrap>
+            <RowWrap>
+              <RowLabel>특기사항</RowLabel>
+              <RowValue>{data?.field_space?.field_info?.remarks}</RowValue>
+            </RowWrap>
           </InfoSection>
           <ContentsWrap>
             <Box>
