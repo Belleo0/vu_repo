@@ -11,6 +11,7 @@ interface ISelect {
   onChange: (v: any) => any;
   containerStyle?: React.CSSProperties;
   absoluteStyle?: React.CSSProperties;
+  initalMaxHeight?: number;
 }
 
 export default ({
@@ -21,6 +22,7 @@ export default ({
   onChange,
   containerStyle = {},
   absoluteStyle = {},
+  initalMaxHeight,
 }: ISelect) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -79,6 +81,7 @@ export default ({
         isOpen={isOpened}
         value={value}
         optionLength={options.length}
+        initalMaxHeight={initalMaxHeight as number}
         style={{ zIndex, ...absoluteStyle }}
       >
         <AbsoluteValueContainer>
@@ -118,6 +121,7 @@ const Container = styled.div`
   background-color: #fff;
   cursor: pointer;
   position: relative;
+  user-select: none;
 `;
 
 const Icon = styled.img`
@@ -131,12 +135,16 @@ const Value = styled.span`
   letter-spacing: -0.84px;
   text-align: left;
   color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const AbsoluteWrap = styled.div<{
   isOpen: boolean;
   value: unknown;
   optionLength: number;
+  initalMaxHeight: number;
 }>`
   display: flex;
   flex-direction: column;
@@ -151,13 +159,13 @@ const AbsoluteWrap = styled.div<{
   z-index: 500;
   overflow: hidden;
 
-  ${({ isOpen, optionLength }) =>
+  ${({ isOpen, optionLength, initalMaxHeight }) =>
     isOpen
       ? css`
           max-height: ${42 + 28 * optionLength}px;
         `
       : css`
-          max-height: 37px;
+          max-height: ${initalMaxHeight || 37}px;
         `}
 
   ${({ value }) =>
@@ -174,7 +182,7 @@ const AbsoluteValueContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 `;
 
 const OptionText = styled.span<{ active: boolean }>`

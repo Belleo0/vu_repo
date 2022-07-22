@@ -71,7 +71,6 @@ export default () => {
   const companyName: string = '동양건설'; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
   const companyType: string =
     (location.state as any)?.userType === 1 ? 'con' : 'rem'; // 유저 소속에 따른 타입 1: 건설사, 2: 레미콘사
-  console.log((location.state as any)?.userType);
 
   const getCompanyList = async () => {
     if (companyType === 'con') {
@@ -103,7 +102,7 @@ export default () => {
         phone: (location.state as any)?.phone,
         position: position || '',
         tel: tel || '',
-        company_id: company.id,
+        company_id: companyType === 'con' ? 2 : 1,
       })
       .then((res) => setSuccessOpenModal(true));
   };
@@ -174,7 +173,11 @@ export default () => {
   };
 
   useEffect(() => {
-    if (company.name) setIsValid(true);
+    if (companyType === 'con') {
+      company.name && setIsValid(true);
+    } else {
+      company.visible_name && setIsValid(true);
+    }
   }, [company]);
 
   return (
@@ -360,7 +363,11 @@ export default () => {
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'company');
                     }}
-                    value={company.name}
+                    value={
+                      companyType === 'con'
+                        ? company?.company?.name
+                        : company?.visible_name
+                    }
                     placeholder={
                       companyType == 'con'
                         ? '회사명을 검색해 주세요'
