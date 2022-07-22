@@ -7,10 +7,15 @@ import Modal from './Modal';
 import convertDistance from '@utils/convertDistance';
 import convertDuration from '@utils/convertDuration';
 import { makeComma } from '@utils/makeComma';
+import { useState } from 'react';
+import RemiconUnitPriceListModal from './RemiconUnitPriceListModal';
 
 export default ({ open, data, estimation, onClose }: any) => {
   const field = estimation?.field_space;
   const factory = estimation?.factory_space;
+
+  const [isUnitPriceModalOpen, setIsUnitPriceModalOpen] =
+    useState<boolean>(false);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -76,7 +81,13 @@ export default ({ open, data, estimation, onClose }: any) => {
                   <Slump>{estimation?.norminal_strength_3}</Slump>
                   <TotalPrice>{makeComma(estimation?.price_3)}원</TotalPrice>
                 </SpecRow>
-                <TextButton>+부산지역 단가표</TextButton>
+                <TextButton
+                  onClick={() => {
+                    setIsUnitPriceModalOpen(true);
+                  }}
+                >
+                  +부산지역 단가표
+                </TextButton>
               </Box>
               <Label>특기사항</Label>
               <Textarea>{estimation?.remarks}</Textarea>
@@ -108,7 +119,7 @@ export default ({ open, data, estimation, onClose }: any) => {
                   }}
                   onClick={() => window.alert(`TODO : 2차 범위입니다.`)}
                 >
-                  견적제출
+                  견적서출력
                 </Button>
               </PrintButtonWrap>
               <Button
@@ -121,6 +132,10 @@ export default ({ open, data, estimation, onClose }: any) => {
             </ModalTableSection>
           </Contents>
         )}
+        <RemiconUnitPriceListModal
+          open={isUnitPriceModalOpen}
+          onClose={() => setIsUnitPriceModalOpen(false)}
+        />
       </Container>
     </Modal>
   );
