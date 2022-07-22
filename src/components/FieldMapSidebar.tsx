@@ -25,13 +25,14 @@ enum ChipTypeEnum {
 }
 
 export default ({
+  spaces,
   fields,
   duration,
   setDuration,
   order,
   setOrder,
-  selectedFactoryInfo,
-  setSelectedFactoryInfo,
+  selectedFactoryId,
+  setSelectedFactoryId,
   selectedFieldInfo,
   setSelectedFieldInfo,
   selectedFactoryIds,
@@ -52,11 +53,9 @@ export default ({
 
   const navigate = useNavigate();
 
-  const { data: spaces } = useSpaces('N');
-
   const factoryOptions = useMemo(() => {
     if (!spaces) return [];
-    return spaces.map((v) => ({
+    return spaces.map((v: any) => ({
       label: v.name,
       value: v.id,
     }));
@@ -185,9 +184,9 @@ export default ({
         <BlackSelect
           placeholder="레미콘 공장을 선택하세요"
           width={320}
-          value={selectedFactoryInfo}
+          value={selectedFactoryId}
           onChange={(v) => {
-            setSelectedFactoryInfo(v);
+            setSelectedFactoryId(v);
           }}
           options={factoryOptions}
           initalMaxHeight={45}

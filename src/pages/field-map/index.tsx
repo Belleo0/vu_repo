@@ -34,6 +34,7 @@ import useFieldMaps from '@api/useFieldMaps';
 import FieldMarkerContent from '@components/FieldMarkerContent';
 import MapFieldInfoModal from '@components/MapFieldInfoModal';
 import NaverMapCenterPosition from '@components/NaverMapCenterPosition';
+import useSpaces from '@api/useSpaces';
 
 // @ts-ignore
 const { naver } = window;
@@ -52,10 +53,17 @@ export default () => {
 
   const [duration, setDuration] = useState<string>('60');
 
+  const { data: spaces } = useSpaces('N');
+
   const [selectedFieldInfo, setSelectedFieldInfo] = useState<any>(null);
-  const [selectedFactoryInfo, setSelectedFactoryInfo] = useState<string | null>(
+  const [selectedFactoryId, setSelectedFactoryId] = useState<string | null>(
     null,
   );
+
+  const selectedFactoryInfo = useMemo(() => {
+    if (!spaces || selectedFactoryId === null) return null;
+    return spaces.find((v) => v.id === selectedFactoryId);
+  }, [spaces, selectedFactoryId]);
 
   const selectedFieldId = useMemo(() => {
     if (!selectedFieldInfo) return null;
@@ -180,13 +188,14 @@ export default () => {
   return (
     <SpaceMapLayout>
       <FieldMapSidebar
+        spaces={spaces}
         fields={fields}
         order={order}
         setOrder={setOrder}
         duration={duration}
         setDuration={setDuration}
-        selectedFactoryInfo={selectedFactoryInfo}
-        setSelectedFactoryInfo={setSelectedFactoryInfo}
+        selectedFactoryId={selectedFactoryId}
+        setSelectedFactoryId={setSelectedFactoryId}
         selectedFieldInfo={selectedFieldInfo}
         setSelectedFieldInfo={setSelectedFieldInfo}
         selectedFactoryIds={selectedFactoryIds}
@@ -220,6 +229,11 @@ export default () => {
               setCurrentZoomLevel(zoom);
             }}
           >
+            <NaverMapCenterPosition
+              lat={selectedFactoryInfo?.latitude as any}
+              lng={selectedFactoryInfo?.longitude as any}
+              disableCenter={false}
+            />
             <NaverMapCenterPosition
               lat={selectedSpaceInfo?.latitude as any}
               lng={selectedSpaceInfo?.longitude as any}
