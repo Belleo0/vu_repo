@@ -33,6 +33,7 @@ import { IArea } from '@components/AreaButton';
 import useFieldMaps from '@api/useFieldMaps';
 import FieldMarkerContent from '@components/FieldMarkerContent';
 import MapFieldInfoModal from '@components/MapFieldInfoModal';
+import NaverMapCenterPosition from '@components/NaverMapCenterPosition';
 
 // @ts-ignore
 const { naver } = window;
@@ -219,6 +220,11 @@ export default () => {
               setCurrentZoomLevel(zoom);
             }}
           >
+            <NaverMapCenterPosition
+              lat={selectedSpaceInfo?.latitude as any}
+              lng={selectedSpaceInfo?.longitude as any}
+              disableCenter={selectedSpaceInfo?.disableCenter as boolean}
+            />
             {polylineInfo?.path && (
               <NaverMapPolyline paths={polylineInfo?.path} />
             )}
@@ -268,7 +274,7 @@ export default () => {
                       }}
                       onInfo={() => {
                         setIsInfoModalOpen(false);
-                        setSelectedSpaceInfo(v);
+                        setSelectedSpaceInfo({ ...v, disableCenter: true });
                         setTimeout(() => {
                           setIsInfoModalOpen(true);
                         }, 250);

@@ -273,7 +273,7 @@ export default ({
                   ? () => handleClickFactoryCard(v.id)
                   : () => {
                       setIsInfoModalOpen(false);
-                      setSelectedSpaceInfo(v);
+                      setSelectedSpaceInfo({ ...v, disableCenter: false });
                       setTimeout(() => {
                         setIsInfoModalOpen(true);
                       }, 250);
