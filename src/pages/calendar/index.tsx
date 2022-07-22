@@ -40,6 +40,7 @@ export default () => {
   const [selectedBarInfo, setSelectedBarInfo] = useState(null);
 
   const [pickCalendar, setPickCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<any>();
 
   const { data: assignments, mutate } = useAssignments(
     dates?.[0],
@@ -87,8 +88,7 @@ export default () => {
   };
 
   const handlePickCalendar = (v: any) => {
-    console.log(v);
-
+    setSelectedDate(v);
     if (type === CalendarTypeState.DAY) {
       const date = v;
       const nextDate = new Date(new Date(date).setDate(date.getDate()));
@@ -141,7 +141,9 @@ export default () => {
                     setPickCalendar(false);
                   }}
                   closeCalendar={pickCalendar}
-                  locale={'en'}
+                  locale={'en-US'}
+                  calendarType={'Hebrew'}
+                  value={selectedDate}
                 />
               </CalendarWrapper>
             )}
@@ -384,15 +386,18 @@ const CalendarWrapper = styled.div`
 
   .react-calendar__tile:enabled:hover {
     background-color: #e6f0ff;
+    border-radius: 8px;
   }
 
   .react-calendar__tile:enabled:focus {
     background-color: #e6f0ff;
+    border-radius: 8px;
   }
 
   .react-calendar__tile--now {
     background-color: #258fff;
-    color: #fff;
+    color: #ffffff !important;
+    border-radius: 8px;
   }
   .react-calendar__tile {
     height: 40px;
@@ -400,8 +405,15 @@ const CalendarWrapper = styled.div`
     flex: 0;
   }
 
+  .react-calendar__tile--active {
+    background-color: #94c8ff;
+    color: #ffffff !important;
+    border-radius: 8px;
+  }
+
   .react-calendar__navigation button:enabled:hover {
     background-color: #e6f0ff;
+    border-radius: 8px;
   }
   .react-calendar__month-view__days__day--weekend {
     color: #000;
