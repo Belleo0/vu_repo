@@ -21,9 +21,6 @@ export default ({
   containerStyle?: CSSProperties;
   searchIconStyle?: CSSProperties;
 }) => {
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
   const [inputValue, setInputValue] = useState<any>(value);
 
   const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
