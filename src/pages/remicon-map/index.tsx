@@ -197,40 +197,40 @@ export default () => {
     }
   }, [coordinates, location]);
 
-  // useEffect(() => {
-  //   if (!selectedFieldId) return;
-  //   if (selectedFieldId) {
-  //     console.log('selectedFieldAddress', selectedFieldAddress);
-  //     naver.maps.Service.geocode(
-  //       {
-  //         query: selectedFieldAddress,
-  //       },
-  //       (status: any, response: any) => {
-  //         if (status !== naver.maps.Service.Status.OK) {
-  //           return alert('문제가 발생했습니다.');
-  //         }
-  //         const result = response.v2.addresses[0];
-  //         const sido = result.addressElements.find((element: any) =>
-  //           element.types.includes('SIDO'),
-  //         ).longName;
-  //         const sigugun = result.addressElements.find((element: any) =>
-  //           element.types.includes('SIGUGUN'),
-  //         ).longName;
+  useEffect(() => {
+    if (!selectedFieldId) return;
+    if (selectedFieldId) {
+      console.log('selectedFieldAddress', selectedFieldAddress);
+      naver.maps.Service.geocode(
+        {
+          query: selectedFieldAddress,
+        },
+        (status: any, response: any) => {
+          if (status !== naver.maps.Service.Status.OK) {
+            return alert('문제가 발생했습니다.');
+          }
+          const result = response.v2.addresses[0];
+          const sido = result.addressElements.find((element: any) =>
+            element.types.includes('SIDO'),
+          ).longName;
+          const sigugun = result.addressElements.find((element: any) =>
+            element.types.includes('SIGUGUN'),
+          ).longName;
 
-  //         setCurrentAddress(selectedFieldAddress);
-  //         setCurrentAddrDetail({
-  //           sido: sido,
-  //           sigugun: sigugun,
-  //         });
-  //         setRealAddress(selectedFieldAddress);
-  //         setAddress(selectedFieldAddress);
-  //         setSelectedFieldInfo(selectedFieldInfo);
-  //         setLongitude(result.x);
-  //         setLatitude(result.y);
-  //       },
-  //     );
-  //   }
-  // }, [selectedFieldInfo]);
+          setCurrentAddress(selectedFieldAddress);
+          setCurrentAddrDetail({
+            sido: sido,
+            sigugun: sigugun,
+          });
+          setRealAddress(selectedFieldAddress);
+          setAddress(selectedFieldAddress);
+          setSelectedFieldInfo(selectedFieldInfo);
+          setLongitude(result.x);
+          setLatitude(result.y);
+        },
+      );
+    }
+  }, [selectedFieldInfo]);
 
   useEffect(() => {
     navigate(location.pathname, {
@@ -241,15 +241,6 @@ export default () => {
       },
     });
   }, [realAddress]);
-
-  // useEffect(() => {
-  //   navigate(location.pathname, {
-  //     state: {
-  //       // ...(location.state as any),
-  //       searchText: realAddress,
-  //     },
-  //   });
-  // }, [realAddress]);
 
   const orderByFactories = useMemo(() => {
     if (factories) {
