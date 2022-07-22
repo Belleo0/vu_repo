@@ -94,7 +94,7 @@ export default ({ open, onClose, data }: any) => {
               </StatusDate>
             </StatusWrap>
             <StatusWrap>
-              <StatusImage src={getAssetURL('../assets/permission-2-ic.svg')} />
+              <StatusImage src={getAssetURL('../assets/approval2_ic.svg')} />
               <StatusLabel>사용승인일</StatusLabel>
               <StatusDate>
                 {moment(data?.use_apr_day).isValid()
