@@ -10,7 +10,6 @@ import NaverMap from '@components/NaverMap';
 import NaverMapSpaceMarker from '@components/NaverMapSpaceMarker';
 
 import styled from '@emotion/styled';
-import SpaceMapSidebar from '@components/SpaceMapSidebar';
 import Footer from '@components/Footer';
 import useFactoryMaps from '@api/useFactoryMaps';
 import SpaceMarkerContent from '@components/SpaceMarkerContent';
@@ -30,6 +29,10 @@ import FieldMapSidebar from '@components/FieldMapSidebar';
 import NaverMapFieldStatus from '@components/NaverMapFieldStatus';
 import NaverMapFieldAddress from '@components/NaverMapFieldAddress';
 import useGeolocation from '@hooks/useGeolocation';
+import { IArea } from '@components/AreaButton';
+import useFieldMaps from '@api/useFieldMaps';
+import FieldMarkerContent from '@components/FieldMarkerContent';
+import MapFieldInfoModal from '@components/MapFieldInfoModal';
 
 // @ts-ignore
 const { naver } = window;
@@ -63,19 +66,29 @@ export default () => {
   const [address, setAddress] = useState('');
   const [realAddress, setRealAddress] = useState('');
 
-  const { data: factoriesData, isLoading } = useFactoryMaps(
-    selectedFieldId,
-    duration,
+  const [areas, setAreas] = useState<IArea[]>([]);
+
+  const areaQuery = useMemo(() => {
+    if (areas.length === 0) return '';
+    return areas
+      .map((area) => `${area.state.code}_${area.city.code}_${area.dong.code}`)
+      .join(',');
+  }, [areas]);
+
+  const [currentZoomLevel, setCurrentZoomLevel] = useState(18);
+
+  const { data: fieldsData, isLoading } = useFieldMaps(
+    areaQuery,
     bounds,
-    realAddress,
+    currentZoomLevel,
   );
 
-  const previousFactories = usePrevious(factoriesData);
+  const previousFields = usePrevious(fieldsData);
 
-  const factories = useMemo(() => {
-    if (factoriesData) return factoriesData;
-    return previousFactories;
-  }, [factoriesData]);
+  const fields = useMemo(() => {
+    if (fieldsData) return fieldsData;
+    return previousFields;
+  }, [fieldsData]);
 
   const [selectedFactoryIds, setSelectedFactoryIds] = useState<number[]>([]);
 
@@ -157,16 +170,16 @@ export default () => {
   }, [selectedFieldInfo]);
 
   useEffect(() => {
-    if (factoriesData?.message === '주소 위치를 찾을 수 없습니다.') {
+    if (fieldsData?.message === '주소 위치를 찾을 수 없습니다.') {
       window.alert('주소 위치를 찾을 수 없습니다.');
       setRealAddress('');
     }
-  }, [factoriesData]);
+  }, [fieldsData]);
 
   return (
     <SpaceMapLayout>
       <FieldMapSidebar
-        factories={factories}
+        fields={fields}
         order={order}
         setOrder={setOrder}
         duration={duration}
@@ -183,13 +196,15 @@ export default () => {
         address={address}
         setAddress={setAddress}
         setRealAddress={setRealAddress}
+        areas={areas}
+        setAreas={setAreas}
       />
       <ContentWrap>
         <Content>
           <NaverMap
             lat={37.557733}
             lng={126.9253985}
-            zoom={12}
+            zoom={18}
             style={{ width: '100%', height: 'calc(100vh - 80px)' }}
             boundChange={({ _min, _max }) => {
               const data = {
@@ -199,6 +214,9 @@ export default () => {
                 max_lng: _max._lng,
               };
               delayedUpdateCall(data);
+            }}
+            zoomChange={(zoom) => {
+              setCurrentZoomLevel(zoom);
             }}
           >
             {polylineInfo?.path && (
@@ -216,10 +234,10 @@ export default () => {
                 }
               />
             )}
-            {!!factories?.field_position && (
+            {!!fields?.field_position && (
               <NaverMapImageMarker
-                lat={factories?.field_position.latitude}
-                lng={factories?.field_position.longitude}
+                lat={fields?.field_position.latitude}
+                lng={fields?.field_position.longitude}
                 content={
                   <img
                     src={getAssetURL('../assets/ic-field-marker.png')}
@@ -229,16 +247,17 @@ export default () => {
               />
             )}
 
-            {factories &&
-              factories.data?.map((v: any, i: number) => (
+            {fields &&
+              fields.data?.map((v: any, i: number) => (
                 <NaverMapSpaceMarker
                   key={v.id}
                   lat={v.latitude}
                   lng={v.longitude}
                   content={
-                    <SpaceMarkerContent
+                    <FieldMarkerContent
                       index={i}
-                      name={v?.name}
+                      name={v?.main_purps_cd_nm}
+                      data={v}
                       address={v?.basic_address}
                       distance={v?.direction?.distance}
                       duration={v?.direction?.duration}
@@ -261,7 +280,7 @@ export default () => {
                         (!!v.direction && v.direction === polylineInfo) ||
                         selectedFactoryIds.includes(v.id)
                       }
-                      hideWithoutName={!!factories?.field_position}
+                      hideWithoutName={true}
                     />
                   }
                 />
@@ -271,7 +290,7 @@ export default () => {
             <NaverMapController />
             <NaverMapFieldStatus />
           </NaverMap>
-          <MapSpaceInfoModal
+          <MapFieldInfoModal
             open={isInfoModalOpen}
             onClose={() => setIsInfoModalOpen(false)}
             data={selectedSpaceInfo}

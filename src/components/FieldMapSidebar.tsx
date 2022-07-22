@@ -7,9 +7,7 @@ import Button, { ButtonType } from './Button';
 import { css } from '@emotion/react';
 import FilterSelect from './FilterSelect';
 import Modal, { ModalContainer, ModalTitle, ShadowButtonWrap } from './Modal';
-import MapSpaceCard from './MapSpaceCard';
 import useSpaces from '@api/useSpaces';
-import SelectSpaceCard from './SelectSpaceCard';
 import TextModal from './TextModal';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DaumPostcode from 'react-daum-postcode';
@@ -18,14 +16,8 @@ import BlackSelect from './BlackSelect';
 import getAssetURL from '@utils/getAssetURL';
 import MapFieldCard from './MapFieldCard';
 import ScrollBox from './ScrollBox';
-import FieldFilterModal from './FieldFilterModal';
-import useFactories from '@api/useFactories';
-import BlackInput from './BlackInput';
-import {
-  FieldPerOptions,
-  FieldReportOptions,
-} from '@constance/FieldFilterOptions';
 import FieldMapFilterModal from './FieldMapFilterModal';
+import AreaButton, { IArea } from './AreaButton';
 
 enum ChipTypeEnum {
   DEFAULT,
@@ -33,7 +25,7 @@ enum ChipTypeEnum {
 }
 
 export default ({
-  factories,
+  fields,
   duration,
   setDuration,
   order,
@@ -51,6 +43,8 @@ export default ({
   setAddress,
   setRealAddress,
   orderByFactories,
+  areas,
+  setAreas,
 }: any) => {
   const isLogin = useIsLogin();
 
@@ -60,7 +54,13 @@ export default ({
 
   const { data: spaces } = useSpaces('N');
 
-  const [factoryOptions, setFactoryOptions] = useState<any>([]);
+  const factoryOptions = useMemo(() => {
+    if (!spaces) return [];
+    return spaces.map((v) => ({
+      label: v.name,
+      value: v.id,
+    }));
+  }, [spaces]);
 
   const [tempSelectedFieldInfo, setTempSelectedFieldInfo] = useState<any>(null);
 
@@ -80,6 +80,14 @@ export default ({
 
   const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false);
 
+  const [stateOptions, setStateOptions] = useState<any>([]);
+  const [cityOptions, setCityOptions] = useState<any>([]);
+  const [dongOptions, setDongOptions] = useState<any>([]);
+
+  const [stateId, setStateId] = useState(null);
+  const [cityId, setCityId] = useState(null);
+  const [dongId, setDongId] = useState(null);
+
   useEffect(() => {
     if ((location?.state as any)?.searchText) {
       const tempAddress = (location?.state as any)?.searchText;
@@ -88,24 +96,6 @@ export default ({
       navigate(location.pathname, {});
     }
   }, [location]);
-
-  useEffect(() => {
-    if (factories?.data) {
-      const factoryOption = factories?.data.map((v: any) => ({
-        label: v.name,
-        value: v.id,
-      }));
-      setFactoryOptions(factoryOption);
-    }
-  }, [factories]);
-
-  const handleOpenSelectModal = () => {
-    if (spaces && spaces.length > 0) {
-      setIsSelectModalOpen(true);
-    } else {
-      setIsNotFoundSpaceModal(true);
-    }
-  };
 
   const handleCloseFilterModal = () => {
     setIsFieldFilterModal(false);
@@ -130,6 +120,65 @@ export default ({
     }
   };
 
+  const getAddressCode = async (parentId: any) => {
+    const { data } = await api.get(`/codes/addresses`, {
+      params: { parent_id: parentId },
+    });
+
+    const result = data?.result.map((v: any) => {
+      return {
+        code: v.code,
+        label: v.name,
+        value: v.id,
+      };
+    });
+
+    return result;
+  };
+
+  useEffect(() => {
+    (async () => {
+      const data = await getAddressCode(undefined);
+      setStateOptions(data);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (!stateId) return;
+      const data = await getAddressCode(stateId);
+      setCityOptions(data);
+    })();
+  }, [stateId]);
+
+  useEffect(() => {
+    (async () => {
+      if (!cityId) return;
+      const data = await getAddressCode(cityId);
+      setDongOptions(data);
+    })();
+  }, [cityId]);
+
+  const handleAddArea = () => {
+    if (stateId === null && cityId === null && dongId === null) return;
+    const state = stateOptions.find((v: any) => v.value === stateId);
+    const city = cityOptions.find((v: any) => v.value === cityId);
+    const dong = dongOptions.find((v: any) => v.value === dongId);
+
+    setAreas((prev: any) => prev.concat({ state, city, dong }));
+
+    setStateId(null);
+    setCityId(null);
+    setDongId(null);
+
+    setCityOptions([]);
+    setDongOptions([]);
+  };
+
+  const handleRemoveArea = (v: any) => {
+    setAreas((prev: any) => prev.filter((x: any) => v !== x));
+  };
+
   return (
     <Container>
       <TopSectionWrap>
@@ -141,43 +190,61 @@ export default ({
             setSelectedFactoryInfo(v);
           }}
           options={factoryOptions}
-          absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
-          containerStyle={{ marginBottom: 40 }}
+          initalMaxHeight={45}
+          absoluteStyle={{
+            border: 'solid 1px #c7c7c7',
+            padding: '12px 14px',
+          }}
+          containerStyle={{ marginBottom: 40, padding: '12px 14px' }}
         />
         <HelperText>지역을 등록하세요. (최대 00개)</HelperText>
         <SelectWrap>
           <BlackSelect
-            placeholder="00"
+            placeholder="광역시도"
             width={108}
-            value={slumpOptions}
-            onChange={() => {}}
-            options={slumpOptions}
+            value={stateId}
+            onChange={(v) => setStateId(v)}
+            options={stateOptions}
             absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           />
           <BlackSelect
-            placeholder="00"
+            placeholder="시군구"
             width={98}
-            value={slumpOptions}
-            onChange={() => {}}
-            options={slumpOptions}
+            value={cityId}
+            onChange={(v) => setCityId(v)}
+            options={cityOptions}
             absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           />
           <BlackSelect
-            placeholder="00"
+            placeholder="읍면동"
             width={98}
-            value={slumpOptions}
-            onChange={() => {}}
-            options={slumpOptions}
+            value={dongId}
+            onChange={(v) => setDongId(v)}
+            options={dongOptions}
             absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           />
         </SelectWrap>
         <Button
-          type={ButtonType.GRAY}
-          containerStyle={{ marginBottom: 30, height: 40 }}
-          onClick={handleOpenSelectModal}
+          type={
+            stateId !== null && cityId !== null && dongId !== null
+              ? ButtonType.PRIMARY
+              : ButtonType.GRAY
+          }
+          containerStyle={{
+            marginBottom: areas.length > 0 ? 20 : 30,
+            height: 40,
+          }}
+          onClick={handleAddArea}
         >
           지역 등록하기
         </Button>
+        {areas.length > 0 && (
+          <AreaButtonWrap>
+            {areas.map((v: any) => (
+              <AreaButton area={v} onClick={() => handleRemoveArea(v)} />
+            ))}
+          </AreaButtonWrap>
+        )}
       </TopSectionWrap>
       <FilterWrap>
         <FilterSelect
@@ -195,18 +262,14 @@ export default ({
         </FilterButton>
       </FilterWrap>
       <MapSpaceCardWrap>
-        {factories &&
-          factories.data?.map((v: any, i: any) => (
+        {fields &&
+          fields.data?.map((v: any, i: any) => (
             <MapFieldCard
               key={v.id}
-              id={v.id}
-              index={i}
-              name={v?.name}
-              distance={v?.direction?.distance}
-              duration={v?.direction?.duration}
+              data={v}
               selected={selectedFactoryIds.includes(v.id)}
               onClick={
-                !!factories?.field_position
+                !!fields?.field_position
                   ? () => handleClickFactoryCard(v.id)
                   : () => {
                       setIsInfoModalOpen(false);
@@ -216,8 +279,6 @@ export default ({
                       }, 250);
                     }
               }
-              selectedFieldId={selectedFieldId}
-              factories={factories}
             />
           ))}
       </MapSpaceCardWrap>
@@ -244,9 +305,8 @@ export default ({
         content={`이미 견적요청한 공장이 존재합니다.\n${duplicatedFactoryIds
           .map(
             (v) =>
-              (factories?.data || []).filter(
-                (factory: any) => factory.id === v,
-              )[0].name,
+              (fields?.data || []).filter((factory: any) => factory.id === v)[0]
+                .name,
           )
           .join(', ')}`}
         onClose={() => setIsDuplicatedEstimation(false)}
@@ -434,4 +494,10 @@ const Icon = styled.img`
   height: 18px;
 
   margin-left: 4px;
+`;
+
+const AreaButtonWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
 `;

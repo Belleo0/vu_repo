@@ -118,12 +118,13 @@ export default ({
 const Container = styled.div`
   display: flex;
   align-items: center;
-  padding: 8px;
+  padding: 14px;
   border-radius: 6px;
   border: solid 1px #c7c7c7;
   background-color: #fff;
   cursor: pointer;
   position: relative;
+  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
 `;
 
 const Icon = styled.img`
@@ -152,7 +153,7 @@ const AbsoluteWrap = styled.div<{
   top: -1px;
   left: -1px;
   width: calc(100% + 2px);
-  padding: 8px;
+  padding: 14px;
   border-radius: 6px;
   border: solid 1px #e3e3e3;
   background-color: #fff;
@@ -162,11 +163,13 @@ const AbsoluteWrap = styled.div<{
   ${({ isOpen, optionLength, maxHeight }) =>
     isOpen
       ? css`
-          max-height: ${42 + 28 * optionLength}px;
+          max-height: ${55 + 28 * optionLength}px;
         `
-      : maxHeight
+      : css`
+          max-height: 0px;
+        `
       ? css`
-          height: ${maxHeight}px;
+          max-height: ${maxHeight}px;
         `
       : css`
           max-height: 37px;
@@ -192,7 +195,7 @@ const AbsoluteValueContainer = styled.div<{
   ${({ maxHeight }) =>
     maxHeight
       ? css`
-          margin-top: 7px;
+          /* margin-top: 7px; */
         `
       : css`
           margin-top: 0px;
@@ -223,5 +226,5 @@ const OptionBox = styled.div`
   width: 100%;
   height: 200px;
 
-  margin-top: 14px;
+  margin-top: 20px;
 `;

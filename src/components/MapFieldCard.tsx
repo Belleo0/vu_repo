@@ -3,7 +3,8 @@ import styled from '@emotion/styled';
 import convertDistance from '@utils/convertDistance';
 import convertDuration from '@utils/convertDuration';
 import getAssetURL from '@utils/getAssetURL';
-import React from 'react';
+import moment from 'moment';
+import React, { useMemo } from 'react';
 
 interface IMapSpaceCard {
   id: number;
@@ -17,27 +18,41 @@ interface IMapSpaceCard {
   selectedFieldId: null | number;
 }
 
-export default ({
-  id,
-  index,
-  name,
-  distance,
-  duration,
-  selected,
-  onClick,
-  factories,
-  selectedFieldId,
-}: IMapSpaceCard) => {
+export default ({ data, selected, onClick }: any) => {
+  const status = useMemo(() => {
+    if (data?.use_apr_day && new Date(data?.use_apr_day) < new Date()) {
+      return {
+        date: data?.use_apr_day,
+        label: '승인',
+        color: '#253bff',
+      };
+    } else if (
+      data?.real_stcns_day &&
+      new Date(data?.real_stcns_day) < new Date()
+    ) {
+      return {
+        date: data?.real_stcns_day,
+        label: '착공',
+        color: '#9241e4',
+      };
+    } else if (
+      data?.arch_pms_day &&
+      new Date(data?.arch_pms_day) < new Date()
+    ) {
+      return {
+        date: data?.arch_pms_day,
+        label: '허가',
+        color: '#00b448',
+      };
+    }
+  }, [data]);
+
   return (
-    <Container
-      selected={selected}
-      onClick={!!factories?.field_position ? onClick : () => null}
-      // onClick={selectedFieldId !== null ? onClick : () => null}
-    >
+    <Container selected={selected} onClick={onClick}>
       <InfoContainer>
         <InfoWrap>
           <BookmarkWrap>
-            <Address>부산광역시 영도구 동삼동 1123-3</Address>
+            <Address>{data?.plat_plc}</Address>
             <StarIcon
               src={
                 selected
@@ -47,17 +62,28 @@ export default ({
             />
           </BookmarkWrap>
           <FieldInfoWrap>
-            <FieldPurpose>업무시설</FieldPurpose>
+            <FieldPurpose>
+              {data?.main_purps_cd_nm === ''
+                ? '알수없음'
+                : data?.main_purps_cd_nm}
+            </FieldPurpose>
             <Divider />
-            <FieldArea>260.68㎡ (78.86평)</FieldArea>
+            <FieldArea>
+              {data?.plat_area}㎡ (
+              {(parseFloat(data?.plat_area) / 3.3058).toFixed(2)}평)
+            </FieldArea>
           </FieldInfoWrap>
           <FieldConstructorWrap>
             <Constructor>발주처</Constructor>
-            <FieldDateInfo>(주)대성건설</FieldDateInfo>
+            <FieldDateInfo>{data?.bld_nm}</FieldDateInfo>
           </FieldConstructorWrap>
           <FieldDateWrap>
-            <FieldStatus>승인</FieldStatus>
-            <FieldDateInfo>2021.10</FieldDateInfo>
+            <FieldStatus style={{ color: status?.color }}>
+              {status?.label}
+            </FieldStatus>
+            <FieldDateInfo>
+              {moment(status?.date).format('YYYY.MM')}
+            </FieldDateInfo>
           </FieldDateWrap>
         </InfoWrap>
       </InfoContainer>
@@ -195,10 +221,14 @@ const CheckIcon = styled.img`
 `;
 
 const FieldDateInfo = styled.div`
+  width: 100%;
   font-size: 14px;
   font-weight: normal;
   letter-spacing: -0.28px;
   color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const StarIcon = styled.img`
