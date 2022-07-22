@@ -1,6 +1,7 @@
 import { BusanUnitPrice } from '@constance/UnitPriceData';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
+import { makeComma } from '@utils/makeComma';
 import Button, { ButtonSize, ButtonType } from './Button';
 import Modal from './Modal';
 
@@ -16,9 +17,6 @@ export default ({ open, estimation, onClose }: any) => {
   const slump4 = BusanUnitPrice.filter((v) => v.slump === 18);
   const slump5 = BusanUnitPrice.filter((v) => v.slump === 21);
 
-  const makeComma = (v: number) => {
-    return v.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-  };
   return (
     <Modal open={open} onClose={onClose}>
       <Container>
