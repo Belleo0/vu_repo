@@ -265,7 +265,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
                   <SpecDivider />
                   <BlackSelect
                     placeholder="00"
-                    width={55}
+                    width={58}
                     value={v.slump === 0 ? null : v.slump}
                     onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
                     options={slumpOptions}
@@ -273,7 +273,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
                   <SpecDivider />
                   <BlackSelect
                     placeholder="000"
-                    width={65}
+                    width={68}
                     value={
                       v.norminal_strength === 0 ? null : v.norminal_strength
                     }
