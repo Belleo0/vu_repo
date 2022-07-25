@@ -134,7 +134,11 @@ export default ({
               top={v.top}
               left={v.left + defaultLeftMargin}
               height={Math.abs(v.height)}
-              style={{ backgroundColor: v?.estimation?.color }}
+              style={
+                v?.estimation?.status === 'REQUESTED'
+                  ? RequestedBarStyle
+                  : { backgroundColor: v?.estimation?.color }
+              }
               onClick={(e) => {
                 setSelectedBarInfo(v);
                 setIsModalOpened(true);
@@ -160,7 +164,11 @@ export default ({
               top={v.top}
               left={v.left + defaultLeftMargin}
               height={Math.abs(v.height)}
-              style={{ backgroundColor: v?.estimation?.color }}
+              style={
+                v?.estimation?.status === 'REQUESTED'
+                  ? RequestedBarStyle
+                  : { backgroundColor: v?.estimation?.color }
+              }
               onClick={(e) => {
                 setSelectedBarInfo(v);
                 setIsModalOpened(true);
@@ -343,3 +351,15 @@ const Bar = styled.div<{
       min-height: ${height}px;
     `}
 `;
+
+const RequestedBarStyle = {
+  backgroundColor: '#ffffff',
+  backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23c7c7c7' stroke-width='3' stroke-dasharray='2%2c7' stroke-dashoffset='57' stroke-linecap='square'/%3e%3c/svg%3e")`,
+  borderRadius: ' 6px',
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  padding: '8px 10px',
+  marginBottom: '2px',
+  cursor: 'pointer',
+};
