@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import api from '@api';
+import api, { setToken } from '@api';
 import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
 import Input from '@components/Input';
@@ -10,6 +10,8 @@ import { css } from '@emotion/react';
 import getAssetURL from '@utils/getAssetURL';
 import Modal from '@components/RegisterTextModal';
 import SearchCompanyModal from '@components/SearchCompanyModal';
+import { useDispatch } from 'react-redux';
+import { me } from '@data/auth';
 
 enum ButtonType {
   'ABLE',
@@ -47,6 +49,7 @@ const cursor = {
 export default () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // # Basic State
   const [company, setCompany] = useState<string | any>({}); // 회사이름
@@ -65,33 +68,12 @@ export default () => {
   const [successOpenModal, setSuccessOpenModal] = useState(false); // 완료 modal controller
   const [searchCompanyOpenModal, setSearchCompanyOpenModal] = useState(false); // 회사검색 modal controller
 
-  const [companyList, setCompanyList] = useState<any>(); // 유저 소속에 따른 회사 리스트
-
   const userInviteType: boolean = false;
   const companyName: string = '동양건설'; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
   const companyType: string =
     (location.state as any)?.userType === 1 ? 'con' : 'rem'; // 유저 소속에 따른 타입 1: 건설사, 2: 레미콘사
 
-  const getCompanyList = async () => {
-    if (companyType === 'con') {
-      try {
-        const { data } = await api.get('/fields');
-        setCompanyList(data.result);
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      try {
-        const { data } = await api.get('/temp-factories');
-        setCompanyList(data.result);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  };
-  useEffect(() => {
-    getCompanyList();
-  }, []);
+  console.log('location state => ', location?.state);
 
   const requestSignUpHandler = async () => {
     await api
@@ -99,18 +81,18 @@ export default () => {
         signname: (location.state as any)?.signname,
         password: (location.state as any)?.password,
         name: (location.state as any)?.name,
-        phone: (location.state as any)?.phone,
+        phone: '01000000001' || (location.state as any)?.phone,
         position: position || '',
         tel: tel || '',
         company_id: companyType === 'con' ? 2 : 1,
       })
-      .then((res) => setSuccessOpenModal(true));
+      .then(() => setSuccessOpenModal(true));
   };
   const isValidHandler = (e: any, type: string) => {
     switch (type) {
       case 'company':
-        setCompany(e);
-        if (!isUserInsert && !company === undefined) {
+        if (!isUserInsert && company !== undefined) {
+          setCompany(e);
           setIsValid(() => true);
         }
         break;
@@ -162,10 +144,21 @@ export default () => {
         setIsValid(false);
       }
     }
-  });
+  }, []);
 
-  const successCloseModal = () => {
-    navigate('/');
+  console.log(location?.state);
+
+  const successCloseModal = async () => {
+    await api
+      .post('/auth/login', {
+        username: (location?.state as any)?.signname,
+        password: (location?.state as any)?.password,
+      })
+      .then(async (res) => {
+        setToken(res.data);
+        await dispatch(me());
+        await navigate('/');
+      });
   };
 
   const searchCompanyClose = () => {
@@ -173,11 +166,7 @@ export default () => {
   };
 
   useEffect(() => {
-    if (companyType === 'con') {
-      company.name && setIsValid(true);
-    } else {
-      company.visible_name && setIsValid(true);
-    }
+    company.name && setIsValid(true);
   }, [company]);
 
   return (
@@ -187,7 +176,6 @@ export default () => {
         onClose={() => {
           searchCompanyClose();
         }}
-        data={companyList}
         setChkCompany={setCompany}
         companyType={companyType}
       />
@@ -196,7 +184,6 @@ export default () => {
         onClose={() => successCloseModal()}
         submitText={'확인'}
         content={'회원가입이 완료되었습니다.'}
-        bottomContent={'메인 페이지로 이동합니다.'}
       />
       <Container>
         <MainTitle>
@@ -363,11 +350,7 @@ export default () => {
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'company');
                     }}
-                    value={
-                      companyType === 'con'
-                        ? company?.company?.name
-                        : company?.visible_name
-                    }
+                    value={company?.name}
                     placeholder={
                       companyType == 'con'
                         ? '회사명을 검색해 주세요'

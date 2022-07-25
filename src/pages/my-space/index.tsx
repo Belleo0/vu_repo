@@ -23,63 +23,61 @@ export default () => {
 
   return (
     <SpaceLayout>
-      {selectedSpaceId === undefined ? null : isLoading ? null : (
-        <Container>
-          <BarSection>
-            {isFieldUser ? (
-              <Title>건설현장</Title>
-            ) : (
-              <RemiconSpaceTitle>
-                {suppliers?.length}개 현장과 거래하고 있습니다.
-              </RemiconSpaceTitle>
-            )}
-            {isFieldUser ? null : <Title>공장명</Title>}
-            <SpaceBar
-              id={info?.id}
-              name={info?.name}
-              adminUserName={info?.admin_user?.name}
-              siteUserName={info?.site_user?.name}
-              address={info?.basic_address}
-            />
-            {isFieldUser && (
-              <SpaceInfoTable
-                companyName={info?.company?.name}
-                address={info?.basic_address}
-                startAt={info?.start_at}
-                endAt={info?.end_at}
-                needAmount={info?.field_info?.need_amount}
-              />
-            )}
-          </BarSection>
-          <MidSection>
-            <MidSectionInSection>
-              <Title>알림내역 (999) - 2차 범위</Title>
-              <Notifications
-                data={new Array(15).fill({
-                  type: '견적접수',
-                  value: '(주)동서산업의 견적이 접수되었습니다.',
-                  created_at: '2022-05-05T12:18:53.795Z',
-                })}
-              />
-            </MidSectionInSection>
-            <MidSectionInSection>
-              <Title>현장멤버 ({members?.length})</Title>
-              <SpaceMembers data={members} />
-            </MidSectionInSection>
-          </MidSection>
+      <Container>
+        <BarSection>
           {isFieldUser ? (
-            <BottomSection>
-              <Title>납품사 ({suppliers?.length})</Title>
-              <MyFieldVendorTable data={suppliers} />
-            </BottomSection>
+            <Title>건설현장</Title>
           ) : (
-            <MyFactoryVendorTable
-              data={suppliers}
-              revalidate={() => supplierMutate()}
+            <RemiconSpaceTitle>
+              {suppliers?.length}개 현장과 거래하고 있습니다.
+            </RemiconSpaceTitle>
+          )}
+          {isFieldUser ? null : <Title>공장명</Title>}
+          <SpaceBar
+            id={info?.id}
+            name={info?.name}
+            adminUserName={info?.admin_user?.name}
+            siteUserName={info?.site_user?.name}
+            address={info?.basic_address}
+          />
+          {isFieldUser && (
+            <SpaceInfoTable
+              companyName={info?.company?.name}
+              address={info?.basic_address}
+              startAt={info?.start_at}
+              endAt={info?.end_at}
+              needAmount={info?.field_info?.need_amount}
             />
           )}
-        </Container>
-      )}
+        </BarSection>
+        <MidSection>
+          <MidSectionInSection>
+            <Title>알림내역 (999) - 2차 범위</Title>
+            <Notifications
+              data={new Array(15).fill({
+                type: '견적접수',
+                value: '(주)동서산업의 견적이 접수되었습니다.',
+                created_at: '2022-05-05T12:18:53.795Z',
+              })}
+            />
+          </MidSectionInSection>
+          <MidSectionInSection>
+            <Title>현장멤버 ({members?.length})</Title>
+            <SpaceMembers data={members} />
+          </MidSectionInSection>
+        </MidSection>
+        {isFieldUser ? (
+          <BottomSection>
+            <Title>납품사 ({suppliers?.length})</Title>
+            <MyFieldVendorTable data={suppliers} />
+          </BottomSection>
+        ) : (
+          <MyFactoryVendorTable
+            data={suppliers}
+            revalidate={() => supplierMutate()}
+          />
+        )}
+      </Container>
     </SpaceLayout>
   );
 };

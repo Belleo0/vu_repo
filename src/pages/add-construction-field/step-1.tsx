@@ -29,7 +29,6 @@ export default () => {
     searchItem,
   });
 
-  const location = useLocation();
   const navigate = useNavigate();
 
   const nxtStepHandler = () => {

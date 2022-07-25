@@ -60,8 +60,6 @@ export default () => {
     });
   };
 
-  console.log(location.state);
-
   const companyName: string = ''; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
 
   const validItem = {
