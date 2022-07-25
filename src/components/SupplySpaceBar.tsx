@@ -21,7 +21,6 @@ import RegisterFactoryModal from './RegisterFactoryModal';
 import SearchInput from './SearchInput';
 import { debounce } from 'lodash';
 import api from '@api';
-import useFactories from '@api/useFactories';
 import MapSpaceCard from './MapSpaceCard';
 import MapSpaceModalCard from './MapSpaceModalCard';
 import TextModal from './TextModal';
