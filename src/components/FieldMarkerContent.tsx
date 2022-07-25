@@ -62,7 +62,7 @@ export default ({
   }, [data]);
 
   const [isModalOpened, setIsModalOpened] = useState(false);
-  const [isHovered, setIsHovered] = useState<boolean>(true);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const isSelected = useMemo(() => {
@@ -95,8 +95,8 @@ export default ({
         }
       />
       <ContentsWrap
-        // onMouseEnter={() => setIsHovered(true)}
-        // onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         onClick={onInfo}
       >
         {hideWithoutName && (

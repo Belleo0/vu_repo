@@ -54,8 +54,8 @@ export default ({ lat, lng, content }: IMarker) => {
     if (isMounted) {
       marker.setIcon({
         content: convertedContent,
-        size: new naver.maps.Size(22, 35),
-        anchor: new naver.maps.Point(11, 35),
+        size: new naver.maps.Size(175, 64),
+        anchor: new naver.maps.Point(20, 64),
       });
 
       ReactDOMClient.hydrateRoot(document.getElementById(id)!, content as any);
