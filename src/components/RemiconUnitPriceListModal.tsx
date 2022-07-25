@@ -11,11 +11,11 @@ export default ({ open, estimation, onClose }: any) => {
   // );
   // console.log('price!!!!', result?.[0]?.price);
 
-  const slump1 = BusanUnitPrice.filter((v) => v.slump === 8);
-  const slump2 = BusanUnitPrice.filter((v) => v.slump === 12);
-  const slump3 = BusanUnitPrice.filter((v) => v.slump === 15);
-  const slump4 = BusanUnitPrice.filter((v) => v.slump === 18);
-  const slump5 = BusanUnitPrice.filter((v) => v.slump === 21);
+  const slump1 = BusanUnitPrice.filter((v) => v.slump === 80);
+  const slump2 = BusanUnitPrice.filter((v) => v.slump === 120);
+  const slump3 = BusanUnitPrice.filter((v) => v.slump === 150);
+  const slump4 = BusanUnitPrice.filter((v) => v.slump === 180);
+  const slump5 = BusanUnitPrice.filter((v) => v.slump === 210);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -51,24 +51,25 @@ export default ({ open, estimation, onClose }: any) => {
             <TableWrap>
               <TableRow>
                 <ColumnTitle>
-                  <SlashImage
-                    src={getAssetURL('/assets/reference_room_one.png')}
-                    width={'100px'}
-                  />
+                  <DiagonalCell>
+                    <DiagonalLeft>슬럼프(mm)</DiagonalLeft>
+                    <DiagonalRight>호칭강도</DiagonalRight>
+                    <Slash />
+                  </DiagonalCell>
                 </ColumnTitle>
-                <LabelCell>160</LabelCell>
-                <LabelCell>180</LabelCell>
-                <LabelCell>210</LabelCell>
-                <LabelCell>240</LabelCell>
-                <LabelCell>270</LabelCell>
-                <LabelCell>300</LabelCell>
-                <LabelCell>350</LabelCell>
-                <LabelCell>400</LabelCell>
-                <LabelCell>450</LabelCell>
-                <LabelCell style={{ borderRight: 'none' }}>500</LabelCell>
+                <LabelCell>16</LabelCell>
+                <LabelCell>18</LabelCell>
+                <LabelCell>21</LabelCell>
+                <LabelCell>24</LabelCell>
+                <LabelCell>27</LabelCell>
+                <LabelCell>30</LabelCell>
+                <LabelCell>35</LabelCell>
+                <LabelCell>40</LabelCell>
+                <LabelCell>45</LabelCell>
+                <LabelCell style={{ borderRight: 'none' }}>50</LabelCell>
               </TableRow>
               <TableRow>
-                <ColumnTitle>8</ColumnTitle>
+                <ColumnTitle>80</ColumnTitle>
                 {slump1.map((v: any, i: any) => (
                   <ValueCell>{makeComma(v.price)}</ValueCell>
                 ))}
@@ -76,7 +77,7 @@ export default ({ open, estimation, onClose }: any) => {
                 <ValueCell style={{ borderRight: 'none' }}>{''}</ValueCell>
               </TableRow>
               <TableRow>
-                <ColumnTitle>12</ColumnTitle>
+                <ColumnTitle>120</ColumnTitle>
                 {slump2.map((v: any, i: any) => (
                   <ValueCell>{makeComma(v.price)}</ValueCell>
                 ))}
@@ -84,7 +85,7 @@ export default ({ open, estimation, onClose }: any) => {
                 <ValueCell style={{ borderRight: 'none' }}>{''}</ValueCell>
               </TableRow>
               <TableRow>
-                <ColumnTitle>15</ColumnTitle>
+                <ColumnTitle>150</ColumnTitle>
                 {slump3.map((v: any, i: any) => (
                   <ValueCell>{makeComma(v.price)}</ValueCell>
                 ))}
@@ -92,7 +93,7 @@ export default ({ open, estimation, onClose }: any) => {
                 <ValueCell style={{ borderRight: 'none' }}>{''}</ValueCell>
               </TableRow>
               <TableRow>
-                <ColumnTitle>18</ColumnTitle>
+                <ColumnTitle>180</ColumnTitle>
                 {slump4.map((v: any, i: any) => (
                   <ValueCell>{makeComma(v.price)}</ValueCell>
                 ))}
@@ -100,7 +101,7 @@ export default ({ open, estimation, onClose }: any) => {
                 <ValueCell style={{ borderRight: 'none' }}>{''}</ValueCell>
               </TableRow>
               <TableRow>
-                <ColumnTitle>21</ColumnTitle>
+                <ColumnTitle>210</ColumnTitle>
                 {slump5.map((v: any, i: any) => (
                   <ValueCell>{makeComma(v.price)}</ValueCell>
                 ))}
@@ -117,11 +118,11 @@ export default ({ open, estimation, onClose }: any) => {
               <TableWrap>
                 <TableRow>
                   <ColumnTitle>
-                    <SlashImage
-                      src={getAssetURL('/assets/reference_room_two.png')}
-                      width={'100%'}
-                      height={'100%'}
-                    />
+                    <DiagonalCell>
+                      <DiagonalLeft>슬럼프(mm)</DiagonalLeft>
+                      <DiagonalRight>시멘트량 배합비</DiagonalRight>
+                      <Slash />
+                    </DiagonalCell>
                   </ColumnTitle>
                   <LabelCell>
                     350 <CaptionSpan>(1:5)</CaptionSpan>
@@ -311,6 +312,8 @@ const ColumnTitle = styled.div`
   height: 50px;
   border-right: 1px solid #e3e3e3;
 
+  position: relative;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -318,8 +321,8 @@ const ColumnTitle = styled.div`
   background-color: #f2f2f2;
   border-bottom: 1px solid #e3e3e3;
 
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: normal;
   color: #444;
 `;
 
@@ -364,4 +367,38 @@ const CaptionSpan = styled.span`
   color: #777;
 `;
 
-const SlashImage = styled.img``;
+const DiagonalCell = styled.div`
+  width: 74px;
+  height: 30px;
+`;
+
+const DiagonalLeft = styled.span`
+  position: absolute;
+  bottom: 4px;
+  left: 6px;
+`;
+
+const DiagonalRight = styled.span`
+  width: 50px;
+
+  position: absolute;
+  top: 4px;
+  right: 6px;
+
+  text-align: right;
+`;
+
+const Slash = styled.div`
+  position: absolute;
+  height: 30px; // adjust height td
+  top: 40px;
+  bottom: 14px;
+  margin: auto;
+  right: 5px;
+  width: 100%;
+  border-top: 1px solid #000;
+  // adjust height td
+  -webkit-transform: rotate(25deg);
+  -ms-transform: rotate(25deg);
+  transform: rotate(25deg);
+`;

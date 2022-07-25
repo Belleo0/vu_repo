@@ -101,7 +101,7 @@ export default ({
                 <BoxLabel>{i === 0 ? '발주내역' : ''}</BoxLabel>
                 <BoxValueWrap>
                   <BoxValue>
-                    {v.value}-{v.slump}-{v.norminal_strength}
+                    {v.value}-{v.norminal_strength}-{v.slump}
                   </BoxValue>
                   <BoxAmount>{v.quantity?.toLocaleString?.('ko')}m³</BoxAmount>
                 </BoxValueWrap>

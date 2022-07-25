@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import convertDistance from '@utils/convertDistance';
 import convertDuration from '@utils/convertDuration';
@@ -62,7 +62,6 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
   const selectedEstimation = (id: any) => {
     if (id && estimations) {
       const selectedEstimationInfo = estimations.find((v) => v.id === id);
-      console.log('selectedEstimationInfo!!!!!!', selectedEstimationInfo);
       return selectedEstimationInfo;
     }
   };
@@ -98,9 +97,15 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
     setIsDeleteModalOpen(false);
   };
 
-  console.log('selectedSpaceInfo', selectedSpaceInfo);
-  console.log('data', data);
-  console.log('estimationInfo', estimationInfo);
+  const sortedDescData = useMemo(() => {
+    if (data) {
+      const sortedData = data.sort((a: any, b: any) => {
+        return b.id - a.id;
+      });
+      return sortedData;
+    }
+    return;
+  }, [data]);
 
   return (
     <Container>
@@ -163,7 +168,7 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
         <LabelCell>납품사 등록</LabelCell>
         <LabelCell>주문</LabelCell>
       </CellWrap>
-      {data.map((v) => (
+      {sortedDescData?.map((v) => (
         <CellWrap key={v?.id}>
           <ValueCell style={{ maxWidth: 130 }}>
             <DeleteRadio
