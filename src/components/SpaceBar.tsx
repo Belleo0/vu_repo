@@ -24,7 +24,7 @@ export default ({
       <Icon src={getAssetURL('../assets/ic-field.svg')} />
       <InfoContainer>
         <InfoRow style={{ marginBottom: 12 }}>
-          <SpaceName>{name}</SpaceName>
+          <SpaceName>{name || '정보없음'}</SpaceName>
           {isFieldUser && (
             <Button onClick={() => window.alert(`TODO : 2차 범위입니다.`)}>
               편집
@@ -35,18 +35,18 @@ export default ({
           <InfoRow>
             <PersonWrap>
               <PersonLabel>구매계약 담당자</PersonLabel>
-              <PersonName>{adminUserName}</PersonName>
+              <PersonName>{adminUserName || '정보없음'}</PersonName>
             </PersonWrap>
             <PersonWrap>
               <PersonLabel>주문담당자(현장)</PersonLabel>
-              <PersonName>{siteUserName}</PersonName>
+              <PersonName>{siteUserName || '정보없음'}</PersonName>
             </PersonWrap>
           </InfoRow>
         ) : (
           <InfoRow>
             <PersonWrap>
               <PersonLabel>공장 주소</PersonLabel>
-              <PersonName>{address}</PersonName>
+              <PersonName>{address || '정보없음'}</PersonName>
             </PersonWrap>
           </InfoRow>
         )}

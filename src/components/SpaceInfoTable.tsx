@@ -21,18 +21,26 @@ export default ({
     <Container>
       <CellWrap>
         <LabelCell>건설사명</LabelCell>
-        <ValueCell>{companyName}</ValueCell>
+        <ValueCell>{companyName || '정보없음'}</ValueCell>
         <LabelCell>현장주소</LabelCell>
-        <ValueCell>{address}</ValueCell>
+        <ValueCell>{address || '정보없음'}</ValueCell>
       </CellWrap>
       <CellWrap>
         <LabelCell>공사기간</LabelCell>
         <ValueCell>
-          {moment(startAt).format('YYYY. MM')} ~{' '}
-          {moment(endAt).format('YYYY. MM')}
+          {startAt || endAt ? (
+            <>
+              {moment(startAt).format('YYYY. MM')} ~{' '}
+              {moment(endAt).format('YYYY. MM')}
+            </>
+          ) : (
+            '정보없음'
+          )}
         </ValueCell>
         <LabelCell>현장 레미콘 소모량 (m³)</LabelCell>
-        <ValueCell>{needAmount?.toLocaleString?.('ko')}m³</ValueCell>
+        <ValueCell>
+          {needAmount?.toLocaleString?.('ko') || '정보없음 '}m³
+        </ValueCell>
       </CellWrap>
     </Container>
   );

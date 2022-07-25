@@ -6,11 +6,12 @@ import SearchInput from './SearchInput';
 import api from '@api';
 
 export default ({ open, onClose, setChkCompany, companyType }: any) => {
-  const [search, setSearch] = useState<string>();
+  const [search, setSearch] = useState<string>('');
   const [checkedCompanyId, setCheckedCompanyId] = useState<any>();
   const [companyList, setCompanyList] = useState<any>([]);
 
   const userType = companyType === 'con' ? 'CONSTRUCTION' : 'REMICON';
+  const regex = new RegExp('[가-힣]{1}');
 
   const getCompanyList = async () => {
     if (userType === 'CONSTRUCTION') {
@@ -41,7 +42,7 @@ export default ({ open, onClose, setChkCompany, companyType }: any) => {
   };
 
   useEffect(() => {
-    if (search !== undefined && search.length > 0) {
+    if (search !== '') {
       getCompanyList();
     }
   }, [search]);
