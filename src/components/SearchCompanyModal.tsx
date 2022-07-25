@@ -1,31 +1,54 @@
-import data from '@data';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Modal from './Modal';
 import SearchInput from './SearchInput';
+import api from '@api';
 
-export default ({ open, onClose, data, setChkCompany, companyType }: any) => {
-  const [search, setSearch] = useState('');
+export default ({ open, onClose, setChkCompany, companyType }: any) => {
+  const [search, setSearch] = useState<string>('');
   const [checkedCompanyId, setCheckedCompanyId] = useState<any>();
-  // console.log('data =>', data, 'companyType => ', companyType);
+  const [companyList, setCompanyList] = useState<any>([]);
 
-  const searchedData = useMemo(() => {
-    if (!data) {
-      return [];
-    } else if (!search) {
-      return data;
+  const userType = companyType === 'con' ? 'CONSTRUCTION' : 'REMICON';
+  const regex = new RegExp('[가-힣]{1}');
+
+  const getCompanyList = async () => {
+    if (userType === 'CONSTRUCTION') {
+      await api
+        .get('/companies', {
+          params: {
+            company_type: 'CONSTRUCTION',
+            name: search,
+            limit: 1000,
+          },
+        })
+        .then((res) => {
+          setCompanyList(res.data.result.data);
+        });
     } else {
-      return data.filter((v: any) =>
-        companyType === 'con'
-          ? v?.basic_address?.includes(search)
-          : v?.visible_name?.includes(search),
-      );
+      await api
+        .get('/companies', {
+          params: {
+            company_type: 'REMICON',
+            name: search,
+            limit: 1000,
+          },
+        })
+        .then((res) => {
+          setCompanyList(res.data.result.data);
+        });
     }
-  }, [data, search]);
+  };
+
+  useEffect(() => {
+    if (search !== '') {
+      getCompanyList();
+    }
+  }, [search]);
 
   const onClickConfirm = (v: any) => {
-    setChkCompany(data.find((el: any) => el.id === v));
+    setChkCompany(companyList.find((el: any) => el.id === v));
     onClose();
   };
 
@@ -43,20 +66,20 @@ export default ({ open, onClose, data, setChkCompany, companyType }: any) => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </SearchInputWrap>
-        <SubTitle>
-          목록({searchedData ? searchedData.length : data?.length})
-        </SubTitle>
-        {searchedData.length > 0 && <Divider />}
+        <SubTitle>목록({companyList?.length})</SubTitle>
+        {companyList?.length > 0 && <Divider />}
         <UsersWrap>
-          {searchedData?.map((v: any, idx: any) => (
-            <Item
-              key={idx}
-              setCheckedCompanyId={setCheckedCompanyId}
-              checkedCompanyId={checkedCompanyId}
-              data={v}
-              companyType={companyType}
-            />
-          ))}
+          {companyList.map((v: any, idx: any) => {
+            return (
+              <Item
+                key={idx}
+                setCheckedCompanyId={setCheckedCompanyId}
+                checkedCompanyId={checkedCompanyId}
+                data={v}
+                companyType={companyType}
+              />
+            );
+          })}
         </UsersWrap>
         <ButtonWrap>
           <CancelButton
@@ -93,23 +116,21 @@ const Item = ({
             setCheckedCompanyId(data.id);
           }}
         >
-          <UserContainer>
-            <CompanyName>
-              {companyType === 'con' ? data.company.name : data.visible_name}
-            </CompanyName>
-            <CompanyAddr>
-              {companyType === 'con'
-                ? data.basic_address || data.company.address
-                : data.address}
-            </CompanyAddr>
-            <CompanyCeoWrap>
-              <CompanyCeoTitle>대표자</CompanyCeoTitle>
-              <CompanyCeoLineGuard />
-              <CompanyCeoName>
-                {companyType === 'con' ? data.company.ceo_name : data.ceo_name}
-              </CompanyCeoName>
-            </CompanyCeoWrap>
-          </UserContainer>
+          {data ? (
+            <UserContainer>
+              <CompanyName>{data.name}</CompanyName>
+              <CompanyAddr>{data.address}</CompanyAddr>
+              <CompanyCeoWrap>
+                <CompanyCeoTitle>대표자</CompanyCeoTitle>
+                <CompanyCeoLineGuard />
+                <CompanyCeoName>{data.ceo_name}</CompanyCeoName>
+              </CompanyCeoWrap>
+            </UserContainer>
+          ) : (
+            <UserContainer>
+              <div>검색어를 입력해 주세요</div>
+            </UserContainer>
+          )}
           <CIconWrap>
             {checkedCompanyId === data.id ? (
               <CIcon src={getAssetURL('../assets/blue_check_ic_on.svg')} />
