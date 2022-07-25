@@ -494,7 +494,7 @@ export default () => {
           </MainContentBox>
           <Button
             type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
-            onClick={() => (isValid ? nxtStepHandler() : null)}
+            onClick={() => (!isValid ? nxtStepHandler() : null)}
           >
             다음
           </Button>
