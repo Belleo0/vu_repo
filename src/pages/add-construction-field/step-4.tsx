@@ -280,9 +280,11 @@ export default () => {
                     </DateSelectBorder>
                   </OptionWrapper>
                   <InputStyle
-                    placeholder={maturity === '' ? '숫자만 입력해 주세요' : ''}
-                    value={maturity === '' ? maturityInput : ''}
-                    disabled={maturity !== '' ? true : false}
+                    placeholder={
+                      maturity === '기타' ? '숫자만 입력해 주세요' : ''
+                    }
+                    value={maturity === '기타' ? maturityInput : ''}
+                    disabled={maturity !== '기타' ? true : false}
                     type={'number'}
                     onChange={(e) => dateInputHandler(e.target.value)}
                   />
@@ -332,18 +334,24 @@ export default () => {
                   </DateSelectBorder>
                 </OptionWrapper>
                 <InputStyle
-                  placeholder={paymentDate === '' ? '숫자만 입력해 주세요' : ''}
+                  placeholder={
+                    paymentDate === '기타' ? '숫자만 입력해 주세요' : ''
+                  }
                   type={'number'}
-                  value={paymentDate === '' ? paymentDateInput : ''}
-                  disabled={paymentDate !== '' ? true : false}
+                  value={paymentDate === '기타' ? paymentDateInput : ''}
+                  disabled={paymentDate !== '기타' ? true : false}
                   onChange={(e) => paymentDateInputHandler(e.target.value)}
                 />
               </InputItemWrapper>
               {paymentType === 'NOTE' ? (
                 <Caption>
-                  • 거래처가 세금계산서를 발행 후 {paymentDate || '청구'}일 뒤,
-                  어음(
-                  {maturity || '만기'}일)을 지급합니다.
+                  • 거래처가 세금계산서를 발행 후{' '}
+                  {paymentDate !== '기타'
+                    ? paymentDate
+                    : paymentDateInput || '청구'}
+                  일 뒤, 어음(
+                  {maturity !== '기타' ? maturity : maturityInput || '만기'}
+                  일)을 지급합니다.
                 </Caption>
               ) : null}
               {paymentType === 'CASH' ? (
