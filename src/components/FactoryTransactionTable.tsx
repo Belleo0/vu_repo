@@ -19,12 +19,12 @@ interface ITransactionTable {
 
 interface ISpec {
   value: number; /// 키 수정해야함ㅜㅜ
-  slump: number;
   norminal_strength: number;
+  slump: number;
   quantity: number;
 }
 
-const defaultSpec = { value: 0, slump: 0, norminal_strength: 0, quantity: 0 };
+const defaultSpec = { value: 0, norminal_strength: 0, slump: 0, quantity: 0 };
 
 // 버튼 상태 1.확인완료 2.수량변경가능 3.변경완료
 enum ButtonType {
@@ -162,16 +162,8 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
               />
               <SpecDivider />
               <BlackSelect
-                placeholder="00"
-                width={55}
-                value={v.slump === 0 ? null : v.slump}
-                onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
-                options={slumpOptions}
-              />
-              <SpecDivider />
-              <BlackSelect
                 placeholder="000"
-                width={65}
+                width={68}
                 value={v.norminal_strength === 0 ? null : v.norminal_strength}
                 onChange={(v) =>
                   handleChangeSpecValue(i, 'norminal_strength', v)
@@ -179,6 +171,15 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                 options={norminalStrengthOptions}
                 containerStyle={{ marginRight: 24 }}
               />
+              <SpecDivider />
+              <BlackSelect
+                placeholder="00"
+                width={58}
+                value={v.slump === 0 ? null : v.slump}
+                onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
+                options={slumpOptions}
+              />
+
               <BlackInput
                 placeholder="000"
                 containerStyle={{ width: 64, marginLeft: 220 }}

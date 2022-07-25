@@ -15,8 +15,8 @@ import RemiconUnitPriceListModal from './RemiconUnitPriceListModal';
 
 interface ISpec {
   value: number; /// 키 수정해야함ㅜㅜ
-  slump: number;
   norminal_strength: number;
+  slump: number;
   price: number;
 }
 
@@ -270,14 +270,6 @@ export default ({ open, onClose, revalidate, data }: any) => {
                   <BlackSelect
                     placeholder="00"
                     width={58}
-                    value={v.slump === 0 ? null : v.slump}
-                    onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
-                    options={slumpOptions}
-                  />
-                  <SpecDivider />
-                  <BlackSelect
-                    placeholder="000"
-                    width={68}
                     value={
                       v.norminal_strength === 0 ? null : v.norminal_strength
                     }
@@ -285,6 +277,14 @@ export default ({ open, onClose, revalidate, data }: any) => {
                       handleChangeSpecValue(i, 'norminal_strength', v)
                     }
                     options={norminalStrengthOptions}
+                  />
+                  <SpecDivider />
+                  <BlackSelect
+                    placeholder="000"
+                    width={68}
+                    value={v.slump === 0 ? null : v.slump}
+                    onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
+                    options={slumpOptions}
                   />
                   <TotalPrice>{makeComma(v.price)}원</TotalPrice>
                 </SpecRow>
