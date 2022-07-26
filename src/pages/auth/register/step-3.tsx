@@ -146,8 +146,6 @@ export default () => {
     }
   }, []);
 
-  console.log(location?.state);
-
   const successCloseModal = async () => {
     await api
       .post('/auth/login', {

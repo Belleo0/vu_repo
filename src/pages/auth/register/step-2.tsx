@@ -235,8 +235,8 @@ export default () => {
   }, [password, password2]);
 
   useEffect(() => {
-    isPhoneDone && isEmailDone && isPasswordDone2 && setIsValid(true);
-  }, [isPhoneDone, isEmailDone, isPasswordDone, isPasswordDone2]);
+    isPhoneDone && isEmailDone && isPasswordDone2 && name && setIsValid(true);
+  }, [isPhoneDone, isEmailDone, isPasswordDone, isPasswordDone2, name]);
 
   const successCloseModal = () => {
     setEmailDupModal(false);
