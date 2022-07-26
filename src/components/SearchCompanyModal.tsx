@@ -11,7 +11,6 @@ export default ({ open, onClose, setChkCompany, companyType }: any) => {
   const [companyList, setCompanyList] = useState<any>([]);
 
   const userType = companyType === 'con' ? 'CONSTRUCTION' : 'REMICON';
-  const regex = new RegExp('[가-힣]{1}');
 
   const getCompanyList = async () => {
     if (userType === 'CONSTRUCTION') {
@@ -24,6 +23,7 @@ export default ({ open, onClose, setChkCompany, companyType }: any) => {
           },
         })
         .then((res) => {
+          console.log(res.data.result.data);
           setCompanyList(res.data.result.data);
         });
     } else {
@@ -41,16 +41,16 @@ export default ({ open, onClose, setChkCompany, companyType }: any) => {
     }
   };
 
-  useEffect(() => {
-    if (search !== '') {
-      getCompanyList();
-    }
-  }, [search]);
-
   const onClickConfirm = (v: any) => {
     setChkCompany(companyList.find((el: any) => el.id === v));
     onClose();
   };
+
+  function handleChkSearchKeyword(e: any) {
+    if (e.code === 'Enter') {
+      getCompanyList();
+    }
+  }
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -64,6 +64,7 @@ export default ({ open, onClose, setChkCompany, companyType }: any) => {
             placeholder="회사명 검색"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyUp={(e) => handleChkSearchKeyword(e)}
           />
         </SearchInputWrap>
         <SubTitle>목록({companyList?.length})</SubTitle>
