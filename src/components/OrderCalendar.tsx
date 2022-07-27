@@ -104,7 +104,7 @@ export default ({
                   {data?.map((v: any) => (
                     <Bar
                       style={
-                        v?.estimation?.status === 'REQUESTED'
+                        v?.status === 'REQUESTED'
                           ? RequestedBarStyle
                           : { backgroundColor: v?.estimation?.color }
                       }

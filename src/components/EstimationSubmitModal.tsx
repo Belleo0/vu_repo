@@ -269,7 +269,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
                   <SpecDivider />
                   <BlackSelect
                     placeholder="00"
-                    width={58}
+                    width={60}
                     value={
                       v.norminal_strength === 0 ? null : v.norminal_strength
                     }

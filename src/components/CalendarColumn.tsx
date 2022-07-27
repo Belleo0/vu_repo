@@ -135,7 +135,7 @@ export default ({
               left={v.left + defaultLeftMargin}
               height={Math.abs(v.height)}
               style={
-                v?.estimation?.status === 'REQUESTED'
+                v?.status === 'REQUESTED'
                   ? RequestedBarStyle
                   : { backgroundColor: v?.estimation?.color }
               }
@@ -165,7 +165,7 @@ export default ({
               left={v.left + defaultLeftMargin}
               height={Math.abs(v.height)}
               style={
-                v?.estimation?.status === 'REQUESTED'
+                v?.status === 'REQUESTED'
                   ? RequestedBarStyle
                   : { backgroundColor: v?.estimation?.color }
               }
