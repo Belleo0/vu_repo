@@ -65,7 +65,12 @@ export default () => {
   }, [tabType]);
 
   const { data: spaces, mutate } = useSpaces(isHide);
-  const { data: factories } = useFactories();
+
+  const [searchFactory, setSearchFactory] = useState('');
+  const [forSearchFactory, setForSearchFactory] = useState('');
+
+  const { data: factories, mutate: mutateFactories } =
+    useFactories(forSearchFactory);
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -98,37 +103,29 @@ export default () => {
     } else return [];
   }, [spaces, order, search]);
 
-  const [searchFactory, setSearchFactory] = useState('');
-  const [forSearchFactory, setForSearchFactory] = useState('');
-
-  const registerSearchedFactories = useMemo(() => {
-    if (!factories) return [];
-    return factories.filter((v) => v?.visible_name?.includes(forSearchFactory));
-  }, [factories, forSearchFactory]);
-
-  const searchedFactories = useMemo(() => {
-    if (!factories) return [];
-    else if (order === '최신순') {
-      const stableFactory = factories.map((el, i) => [el, i]);
-      stableFactory.sort((a, b) => {
-        return b[1] - a[1];
-      });
-      const sortedFactory = stableFactory.map((el) => el[0]);
-      return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
-    } else if (order === '오래된순') {
-      const sortedFactory = factories.sort((a, b) => {
-        return a.id - b.id;
-      });
-      return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
-    } else if (order === '이름순') {
-      const sortedFactory = factories.sort((a, b) => {
-        return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
-      });
-      return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
-    } else if (order === '사용자화') {
-      return factories.filter((v) => v?.name?.includes(forSearchFactory));
-    } else return [];
-  }, [factories, forSearchFactory]);
+  // const searchedFactories = useMemo(() => {
+  //   if (!factories) return [];
+  //   else if (order === '최신순') {
+  //     const stableFactory = factories.map((el, i) => [el, i]);
+  //     stableFactory.sort((a, b) => {
+  //       return b[1] - a[1];
+  //     });
+  //     const sortedFactory = stableFactory.map((el) => el[0]);
+  //     return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
+  //   } else if (order === '오래된순') {
+  //     const sortedFactory = factories.sort((a, b) => {
+  //       return a.id - b.id;
+  //     });
+  //     return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
+  //   } else if (order === '이름순') {
+  //     const sortedFactory = factories.sort((a, b) => {
+  //       return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
+  //     });
+  //     return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
+  //   } else if (order === '사용자화') {
+  //     return factories.filter((v) => v?.name?.includes(forSearchFactory));
+  //   } else return [];
+  // }, [factories, forSearchFactory]);
 
   const [isOrderChangeModalOpen, setIsOrderChangeModalOpen] = useState(false);
 
@@ -239,26 +236,10 @@ export default () => {
     }
     setSubmitFactroyLoading(true);
     try {
-      await api.post(`/factory-spaces`, {
-        name: tempSelectedFactoryInfo?.visible_name,
-        basic_address: tempSelectedFactoryInfo?.address,
-        detail_address: '',
-        latitude: tempSelectedFactoryInfo?.latitude,
-        longitude: tempSelectedFactoryInfo?.longitude,
-        factory_info: {
-          tel: tempSelectedFactoryInfo?.tel,
-          fax: tempSelectedFactoryInfo?.fax,
-          no: tempSelectedFactoryInfo?.no,
-          capa: tempSelectedFactoryInfo?.capa,
-          total: tempSelectedFactoryInfo?.total,
-          truck_count: tempSelectedFactoryInfo?.truck_count,
-          cement_silo: tempSelectedFactoryInfo?.cement_silo,
-          start_at: tempSelectedFactoryInfo?.start_at,
-          ks_acquired_at: tempSelectedFactoryInfo?.ks_acquired_at,
-        },
-      });
+      await api.post(`/factory-spaces/${tempSelectedFactoryInfo?.id}`);
       mutate();
       handleCloseRegisterModal();
+      mutateFactories();
     } catch (err) {
       console.log(err);
       window.alert('에러 발생..');
@@ -268,7 +249,7 @@ export default () => {
   };
 
   const delayedUpdateCall = useRef(
-    debounce((q) => setForSearchFactory(q), 300),
+    debounce((q) => setForSearchFactory(q), 500),
   ).current;
 
   const handleKeywordChange = (v: string) => {
@@ -376,17 +357,17 @@ export default () => {
                 value={searchFactory}
                 onChange={(e) => handleKeywordChange(e.target.value)}
               />
-              <Label>목록({factories?.length})</Label>
+              <Label>목록({factories?.total_elements || 0})</Label>
             </ModalHeaderWrap>
 
             <CardWrap>
-              {registerSearchedFactories &&
-                registerSearchedFactories.map((v, i) => (
+              {factories?.data &&
+                factories?.data.map((v: any) => (
                   <FactoryCard
                     key={v.id}
-                    name={v?.visible_name}
-                    address={v?.address}
-                    ceoName={v?.ceo_name}
+                    name={v?.name}
+                    address={v?.basic_address}
+                    ceoName={v?.company?.ceo_name}
                     active={tempSelectedFactoryInfo?.id === v?.id}
                     onClick={() => setTempSelectedFactoryInfo(v)}
                   />

@@ -148,70 +148,74 @@ export default () => {
   };
 
   const requestPhoneValidateHandler = async () => {
-    const tempPh = phone.replace(/-/g, '');
-    await api
-      .post('/verifications/phone', {
-        phone: tempPh,
-      })
-      .then((res) => {
-        if (res.data.result) {
-          setPhoneCodeRecent(true);
-          setPhoneCodeVisible(true);
-        }
-      });
+    // const tempPh = phone.replace(/-/g, '');
+    setIsPhoneDone(true);
+    // await api
+    //   .post('/verifications/phone', {
+    //     phone: tempPh,
+    //   })
+    //   .then((res) => {
+
+    // if (res.data.result) {
+    //   setPhoneCodeRecent(true);
+    //   setPhoneCodeVisible(true);
+    // }
+    // });
   };
 
-  const requestPhoneCodeValidateHandler = async () => {
-    const tempPh = phone.replace(/-/g, '');
-    await api
-      .post('/verifications/phone/verify', {
-        phone: tempPh,
-        key: phoneCode,
-      })
-      .then((res) => {
-        if (res.data.result) {
-          setIsPhoneDone(true);
-          setErrorPhoneMsg('3');
-        }
-      })
-      .catch(() => {
-        setErrorPhoneMsg('2');
-      });
-  };
+  // const requestPhoneCodeValidateHandler = async () => {
+  //   const tempPh = phone.replace(/-/g, '');
+  //   await api
+  //     .post('/verifications/phone/verify', {
+  //       phone: tempPh,
+  //       key: phoneCode,
+  //     })
+  //     .then((res) => {
+  //       if (res.data.result) {
+  //         setIsPhoneDone(true);
+  //         setErrorPhoneMsg('3');
+  //       }
+  //     })
+  //     .catch(() => {
+  //       setErrorPhoneMsg('2');
+  //     });
+  // };
 
   const requestEmailValidateHandler = async () => {
     const chkDupEmail = await dupEmailCheck();
     if (chkDupEmail) {
       setEmailDupModal(true);
-    } else {
-      await api
-        .post('/verifications/email', {
-          email: email,
-        })
-        .then((res) => {
-          if (res.data.result) {
-            setEmailCodeVisible(true);
-          }
-        });
+      setIsEmailDone(true);
     }
+    // else {
+    //   await api
+    //     .post('/verifications/email', {
+    //       email: email,
+    //     })
+    //     .then((res) => {
+    //       if (res.data.result) {
+    //         setEmailCodeVisible(true);
+    //       }
+    //     });
+    // }
   };
 
-  const requestEmailCodeValidateHandler = async () => {
-    await api
-      .post('/verifications/email/verify', {
-        email: email,
-        key: emailCode,
-      })
-      .then((res) => {
-        if (res.data.result) {
-          setIsEmailDone(true);
-          setErrorEmailMsg('3');
-        }
-      })
-      .catch(() => {
-        setErrorEmailMsg('2');
-      });
-  };
+  // const requestEmailCodeValidateHandler = async () => {
+  //   await api
+  //     .post('/verifications/email/verify', {
+  //       email: email,
+  //       key: emailCode,
+  //     })
+  //     .then((res) => {
+  //       if (res.data.result) {
+  //         setIsEmailDone(true);
+  //         setErrorEmailMsg('3');
+  //       }
+  //     })
+  //     .catch(() => {
+  //       setErrorEmailMsg('2');
+  //     });
+  // };
 
   useEffect(() => {
     if (email.length <= 0 || !email.includes('@') || !email.includes('.')) {
@@ -235,8 +239,8 @@ export default () => {
   }, [password, password2]);
 
   useEffect(() => {
-    isPhoneDone && isEmailDone && isPasswordDone2 && setIsValid(true);
-  }, [isPhoneDone, isEmailDone, isPasswordDone, isPasswordDone2]);
+    isPhoneDone && isEmailDone && isPasswordDone2 && name && setIsValid(true);
+  }, [isPhoneDone, isEmailDone, isPasswordDone, isPasswordDone2, name]);
 
   const successCloseModal = () => {
     setEmailDupModal(false);
@@ -316,7 +320,7 @@ export default () => {
               </TextWrapper>
             </LineWrapper>
 
-            {emailCodeVisible ? (
+            {/* {emailCodeVisible ? (
               <LineWrapper>
                 <TextWrapper style={{ margin: '0 0 14px' }}>
                   <Input
@@ -352,15 +356,15 @@ export default () => {
                         ? AbleType.ABLE
                         : AbleType.INABLE
                     }
-                    onClick={() =>
-                      !isEmailDone ? requestEmailCodeValidateHandler() : null
-                    }
+                    // onClick={() =>
+                    //   !isEmailDone ? requestEmailCodeValidateHandler() : null
+                    // }
                   >
                     확인
                   </SendButton>
                 </TextWrapper>
               </LineWrapper>
-            ) : null}
+            ) : null} */}
 
             <LineWrapper>
               <RepeatTitle>이름</RepeatTitle>
@@ -446,7 +450,7 @@ export default () => {
               </TextWrapper>
             </LineWrapper>
 
-            {phoneCodeVisible ? (
+            {/* {phoneCodeVisible ? (
               <LineWrapper>
                 <TextWrapper style={{ margin: 0 }}>
                   <Input
@@ -490,11 +494,21 @@ export default () => {
                   </SendButton>
                 </TextWrapper>
               </LineWrapper>
-            ) : null}
+            ) : null} */}
           </MainContentBox>
           <Button
-            type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
-            onClick={() => (!isValid ? nxtStepHandler() : null)}
+            // type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
+            type={
+              name && password && password2 && email && phone
+                ? ButtonType.ABLE
+                : ButtonType.INABLE
+            }
+            // onClick={() => (isValid ? nxtStepHandler() : null)}
+            onClick={() =>
+              name && password && password2 && email && phone
+                ? nxtStepHandler()
+                : null
+            }
           >
             다음
           </Button>

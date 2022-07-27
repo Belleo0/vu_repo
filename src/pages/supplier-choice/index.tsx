@@ -7,7 +7,6 @@ import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
 import VendorTable from '@components/VendorTable';
 import SupplySpaceBar from '@components/SupplySpaceBar';
-import useFactories from '@api/useFactories';
 import useFactoryMaps from '@api/useFactoryMaps';
 import { usePrevious } from '@hooks/usePrevious';
 

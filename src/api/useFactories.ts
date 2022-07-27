@@ -1,7 +1,10 @@
 import useSWR from 'swr';
 
-export default () => {
-  const { data, error, mutate } = useSWR<any[]>(`/temp-factories`);
+export default (name: string) => {
+  const { data, error, mutate } = useSWR<any>([
+    `/factory-spaces/un-registers`,
+    { name, page: 0, limit: 200 },
+  ]);
 
   return {
     data,
