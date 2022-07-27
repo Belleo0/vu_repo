@@ -164,6 +164,8 @@ export default ({
     const city = cityOptions.find((v: any) => v.value === cityId);
     const dong = dongOptions.find((v: any) => v.value === dongId);
 
+    if (areas !== null) setAreas([]);
+
     setAreas((prev: any) => prev.concat({ state, city, dong }));
 
     setStateId(null);
@@ -192,7 +194,7 @@ export default ({
           initalMaxHeight={45}
           absoluteStyle={{
             border: 'solid 1px #c7c7c7',
-            padding: '12px 14px',
+            padding: '12px 14px 10px',
           }}
           containerStyle={{ marginBottom: 40, padding: '12px 14px' }}
         />
