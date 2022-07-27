@@ -200,7 +200,6 @@ export default () => {
   useEffect(() => {
     if (!selectedFieldId) return;
     if (selectedFieldId) {
-      console.log('selectedFieldAddress', selectedFieldAddress);
       naver.maps.Service.geocode(
         {
           query: selectedFieldAddress,
@@ -259,7 +258,7 @@ export default () => {
     } else return;
   }, [factories, order]);
 
-  if (!coordinates?.lat || !coordinates?.lng) {
+  if (!coordinates?.lat || !coordinates?.lng || !factories) {
     return <Loading />;
   }
 
@@ -371,6 +370,7 @@ export default () => {
                         selectedFactoryIds.includes(v.id)
                       }
                       hideWithoutName={!!factories?.field_position}
+                      totalDuration={duration}
                     />
                   }
                 />
@@ -386,6 +386,7 @@ export default () => {
             open={isInfoModalOpen}
             onClose={() => setIsInfoModalOpen(false)}
             data={selectedSpaceInfo}
+            duration={duration}
           />
         </Content>
         <Footer />

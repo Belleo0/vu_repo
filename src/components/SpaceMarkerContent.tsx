@@ -16,6 +16,7 @@ interface IMarkerContent {
   onChangePath: () => any;
   selected: boolean;
   hideWithoutName: boolean;
+  totalDuration: string;
 }
 
 export default ({
@@ -29,6 +30,7 @@ export default ({
   onInfo,
   onChangePath,
   hideWithoutName,
+  totalDuration,
 }: IMarkerContent) => {
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -78,11 +80,13 @@ export default ({
         {hideWithoutName ? (
           <InfoWrap>
             <PlaceName>{name}</PlaceName>
-            <DurationWrap>
-              <Distance>{convertDistance(distance)}km</Distance>
-              <Divider />
-              <Duration>{convertDuration(duration)}분</Duration>
-            </DurationWrap>
+            {totalDuration !== 'null' && (
+              <DurationWrap>
+                <Distance>{convertDistance(distance)}km</Distance>
+                <Divider />
+                <Duration>{convertDuration(duration)}분</Duration>
+              </DurationWrap>
+            )}
           </InfoWrap>
         ) : (
           <OnlyNameWrap>

@@ -22,16 +22,18 @@ export default ({
   searchIconStyle?: CSSProperties;
 }) => {
   const [inputValue, setInputValue] = useState<any>(value);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const changeHandler = (ev: ChangeEvent<HTMLInputElement>) => {
     setInputValue(ev.target.value);
     onChange && onChange(ev); // optional로 인한 코드
+    inputRef?.current?.focus();
   };
 
   return (
     <Container style={containerStyle} onClick={onClick}>
       {icon && <Icon src={getAssetURL(`../assets/${icon}.svg`)} />}
-      <Input value={value} onChange={changeHandler} {...props} />
+      <Input value={value} onChange={changeHandler} {...props} ref={inputRef} />
       {inputValue !== '' && (
         <ClearIcon
           src={getAssetURL('../assets/ic-circle-x.svg')}
