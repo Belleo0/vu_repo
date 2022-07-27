@@ -7,7 +7,12 @@ import Button, { ButtonSize, ButtonType } from './Button';
 import Modal from './Modal';
 
 export default ({ open, data, onClose, companyName }: any) => {
-  console.log('Modaldata!!!!!!', data);
+  const addHyphen = (v: any) => {
+    return v?.replace(
+      /(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,
+      '$1-$2-$3',
+    );
+  };
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -34,11 +39,11 @@ export default ({ open, data, onClose, companyName }: any) => {
             <MemberContactWrap>
               <ContactInfo>
                 <Icon src={getAssetURL('../assets/ic-cellphone-bk.svg')} />
-                {data.phone}
+                {addHyphen(data.phone)}
               </ContactInfo>
               <ContactInfo>
                 <Icon src={getAssetURL('../assets/ic-phone-bk.svg')} />
-                {data.tel}
+                {addHyphen(data.tel)}
               </ContactInfo>
               <ContactInfo>
                 <Icon src={getAssetURL('../assets/ic-email-bk.svg')} />

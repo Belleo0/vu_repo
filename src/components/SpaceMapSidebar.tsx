@@ -64,6 +64,14 @@ export default ({
     }
   };
 
+  const handleOpenAddSpaceModal = () => {
+    if (spaces && spaces.length > 0 && !(location?.state as any)?.searchText) {
+      setIsSelectModalOpen(true);
+    } else {
+      setIsNotFoundSpaceModal(true);
+    }
+  };
+
   const handleCloseSelectModal = () => {
     setIsSelectModalOpen(false);
   };
@@ -207,6 +215,7 @@ export default ({
               }
               selectedFieldId={selectedFieldId}
               factories={factories}
+              totalDuration={duration}
             />
           ))}
       </MapSpaceCardWrap>
@@ -220,7 +229,7 @@ export default ({
           onClick={
             selectedFieldId !== null && isLogin
               ? handleRequestEstimation
-              : handleOpenSelectModal
+              : handleOpenAddSpaceModal
           }
         >
           견적 요청하기

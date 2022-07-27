@@ -20,7 +20,7 @@ interface ISpec {
   quantity: number;
 }
 
-const defaultSpec = { value: 0, norminal_strength: 0, slump: 0, quantity: 0 };
+const defaultSpec = { value: 25, norminal_strength: 0, slump: 0, quantity: 0 };
 
 export default ({
   id,
@@ -243,7 +243,7 @@ export default ({
                   <SpecDivider />
                   <BlackSelect
                     placeholder="00"
-                    width={58}
+                    width={60}
                     value={
                       v.norminal_strength === 0 ? null : v.norminal_strength
                     }
@@ -251,7 +251,6 @@ export default ({
                       handleChangeSpecValue(i, 'norminal_strength', v)
                     }
                     options={norminalStrengthOptions}
-                    containerStyle={{ marginRight: 24 }}
                   />
                   <SpecDivider />
                   <BlackSelect
@@ -260,8 +259,9 @@ export default ({
                     value={v.slump === 0 ? null : v.slump}
                     onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
                     options={slumpOptions}
+                    containerStyle={{ marginRight: 20 }}
                   />
-                  <FormLabel style={{ width: 'auto', marginRight: 14 }}>
+                  <FormLabel style={{ width: 'auto', marginRight: 10 }}>
                     수량
                   </FormLabel>
                   <BlackInput

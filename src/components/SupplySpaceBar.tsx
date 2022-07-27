@@ -146,7 +146,9 @@ export default ({
         <Icon src={getAssetURL('../assets/ic-field.svg')} />
         <InfoContainer>
           <InfoRow style={{ marginBottom: 12 }}>
-            <SpaceName>{name}</SpaceName>
+            <SpaceName>
+              {selectedSpaceId ? name : '등록된 건설현장이 없습니다.'}
+            </SpaceName>
           </InfoRow>
           {isFieldUser ? (
             <InfoRow>
@@ -174,13 +176,16 @@ export default ({
           )}
         </InfoContainer>
       </SpaceBarWrap>
-      <Button
-        type={ButtonType.OUTLINE_THICK}
-        containerStyle={{ width: 160, height: 50 }}
-        onClick={() => setAddFactoryModalOpen(true)}
-      >
-        + 레미콘 공장 추가
-      </Button>
+      {selectedSpaceId ? (
+        <Button
+          type={ButtonType.OUTLINE_THICK}
+          containerStyle={{ width: 160, height: 50 }}
+          onClick={() => setAddFactoryModalOpen(true)}
+        >
+          + 레미콘 공장 추가
+        </Button>
+      ) : null}
+
       <Modal
         open={addFactoryModalOpen}
         onClose={() => setAddFactoryModalOpen(false)}
