@@ -13,6 +13,7 @@ import TextModal from './TextModal';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DaumPostcode from 'react-daum-postcode';
 import useIsLogin from '@hooks/useIsLogin';
+import Loading from './Loading';
 
 export default ({
   factories,
@@ -436,6 +437,7 @@ const MapSpaceCardWrap = styled.div`
   flex: 1;
   /* max-height: calc(100% - 123px); */
   overflow-y: scroll;
+  margin-bottom: 84px;
 `;
 
 const SelectedFieldWrap = styled.div`

@@ -161,6 +161,7 @@ const ContentsWrap = styled.div`
   left: 0;
   display: flex;
   position: absolute;
+  align-items: center;
   width: 100%;
   height: 100%;
   padding: 10px 10px 20px 10px;
@@ -203,7 +204,6 @@ const PlaceName = styled.span`
   letter-spacing: -0.3px;
   text-align: left;
   color: #000;
-  margin-bottom: 6px;
 
   width: 90px;
   overflow: hidden;
@@ -214,6 +214,7 @@ const PlaceName = styled.span`
 const DurationWrap = styled.div`
   display: flex;
   align-items: center;
+  margin-top: 6px;
 `;
 
 const Distance = styled.span`

@@ -15,27 +15,27 @@ export default () => {
 
   return (
     <SpaceLayout>
-      {selectedSpaceId === undefined ? null : isLoading ? null : (
-        <Container>
-          <BarSection>
-            <Title>공장명</Title>
-            <SpaceBar
-              id={info?.id}
-              name={info?.name}
-              adminUserName={info?.admin_user?.name}
-              siteUserName={info?.site_user?.name}
-              address={info?.basic_address}
-            />
-          </BarSection>
-          <BottomSection>
-            <Title>견적 현황</Title>
-            <EstimationTable
-              data={estimations}
-              revalidate={() => estimationMutate()}
-            />
-          </BottomSection>
-        </Container>
-      )}
+      {/* {selectedSpaceId === undefined ? null : isLoading ? null : ( */}
+      <Container>
+        <BarSection>
+          <Title>공장명</Title>
+          <SpaceBar
+            id={info?.id}
+            name={info?.name}
+            adminUserName={info?.admin_user?.name}
+            siteUserName={info?.site_user?.name}
+            address={info?.basic_address}
+          />
+        </BarSection>
+        <BottomSection>
+          <Title>견적 현황</Title>
+          <EstimationTable
+            data={estimations}
+            revalidate={() => estimationMutate()}
+          />
+        </BottomSection>
+      </Container>
+      {/* )} */}
     </SpaceLayout>
   );
 };
