@@ -13,9 +13,18 @@ interface IOrderSpaceCard {
   id: string;
   name?: string;
   address?: string;
+  mutate?: any;
+  setIsOrderChangeModalOpen?: any;
 }
 
-export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
+export default ({
+  draggable,
+  id,
+  name,
+  address,
+  mutate,
+  setIsOrderChangeModalOpen,
+}: IOrderSpaceCard) => {
   const isFieldUser = useIsFieldUser();
 
   const [loading, setLoading] = useState(false);
@@ -31,11 +40,13 @@ export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
 
   const handleRemove = async () => {
     if (loading) return;
-    console.log('id', id);
     if (!id) return;
     try {
       setLoading(true);
       await api.delete(`/factory-spaces/${id}`);
+      await mutate();
+      setIsRemoveModalOpen(false);
+      setIsOrderChangeModalOpen(false);
     } catch (error) {
       console.log(error);
     } finally {
@@ -60,20 +71,11 @@ export default ({ draggable, id, name, address }: IOrderSpaceCard) => {
           <Icon src={getAssetURL('../assets/ic-move.svg')} />
         </IconWrap>
       </InfoContainer>
-      {/* <TextModal
-        open={isRemoveModalOpen}
-        onSubmit={handleRemove}
-        onClose={() => setIsRemoveModalOpen(false)}
-        content={`레미콘 공장을 등록하시겠습니까?`}
-        submitText="공장 등록하기"
-      /> */}
       <TextModal
         open={isRemoveModalOpen}
         onSubmit={handleRemove}
         onClose={() => setIsRemoveModalOpen(false)}
-        content={`해당 공장을 삭제하시겠습니까?\n
-        삭제 시 관련된 현장, 거래, 멤버 및 모든 정보가\n
-        삭제됩니다.`}
+        content={`해당 공장을 삭제하시겠습니까?\n삭제 시 관련된 현장, 거래, 멤버 및 모든 정보가\n삭제됩니다.`}
         submitText="삭제"
       />
     </Container>

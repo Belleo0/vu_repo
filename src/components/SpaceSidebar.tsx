@@ -74,8 +74,6 @@ export default () => {
 
   const [isMounted, setIsMounted] = useState(false);
 
-  // console.log(data);
-
   const [search, setSearch] = useState('');
 
   const searchedSpaces = useMemo(() => {
@@ -129,7 +127,7 @@ export default () => {
   const [isOrderChangeModalOpen, setIsOrderChangeModalOpen] = useState(false);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
@@ -417,6 +415,8 @@ export default () => {
                     id={v.id}
                     name={v?.name}
                     address={v?.basic_address}
+                    mutate={mutate}
+                    setIsOrderChangeModalOpen={setIsOrderChangeModalOpen}
                   />
                 ))}
               </SortableContext>
