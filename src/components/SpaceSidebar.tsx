@@ -96,7 +96,6 @@ export default () => {
       const sortedSpaces = spaces.sort((a, b) => {
         return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
       });
-      console.log('이름순 sortedSpaces', sortedSpaces);
       return sortedSpaces.filter((v) => v?.name?.includes(search));
     } else if (order === '사용자화') {
       return spaces.filter((v) => v?.name?.includes(search));
@@ -256,8 +255,6 @@ export default () => {
     delayedUpdateCall(v);
     setSearchFactory(v);
   };
-
-  console.log('searchedSpaces', searchedSpaces);
 
   return (
     <Container>

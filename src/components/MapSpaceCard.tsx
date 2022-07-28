@@ -154,12 +154,13 @@ const Name = styled.span`
   letter-spacing: -0.32px;
   text-align: left;
   color: #000;
-  margin-bottom: 6px;
 `;
 
 const DistanceWrap = styled.div`
   display: flex;
   align-items: center;
+
+  margin-top: 6px;
 `;
 
 const Distance = styled.span`
