@@ -84,7 +84,8 @@ export default () => {
         phone: '01000000001' || (location.state as any)?.phone,
         position: position || '',
         tel: tel || '',
-        company_id: companyType === 'con' ? 2 : 1,
+        // company_id: companyType === 'con' ? 2 : 1,
+        company_id: company?.id,
       })
       .then(() => setSuccessOpenModal(true));
   };
