@@ -24,6 +24,7 @@ const calendarTypeOptions = [
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { pick } from 'lodash';
+import useFieldSpaceWeathers from '@api/useFieldSpaceWeathers';
 
 const hours = [
   4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
@@ -31,6 +32,8 @@ const hours = [
 
 export default () => {
   const spaceInfo = useSelectedSpaceInfo();
+
+  const { data: weatherInfo } = useFieldSpaceWeathers(spaceInfo?.id);
 
   const [type, setType] = useState(CalendarTypeState.WEEK);
   const [dates, setDates] = useState<any>([]);
@@ -179,6 +182,7 @@ export default () => {
                 setIsModalOpened={setIsModalOpened}
                 setModalPosition={setModalPosition}
                 setSelectedBarInfo={setSelectedBarInfo}
+                weatherInfo={weatherInfo}
               />
             ) : (
               dates.map((v: any) => (
@@ -190,6 +194,7 @@ export default () => {
                   setIsModalOpened={setIsModalOpened}
                   setModalPosition={setModalPosition}
                   setSelectedBarInfo={setSelectedBarInfo}
+                  weatherInfo={weatherInfo}
                 />
               ))
             )}

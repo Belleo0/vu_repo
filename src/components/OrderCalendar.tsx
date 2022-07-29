@@ -1,4 +1,5 @@
 import useAssignments from '@api/useAssignments';
+import useFieldSpaceWeathers from '@api/useFieldSpaceWeathers';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
@@ -28,6 +29,8 @@ export default ({
   const isFieldUser = useIsFieldUser();
 
   const spaceInfo = useSelectedSpaceInfo();
+
+  const { data: weatherInfo } = useFieldSpaceWeathers(spaceInfo?.id);
 
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
@@ -86,19 +89,34 @@ export default ({
         {dates.map((v: any) => {
           const date = moment(v).format('YYYY-MM-DD');
           const data = assignments?.[date] || [];
+
+          const isAvaildableVisibleWeather = weatherInfo?.[date];
+          const iconType = weatherInfo?.[date]?.weather?.[0]?.icon?.slice?.(
+            0,
+            2,
+          );
+          const icon = `../assets/${iconType}.svg`;
+
           return (
             <DayContainer key={v.toISOString()}>
               <DayText className="day-text">{days[v.getDay()]}</DayText>
               <DayContents>
-                <DayAmountWrap>
-                  <DayIcon
-                    src={getAssetURL('../assets/ic-sunny.svg')}
-                    style={{ opacity: 0 }}
-                  />
+                <DayAmountWrap
+                  style={
+                    isAvaildableVisibleWeather
+                      ? {}
+                      : { justifyContent: 'center' }
+                  }
+                >
+                  {isAvaildableVisibleWeather ? (
+                    <DayIcon style={{ opacity: 0 }} />
+                  ) : null}
                   <DayAmount active={isDateToday(v)}>
                     {convertString(v.getDate())}
                   </DayAmount>
-                  <DayIcon src={getAssetURL('../assets/ic-sunny.svg')} />
+                  {isAvaildableVisibleWeather ? (
+                    <DayIcon src={getAssetURL(icon)} />
+                  ) : null}
                 </DayAmountWrap>
                 <BarContainer>
                   {data?.map((v: any) => (
