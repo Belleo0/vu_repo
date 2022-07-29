@@ -150,6 +150,7 @@ export default () => {
   const requestPhoneValidateHandler = async () => {
     // const tempPh = phone.replace(/-/g, '');
     setIsPhoneDone(true);
+    setPhoneCodeVisible(true);
     // await api
     //   .post('/verifications/phone', {
     //     phone: tempPh,
@@ -186,6 +187,8 @@ export default () => {
     if (chkDupEmail) {
       setEmailDupModal(true);
       setIsEmailDone(true);
+    } else {
+      setEmailCodeVisible(true);
     }
     // else {
     //   await api
@@ -320,7 +323,7 @@ export default () => {
               </TextWrapper>
             </LineWrapper>
 
-            {/* {emailCodeVisible ? (
+            {emailCodeVisible ? (
               <LineWrapper>
                 <TextWrapper style={{ margin: '0 0 14px' }}>
                   <Input
@@ -364,7 +367,7 @@ export default () => {
                   </SendButton>
                 </TextWrapper>
               </LineWrapper>
-            ) : null} */}
+            ) : null}
 
             <LineWrapper>
               <RepeatTitle>이름</RepeatTitle>
@@ -443,14 +446,16 @@ export default () => {
                 />
                 <SendButton
                   type={phoneValid ? AbleType.ABLE : AbleType.INABLE}
-                  onClick={() => requestPhoneValidateHandler()}
+                  onClick={() =>
+                    phoneValid ? requestPhoneValidateHandler() : null
+                  }
                 >
                   {phoneCodeRecent ? '재인증받기' : '인증번호 전송'}
                 </SendButton>
               </TextWrapper>
             </LineWrapper>
 
-            {/* {phoneCodeVisible ? (
+            {phoneCodeVisible ? (
               <LineWrapper>
                 <TextWrapper style={{ margin: 0 }}>
                   <Input
@@ -482,19 +487,21 @@ export default () => {
                   />
                   <SendButton
                     type={
-                      phoneCode?.length >= 1 && !isPhoneDone
+                      // phoneCode?.length >= 1 && !isPhoneDone
+                      phoneCode?.length >= 1 && isPhoneDone
                         ? AbleType.ABLE
                         : AbleType.INABLE
                     }
-                    onClick={() =>
-                      !isPhoneDone ? requestPhoneCodeValidateHandler() : null
-                    }
+                    // onClick={() =>
+                    //   !isPhoneDone ? requestPhoneCodeValidateHandler() : null
+                    // }
+                    onClick={() => {}}
                   >
                     확인
                   </SendButton>
                 </TextWrapper>
               </LineWrapper>
-            ) : null} */}
+            ) : null}
           </MainContentBox>
           <Button
             // type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
