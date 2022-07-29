@@ -258,7 +258,7 @@ export default () => {
     } else return;
   }, [factories, order]);
 
-  if (!coordinates) {
+  if (error) {
     alert('위치서비스를 활성화 해주세요');
   }
 
