@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider, shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { QueryParamProvider } from 'use-query-params';
-import { SWRConfig } from 'swr';
 
 import store from '@data';
 import { me } from '@data/auth';
@@ -12,10 +11,10 @@ import { RouteAdapter } from '@components/RouteAdapter';
 import routes, { Permission } from './Routes';
 import PrivateWrapper from './PrivateWrapper';
 
-import api from '@api';
-
 import Loading from '@components/Loading';
 import styled from '@emotion/styled';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const Container = () => {
   const dispatch = useDispatch();
@@ -68,23 +67,29 @@ const Container = () => {
   );
 };
 
-const swrConfig = {
-  fetcher(url: string, params: object) {
-    return api.get(url, { params }).then((res) => {
-      return res.data?.result || res.data;
-    });
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+      useErrorBoundary: true,
+      select: ({ data }: any) => data?.result || data,
+    },
+    mutations: {
+      useErrorBoundary: true,
+    },
   },
-};
+});
 
 function App() {
   return (
-    <SWRConfig value={swrConfig}>
+    <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <BrowserRouter>
           <Container />
         </BrowserRouter>
       </Provider>
-    </SWRConfig>
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+    </QueryClientProvider>
   );
 }
 

@@ -1,4 +1,7 @@
-import useSWR from 'swr';
+import api from '@api';
+import useQuery from '@hooks/useQuery';
+
+export const FACTORY_MAPS_KEY = 'FACTORY_MAPS';
 
 export default (
   fieldId: number,
@@ -6,20 +9,16 @@ export default (
   bounds: any,
   address: string,
 ) => {
-  const { data, error, mutate } = useSWR<any>([
-    `/factories/maps`,
-    fieldId !== null
-      ? { field_id: fieldId, duration, ...(bounds || {}) }
-      : {
-          address,
-          duration,
-          ...(bounds || {}),
-        },
-  ]);
-
-  return {
-    data,
-    isLoading: !error && !data,
-    mutate,
-  };
+  return useQuery([FACTORY_MAPS_KEY, fieldId, duration, bounds, address], () =>
+    api.get('/factories/maps', {
+      params:
+        fieldId !== null
+          ? { field_id: fieldId, duration, ...(bounds || {}) }
+          : {
+              address,
+              duration,
+              ...(bounds || {}),
+            },
+    }),
+  );
 };

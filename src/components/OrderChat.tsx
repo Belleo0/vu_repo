@@ -1,9 +1,7 @@
 import io from 'socket.io-client';
 import api, { getSocketHost } from '@api';
-import useChatData from '@api/useChatData';
 import useOrderSuppliers from '@api/useOrderSuppliers';
 import styled from '@emotion/styled';
-import { usePrevious } from '@hooks/usePrevious';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useUserInfo from '@hooks/useUserInfo';
 import getAssetURL from '@utils/getAssetURL';
@@ -19,7 +17,6 @@ import useIsFieldUser from '@hooks/useIsFieldUser';
 import OrderChatMemberModal from './OrderChatMemberModal';
 import TextModal from './TextModal';
 import { css } from '@emotion/react';
-import ScrollBox from './ScrollBox';
 
 export default ({
   messages,
@@ -42,9 +39,9 @@ export default ({
 
   const selectedSpaceId = useSelectedSpaceId();
   const {
-    data: spaces,
+    data: spaces = [],
     isLoading,
-    mutate: mutateSpaces,
+    refetch: refetchSpaces,
   } = useOrderSuppliers(selectedSpaceId);
 
   const [search, setSearch] = useState('');
@@ -218,7 +215,7 @@ export default ({
     try {
       setCloseLoading(true);
       await api.post(`/estimations/${selectedChatRoomInfo?.id}/close`);
-      await mutateSpaces();
+      await refetchSpaces();
     } catch (err) {
       console.log(err);
     } finally {
@@ -232,7 +229,7 @@ export default ({
     try {
       setCloseLoading(true);
       await api.delete(`/estimations/${selectedChatRoomInfo?.id}/close`);
-      await mutateSpaces();
+      await refetchSpaces();
     } catch (err) {
       console.log(err);
     } finally {

@@ -1,14 +1,12 @@
-import useSWR from 'swr';
+import api from '@api';
+import useQuery from '@hooks/useQuery';
+
+export const FACTORY_SPACES_UNREGISTERED_KEY = 'FACTORY_SPACES_UNREGISTERED';
 
 export default (name: string) => {
-  const { data, error, mutate } = useSWR<any>([
-    `/factory-spaces/un-registers`,
-    { name, page: 0, limit: 200 },
-  ]);
-
-  return {
-    data,
-    isLoading: !error && !data,
-    mutate,
-  };
+  return useQuery([FACTORY_SPACES_UNREGISTERED_KEY, name], () =>
+    api.get(`/factory-spaces/un-registers`, {
+      params: { name, page: 0, limit: 200 },
+    }),
+  );
 };

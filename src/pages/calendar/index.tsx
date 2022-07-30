@@ -14,7 +14,7 @@ import {
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
-import pickCalendarModal from '@components/CalendarModal';
+
 const calendarTypeOptions = [
   { label: '일', value: CalendarTypeState.DAY },
   { label: '주', value: CalendarTypeState.WEEK },
@@ -23,7 +23,6 @@ const calendarTypeOptions = [
 
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { pick } from 'lodash';
 import useFieldSpaceWeathers from '@api/useFieldSpaceWeathers';
 
 const hours = [
@@ -33,7 +32,7 @@ const hours = [
 export default () => {
   const spaceInfo = useSelectedSpaceInfo();
 
-  const { data: weatherInfo } = useFieldSpaceWeathers(spaceInfo?.id);
+  const { data: weatherInfo } = useFieldSpaceWeathers();
 
   const [type, setType] = useState(CalendarTypeState.WEEK);
   const [dates, setDates] = useState<any>([]);
@@ -45,7 +44,7 @@ export default () => {
   const [pickCalendar, setPickCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState<any>();
 
-  const { data: assignments, mutate } = useAssignments(
+  const { data: assignments, refetch } = useAssignments(
     dates?.[0],
     dates?.[dates.length - 1],
   );
@@ -178,7 +177,7 @@ export default () => {
                   assignments?.[moment(dates[0]).format('YYYY-MM-DD')] || []
                 }
                 type={type}
-                mutate={mutate}
+                mutate={refetch}
                 setIsModalOpened={setIsModalOpened}
                 setModalPosition={setModalPosition}
                 setSelectedBarInfo={setSelectedBarInfo}
@@ -190,7 +189,7 @@ export default () => {
                   date={v}
                   data={assignments?.[moment(v).format('YYYY-MM-DD')] || []}
                   type={type}
-                  mutate={mutate}
+                  mutate={refetch}
                   setIsModalOpened={setIsModalOpened}
                   setModalPosition={setModalPosition}
                   setSelectedBarInfo={setSelectedBarInfo}
@@ -206,7 +205,7 @@ export default () => {
           info={selectedBarInfo}
           position={modalPosition}
           revalidate={() => {
-            mutate();
+            refetch();
           }}
         />
       </Container>

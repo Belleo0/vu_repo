@@ -1,13 +1,15 @@
-import useSWR from 'swr';
+import api from '@api';
+import useQuery from '@hooks/useQuery';
+import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
 
-export default (id: number) => {
-  const { data, error, mutate } = useSWR<any>([
-    `/factory-spaces/${id}/weathers`,
-  ]);
+export const FIELD_SPACE_WEATHER_KEY = 'FIELD_SPACE_WEATHER';
 
-  return {
-    data,
-    isLoading: !error && !data,
-    mutate,
-  };
+export default () => {
+  const spaceInfo = useSelectedSpaceInfo();
+
+  return useQuery(
+    [FIELD_SPACE_WEATHER_KEY, spaceInfo?.id],
+    () => api.get(`/factory-spaces/${spaceInfo?.id}/weathers`),
+    { enabled: !!spaceInfo },
+  );
 };

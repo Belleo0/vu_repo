@@ -1,4 +1,3 @@
-import useAssignments from '@api/useAssignments';
 import useFieldSpaceWeathers from '@api/useFieldSpaceWeathers';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -30,7 +29,7 @@ export default ({
 
   const spaceInfo = useSelectedSpaceInfo();
 
-  const { data: weatherInfo } = useFieldSpaceWeathers(spaceInfo?.id);
+  const { data: weatherInfo } = useFieldSpaceWeathers();
 
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });

@@ -1,16 +1,14 @@
+import api from '@api';
 import useIsFieldUser from '@hooks/useIsFieldUser';
-import useSWR from 'swr';
+import useQuery from '@hooks/useQuery';
+
+export const MY_SPACES_KEY = 'MY_SPACES';
 
 export default (isHide: string) => {
   const isFieldUser = useIsFieldUser();
-  const { data, error, mutate } = useSWR<any[]>([
-    `/${isFieldUser ? 'field' : 'factory'}-spaces`,
-    { is_hide: isHide },
-  ]);
-
-  return {
-    data,
-    isLoading: !error && !data,
-    mutate,
-  };
+  return useQuery([MY_SPACES_KEY, isHide], () =>
+    api.get(`/${isFieldUser ? 'field' : 'factory'}-spaces`, {
+      params: { is_hide: isHide },
+    }),
+  );
 };
