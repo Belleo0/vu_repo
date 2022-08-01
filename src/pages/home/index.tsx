@@ -1,17 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import useSWR from 'swr';
 import AuthLayout from '@layout/AuthLayout';
-import SearchInput from '@components/SearchInput';
-import getAssetURL from '@utils/getAssetURL';
-import Button, { ButtonType } from '@components/Button';
 
 import useIsLogin from '@hooks/useIsLogin';
-// api
-import useMySpaceInfo from '@api/useMySpaceInfo';
-import useSpaces from '@api/useSpaces';
 
-// components
 import SearchSection from './SearchSection';
 import SiteSection from './SiteSection';
 import InfoSection from './InfoSection';
@@ -21,18 +13,14 @@ import AppSection from './AppSection';
 import MySiteSection from './MySiteSection';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '@hooks/useLocalStorage';
-
-enum TabTypeEnum {
-  DEFAULT,
-  HIDE,
-}
+import useSpaces from '@api/useSpaces';
 
 export default () => {
   const navigate = useNavigate();
   const isLogin = useIsLogin();
   const [search, setSearch] = useState('');
 
-  const { data, error, mutate } = useSWR<any[]>([`/field-spaces`]);
+  const { data = [] } = useSpaces('false');
   const [myspaces, setMyspaces] = useState<any[]>([]);
 
   const [state, setState] = useLocalStorage('@add-construction-field', {
@@ -41,11 +29,11 @@ export default () => {
 
   useEffect(() => {
     if (data) {
-      const stableSpaces = data.map((el, i) => [el, i]);
-      stableSpaces.sort((a, b) => {
+      const stableSpaces = data.map((el: any, i: number) => [el, i]);
+      stableSpaces.sort((a: any, b: any) => {
         return b[1] - a[1];
       });
-      const sortedSpaces = stableSpaces.map((el) => el[0]);
+      const sortedSpaces = stableSpaces.map((el: any) => el[0]);
       setMyspaces(sortedSpaces);
     }
     console.log(myspaces);

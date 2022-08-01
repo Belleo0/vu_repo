@@ -17,7 +17,7 @@ export default ({
 }) => {
   const navigate = useNavigate();
   const isFieldUser = useIsFieldUser();
-  const { data: assignmentData, mutate } = useAssignmentInfo(id);
+  const { data: assignmentData, refetch } = useAssignmentInfo(id);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -29,7 +29,7 @@ export default ({
         console.log(err);
         window.alert('에러 발생..');
       } finally {
-        await mutate();
+        await refetch();
         await mutateMessages();
         setLoading(false);
       }

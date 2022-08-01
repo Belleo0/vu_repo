@@ -1,14 +1,11 @@
-import useAssignmentInfo from '@api/useAssignmentInfo';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
-import useUserInfo from '@hooks/useUserInfo';
 import { days } from '@utils/calendar';
 import { convertTime } from '@utils/date';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
-import Button, { ButtonSize, ButtonType } from './Button';
 import Checkbox from './Checkbox';
 import OrderChatAssignmentButton from './OrderChatAssignmentButton';
 

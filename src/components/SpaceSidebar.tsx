@@ -69,7 +69,7 @@ export default () => {
   const [searchFactory, setSearchFactory] = useState('');
   const [forSearchFactory, setForSearchFactory] = useState('');
 
-  const { data: factories, mutate: mutateFactories } =
+  const { data: factories, refetch: refetchFactories } =
     useFactories(forSearchFactory);
 
   const [isMounted, setIsMounted] = useState(false);
@@ -236,7 +236,7 @@ export default () => {
       await api.post(`/factory-spaces/${tempSelectedFactoryInfo?.id}`);
       mutate();
       handleCloseRegisterModal();
-      mutateFactories();
+      refetchFactories();
     } catch (err) {
       console.log(err);
       window.alert('에러 발생..');

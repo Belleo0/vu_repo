@@ -1,18 +1,22 @@
+import api from '@api';
 import useIsFieldUser from '@hooks/useIsFieldUser';
-import useSWR from 'swr';
+import useQuery from '@hooks/useQuery';
+
+export const ORDER_SUPPLIERS_KEY = 'ORDER_SUPPLIERS';
 
 export default (selectedSpaceId: number) => {
   const isFieldUser = useIsFieldUser();
 
-  const { data, error, mutate } = useSWR<any[]>([
-    `/${isFieldUser ? 'field' : 'factory'}-spaces/${selectedSpaceId}/order-${
-      isFieldUser ? 'suppliers' : 'clients'
-    }`,
-  ]);
-
-  return {
-    data: data || [],
-    isLoading: !error && !data,
-    mutate,
-  };
+  return useQuery(
+    [ORDER_SUPPLIERS_KEY, selectedSpaceId],
+    () =>
+      api.get(
+        `/${
+          isFieldUser ? 'field' : 'factory'
+        }-spaces/${selectedSpaceId}/order-${
+          isFieldUser ? 'suppliers' : 'clients'
+        }`,
+      ),
+    { enabled: !!selectedSpaceId },
+  );
 };

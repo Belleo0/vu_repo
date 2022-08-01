@@ -4,6 +4,7 @@ import useIsFieldUser from '@hooks/useIsFieldUser';
 import SpaceLayout from '@layout/SpaceLayout';
 import { CalendarTypeState, days, isDateToday } from '@utils/calendar';
 import getAssetURL from '@utils/getAssetURL';
+import moment from 'moment';
 import { useMemo, useState } from 'react';
 
 const hours = [
@@ -19,8 +20,27 @@ export default ({
   setIsModalOpened,
   setModalPosition,
   setSelectedBarInfo,
+  weatherInfo,
 }: any) => {
   const isFieldUser = useIsFieldUser();
+
+  const dateString = useMemo(() => {
+    return moment(date).format('YYYY-MM-DD');
+  }, [date]);
+
+  const isAvaildableVisibleWeather = useMemo(() => {
+    if (weatherInfo?.[dateString]) return true;
+    return false;
+  }, [weatherInfo, dateString]);
+
+  const weatherIcon = useMemo(() => {
+    const iconType = weatherInfo?.[dateString]?.weather?.[0]?.icon?.slice?.(
+      0,
+      2,
+    );
+    return `../assets/${iconType}.svg`;
+  }, [weatherInfo, dateString]);
+
   const defaultTopMargin = useMemo(() => {
     return type === CalendarTypeState.WEEK ? 8 : 8;
   }, []);
@@ -113,15 +133,23 @@ export default ({
       )}
       {type === CalendarTypeState.WEEK && (
         <CalendarDay>
-          <CalendarTopWrap>
-            <CalendarTopIcon
-              src={getAssetURL('../assets/ic-sunny.svg')}
-              style={{ opacity: 0 }}
-            />
+          <CalendarTopWrap
+            style={
+              isAvaildableVisibleWeather ? {} : { justifyContent: 'center' }
+            }
+          >
+            {isAvaildableVisibleWeather ? (
+              <CalendarTopIcon
+                src={getAssetURL(weatherIcon)}
+                style={{ opacity: 0 }}
+              />
+            ) : null}
             <CalendarTopDay active={isDateToday(date)}>
               {date.getDate().toString().padStart(2, '0')}
             </CalendarTopDay>
-            <CalendarTopIcon src={getAssetURL('../assets/ic-sunny.svg')} />
+            {isAvaildableVisibleWeather ? (
+              <CalendarTopIcon src={getAssetURL(weatherIcon)} />
+            ) : null}
           </CalendarTopWrap>
         </CalendarDay>
       )}
