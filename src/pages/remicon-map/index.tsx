@@ -31,12 +31,16 @@ import NaverMapController from '@components/NaverMapController';
 import useGeolocation from '@hooks/useGeolocation';
 import NaverMapFieldAddress from '@components/NaverMapFieldAddress';
 import NaverMapFieldStatus from '@components/NaverMapFieldStatus';
+import useIsLogin from '@hooks/useIsLogin';
+import useSpaces from '@api/useSpaces';
 
 // @ts-ignore
 const { naver } = window;
 
 export default () => {
   const dispatch = useDispatch();
+  const isLogin = useIsLogin();
+  const { data: spaces } = useSpaces('N');
 
   const { error, coordinates, loaded } = useGeolocation();
   const { polylineInfo } = useSelector((s: any) => s.map, shallowEqual);
@@ -59,6 +63,11 @@ export default () => {
     if (!selectedFieldInfo) return null;
     return selectedFieldInfo.basic_address;
   }, [selectedFieldInfo]);
+
+  const selectedFirstSpace = useMemo(() => {
+    if (!spaces) return null;
+    return spaces[spaces.length - 1];
+  }, [spaces]);
 
   const [bounds, setBounds] = useState<any>(null);
 
@@ -187,10 +196,19 @@ export default () => {
               sido: sido,
               sigugun: sigugun,
             });
-            setRealAddress(address);
-            setAddress(address);
+            // setRealAddress(address);
+            // setAddress(address);
             setLongitude(coordinates?.lng);
             setLatitude(coordinates?.lat);
+
+            if (isLogin && spaces) {
+              setRealAddress(selectedFirstSpace.basic_address);
+              setAddress(selectedFirstSpace.basic_address);
+              setSelectedFieldInfo(selectedFirstSpace);
+              setLongitude(selectedFirstSpace.latitude);
+              setLatitude(selectedFirstSpace.longitude);
+            }
+            return;
           },
         );
       }
@@ -262,7 +280,7 @@ export default () => {
     alert('위치서비스를 활성화 해주세요');
   }
 
-  if (!coordinates?.lat || !coordinates?.lng || !factories?.field_position) {
+  if (!coordinates?.lat || !coordinates?.lng) {
     return <Loading />;
   }
 
@@ -322,7 +340,7 @@ export default () => {
                 }
               />
             )}
-            {!!factories?.field_position && (
+            {!!factories?.field_position && isLogin && (
               <NaverMapImageMarker
                 lat={factories?.field_position.latitude}
                 lng={factories?.field_position.longitude}
