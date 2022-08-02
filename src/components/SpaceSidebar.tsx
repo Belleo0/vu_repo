@@ -254,6 +254,8 @@ export default () => {
     setSearchFactory(v);
   };
 
+  console.log(factories);
+
   return (
     <Container>
       <ProfileBox />

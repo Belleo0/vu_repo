@@ -32,6 +32,8 @@ export default () => {
 
   // console.log('selectedChatRoomInfo', selectedChatRoomInfo);
 
+  console.log('assignments', assignments);
+
   return (
     <SpaceLayout>
       <Container>

@@ -7,6 +7,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Button, { ButtonType } from './Button';
+import Checkbox from './Checkbox';
 import OrderAssignmentModal from './OrderAssignmentModal';
 import TextModal from './TextModal';
 
@@ -19,6 +20,8 @@ interface ICalendarModal {
     x: number;
     y: number;
   };
+  setIsModalOpened: any;
+  setModalPosition: any;
 }
 
 export default ({
@@ -27,6 +30,8 @@ export default ({
   info,
   position,
   revalidate,
+  setIsModalOpened,
+  setModalPosition,
 }: ICalendarModal) => {
   const isFieldUser = useIsFieldUser();
 
@@ -110,6 +115,31 @@ export default ({
               </BoxRow>
             ))}
           </SpecWrap>
+          {/* <BottomDivider /> */}
+          <CheckboxWrap>
+            <Checkbox
+              value={info?.mulcha}
+              onChange={() => null}
+              label="물차"
+              containerStyle={{ marginRight: 24 }}
+            />
+            <Checkbox
+              value={info?.multal}
+              onChange={() => null}
+              label="물탈"
+              containerStyle={{ marginRight: 24 }}
+            />
+            <Checkbox
+              value={info?.inducer}
+              onChange={() => null}
+              label="유도제"
+              containerStyle={{ marginRight: 24 }}
+            />
+          </CheckboxWrap>
+          <InfoBoxRow>
+            <BoxLabel style={{ marginRight: 75 }}>특기사항</BoxLabel>
+            <BoxValue>{info?.remark}</BoxValue>
+          </InfoBoxRow>
           <BottomDivider />
           <TotalAmountWrap>
             <TotalAmountLabel>총 주문합계</TotalAmountLabel>
@@ -127,7 +157,10 @@ export default ({
             </Button>
             <Button
               type={ButtonType.PRIMARY}
-              onClick={() => setIsEditModalOpened(true)}
+              onClick={() => {
+                setIsEditModalOpened(true);
+                setModalPosition({ x: 0, y: 0 });
+              }}
             >
               주문 변경
             </Button>
@@ -147,6 +180,11 @@ export default ({
                 info?.estimation?.[
                   isFieldUser ? 'factory_space' : 'field_space'
                 ]?.name || ''
+              }
+              address={
+                info?.estimation?.[
+                  isFieldUser ? 'factory_space' : 'field_space'
+                ]?.basic_address || ''
               }
               percent={info?.estimation?.percent || 0}
               revalidate={async () => await revalidate()}
@@ -247,12 +285,19 @@ const BoxRow = styled.div`
   margin-bottom: 8px;
 `;
 
+const InfoBoxRow = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
 const BoxLabel = styled.span`
   min-width: 47px;
   font-size: 13px;
   letter-spacing: -0.26px;
   text-align: left;
-  color: #000;
+  color: #999;
 `;
 
 const BoxValue = styled.span`
@@ -260,7 +305,7 @@ const BoxValue = styled.span`
   font-size: 14px;
   letter-spacing: normal;
   text-align: left;
-  color: #999;
+  color: #000;
 `;
 
 const BoxAmount = styled.span`
@@ -315,4 +360,13 @@ const TotalAmountWrap = styled.div`
 const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const CheckboxWrap = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f2f2f2;
+  margin-bottom: 16px;
+  margin-top: 16px;
 `;
