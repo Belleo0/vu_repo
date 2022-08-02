@@ -31,7 +31,7 @@ const Container = () => {
   }, []);
 
   useEffect(() => {
-    routes.forEach((v) => v.component.preload());
+    routes.forEach((v: any) => v.component.preload());
   }, []);
 
   if (loading) {
@@ -43,7 +43,7 @@ const Container = () => {
       ReactRouterRoute={RouteAdapter as unknown as React.FunctionComponent}
     >
       <Routes>
-        {routes.map((v) => (
+        {routes.map((v: any) => (
           <Route
             key={v.path}
             path={v.path}

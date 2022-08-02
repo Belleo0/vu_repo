@@ -64,7 +64,7 @@ export default () => {
     return tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y';
   }, [tabType]);
 
-  const { data: spaces, mutate } = useSpaces(isHide);
+  const { data: spaces, refetch } = useSpaces(isHide);
 
   const [searchFactory, setSearchFactory] = useState('');
   const [forSearchFactory, setForSearchFactory] = useState('');
@@ -79,48 +79,48 @@ export default () => {
   const searchedSpaces = useMemo(() => {
     if (!spaces) return [];
     else if (order === '최신순') {
-      const stableSpaces = spaces.map((el, i) => [el, i]);
-      stableSpaces.sort((a, b) => {
+      const stableSpaces = spaces.map((el: any, i: any) => [el, i]);
+      stableSpaces.sort((a: any, b: any) => {
         return b[1] - a[1];
       });
-      const sortedSpaces = stableSpaces.map((el) => el[0]);
-      return sortedSpaces.filter((v) => v?.name?.includes(search));
+      const sortedSpaces = stableSpaces.map((el: any) => el[0]);
+      return sortedSpaces.filter((v: any) => v?.name?.includes(search));
     } else if (order === '오래된순') {
-      const sortedSpaces = spaces.sort((a, b) => {
+      const sortedSpaces = spaces.sort((a: any, b: any) => {
         return a.id - b.id;
       });
-      return sortedSpaces.filter((v) => v?.name?.includes(search));
+      return sortedSpaces.filter((v: any) => v?.name?.includes(search));
     } else if (order === '이름순') {
-      const sortedSpaces = spaces.sort((a, b) => {
+      const sortedSpaces = spaces.sort((a: any, b: any) => {
         return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
       });
-      return sortedSpaces.filter((v) => v?.name?.includes(search));
+      return sortedSpaces.filter((v: any) => v?.name?.includes(search));
     } else if (order === '사용자화') {
-      return spaces.filter((v) => v?.name?.includes(search));
+      return spaces.filter((v: any) => v?.name?.includes(search));
     } else return [];
   }, [spaces, order, search]);
 
   // const searchedFactories = useMemo(() => {
   //   if (!factories) return [];
   //   else if (order === '최신순') {
-  //     const stableFactory = factories.map((el, i) => [el, i]);
-  //     stableFactory.sort((a, b) => {
+  //     const stableFactory = factories.map((el: any, i: any) => [el, i]);
+  //     stableFactory.sort((a:any, b:any) => {
   //       return b[1] - a[1];
   //     });
-  //     const sortedFactory = stableFactory.map((el) => el[0]);
-  //     return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
+  //     const sortedFactory = stableFactory.map((el: any) =>el[0]);
+  //     return sortedFactory.filter((v: any) => v?.name?.includes(forSearchFactory));
   //   } else if (order === '오래된순') {
-  //     const sortedFactory = factories.sort((a, b) => {
+  //     const sortedFactory = factories.sort((a:any, b:any) => {
   //       return a.id - b.id;
   //     });
-  //     return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
+  //     return sortedFactory.filter((v: any) => v?.name?.includes(forSearchFactory));
   //   } else if (order === '이름순') {
-  //     const sortedFactory = factories.sort((a, b) => {
+  //     const sortedFactory = factories.sort((a:any, b:any) => {
   //       return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
   //     });
-  //     return sortedFactory.filter((v) => v?.name?.includes(forSearchFactory));
+  //     return sortedFactory.filter((v: any) => v?.name?.includes(forSearchFactory));
   //   } else if (order === '사용자화') {
-  //     return factories.filter((v) => v?.name?.includes(forSearchFactory));
+  //     return factories.filter((v: any) => v?.name?.includes(forSearchFactory));
   //   } else return [];
   // }, [factories, forSearchFactory]);
 
@@ -144,9 +144,9 @@ export default () => {
     useState(false);
 
   const handleSubmitChangeOrderSpaceModal = async () => {
-    const ids = changeOrderSpaces.map((v) => v.id);
+    const ids = changeOrderSpaces.map((v: any) => v.id);
     await api.put(`/field-spaces/change-order`, ids);
-    await mutate();
+    await refetch();
     setIsOrderChangeModalOpen(false);
   };
 
@@ -168,10 +168,10 @@ export default () => {
     if (active.id !== over.id) {
       setChangeOrderSpaces((items) => {
         const oldIndex = items.indexOf(
-          items.filter((v) => v.id === active.id)?.[0],
+          items.filter((v: any) => v.id === active.id)?.[0],
         );
         const newIndex = items.indexOf(
-          items.filter((v) => v.id === over.id)?.[0],
+          items.filter((v: any) => v.id === over.id)?.[0],
         );
         const result = arrayMove(items, oldIndex, newIndex);
 
@@ -234,7 +234,7 @@ export default () => {
     setSubmitFactroyLoading(true);
     try {
       await api.post(`/factory-spaces/${tempSelectedFactoryInfo?.id}`);
-      mutate();
+      refetch();
       handleCloseRegisterModal();
       refetchFactories();
     } catch (err) {
@@ -305,7 +305,7 @@ export default () => {
               { label: '사용자화', value: '사용자화' },
             ]}
             value={order}
-            onChange={(v) => setOrder(v)}
+            onChange={(v: any) => setOrder(v)}
           />
           <SpaceOrderWrap onClick={handleOpenChangeOrderSpaceModal}>
             <SpaceOrderLabel>
@@ -319,14 +319,14 @@ export default () => {
           </SpaceOrderWrap>
         </SpaceFilterContainer>
         <SearchedSpaceWrap>
-          {searchedSpaces.map((v, i) => (
+          {searchedSpaces.map((v: any, i: number) => (
             <SpaceCard
               key={`space-${v.id}-${i}`}
               info={v}
               id={v.id}
               name={v?.name}
               address={v?.basic_address}
-              revalidate={mutate}
+              revalidate={refetch}
               isHide={tabType === TabTypeEnum.HIDE}
               setSelectedIdWithFirstId={setSelectedIdWithFirstId}
             />
@@ -408,14 +408,14 @@ export default () => {
                 items={changeOrderSpaces}
                 strategy={verticalListSortingStrategy}
               >
-                {changeOrderSpaces.map((v) => (
+                {changeOrderSpaces.map((v: any) => (
                   <OrderSpaceCard
                     draggable
                     key={v.id}
                     id={v.id}
                     name={v?.name}
                     address={v?.basic_address}
-                    mutate={mutate}
+                    mutate={refetch}
                     setIsOrderChangeModalOpen={setIsOrderChangeModalOpen}
                   />
                 ))}

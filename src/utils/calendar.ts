@@ -11,7 +11,9 @@ export const generateWeekData = (date: Date) => {
 
   const week = new Array(7)
     .fill(null)
-    .map((v, i) => new Date(date.valueOf() + 86400000 * (i - day)));
+    .map(
+      (v: any, i: number) => new Date(date.valueOf() + 86400000 * (i - day)),
+    );
 
   return week;
 };

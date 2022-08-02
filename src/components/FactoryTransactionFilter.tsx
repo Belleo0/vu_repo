@@ -62,7 +62,7 @@ export default () => {
           absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           options={filterOptions}
           value={filter}
-          onChange={(v) => setFilter(v)}
+          onChange={(v: any) => setFilter(v)}
         />
       </FactoryFilterWrap>
       <FactoryFilterWrap>
@@ -80,7 +80,7 @@ export default () => {
           absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           options={filterOptions}
           value={filter}
-          onChange={(v) => setFilter(v)}
+          onChange={(v: any) => setFilter(v)}
         />
       </FactoryFilterWrap>
       <ButtonsWrap style={{ justifyContent: 'flex-end' }}>

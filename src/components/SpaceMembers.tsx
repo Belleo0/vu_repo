@@ -9,7 +9,7 @@ interface IMembers {
 export default ({ data = [] }: IMembers) => {
   return (
     <Container>
-      {data.map((v, i) => (
+      {data.map((v: any, i: number) => (
         <ProfileWrap key={v.id}>
           <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
           <ProfileInfoWrap>

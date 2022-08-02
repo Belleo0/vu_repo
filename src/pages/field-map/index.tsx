@@ -60,7 +60,7 @@ export default () => {
 
   const selectedFactoryInfo = useMemo(() => {
     if (!spaces || selectedFactoryId === null) return null;
-    return spaces.find((v) => v.id === selectedFactoryId);
+    return spaces.find((v: any) => v.id === selectedFactoryId);
   }, [spaces, selectedFactoryId]);
 
   const selectedFieldId = useMemo(() => {
@@ -111,7 +111,7 @@ export default () => {
     (id: number) => {
       setSelectedFactoryIds((prev: number[]) => {
         if (prev.includes(id)) {
-          const result = prev.filter((v) => v !== id);
+          const result = prev.filter((v: any) => v !== id);
           return result;
         } else {
           const result = prev.concat(id);

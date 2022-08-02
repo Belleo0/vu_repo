@@ -97,7 +97,7 @@ export default () => {
       </LogoWrap>
       <ContentContainer>
         <MenuWrap>
-          {(isFieldUser ? fieldMenus : remiconMenus).map((v) => (
+          {(isFieldUser ? fieldMenus : remiconMenus).map((v: any) => (
             <MenuItem
               key={v.path}
               active={[v.path, ...((v as any)?.includePaths || [])].includes(
@@ -165,7 +165,7 @@ export default () => {
               </LoginButton>
               <Select
                 value={isFieldView}
-                onChange={(v) => dispatch(setIsFieldView(v))}
+                onChange={(v: any) => dispatch(setIsFieldView(v))}
                 options={[
                   { label: '건설사', value: true },
                   { label: '레미콘사', value: false },

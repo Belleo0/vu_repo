@@ -185,7 +185,7 @@ export default ({
           placeholder="레미콘 공장을 선택하세요"
           width={320}
           value={selectedFactoryId}
-          onChange={(v) => {
+          onChange={(v: any) => {
             setSelectedFactoryId(v);
           }}
           options={factoryOptions}
@@ -202,7 +202,7 @@ export default ({
             placeholder="광역시도"
             width={108}
             value={stateId}
-            onChange={(v) => setStateId(v)}
+            onChange={(v: any) => setStateId(v)}
             options={stateOptions}
             absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           />
@@ -210,7 +210,7 @@ export default ({
             placeholder="시군구"
             width={98}
             value={cityId}
-            onChange={(v) => setCityId(v)}
+            onChange={(v: any) => setCityId(v)}
             options={cityOptions}
             absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           />
@@ -218,7 +218,7 @@ export default ({
             placeholder="읍면동"
             width={98}
             value={dongId}
-            onChange={(v) => setDongId(v)}
+            onChange={(v: any) => setDongId(v)}
             options={dongOptions}
             absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
           />
@@ -254,7 +254,7 @@ export default ({
             { label: '즐겨찾기', value: '즐겨찾기' },
           ]}
           value={order}
-          onChange={(v) => setOrder(v)}
+          onChange={(v: any) => setOrder(v)}
         />
         <FilterButton onClick={() => setIsFieldFilterModal(true)}>
           필터 <Icon src={getAssetURL('../assets/ic-sort-bk.svg')} />
@@ -303,7 +303,7 @@ export default ({
         open={isDuplicatedEstimation}
         content={`이미 견적요청한 공장이 존재합니다.\n${duplicatedFactoryIds
           .map(
-            (v) =>
+            (v: any) =>
               (fields?.data || []).filter((factory: any) => factory.id === v)[0]
                 .name,
           )
@@ -316,7 +316,7 @@ export default ({
       >
         <PostContainer style={{ width: 400, height: 600 }}>
           <DaumPostcode
-            onComplete={(v) => {
+            onComplete={(v: any) => {
               setSelectedFieldInfo(null);
               setAddress(v?.roadAddress || v?.autoJibunAddress);
               setIsPostcodeModalOpened(false);

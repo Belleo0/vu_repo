@@ -40,7 +40,7 @@ export default ({ data = [], revalidate }: IMemberTable) => {
 
   return (
     <MemberListContainer>
-      {data.map((v, i) => (
+      {data.map((v: any, i: number) => (
         <MemberCell key={i}>
           <CellLeftSection>
             <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />

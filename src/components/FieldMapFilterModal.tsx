@@ -179,7 +179,7 @@ export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
               <OptionBox active={false} onClick={() => {}}>
                 전체
               </OptionBox>
-              {FieldPerOptions.map((v) => (
+              {FieldPerOptions.map((v: any) => (
                 <OptionBox key={v.value} active={false} onClick={() => {}}>
                   {v.label}
                 </OptionBox>
@@ -193,7 +193,7 @@ export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
               <OptionBox active={false} onClick={() => {}}>
                 전체
               </OptionBox>
-              {FieldReportOptions.map((v) => (
+              {FieldReportOptions.map((v: any) => (
                 <OptionBox key={v.value} active={false} onClick={() => {}}>
                   {v.label}
                 </OptionBox>

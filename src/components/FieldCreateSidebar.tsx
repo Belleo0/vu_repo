@@ -25,7 +25,7 @@ export default () => {
   return (
     <Container>
       <Title>건설현장 등록</Title>
-      {menus.map((v, i) => (
+      {menus.map((v: any, i: number) => (
         <Box
           className={
             pathname === `/add-construction-field/step-${i + 1}` ? 'active' : ''

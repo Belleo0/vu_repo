@@ -32,7 +32,7 @@ export default ({
 
   const valueLabel = useMemo(() => {
     if (value === null) return null;
-    return options?.filter?.((v) => v.value === value)?.[0]?.label;
+    return options?.filter?.((v: any) => v.value === value)?.[0]?.label;
   }, [options, value]);
 
   const handleClickOutside = ({ target }: any) => {
@@ -97,7 +97,7 @@ export default ({
           />
         </AbsoluteValueContainer>
         <OptionBox>
-          {options.map((v) => (
+          {options.map((v: any) => (
             <OptionText
               key={v.value as string}
               active={value === v.value}

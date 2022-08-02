@@ -38,11 +38,11 @@ export default () => {
     return tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y';
   }, [tabType]);
 
-  const { data: spaces, mutate } = useSpaces(isHide);
+  const { data: spaces = [], refetch } = useSpaces(isHide);
 
-  const searchedSpaces = useMemo(() => {
+  const searchedSpaces: any[] = useMemo(() => {
     if (!spaces) return [];
-    return spaces.filter((v) => v?.name?.includes(search));
+    return spaces.filter((v: any) => v?.name?.includes(search));
   }, [spaces, search]);
 
   const handleChangeTabType = (type: TabTypeEnum) => {
@@ -110,14 +110,14 @@ export default () => {
         </ChipWrap>
       )}
       <SearchedSpaceWrap>
-        {searchedSpaces.map((v, i) => (
+        {searchedSpaces.map((v: any, i: number) => (
           <MemberCard
             key={`space-${v.id}-${i}`}
             info={v}
             id={v.id}
             name={v?.name}
             address={v?.basic_address}
-            revalidate={mutate}
+            revalidate={refetch}
             isHide={tabType === TabTypeEnum.HIDE}
             setSelectedIdWithFirstId={setSelectedIdWithFirstId}
           />

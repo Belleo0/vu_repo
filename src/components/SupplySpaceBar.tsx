@@ -121,7 +121,7 @@ export default ({
     (id: number) => {
       setSelectedFactoryIds((prev: number[]) => {
         if (prev.includes(id)) {
-          const result = prev.filter((v) => v !== id);
+          const result = prev.filter((v: any) => v !== id);
           return result;
         } else {
           const result = prev.concat(id);
@@ -254,7 +254,7 @@ export default ({
                     { label: '시간순', value: '시간순' },
                   ]}
                   value={order}
-                  onChange={(v) => setOrder(v)}
+                  onChange={(v: any) => setOrder(v)}
                 />
               )}
             </ModalSortSection>
@@ -311,7 +311,7 @@ export default ({
         open={isDuplicatedEstimation}
         content={`이미 견적요청한 공장이 존재합니다.\n${duplicatedFactoryIds
           .map(
-            (v) =>
+            (v: any) =>
               (factories?.data || []).filter(
                 (factory: any) => factory.id === v,
               )[0].name,
