@@ -61,8 +61,8 @@ const borderColors = {
 
 export default ({ data = [], revalidate }: ITransactionTable) => {
   const navigate = useNavigate();
-  const dataList = data.filter((v) => v.status !== '1');
-  const dataListIds = dataList.map((v) => v.id);
+  const dataList = data.filter((v: any) => v.status !== '1');
+  const dataListIds = dataList.map((v: any) => v.id);
 
   const [editData, setEditData] = useState(data);
   const [specs, setSpecs] = useState<ISpec[]>([defaultSpec]);
@@ -130,7 +130,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
     console.log(value);
     if (/\d/.test(value) || value === '') {
       setSpecs((prev) => {
-        const mappedData = Array.from(prev).map((v, i) =>
+        const mappedData = Array.from(prev).map((v: any, i: number) =>
           i !== index
             ? v
             : { ...v, [key]: parseInt(value === '' ? '0' : value, 10) },
@@ -148,7 +148,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
   const renderSpecInput = () => {
     return (
       <>
-        {specs.map((v, i) => (
+        {specs.map((v: any, i: number) => (
           <CellWrap>
             <SepcRowCell>
               <BlackInput
@@ -165,7 +165,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                 placeholder="000"
                 width={68}
                 value={v.norminal_strength === 0 ? null : v.norminal_strength}
-                onChange={(v) =>
+                onChange={(v: any) =>
                   handleChangeSpecValue(i, 'norminal_strength', v)
                 }
                 options={norminalStrengthOptions}
@@ -176,7 +176,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                 placeholder="00"
                 width={58}
                 value={v.slump === 0 ? null : v.slump}
-                onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
+                onChange={(v: any) => handleChangeSpecValue(i, 'slump', v)}
                 options={slumpOptions}
               />
 
@@ -216,7 +216,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
           <LabelCell style={{ maxWidth: 25 }}>{''}</LabelCell>
           <LabelCell style={{ minWidth: 280 }}>확인</LabelCell>
         </CellWrap>
-        {data.map((v, i) => (
+        {data.map((v: any, i: number) => (
           <CellWrap key={v?.id} selected={selectedIds.includes(v.id)}>
             <ValueCell>
               <SupplyDate>{v?.supplyDate}</SupplyDate>
@@ -312,7 +312,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
             </ValueCell>
           </CellWrap>
         ))}
-        {/* {specs.map((v, i) => (
+        {/* {specs.map((v: any, i: number) => (
           <CellWrap>
             <SepcRowCell>
               <BlackInput
@@ -329,7 +329,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                 placeholder="00"
                 width={55}
                 value={v.slump === 0 ? null : v.slump}
-                onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
+                onChange={(v: any) => handleChangeSpecValue(i, 'slump', v)}
                 options={slumpOptions}
               />
               <SpecDivider />
@@ -337,7 +337,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                 placeholder="000"
                 width={65}
                 value={v.norminal_strength === 0 ? null : v.norminal_strength}
-                onChange={(v) =>
+                onChange={(v: any) =>
                   handleChangeSpecValue(i, 'norminal_strength', v)
                 }
                 options={norminalStrengthOptions}

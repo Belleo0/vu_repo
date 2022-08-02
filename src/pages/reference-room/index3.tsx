@@ -137,7 +137,7 @@ export default () => {
           <UnitPrice style={{ marginRight: '30px' }}>단가율</UnitPrice>
           <UnitPriceInput
             value={unitPrice}
-            onChange={(v) => {
+            onChange={(v: any) => {
               setUnitPrice(v.target.value);
             }}
           />

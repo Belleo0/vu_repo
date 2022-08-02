@@ -15,7 +15,7 @@ export default ({ paths }: IPolyline) => {
   useEffect(() => {
     const polyline = new naver.maps.Polyline({
       map,
-      path: paths.map((v) => new naver.maps.LatLng(v[1], v[0])),
+      path: paths.map((v: any) => new naver.maps.LatLng(v[1], v[0])),
       strokeWeight: 5,
       strokeColor: '#ef0000',
     });

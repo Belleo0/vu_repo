@@ -16,7 +16,7 @@ export default ({ width, options, value, onChange }: ISelect) => {
   const [isOpened, setIsOpened] = useState(false);
 
   const valueLabel = useMemo(() => {
-    return options?.filter?.((v) => v.value === value)?.[0]?.label;
+    return options?.filter?.((v: any) => v.value === value)?.[0]?.label;
   }, [options, value]);
 
   const handleClickOutside = ({ target }: any) => {
@@ -46,7 +46,7 @@ export default ({ width, options, value, onChange }: ISelect) => {
           <Value>{valueLabel}</Value>
           <Icon src={getAssetURL('../assets/ic-arrow-bottom.svg')} />
         </AbsoluteValueContainer>
-        {options.map((v) => (
+        {options.map((v: any) => (
           <OptionText
             key={v.value as string}
             active={value === v.value}

@@ -61,14 +61,14 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
 
   const selectedEstimation = (id: any) => {
     if (id && estimations) {
-      const selectedEstimationInfo = estimations.find((v) => v.id === id);
+      const selectedEstimationInfo = estimations.find((v: any) => v.id === id);
       return selectedEstimationInfo;
     }
   };
 
   const handleClickRadio = (id: number) => {
     if (selectedIds.includes(id)) {
-      setSelectedIds((prev) => prev.filter((v) => v !== id));
+      setSelectedIds((prev) => prev.filter((v: any) => v !== id));
     } else {
       setSelectedIds((prev) => prev.concat(id));
     }
@@ -90,7 +90,7 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
 
   const handleRemove = async () => {
     await Promise.all(
-      selectedIds.map(async (v) => await api.delete(`/estimations/${v}`)),
+      selectedIds.map(async (v: any) => await api.delete(`/estimations/${v}`)),
     );
     await revalidate();
     setSelectedIds([]);
@@ -177,7 +177,7 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
         <LabelCell>납품사 등록</LabelCell>
         <LabelCell>주문</LabelCell>
       </CellWrap>
-      {sortedData?.map((v) => (
+      {sortedData?.map((v: any) => (
         <CellWrap key={v?.id}>
           <ValueCell style={{ maxWidth: 130 }}>
             <DeleteRadio

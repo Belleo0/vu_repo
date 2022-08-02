@@ -186,7 +186,7 @@ export default () => {
       >
         <PostContainer style={{ width: 400, height: 600 }}>
           <DaumPostcode
-            onComplete={(v) => {
+            onComplete={(v: any) => {
               setFieldAddr(v?.jibunAddress || v?.autoJibunAddress);
               setIsPostcodeModalOpened(false);
             }}

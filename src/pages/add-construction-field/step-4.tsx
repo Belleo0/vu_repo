@@ -222,7 +222,7 @@ export default () => {
                 width={260}
                 options={paymentOptions}
                 value={paymentType}
-                onChange={(v) => setPaymentType(v)}
+                onChange={(v: any) => setPaymentType(v)}
               />
               {paymentType !== 'CASH' && paymentType !== null ? (
                 <InputItemWrapper

@@ -178,7 +178,7 @@ export default ({
                 { label: '시간순', value: '시간순' },
               ]}
               value={order}
-              onChange={(v) => setOrder(v)}
+              onChange={(v: any) => setOrder(v)}
             />
           )}
         </FilterWrap>
@@ -245,7 +245,7 @@ export default ({
           <ModalTitle>MY 건설현장</ModalTitle>
           <CardWrap>
             {spaces &&
-              spaces.map((v, i) => (
+              spaces.map((v: any) => (
                 <SelectSpaceCard
                   key={v.id}
                   name={v?.name}
@@ -284,7 +284,7 @@ export default ({
         open={isDuplicatedEstimation}
         content={`이미 견적요청한 공장이 존재합니다.\n${duplicatedFactoryIds
           .map(
-            (v) =>
+            (v: any) =>
               (factories?.data || []).filter(
                 (factory: any) => factory.id === v,
               )[0].name,
@@ -298,7 +298,7 @@ export default ({
       >
         <PostContainer style={{ width: 400, height: 600 }}>
           <DaumPostcode
-            onComplete={(v) => {
+            onComplete={(v: any) => {
               setSelectedFieldInfo(null);
               setAddress(v?.roadAddress || v?.autoJibunAddress);
               setIsPostcodeModalOpened(false);

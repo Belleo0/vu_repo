@@ -105,7 +105,7 @@ export default () => {
     (id: number) => {
       setSelectedFactoryIds((prev: number[]) => {
         if (prev.includes(id)) {
-          const result = prev.filter((v) => v !== id);
+          const result = prev.filter((v: any) => v !== id);
           return result;
         } else {
           const result = prev.concat(id);

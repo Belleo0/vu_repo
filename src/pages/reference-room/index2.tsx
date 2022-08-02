@@ -119,7 +119,7 @@ export default () => {
             width={140}
             options={selectItem}
             value={select}
-            onChange={(v) => setSelect(v)}
+            onChange={(v: any) => setSelect(v)}
           />
           <Search
             containerStyle={{
