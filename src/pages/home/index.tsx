@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
 
@@ -21,22 +21,21 @@ export default () => {
   const [search, setSearch] = useState('');
 
   const { data = [] } = useSpaces('false');
-  const [myspaces, setMyspaces] = useState<any[]>([]);
+  // const [myspaces, setMyspaces] = useState<any[]>([]);
 
   const [state, setState] = useLocalStorage('@add-construction-field', {
     searchItem: search,
   });
 
-  useEffect(() => {
+  const sortedData = useMemo(() => {
     if (data) {
       const stableSpaces = data.map((el: any, i: number) => [el, i]);
       stableSpaces.sort((a: any, b: any) => {
         return b[1] - a[1];
       });
       const sortedSpaces = stableSpaces.map((el: any) => el[0]);
-      setMyspaces(sortedSpaces);
+      return sortedSpaces;
     }
-    console.log(myspaces);
   }, [data]);
 
   const handleSearch = () => {
@@ -60,7 +59,11 @@ export default () => {
           handleSearch={handleSearch}
         />
         {/* Section2 */}
-        {isLogin ? <MySiteSection myspaces={myspaces} /> : <SiteSection />}
+        {isLogin ? (
+          <MySiteSection myspaces={sortedData || []} />
+        ) : (
+          <SiteSection />
+        )}
         {/* Section3 */}
         <InfoSection />
         {/* Section4 */}
