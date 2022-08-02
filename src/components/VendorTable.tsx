@@ -97,10 +97,19 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
     setIsDeleteModalOpen(false);
   };
 
-  const sortedDescData = useMemo(() => {
+  const sortedData = useMemo(() => {
     if (data) {
+      console.log(data);
       const sortedData = data.sort((a: any, b: any) => {
-        return b.id - a.id;
+        if (
+          moment(a.created_at).format('YYYY.MM.DD') ===
+          moment(b.created_at).format('YYYY.MM.DD')
+        ) {
+          const result = a.direction.duration - b.direction.duration;
+          return result;
+        } else {
+          return b.id - a.id;
+        }
       });
       return sortedData;
     }
@@ -168,7 +177,7 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
         <LabelCell>납품사 등록</LabelCell>
         <LabelCell>주문</LabelCell>
       </CellWrap>
-      {sortedDescData?.map((v) => (
+      {sortedData?.map((v) => (
         <CellWrap key={v?.id}>
           <ValueCell style={{ maxWidth: 130 }}>
             <DeleteRadio
@@ -261,7 +270,7 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
                 {v.status === 'REGISTERED'
                   ? '등록완료'
                   : v.status === 'REQUESTED'
-                  ? '등록불가'
+                  ? '견적 미등록'
                   : '등록하기'}
               </SubmitButton>
             </TotalAmount>

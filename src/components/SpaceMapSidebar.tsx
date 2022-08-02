@@ -102,7 +102,7 @@ export default ({
         <SearchInput
           icon="ic-local"
           containerStyle={
-            tempSelectedFieldInfo
+            selectedFieldInfo
               ? { cursor: 'pointer' }
               : { marginBottom: 30, cursor: 'pointer' }
           }
@@ -120,11 +120,11 @@ export default ({
           }}
           placeholder="주소를 입력해 주세요"
         />
-        {tempSelectedFieldInfo && (
+        {selectedFieldInfo && (
           <SelectedFieldWrap>
             <SelectedFieldTitle>선택된 건설현장</SelectedFieldTitle>
             <SelectedGuard />
-            <SelectedFieldName>{tempSelectedFieldInfo?.name}</SelectedFieldName>
+            <SelectedFieldName>{selectedFieldInfo?.name}</SelectedFieldName>
           </SelectedFieldWrap>
         )}
         {isLogin && (
