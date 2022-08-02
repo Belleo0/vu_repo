@@ -6,8 +6,6 @@ import Button, { ButtonType } from './Button';
 import Modal from './Modal';
 
 export default ({ open, data, onClose }: any) => {
-  console.log('Modaldata,', data);
-
   return (
     <Modal open={open} onClose={onClose}>
       <Container>

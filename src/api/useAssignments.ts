@@ -1,21 +1,24 @@
+import api from '@api';
+import useQuery from '@hooks/useQuery';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import moment from 'moment';
-import useSWR from 'swr';
+
+export const SPACE_ASSIGNMENTS_KEY = 'SPACE_ASSIGNMENTS';
 
 export default (start_date: Date, end_date: Date) => {
   const id = useSelectedSpaceId();
-  const { data, error, mutate } = useSWR<any>([
-    `/assignments`,
+  return useQuery(
+    [SPACE_ASSIGNMENTS_KEY, id, start_date, end_date],
+    () =>
+      api.get(`/assignments`, {
+        params: {
+          space_id: id,
+          start_date: moment(start_date).format('YYYY-MM-DD'),
+          end_date: moment(end_date).format('YYYY-MM-DD'),
+        },
+      }),
     {
-      space_id: id,
-      start_date: moment(start_date).format('YYYY-MM-DD'),
-      end_date: moment(end_date).format('YYYY-MM-DD'),
+      enabled: !!(!!id && start_date && end_date),
     },
-  ]);
-
-  return {
-    data,
-    isLoading: !error && !data,
-    mutate,
-  };
+  );
 };

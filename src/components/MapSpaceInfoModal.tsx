@@ -39,15 +39,13 @@ export default ({ open, data, onClose }: any) => {
               <LabelCell>
                 전화번호 <EngName>Tel.</EngName>
               </LabelCell>
-              {/* <ValueCell>{data?.company?.tel}</ValueCell> */}
-              <ValueCell>TODO : companies table 수정해야함</ValueCell>
+              <ValueCell>{data?.factory_info?.tel}</ValueCell>
             </CellWrap>
             <CellWrap>
               <LabelCell>
                 팩스번호 <EngName>Fax.</EngName>
               </LabelCell>
-              {/* <ValueCell>{data?.company?.fax}</ValueCell> */}
-              <ValueCell>TODO : companies table 수정해야함</ValueCell>
+              <ValueCell>{data?.factory_info?.fax}</ValueCell>
             </CellWrap>
           </Table>
           <SubTitle>레미콘 정보</SubTitle>

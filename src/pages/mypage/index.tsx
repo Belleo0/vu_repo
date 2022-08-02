@@ -14,7 +14,6 @@ import TextModal from '@components/TextModal';
 import useUserInfo from '@hooks/useUserInfo';
 import api from '@api';
 import FileUpload from '@components/FileUpload';
-import useSWR from 'swr';
 
 export default () => {
   const userInfo = useUserInfo();

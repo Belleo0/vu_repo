@@ -7,7 +7,6 @@ import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
 import VendorTable from '@components/VendorTable';
 import SupplySpaceBar from '@components/SupplySpaceBar';
-import useFactories from '@api/useFactories';
 import useFactoryMaps from '@api/useFactoryMaps';
 import { usePrevious } from '@hooks/usePrevious';
 
@@ -60,38 +59,38 @@ export default () => {
 
   return (
     <SpaceLayout>
-      {selectedSpaceId === undefined ? null : isLoading ? null : (
-        <Container>
-          <BarSection>
-            <Title>건설현장</Title>
-            <SupplySpaceBar
-              id={info?.id}
-              name={info?.name}
-              adminUserName={info?.admin_user?.name}
-              siteUserName={info?.site_user?.name}
-              address={info?.basic_address}
-              selectedFieldInfo={info}
-              setSelectedFactoryIds={setSelectedFactoryIds}
-              selectedSpaceId={selectedSpaceId}
-              selectedFactoryIds={selectedFactoryIds}
-              orderByFactories={orderByFactories}
-              factories={factories}
-              order={order}
-              setOrder={setOrder}
-              revalidate={supplierMutate}
-            />
-          </BarSection>
-          <BottomSection>
-            <Title>납품사 ({suppliers?.length})</Title>
-            <VendorTable
-              data={suppliers}
-              estimations={estimations}
-              revalidate={supplierMutate}
-            />
-            <Notice>• 거래업체로 등록하면 주문 기능이 활성화됩니다.</Notice>
-          </BottomSection>
-        </Container>
-      )}
+      {/* {selectedSpaceId === undefined ? null : isLoading ? null : ( */}
+      <Container>
+        <BarSection>
+          <Title>건설현장</Title>
+          <SupplySpaceBar
+            id={info?.id}
+            name={info?.name}
+            adminUserName={info?.admin_user?.name}
+            siteUserName={info?.site_user?.name}
+            address={info?.basic_address}
+            selectedFieldInfo={info}
+            setSelectedFactoryIds={setSelectedFactoryIds}
+            selectedSpaceId={selectedSpaceId}
+            selectedFactoryIds={selectedFactoryIds}
+            orderByFactories={orderByFactories}
+            factories={factories}
+            order={order}
+            setOrder={setOrder}
+            revalidate={supplierMutate}
+          />
+        </BarSection>
+        <BottomSection>
+          <Title>납품사 ({suppliers?.length})</Title>
+          <VendorTable
+            data={suppliers}
+            estimations={estimations}
+            revalidate={supplierMutate}
+          />
+          <Notice>• 거래업체로 등록하면 주문 기능이 활성화됩니다.</Notice>
+        </BottomSection>
+      </Container>
+      {/* )} */}
     </SpaceLayout>
   );
 };

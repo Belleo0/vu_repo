@@ -13,6 +13,7 @@ import TextModal from './TextModal';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DaumPostcode from 'react-daum-postcode';
 import useIsLogin from '@hooks/useIsLogin';
+import Loading from './Loading';
 
 export default ({
   factories,
@@ -58,6 +59,14 @@ export default ({
 
   const handleOpenSelectModal = () => {
     if (spaces && spaces.length > 0) {
+      setIsSelectModalOpen(true);
+    } else {
+      setIsNotFoundSpaceModal(true);
+    }
+  };
+
+  const handleOpenAddSpaceModal = () => {
+    if (spaces && spaces.length > 0 && !(location?.state as any)?.searchText) {
       setIsSelectModalOpen(true);
     } else {
       setIsNotFoundSpaceModal(true);
@@ -207,6 +216,7 @@ export default ({
               }
               selectedFieldId={selectedFieldId}
               factories={factories}
+              totalDuration={duration}
             />
           ))}
       </MapSpaceCardWrap>
@@ -220,7 +230,7 @@ export default ({
           onClick={
             selectedFieldId !== null && isLogin
               ? handleRequestEstimation
-              : handleOpenSelectModal
+              : handleOpenAddSpaceModal
           }
         >
           견적 요청하기
@@ -427,6 +437,7 @@ const MapSpaceCardWrap = styled.div`
   flex: 1;
   /* max-height: calc(100% - 123px); */
   overflow-y: scroll;
+  margin-bottom: 84px;
 `;
 
 const SelectedFieldWrap = styled.div`

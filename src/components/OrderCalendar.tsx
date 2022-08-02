@@ -1,4 +1,4 @@
-import useAssignments from '@api/useAssignments';
+import useFieldSpaceWeathers from '@api/useFieldSpaceWeathers';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
@@ -28,6 +28,8 @@ export default ({
   const isFieldUser = useIsFieldUser();
 
   const spaceInfo = useSelectedSpaceInfo();
+
+  const { data: weatherInfo } = useFieldSpaceWeathers();
 
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
@@ -86,24 +88,43 @@ export default ({
         {dates.map((v: any) => {
           const date = moment(v).format('YYYY-MM-DD');
           const data = assignments?.[date] || [];
+
+          const isAvaildableVisibleWeather = weatherInfo?.[date];
+          const iconType = weatherInfo?.[date]?.weather?.[0]?.icon?.slice?.(
+            0,
+            2,
+          );
+          const icon = `../assets/${iconType}.svg`;
+
           return (
             <DayContainer key={v.toISOString()}>
               <DayText className="day-text">{days[v.getDay()]}</DayText>
               <DayContents>
-                <DayAmountWrap>
-                  <DayIcon
-                    src={getAssetURL('../assets/ic-sunny.svg')}
-                    style={{ opacity: 0 }}
-                  />
+                <DayAmountWrap
+                  style={
+                    isAvaildableVisibleWeather
+                      ? {}
+                      : { justifyContent: 'center' }
+                  }
+                >
+                  {isAvaildableVisibleWeather ? (
+                    <DayIcon style={{ opacity: 0 }} />
+                  ) : null}
                   <DayAmount active={isDateToday(v)}>
                     {convertString(v.getDate())}
                   </DayAmount>
-                  <DayIcon src={getAssetURL('../assets/ic-sunny.svg')} />
+                  {isAvaildableVisibleWeather ? (
+                    <DayIcon src={getAssetURL(icon)} />
+                  ) : null}
                 </DayAmountWrap>
                 <BarContainer>
                   {data?.map((v: any) => (
                     <Bar
-                      style={{ backgroundColor: v?.estimation?.color }}
+                      style={
+                        v?.status === 'REQUESTED'
+                          ? RequestedBarStyle
+                          : { backgroundColor: v?.estimation?.color }
+                      }
                       onClick={(e) => {
                         setSelectedBarInfo(v);
                         setIsModalOpened(true);
@@ -339,3 +360,15 @@ const BarAmount = styled.span`
   color: #000;
   margin-left: auto;
 `;
+
+const RequestedBarStyle = {
+  backgroundColor: '#ffffff',
+  backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23c7c7c7' stroke-width='3' stroke-dasharray='2%2c7' stroke-dashoffset='57' stroke-linecap='square'/%3e%3c/svg%3e")`,
+  borderRadius: ' 6px',
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  padding: '8px 10px',
+  marginBottom: '2px',
+  cursor: 'pointer',
+};

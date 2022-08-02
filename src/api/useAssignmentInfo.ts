@@ -1,11 +1,14 @@
-import useSWR from 'swr';
+import api from '@api';
+import useQuery from '@hooks/useQuery';
+
+export const ASSIGNMENT_INFO_KEY = 'ASSIGNMENT_INFO';
 
 export default (assignmentId: number) => {
-  const { data, error, mutate } = useSWR<any>(`/assignments/${assignmentId}`);
-
-  return {
-    data,
-    isLoading: !error && !data,
-    mutate,
-  };
+  return useQuery(
+    [ASSIGNMENT_INFO_KEY, assignmentId],
+    () => api.get(`/assignments/${assignmentId}`),
+    {
+      enabled: !!assignmentId,
+    },
+  );
 };

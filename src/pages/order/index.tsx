@@ -25,7 +25,7 @@ export default () => {
 
   const [dates, setDates] = useState<Date[]>([]);
 
-  const { data: assignments, mutate } = useAssignments(
+  const { data: assignments, refetch } = useAssignments(
     dates?.[0],
     dates?.[dates.length - 1],
   );
@@ -37,7 +37,7 @@ export default () => {
       <Container>
         <OrderCalendar
           assignments={assignments}
-          mutate={mutate}
+          mutate={refetch}
           dates={dates}
           setDates={setDates}
           mutateMessages={mutateMessages}
@@ -46,7 +46,7 @@ export default () => {
           messages={messages}
           members={members}
           isChatLoading={isChatLoading}
-          mutate={mutate}
+          mutate={refetch}
           mutateMessages={mutateMessages}
           chatRoomId={chatRoomId}
           selectedChatRoomInfo={selectedChatRoomInfo}

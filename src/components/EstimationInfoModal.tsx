@@ -60,25 +60,25 @@ export default ({ open, data, estimation, onClose }: any) => {
                 <SpecRow>
                   <Slump>25</Slump>
                   <SpecDivider />
-                  <Slump>{estimation?.slump_1}</Slump>
-                  <SpecDivider />
                   <Slump>{estimation?.norminal_strength_1}</Slump>
+                  <SpecDivider />
+                  <Slump>{estimation?.slump_1}</Slump>
                   <TotalPrice>{makeComma(estimation?.price_1)}원</TotalPrice>
                 </SpecRow>
                 <SpecRow>
                   <Slump>25</Slump>
                   <SpecDivider />
-                  <Slump>{estimation?.slump_2}</Slump>
-                  <SpecDivider />
                   <Slump>{estimation?.norminal_strength_2}</Slump>
+                  <SpecDivider />
+                  <Slump>{estimation?.slump_2}</Slump>
                   <TotalPrice>{makeComma(estimation?.price_2)}원</TotalPrice>
                 </SpecRow>
                 <SpecRow>
                   <Slump>25</Slump>
                   <SpecDivider />
-                  <Slump>{estimation?.slump_3}</Slump>
-                  <SpecDivider />
                   <Slump>{estimation?.norminal_strength_3}</Slump>
+                  <SpecDivider />
+                  <Slump>{estimation?.slump_3}</Slump>
                   <TotalPrice>{makeComma(estimation?.price_3)}원</TotalPrice>
                 </SpecRow>
                 <TextButton

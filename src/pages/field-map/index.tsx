@@ -11,8 +11,6 @@ import NaverMapSpaceMarker from '@components/NaverMapSpaceMarker';
 
 import styled from '@emotion/styled';
 import Footer from '@components/Footer';
-import useFactoryMaps from '@api/useFactoryMaps';
-import SpaceMarkerContent from '@components/SpaceMarkerContent';
 import getAssetURL from '@utils/getAssetURL';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import NaverMapPolyline from '@components/NaverMapPolyline';

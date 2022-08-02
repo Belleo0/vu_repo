@@ -15,6 +15,7 @@ interface IMapSpaceCard {
   onClick: () => any;
   factories: any;
   selectedFieldId: null | number;
+  totalDuration: string;
 }
 
 export default ({
@@ -27,6 +28,7 @@ export default ({
   onClick,
   factories,
   selectedFieldId,
+  totalDuration,
 }: IMapSpaceCard) => {
   if (!!!factories?.field_position)
     return (
@@ -36,6 +38,28 @@ export default ({
           <SearchIcon src={getAssetURL('../assets/ic-search-on.svg')} />
         </SearchIconWrap>
       </WithoutInfoContainer>
+    );
+
+  if (totalDuration === 'null')
+    return (
+      <Container
+        selected={selected}
+        onClick={!!factories?.field_position ? onClick : () => null}
+      >
+        <InfoContainer>
+          <Index> {(index + 1).toString().padStart(2, '0')}</Index>
+          <Name>{name}</Name>
+        </InfoContainer>
+        {!!factories?.field_position && (
+          <CheckIcon
+            src={
+              selected
+                ? getAssetURL('../assets/ic-check-on.svg')
+                : getAssetURL('../assets/ic-check.svg')
+            }
+          />
+        )}
+      </Container>
     );
   return (
     <Container
@@ -130,12 +154,13 @@ const Name = styled.span`
   letter-spacing: -0.32px;
   text-align: left;
   color: #000;
-  margin-bottom: 6px;
 `;
 
 const DistanceWrap = styled.div`
   display: flex;
   align-items: center;
+
+  margin-top: 6px;
 `;
 
 const Distance = styled.span`

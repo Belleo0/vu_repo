@@ -1,17 +1,17 @@
-import useSWR from 'swr';
+import api from '@api';
+import useQuery from '@hooks/useQuery';
+
+export const FIELD_MAPS_KEY = 'FIELD_MAPS';
 
 export default (areas: string, bounds: any, currentZoomLevel: number) => {
-  const { data, error, mutate } = useSWR<any>([
-    currentZoomLevel >= 16 ? `/field-crawlings/maps` : null,
+  return useQuery(
+    [FIELD_MAPS_KEY, areas, bounds],
+    () =>
+      api.get('/field-crawlings/maps', {
+        params: { areas, ...(bounds || {}) },
+      }),
     {
-      areas,
-      ...(bounds || {}),
+      active: currentZoomLevel >= 16,
     },
-  ]);
-
-  return {
-    data,
-    isLoading: !error && !data,
-    mutate,
-  };
+  );
 };
