@@ -9,6 +9,7 @@ export default function useQuery(
 
   return useQueryOrigin<any, any, any, any>(queryKey, queryFn, {
     ...options,
-    useErrorBoundary: !onError,
+    // useErrorBoundary: !onError,
+    useErrorBoundary: false,
   });
 }
