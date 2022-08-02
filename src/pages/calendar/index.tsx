@@ -207,6 +207,8 @@ export default () => {
           revalidate={() => {
             refetch();
           }}
+          setIsModalOpened={setIsModalOpened}
+          setModalPosition={setModalPosition}
         />
       </Container>
     </SpaceLayout>
