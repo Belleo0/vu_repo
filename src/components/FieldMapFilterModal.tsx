@@ -1,18 +1,10 @@
-import api from '@api';
-import {
-  FieldPerOptions,
-  FieldReportOptions,
-} from '@constance/FieldFilterOptions';
-import { norminalStrengthOptions, slumpOptions } from '@constance/SpecOptions';
+import { FieldPerOptions } from '@constance/FieldFilterOptions';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import moment from 'moment';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import BlackInput from './BlackInput';
-import BlackSelect from './BlackSelect';
-import BlackTextarea from './BlackTextarea';
-import Button, { ButtonSize, ButtonType } from './Button';
+import Button, { ButtonType } from './Button';
 import Modal, { ModalContainer, ModalTitle, ShadowButtonWrap } from './Modal';
 
 interface ISpec {
@@ -24,19 +16,17 @@ interface ISpec {
   handleSubmitSelectModal: any;
 }
 
-enum ChipTypeEnum {
-  DEFAULT,
-  ACTIVE,
-}
-
 export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
-  const [chipType, setChipType] = useState<ChipTypeEnum>(ChipTypeEnum.DEFAULT);
   const [isDateFilter, setIsDateFilter] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  const handleChangeChipType = (type: ChipTypeEnum) => {
-    setChipType(type);
+  const [chipType, setChiptype] = useState<string>('6개월');
+  const [constructionOption, setConstructionOption] = useState<number>(0);
+  const [approvalOption, setApprovalOption] = useState<number>(0);
+
+  const handleChangeChipType = (type: string) => {
+    setChiptype(type);
   };
 
   return (
@@ -91,26 +81,26 @@ export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
             <MapFilterLabel>인허가시기</MapFilterLabel>
             <ChipWrap>
               <Chip
-                active={chipType === ChipTypeEnum.DEFAULT}
-                onClick={() => handleChangeChipType(ChipTypeEnum.DEFAULT)}
+                active={chipType === '1주일'}
+                onClick={() => handleChangeChipType('1주일')}
               >
                 1주일
               </Chip>
               <Chip
-                active={chipType === ChipTypeEnum.ACTIVE}
-                onClick={() => handleChangeChipType(ChipTypeEnum.ACTIVE)}
+                active={chipType === '1개월'}
+                onClick={() => handleChangeChipType('1개월')}
               >
                 1개월
               </Chip>
               <Chip
-                active={chipType === ChipTypeEnum.ACTIVE}
-                onClick={() => handleChangeChipType(ChipTypeEnum.ACTIVE)}
+                active={chipType === '3개월'}
+                onClick={() => handleChangeChipType('3개월')}
               >
                 3개월
               </Chip>
               <Chip
-                active={chipType === ChipTypeEnum.ACTIVE}
-                onClick={() => handleChangeChipType(ChipTypeEnum.ACTIVE)}
+                active={chipType === '6개월'}
+                onClick={() => handleChangeChipType('6개월')}
               >
                 6개월
               </Chip>
@@ -176,16 +166,27 @@ export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
               <Icon src={getAssetURL('../assets/ic-arrow.svg')} />
             </FilterTypeLabel>
             <OptionWrap>
-              <OptionBox active={false} onClick={() => {}}>
+              <OptionBox
+                active={constructionOption === 1}
+                onClick={() => {
+                  setConstructionOption(1);
+                }}
+              >
                 전체
               </OptionBox>
-              {FieldPerOptions.map((v: any) => (
-                <OptionBox key={v.value} active={false} onClick={() => {}}>
+              {FieldPerOptions.map((v) => (
+                <OptionBox
+                  key={v.value}
+                  active={constructionOption === v.value}
+                  onClick={() => {
+                    setConstructionOption(v.value);
+                  }}
+                >
                   {v.label}
                 </OptionBox>
               ))}
             </OptionWrap>
-            <FilterTypeLabel>
+            {/* <FilterTypeLabel>
               건축신고
               <Icon src={getAssetURL('../assets/ic-arrow.svg')} />
             </FilterTypeLabel>
@@ -198,13 +199,18 @@ export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
                   {v.label}
                 </OptionBox>
               ))}
-            </OptionWrap>
+            </OptionWrap> */}
             <FilterTypeLabel>
               사업승인
               <Icon src={getAssetURL('../assets/ic-arrow.svg')} />
             </FilterTypeLabel>
             <OptionWrap>
-              <OptionBox active={false} onClick={() => {}}>
+              <OptionBox
+                active={approvalOption === 1}
+                onClick={() => {
+                  setApprovalOption(1);
+                }}
+              >
                 전체
               </OptionBox>
             </OptionWrap>
@@ -351,8 +357,9 @@ const FilterTypeLabel = styled.div`
 const OptionWrap = styled.div`
   display: flex;
   margin: left;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
+  gap: 5px;
 `;
 
 const OptionBox = styled.div<{ active: boolean }>`

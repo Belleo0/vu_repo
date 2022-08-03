@@ -95,6 +95,17 @@ export default ({
       setIsFinishRequestEstimation(true);
     }
   };
+
+  console.log(spaces?.length === 0);
+
+  function handleCheckSpaces(v: any) {
+    if (spaces?.length <= 0) {
+      setIsNotFoundSpaceModal(true);
+    } else {
+      handleClickFactoryCard(v.id);
+    }
+  }
+
   //선택된 건설현장:
   return (
     <Container>
@@ -196,7 +207,7 @@ export default ({
               selected={selectedFactoryIds.includes(v.id)}
               onClick={
                 !!factories?.field_position
-                  ? () => handleClickFactoryCard(v.id)
+                  ? () => handleCheckSpaces(v.id)
                   : () => {
                       setIsInfoModalOpen(false);
                       setSelectedSpaceInfo(v);
