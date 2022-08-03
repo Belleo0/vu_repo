@@ -122,12 +122,12 @@ export default () => {
     }
   }, [selectedFieldAddress]);
 
-  useEffect(() => {
-    if (factoriesData?.message === '주소 위치를 찾을 수 없습니다.') {
-      window.alert('주소 위치를 찾을 수 없습니다.');
-      setRealAddress('');
-    }
-  }, [factoriesData]);
+  // useEffect(() => {
+  //   if (factoriesData?.message === '주소 위치를 찾을 수 없습니다.') {
+  //     window.alert('주소 위치를 찾을 수 없습니다.');
+  //     setRealAddress('');
+  //   }
+  // }, [factoriesData]);
 
   const [currentAddress, setCurrentAddress] = useState<any>('');
   const [currentAddrDetail, setCurrentAddrDetail] = useState({
@@ -142,9 +142,9 @@ export default () => {
       const tempAddress = (location?.state as any)?.searchText;
       const tempSelectedFieldInfo = (location?.state as any)?.selectedSpaceInfo;
 
-      console.log({ tempAddress });
-      console.log({ tempSelectedFieldInfo });
-      console.log({ location });
+      // console.log({ tempAddress });
+      // console.log({ tempSelectedFieldInfo });
+      // console.log({ location });
 
       naver.maps.Service.geocode(
         {
@@ -163,6 +163,7 @@ export default () => {
           ).longName;
 
           setCurrentAddress(tempAddress);
+
           setCurrentAddrDetail({
             sido: sido,
             sigugun: sigugun,
@@ -176,7 +177,9 @@ export default () => {
       );
     } else {
       if (coordinates?.lat !== 0 && coordinates?.lng !== 0) {
-        console.log('coordinates', coordinates);
+        // console.log('coordinates', coordinates);
+        // console.log('rendering2');
+
         naver.maps.Service.reverseGeocode(
           {
             location: new naver.maps.LatLng(coordinates?.lat, coordinates?.lng),
@@ -192,6 +195,7 @@ export default () => {
             const sigugun = result.addrdetail.sigugun;
 
             setCurrentAddress(address);
+
             setCurrentAddrDetail({
               sido: sido,
               sigugun: sigugun,
@@ -201,9 +205,9 @@ export default () => {
             setLongitude(coordinates?.lng);
             setLatitude(coordinates?.lat);
 
-            if (isLogin && spaces) {
-              setRealAddress(selectedFirstSpace.basic_address);
-              setAddress(selectedFirstSpace.basic_address);
+            if (isLogin && spaces.length > 0) {
+              setRealAddress(selectedFirstSpace?.basic_address);
+              setAddress(selectedFirstSpace?.basic_address);
               setSelectedFieldInfo(selectedFirstSpace);
               setLongitude(selectedFirstSpace.latitude);
               setLatitude(selectedFirstSpace.longitude);
@@ -216,8 +220,9 @@ export default () => {
   }, [coordinates, location]);
 
   useEffect(() => {
+    // console.log(selectedFieldInfo);
     if (!selectedFieldId) return;
-    if (selectedFieldId) {
+    if (selectedFieldId && selectedFieldAddress) {
       naver.maps.Service.geocode(
         {
           query: selectedFieldAddress,
@@ -241,7 +246,7 @@ export default () => {
           });
           setRealAddress(selectedFieldAddress);
           setAddress(selectedFieldAddress);
-          setSelectedFieldInfo(selectedFieldInfo);
+          // setSelectedFieldInfo(selectedFieldInfo);
           setLongitude(result.x);
           setLatitude(result.y);
         },
@@ -250,14 +255,54 @@ export default () => {
   }, [selectedFieldInfo]);
 
   useEffect(() => {
-    navigate(location.pathname, {
-      state: {
-        // ...(location.state as any),
-        searchText: realAddress,
-        selectedSpaceInfo: selectedFieldInfo,
+    if (selectedFieldId) return;
+    if (!factoriesData?.field_position) return;
+    if (factoriesData?.message === '주소 위치를 찾을 수 없습니다.') {
+      window.alert('주소 위치를 찾을 수 없습니다.');
+      setRealAddress('');
+      return;
+    }
+    // console.log(factoriesData);
+
+    naver.maps.Service.reverseGeocode(
+      {
+        location: new naver.maps.LatLng(
+          factoriesData?.field_position?.latitude,
+          factoriesData?.field_position?.longitude,
+        ),
       },
-    });
-  }, [realAddress]);
+      function (status: any, response: any) {
+        if (status !== naver.maps.Service.Status.OK) {
+          return alert('문제가 발생했습니다.');
+        }
+
+        const result = response.result.items?.[0]; // 검색결과 단일
+        const address = result.address;
+        const sido = result.addrdetail.sido;
+        const sigugun = result.addrdetail.sigugun;
+
+        setCurrentAddress(address);
+        setCurrentAddrDetail({
+          sido: sido,
+          sigugun: sigugun,
+        });
+        // setRealAddress(address);
+        // setAddress(address);
+        setLongitude(coordinates?.lng);
+        setLatitude(coordinates?.lat);
+      },
+    );
+  }, [factoriesData]);
+
+  // useEffect(() => {
+  //   navigate(location.pathname, {
+  //     state: {
+  //       // ...(location.state as any),
+  //       searchText: realAddress,
+  //       selectedSpaceInfo: selectedFieldInfo,
+  //     },
+  //   });
+  // }, [realAddress]);
 
   const orderByFactories = useMemo(() => {
     if (factories) {
@@ -308,111 +353,115 @@ export default () => {
         setRealAddress={setRealAddress}
         orderByFactories={orderByFactories}
       />
-      <ContentWrap>
-        <Content>
-          <NaverMap
-            lat={latitude}
-            lng={longitude}
-            zoom={12}
-            style={{ width: '100%', height: 'calc(100vh - 80px)' }}
-            boundChange={({ _min, _max }) => {
-              const data = {
-                min_lat: _min._lat,
-                min_lng: _min._lng,
-                max_lat: _max._lat,
-                max_lng: _max._lng,
-              };
-              delayedUpdateCall(data);
-            }}
-          >
-            {polylineInfo?.path && (
-              <NaverMapPolyline paths={polylineInfo?.path} />
-            )}
-            {centerPaths && (
-              <NaverMapDirectionMarker
-                lat={centerPaths[1]}
-                lng={centerPaths[0]}
-                content={
-                  <DirectionMarkerContent
-                    distance={polylineInfo.distance}
-                    duration={polylineInfo.duration}
-                  />
-                }
-              />
-            )}
-            {!!factories?.field_position && isLogin && (
-              <NaverMapImageMarker
-                lat={factories?.field_position.latitude}
-                lng={factories?.field_position.longitude}
-                content={
-                  <img
-                    src={getAssetURL('../assets/ic-field-marker.png')}
-                    style={{ width: 119, height: 72 }}
-                  />
-                }
-                disableCenter={false}
-              />
-            )}
-
-            {factories &&
-              orderByFactories?.map((v: any, i: number) => (
-                <NaverMapSpaceMarker
-                  key={v.id}
-                  lat={v.latitude}
-                  lng={v.longitude}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <ContentWrap>
+          <Content>
+            <NaverMap
+              lat={latitude}
+              lng={longitude}
+              zoom={12}
+              style={{ width: '100%', height: 'calc(100vh - 80px)' }}
+              boundChange={({ _min, _max }) => {
+                const data = {
+                  min_lat: _min._lat,
+                  min_lng: _min._lng,
+                  max_lat: _max._lat,
+                  max_lng: _max._lng,
+                };
+                delayedUpdateCall(data);
+              }}
+            >
+              {polylineInfo?.path && (
+                <NaverMapPolyline paths={polylineInfo?.path} />
+              )}
+              {centerPaths && (
+                <NaverMapDirectionMarker
+                  lat={centerPaths[1]}
+                  lng={centerPaths[0]}
                   content={
-                    <SpaceMarkerContent
-                      index={i}
-                      name={v?.name}
-                      address={v?.basic_address}
-                      distance={v?.direction?.distance}
-                      duration={v?.direction?.duration}
-                      // onClick={() => {
-                      //   if (selectedFieldId !== null) {
-                      //     handleClickFactoryCard(v.id);
-                      //   }
-                      // }}
-                      onClick={() => {
-                        if (!!factories?.field_position) {
-                          handleClickFactoryCard(v.id);
-                        }
-                      }}
-                      onInfo={() => {
-                        setIsInfoModalOpen(false);
-                        setSelectedSpaceInfo(v);
-                        setTimeout(() => {
-                          setIsInfoModalOpen(true);
-                        }, 250);
-                      }}
-                      onChangePath={() => {
-                        dispatch(setPolylineInfo(v?.direction));
-                      }}
-                      selected={
-                        (!!v.direction && v.direction === polylineInfo) ||
-                        selectedFactoryIds.includes(v.id)
-                      }
-                      hideWithoutName={!!factories?.field_position}
-                      totalDuration={duration}
+                    <DirectionMarkerContent
+                      distance={polylineInfo.distance}
+                      duration={polylineInfo.duration}
                     />
                   }
                 />
-              ))}
-            <NaverMapFieldAddress
-              setCurrentAddrDetail={setCurrentAddrDetail}
-              currentAddrDetail={currentAddrDetail}
-              searchedAddr={factories?.field_position}
+              )}
+              {!!factories?.field_position && (
+                <NaverMapImageMarker
+                  lat={factories?.field_position.latitude}
+                  lng={factories?.field_position.longitude}
+                  content={
+                    <img
+                      src={getAssetURL('../assets/ic-field-marker.png')}
+                      style={{ width: 119, height: 72 }}
+                    />
+                  }
+                  disableCenter={false}
+                />
+              )}
+
+              {factories &&
+                orderByFactories?.map((v: any, i: number) => (
+                  <NaverMapSpaceMarker
+                    key={v.id}
+                    lat={v.latitude}
+                    lng={v.longitude}
+                    content={
+                      <SpaceMarkerContent
+                        index={i}
+                        name={v?.name}
+                        address={v?.basic_address}
+                        distance={v?.direction?.distance}
+                        duration={v?.direction?.duration}
+                        // onClick={() => {
+                        //   if (selectedFieldId !== null) {
+                        //     handleClickFactoryCard(v.id);
+                        //   }
+                        // }}
+                        onClick={() => {
+                          if (!!factories?.field_position) {
+                            handleClickFactoryCard(v.id);
+                          }
+                        }}
+                        onInfo={() => {
+                          setIsInfoModalOpen(false);
+                          setSelectedSpaceInfo(v);
+                          setTimeout(() => {
+                            setIsInfoModalOpen(true);
+                          }, 250);
+                        }}
+                        onChangePath={() => {
+                          dispatch(setPolylineInfo(v?.direction));
+                        }}
+                        selected={
+                          (!!v.direction && v.direction === polylineInfo) ||
+                          selectedFactoryIds.includes(v.id)
+                        }
+                        hideWithoutName={!!factories?.field_position}
+                        totalDuration={duration}
+                      />
+                    }
+                  />
+                ))}
+              <NaverMapFieldAddress
+                setCurrentAddrDetail={setCurrentAddrDetail}
+                currentAddrDetail={currentAddrDetail}
+                searchedAddr={factories?.field_position}
+              />
+              <NaverMapController />
+            </NaverMap>
+            <MapSpaceInfoModal
+              open={isInfoModalOpen}
+              onClose={() => setIsInfoModalOpen(false)}
+              data={selectedSpaceInfo}
+              duration={duration}
             />
-            <NaverMapController />
-          </NaverMap>
-          <MapSpaceInfoModal
-            open={isInfoModalOpen}
-            onClose={() => setIsInfoModalOpen(false)}
-            data={selectedSpaceInfo}
-            duration={duration}
-          />
-        </Content>
-        <Footer />
-      </ContentWrap>
+          </Content>
+          <Footer />
+        </ContentWrap>
+      )}
     </SpaceMapLayout>
   );
 };

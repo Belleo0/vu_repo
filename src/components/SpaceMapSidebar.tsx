@@ -95,6 +95,7 @@ export default ({
       setIsFinishRequestEstimation(true);
     }
   };
+
   //선택된 건설현장:
   return (
     <Container>
@@ -107,7 +108,12 @@ export default ({
               : { marginBottom: 30, cursor: 'pointer' }
           }
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(e) => {
+            setAddress(e.target.value);
+            // if (e.target.value !== selectedFieldInfo?.basic_address) {
+            //   setSelectedFieldInfo(null);
+            // }
+          }}
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
               setRealAddress(address);

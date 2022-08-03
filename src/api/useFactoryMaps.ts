@@ -9,7 +9,7 @@ export default (
   bounds: any,
   address: string,
 ) => {
-  return useQuery([FACTORY_MAPS_KEY, fieldId, duration, bounds, address], () =>
+  return useQuery([FACTORY_MAPS_KEY, fieldId, duration, address], () =>
     api.get('/factories/maps', {
       params:
         fieldId !== null
