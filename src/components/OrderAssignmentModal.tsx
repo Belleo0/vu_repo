@@ -80,7 +80,7 @@ export default ({
 
     if (/\d/.test(value) || value === '') {
       setSpecs((prev) => {
-        const mappedData = Array.from(prev).map((v, i) =>
+        const mappedData = Array.from(prev).map((v: any, i: number) =>
           i !== index
             ? v
             : { ...v, [key]: parseInt(value === '' ? '25' : value, 10) },
@@ -216,7 +216,7 @@ export default ({
                 width={107}
                 options={assignmentTimeOptions}
                 value={startAt}
-                onChange={(v) => setStartAt(v)}
+                onChange={(v: any) => setStartAt(v)}
               />
               <WaveIcon src={getAssetURL('../assets/ic-wave-mark.svg')} />
               <BlackSelect
@@ -224,11 +224,11 @@ export default ({
                 width={107}
                 options={assignmentTimeOptions}
                 value={endAt}
-                onChange={(v) => setEndAt(v)}
+                onChange={(v: any) => setEndAt(v)}
               />
             </FormRow>
             <SpecContainer>
-              {specs.map((v, i) => (
+              {specs.map((v: any, i: number) => (
                 <FormRow>
                   <FormLabel>{i === 0 ? '규격' : ''}</FormLabel>
                   <BlackInput
@@ -247,7 +247,7 @@ export default ({
                     value={
                       v.norminal_strength === 0 ? null : v.norminal_strength
                     }
-                    onChange={(v) =>
+                    onChange={(v: any) =>
                       handleChangeSpecValue(i, 'norminal_strength', v)
                     }
                     options={norminalStrengthOptions}
@@ -257,7 +257,7 @@ export default ({
                     placeholder="000"
                     width={68}
                     value={v.slump === 0 ? null : v.slump}
-                    onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
+                    onChange={(v: any) => handleChangeSpecValue(i, 'slump', v)}
                     options={slumpOptions}
                     containerStyle={{ marginRight: 20 }}
                   />

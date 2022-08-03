@@ -51,14 +51,14 @@ export default ({ open, onClose, revalidate, data }: any) => {
     // if (specs[0].slump === 0) return false;
     // if (specs[0].norminal_strength === 0) return false;
 
-    const specValidation = specs.map((v) => {
+    const specValidation = specs.map((v: any) => {
       if (v.value === 0) return false;
       if (v.slump === 0) return false;
       if (v.norminal_strength === 0) return false;
       return true;
     });
 
-    if (specValidation.filter((v) => !!v).length !== 3) return false;
+    if (specValidation.filter((v: any) => !!v).length !== 3) return false;
 
     return true;
   }, [percent, specs]);
@@ -69,7 +69,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
   //   if (/\d/.test(value) || value === '') {
   //     console.log('specs!!!!', specs);
   //     setSpecs((prev) => {
-  //       const mappedData = Array.from(prev).map((v, i) =>
+  //       const mappedData = Array.from(prev).map((v: any, i: number) =>
   //         i !== index
   //           ? v
   //           : { ...v, [key]: parseInt(value === '' ? '0' : value, 10) },
@@ -84,13 +84,13 @@ export default ({ open, onClose, revalidate, data }: any) => {
   const handleChangeSpecValue = (index: number, key: string, value: string) => {
     if (/\d/.test(value) || value === '') {
       setSpecs((prev) => {
-        const mappedData = Array.from(prev).map((v, i) =>
+        const mappedData = Array.from(prev).map((v: any, i: number) =>
           i !== index
             ? v
             : { ...v, [key]: parseInt(value === '' ? '0' : value, 10) },
         );
 
-        const unitPrice = BusanUnitPrice.filter((v) =>
+        const unitPrice = BusanUnitPrice.filter((v: any) =>
           v
             ? v.slump === mappedData[index].slump &&
               v.mPa === mappedData[index].norminal_strength
@@ -102,7 +102,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
             ? calculateSpecPrice(unitPrice?.[0]?.price, percent)
             : 0;
 
-        const temp = mappedData.map((v, i) => {
+        const temp = mappedData.map((v: any, i: number) => {
           return {
             ...v,
             price: i === index ? price : v.price,
@@ -132,7 +132,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
         remarks,
       };
 
-      specs.forEach((v, i) => {
+      specs.forEach((v: any, i: number) => {
         Object.entries(v).forEach(([key, value]) => {
           submitData[`${key}_${i + 1}`] = value;
         });
@@ -255,7 +255,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
                 />
                 <PercentText>%</PercentText>
               </BoxTopSection>
-              {specs.map((v, i) => (
+              {specs.map((v: any, i: number) => (
                 <SpecRow key={i}>
                   <BlackInput
                     maxLength={2}
@@ -273,7 +273,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
                     value={
                       v.norminal_strength === 0 ? null : v.norminal_strength
                     }
-                    onChange={(v) =>
+                    onChange={(v: any) =>
                       handleChangeSpecValue(i, 'norminal_strength', v)
                     }
                     options={norminalStrengthOptions}
@@ -283,7 +283,7 @@ export default ({ open, onClose, revalidate, data }: any) => {
                     placeholder="000"
                     width={68}
                     value={v.slump === 0 ? null : v.slump}
-                    onChange={(v) => handleChangeSpecValue(i, 'slump', v)}
+                    onChange={(v: any) => handleChangeSpecValue(i, 'slump', v)}
                     options={slumpOptions}
                   />
                   <TotalPrice>{makeComma(v.price)}원</TotalPrice>

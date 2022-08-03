@@ -36,7 +36,7 @@ export default ({ data = [] }: IVendorTable) => {
         <LabelCell>누적주문량</LabelCell>
         <LabelCell />
       </CellWrap>
-      {data.map((v) => (
+      {data.map((v: any) => (
         <CellWrap key={v.id}>
           <ValueCell style={{ flexDirection: 'column' }}>
             <FactoryCompanyName>{v?.factory_space?.name}</FactoryCompanyName>

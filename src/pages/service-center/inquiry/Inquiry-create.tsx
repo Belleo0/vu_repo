@@ -51,7 +51,7 @@ export default () => {
             placeholder="- - - - - - - - -"
             options={typeOptions}
             value={inquiryType}
-            onChange={(v) => setInquiryType(v)}
+            onChange={(v: any) => setInquiryType(v)}
           />
           <SubTitle>제목</SubTitle>
           <Textarea

@@ -34,8 +34,8 @@ const textColors = {
 
 export default ({ data = [], revalidate }: ITransactionTable) => {
   const navigate = useNavigate();
-  const dataList = data.filter((v) => v.status !== '1');
-  const dataListIds = dataList.map((v) => v.id);
+  const dataList = data.filter((v: any) => v.status !== '1');
+  const dataListIds = dataList.map((v: any) => v.id);
 
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -63,7 +63,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
 
   const handleClickRadio = (id: number) => {
     if (selectedIds.includes(id)) {
-      setSelectedIds((prev) => prev.filter((v) => v !== id));
+      setSelectedIds((prev) => prev.filter((v: any) => v !== id));
     } else {
       setSelectedIds((prev) => prev.concat(id));
     }
@@ -107,7 +107,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
             </DeleteRadio>
           </LabelCell>
         </CellWrap>
-        {data.map((v) => (
+        {data.map((v: any) => (
           <CellWrap key={v?.id} selected={selectedIds.includes(v.id)}>
             <ValueCell>
               <SupplyDate>{v?.supplyDate}</SupplyDate>

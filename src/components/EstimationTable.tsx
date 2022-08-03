@@ -37,7 +37,7 @@ export default ({ data = [], revalidate }: IVendorTable) => {
 
   const selectedEstimation = (id: any) => {
     if (id && data) {
-      const selectedEstimationInfo = data.find((v) => v.id === id);
+      const selectedEstimationInfo = data.find((v: any) => v.id === id);
       return selectedEstimationInfo;
     }
   };
@@ -79,7 +79,7 @@ export default ({ data = [], revalidate }: IVendorTable) => {
         <LabelCell style={{ maxWidth: 120 }}>레미콘사 담당자</LabelCell>
         <LabelCell style={{ maxWidth: 120 }} />
       </CellWrap>
-      {sortedDescData?.map((v) => (
+      {sortedDescData?.map((v: any) => (
         <CellWrap key={v?.id}>
           <ValueCell style={{ maxWidth: 130 }}>
             <DateValue>{moment(v?.created_at).format('YYYY.MM.DD')}</DateValue>

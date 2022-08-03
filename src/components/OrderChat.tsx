@@ -48,7 +48,7 @@ export default ({
 
   const searchedSpaces = useMemo(() => {
     if (!spaces) return [];
-    return spaces.filter((v) =>
+    return spaces.filter((v: any) =>
       v?.[isFieldUser ? 'factory_space' : 'field_space']?.name?.includes(
         search,
       ),
@@ -75,14 +75,15 @@ export default ({
 
   useEffect(() => {
     const sameData = spaces?.filter?.(
-      (v) => v?.id === selectedChatRoomInfo?.id,
+      (v: any) => v?.id === selectedChatRoomInfo?.id,
     );
     if (mount === false || sameData?.length === 0) {
       if (spaces.length > 0) {
         if ((location.state as any)?.id !== undefined) {
           const data =
-            spaces?.filter((v) => v.id === (location.state as any)?.id)?.[0] ||
-            spaces?.[0];
+            spaces?.filter(
+              (v: any) => v.id === (location.state as any)?.id,
+            )?.[0] || spaces?.[0];
           setSelectedChatRoomInfo(data);
         } else {
           const data = spaces?.[0];
@@ -256,7 +257,7 @@ export default ({
           />
         </SideTopSection>
         <CompanyCardWrap>
-          {searchedSpaces.map((v) => (
+          {searchedSpaces.map((v: any) => (
             <OrderChatCompanyCard
               key={v.id}
               active={v.id === selectedChatRoomInfo?.id}

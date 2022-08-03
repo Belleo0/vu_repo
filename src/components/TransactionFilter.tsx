@@ -61,7 +61,7 @@ export default () => {
           containerStyle={{ width: 240, marginLeft: 20 }}
           options={filterOptions}
           value={filter}
-          onChange={(v) => setFilter(v)}
+          onChange={(v: any) => setFilter(v)}
           absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
         />
       </FactoryFilterWrap>

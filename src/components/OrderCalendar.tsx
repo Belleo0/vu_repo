@@ -17,6 +17,7 @@ import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import CalendarModal from './CalendarModal';
+import Checkbox from './Checkbox';
 
 export default ({
   dates,
@@ -159,6 +160,8 @@ export default ({
           mutate();
           mutateMessages();
         }}
+        setIsModalOpened={setIsModalOpened}
+        setModalPosition={setModalPosition}
       />
     </Container>
   );

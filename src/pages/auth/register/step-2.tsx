@@ -530,6 +530,7 @@ const Container = styled.div`
   height: 100%;
 
   margin-top: 150px;
+  margin-bottom: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;

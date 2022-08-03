@@ -222,7 +222,7 @@ export default () => {
                 width={260}
                 options={paymentOptions}
                 value={paymentType}
-                onChange={(v) => setPaymentType(v)}
+                onChange={(v: any) => setPaymentType(v)}
               />
               {paymentType !== 'CASH' && paymentType !== null ? (
                 <InputItemWrapper
@@ -343,15 +343,25 @@ export default () => {
                   onChange={(e) => paymentDateInputHandler(e.target.value)}
                 />
               </InputItemWrapper>
-              {paymentType === 'NOTE' ? (
+              {paymentType !== 'CASH' ? (
                 <Caption>
                   • 거래처가 세금계산서를 발행 후{' '}
                   {paymentDate !== '기타'
                     ? paymentDate
                     : paymentDateInput || '청구'}
-                  일 뒤, 어음(
-                  {maturity !== '기타' ? maturity : maturityInput || '만기'}
-                  일)을 지급합니다.
+                  일 뒤,{' '}
+                  {(() => {
+                    switch (paymentType) {
+                      case 'NOTE':
+                        return '어음';
+                      case 'BOND':
+                        return '전자채권';
+                      case 'CARD':
+                        return '구매카드';
+                    }
+                  })()}
+                  ({maturity !== '기타' ? maturity : maturityInput || '만기'}
+                  일){paymentType !== 'CARD' ? '을' : '를'} 지급합니다.
                 </Caption>
               ) : null}
               {paymentType === 'CASH' ? (

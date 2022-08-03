@@ -11,11 +11,11 @@ export default ({ open, estimation, onClose }: any) => {
   // );
   // console.log('price!!!!', result?.[0]?.price);
 
-  const slump1 = BusanUnitPrice.filter((v) => v.slump === 80);
-  const slump2 = BusanUnitPrice.filter((v) => v.slump === 120);
-  const slump3 = BusanUnitPrice.filter((v) => v.slump === 150);
-  const slump4 = BusanUnitPrice.filter((v) => v.slump === 180);
-  const slump5 = BusanUnitPrice.filter((v) => v.slump === 210);
+  const slump1 = BusanUnitPrice.filter((v: any) => v.slump === 80);
+  const slump2 = BusanUnitPrice.filter((v: any) => v.slump === 120);
+  const slump3 = BusanUnitPrice.filter((v: any) => v.slump === 150);
+  const slump4 = BusanUnitPrice.filter((v: any) => v.slump === 180);
+  const slump5 = BusanUnitPrice.filter((v: any) => v.slump === 210);
 
   return (
     <Modal open={open} onClose={onClose}>

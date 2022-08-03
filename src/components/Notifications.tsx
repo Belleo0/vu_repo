@@ -16,7 +16,7 @@ interface INotifications {
 export default ({ data }: INotifications) => {
   return (
     <NotificationBox>
-      {data.map((v, i) => (
+      {data.map((v: any, i: number) => (
         <NotificationBar key={i}>
           <Badge
             style={

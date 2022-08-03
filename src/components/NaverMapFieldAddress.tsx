@@ -40,7 +40,7 @@ export default ({
             { label: '항공지도', value: '항공지도' },
           ]}
           value={mapFilter}
-          onChange={(v) => setMapFilter(v)}
+          onChange={(v: any) => setMapFilter(v)}
           width={120}
           height={46}
           absoluteStyle={{ border: 0 }}

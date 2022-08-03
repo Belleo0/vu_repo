@@ -70,7 +70,7 @@ export default () => {
           })}
         </ServiceTopMenuWrap>
         <ListWrap>
-          {fqa_data.map((v, i) => {
+          {fqa_data.map((v: any, i: number) => {
             return (
               <ContentWrap key={i}>
                 <ContentList onClick={() => handleToggleAnswer(i)}>

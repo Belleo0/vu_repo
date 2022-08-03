@@ -19,14 +19,14 @@ export default ({ data: propData = [], revalidate }: IVendorTable) => {
   const [isHideView, setIsHideView] = useState(false);
 
   const data = useMemo(() => {
-    return propData.filter((v) => v?.is_hide === isHideView);
+    return propData.filter((v: any) => v?.is_hide === isHideView);
   }, [propData, isHideView]);
 
   const hideCount = useMemo(() => {
-    return propData.filter((v) => v?.is_hide).length;
+    return propData.filter((v: any) => v?.is_hide).length;
   }, [propData]);
   const notHideCount = useMemo(() => {
-    return propData.filter((v) => !v?.is_hide).length;
+    return propData.filter((v: any) => !v?.is_hide).length;
   }, [propData]);
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -40,7 +40,7 @@ export default ({ data: propData = [], revalidate }: IVendorTable) => {
       if (selectedIds.length === data.length) {
         setSelectedIds([]);
       } else {
-        setSelectedIds(data.map((v) => v.id));
+        setSelectedIds(data.map((v: any) => v.id));
       }
     } catch (err) {
       console.log(err);
@@ -55,7 +55,7 @@ export default ({ data: propData = [], revalidate }: IVendorTable) => {
       setLoading(true);
       await Promise.all(
         selectedIds.map(
-          async (v) =>
+          async (v: any) =>
             await api[isHideView ? 'delete' : 'post'](`/estimations/${v}/hide`),
         ),
       );
@@ -73,7 +73,9 @@ export default ({ data: propData = [], revalidate }: IVendorTable) => {
     try {
       setLoading(true);
       await Promise.all(
-        selectedIds.map(async (v) => await api.delete(`/estimations/${v}`)),
+        selectedIds.map(
+          async (v: any) => await api.delete(`/estimations/${v}`),
+        ),
       );
       await revalidate();
       setSelectedIds([]);
@@ -86,7 +88,7 @@ export default ({ data: propData = [], revalidate }: IVendorTable) => {
 
   const handleClickRadio = (id: number) => {
     if (selectedIds.includes(id)) {
-      setSelectedIds((prev) => prev.filter((v) => v !== id));
+      setSelectedIds((prev) => prev.filter((v: any) => v !== id));
     } else {
       setSelectedIds((prev) => prev.concat(id));
     }
@@ -135,7 +137,7 @@ export default ({ data: propData = [], revalidate }: IVendorTable) => {
           <LabelCell>누적주문량</LabelCell>
           <LabelCell />
         </CellWrap>
-        {data.map((v) => (
+        {data.map((v: any) => (
           <CellWrap key={v.id}>
             <ValueCell style={{ maxWidth: 130 }}>
               <DeleteRadio

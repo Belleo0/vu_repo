@@ -31,7 +31,7 @@ export default () => {
           <GuideLineRegDtm>답변여부</GuideLineRegDtm>
         </ListGuideLine>
 
-        {fqa_data.map((v, i) => {
+        {fqa_data.map((v: any, i: number) => {
           return (
             <ContentList key={i}>
               <ContentNo>{v.no}</ContentNo>

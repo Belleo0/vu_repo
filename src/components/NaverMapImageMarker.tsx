@@ -40,6 +40,7 @@ export default ({ lat, lng, content, disableCenter }: IMarker) => {
         size: new naver.maps.Size(119, 72),
         anchor: new naver.maps.Point(59.5, 72),
       },
+      zIndex: 99999,
     });
 
     setMarker(marker);

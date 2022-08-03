@@ -154,13 +154,13 @@ export default () => {
               width={64}
               options={calendarTypeOptions}
               value={type}
-              onChange={(v) => setType(v)}
+              onChange={(v: any) => setType(v)}
             />
           </RightWrap>
         </FilterContainer>
         <CalendarContainer type={type}>
           <TimeContainer type={type}>
-            {hours.map((v) => (
+            {hours.map((v: any) => (
               <TimeWrap key={v}>
                 <TimeText>
                   {v >= 12 ? '오후' : '오전'} {v > 12 ? v - 12 : v}시
@@ -207,6 +207,8 @@ export default () => {
           revalidate={() => {
             refetch();
           }}
+          setIsModalOpened={setIsModalOpened}
+          setModalPosition={setModalPosition}
         />
       </Container>
     </SpaceLayout>

@@ -53,7 +53,7 @@ export default ({
       </SpaceOrderLabelWrap>
       {isFilterOpen && (
         <AbsoluteFilterContainer>
-          {options.map((v) => (
+          {options.map((v: any) => (
             <AbsoluteFilterLabel
               key={`${v.value}-${v.value === value}`}
               active={v.value === value}
