@@ -118,7 +118,12 @@ export default ({
               : { marginBottom: 30, cursor: 'pointer' }
           }
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(e) => {
+            setAddress(e.target.value);
+            // if (e.target.value !== selectedFieldInfo?.basic_address) {
+            //   setSelectedFieldInfo(null);
+            // }
+          }}
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
               setRealAddress(address);

@@ -207,6 +207,7 @@ export default () => {
           revalidate={() => {
             refetch();
           }}
+          weatherInfo={weatherInfo}
           setIsModalOpened={setIsModalOpened}
           setModalPosition={setModalPosition}
         />

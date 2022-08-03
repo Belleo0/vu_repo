@@ -20,6 +20,7 @@ export default ({
   icon?: string;
   containerStyle?: CSSProperties;
   searchIconStyle?: CSSProperties;
+  onClick?: any;
 }) => {
   const [inputValue, setInputValue] = useState<any>(value);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -31,7 +32,7 @@ export default ({
   };
 
   return (
-    <Container style={containerStyle} onClick={onClick}>
+    <Container style={containerStyle}>
       {icon && <Icon src={getAssetURL(`../assets/${icon}.svg`)} />}
       <Input value={value} onChange={changeHandler} {...props} ref={inputRef} />
       {inputValue !== '' && (
@@ -42,9 +43,11 @@ export default ({
           }}
         />
       )}
+
       <SearchIcon
         style={searchIconStyle}
         src={getAssetURL('../assets/ic-search.svg')}
+        onClick={onClick}
       />
     </Container>
   );
