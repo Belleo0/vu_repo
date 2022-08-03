@@ -3,8 +3,9 @@ import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import { convertTime } from '@utils/date';
 import getAssetURL from '@utils/getAssetURL';
+import { weatherData } from '@utils/weatherData';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Button, { ButtonType } from './Button';
 import Checkbox from './Checkbox';
@@ -20,6 +21,7 @@ interface ICalendarModal {
     x: number;
     y: number;
   };
+  weatherInfo: any;
   setIsModalOpened: any;
   setModalPosition: any;
 }
@@ -30,6 +32,7 @@ export default ({
   info,
   position,
   revalidate,
+  weatherInfo,
   setIsModalOpened,
   setModalPosition,
 }: ICalendarModal) => {
@@ -44,6 +47,20 @@ export default ({
   const [isRemoveLoading, setIsRemoveLoading] = useState(false);
 
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
+
+  const weatherIcon = useMemo(() => {
+    const date = moment(info?.date).format('YYYY-MM-DD');
+
+    const data = weatherInfo?.[date];
+    const iconType = weatherInfo?.[date]?.weather?.[0]?.icon?.slice?.(0, 2);
+    const icon = `../assets/${iconType}.svg`;
+
+    return {
+      isAvaildableVisibleWeather: !!data,
+      icon,
+      data,
+    };
+  }, [weatherInfo, info]);
 
   useEffect(() => {
     if (position.x === 0 && position.y === 0) {
@@ -73,10 +90,16 @@ export default ({
     ? ReactDOM.createPortal(
         <Container style={{ top: realPosition.y, left: realPosition.x }}>
           <Header>
-            <DayIcon src={getAssetURL('../assets/ic-sunny.svg')} />
-            <DayLabel>
-              맑음 <b>17°</b>
-            </DayLabel>
+            {weatherIcon.isAvaildableVisibleWeather && (
+              <>
+                <DayIcon src={getAssetURL(weatherIcon.icon)} />
+                <DayLabel>
+                  {(weatherData as any)?.[weatherIcon?.data?.weather?.[0]?.id]}{' '}
+                  <b>{(weatherIcon?.data?.temp?.day / 10).toFixed(1)}°</b>
+                </DayLabel>
+              </>
+            )}
+
             <XIcon
               src={getAssetURL('../assets/ic-del-02.svg')}
               onClick={onClose}

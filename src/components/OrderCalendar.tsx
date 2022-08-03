@@ -160,6 +160,7 @@ export default ({
           mutate();
           mutateMessages();
         }}
+        weatherInfo={weatherInfo}
         setIsModalOpened={setIsModalOpened}
         setModalPosition={setModalPosition}
       />
