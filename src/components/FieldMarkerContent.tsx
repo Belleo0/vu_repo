@@ -63,6 +63,13 @@ export default ({
 
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isFavorites, setIsFavorites] = useState<any>([
+    '서울특별시 마포구 동교동 201-9번지',
+    '서울특별시 마포구 서교동 331-13번지',
+  ]);
+
+  console.log(data);
+
   const ref = useRef<HTMLDivElement>(null);
 
   const isSelected = useMemo(() => {
@@ -86,43 +93,57 @@ export default ({
   }, [isModalOpened]);
 
   return (
-    <Container ref={ref}>
-      <Image
-        src={
-          isSelected
-            ? getAssetURL('../assets/img-map-bubble-on.png')
-            : getAssetURL('../assets/img-map-bubble.png')
-        }
-      />
-      <ContentsWrap
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onClick={onInfo}
-      >
-        {hideWithoutName && (
-          <Index selected={isSelected}>
-            {/* {(index + 1).toString().padStart(2, '0')} */}
-            <img src={getAssetURL('../assets/bookmark-ic-off.svg')} />
-          </Index>
-        )}
-        {hideWithoutName ? (
-          <InfoWrap>
-            <PlaceName>{name === '' ? '알수없음' : name}</PlaceName>
-            <DurationWrap>
-              <Distance style={{ color: status?.color }}>
-                {status?.label}
-              </Distance>
-              <Divider />
-              <Duration>{moment(status?.date).format('YYYY.MM')}</Duration>
-            </DurationWrap>
-          </InfoWrap>
-        ) : (
-          <OnlyNameWrap>
-            <OnlyPlaceName>{name}</OnlyPlaceName>
-          </OnlyNameWrap>
-        )}
-      </ContentsWrap>
-    </Container>
+    <FavoritesContainer
+      ref={ref}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onInfo}
+      style={
+        isFavorites.find((v: any) => v === data?.plat_plc)
+          ? {}
+          : { backgroundColor: status?.color }
+      }
+    >
+      {isFavorites.find((v: any) => v === data?.plat_plc) && (
+        <Container ref={ref}>
+          <Image
+            src={
+              isSelected
+                ? getAssetURL('../assets/img-map-bubble-on.png')
+                : getAssetURL('../assets/img-map-bubble.png')
+            }
+          />
+          <ContentsWrap
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onClick={onInfo}
+          >
+            {hideWithoutName && (
+              <Index selected={isSelected}>
+                {/* {(index + 1).toString().padStart(2, '0')} */}
+                <img src={getAssetURL('../assets/bookmark-ic-off.svg')} />
+              </Index>
+            )}
+            {hideWithoutName ? (
+              <InfoWrap>
+                <PlaceName>{name === '' ? '알수없음' : name}</PlaceName>
+                <DurationWrap>
+                  <Distance style={{ color: status?.color }}>
+                    {status?.label}
+                  </Distance>
+                  <Divider />
+                  <Duration>{moment(status?.date).format('YYYY.MM')}</Duration>
+                </DurationWrap>
+              </InfoWrap>
+            ) : (
+              <OnlyNameWrap>
+                <OnlyPlaceName>{name}</OnlyPlaceName>
+              </OnlyNameWrap>
+            )}
+          </ContentsWrap>
+        </Container>
+      )}
+    </FavoritesContainer>
   );
 };
 
@@ -131,8 +152,21 @@ const Container = styled.div`
   position: relative;
   width: 175px;
   height: 64px;
-  &: hover {
-    z-index: 9999;
+  border-radius: 17px;
+  &:hover {
+    z-index: 20000;
+  }
+`;
+
+const FavoritesContainer = styled.div`
+  display: block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+
+  &:hover {
+    z-index: 2000;
   }
 `;
 
