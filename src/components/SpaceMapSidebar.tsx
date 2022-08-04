@@ -96,14 +96,13 @@ export default ({
     }
   };
 
-  console.log(spaces?.length === 0);
+  // console.log(spaces?.length === 0);
 
   function handleCheckSpaces(v: any) {
-    if (spaces?.length <= 0) {
-      setIsNotFoundSpaceModal(true);
-    } else {
-      handleClickFactoryCard(v.id);
+    if (spaces) {
+      return handleClickFactoryCard(v);
     }
+    setIsNotFoundSpaceModal(true);
   }
 
   function handleAddConstruction() {
