@@ -106,6 +106,10 @@ export default ({
     }
   }
 
+  function handleAddConstruction() {
+    navigate('/add-construction-field/step-1');
+  }
+
   //선택된 건설현장:
   return (
     <Container>
@@ -281,6 +285,9 @@ export default ({
             </Button>
             <Button onClick={handleSubmitSelectModal}>선택하기</Button>
           </ShadowButtonWrap>
+          <CreateNewConstructionButton onClick={handleAddConstruction}>
+            신규현장 등록하기
+          </CreateNewConstructionButton>
         </ModalContainer>
       </Modal>
       <TextModal
@@ -484,4 +491,18 @@ const SelectedGuard = styled.div`
   height: 8px;
   background-color: #c7c7c7;
   margin: 0px 8px;
+`;
+
+const CreateNewConstructionButton = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid transparent;
+  background-color: #4490f7;
+  color: #fff;
+  padding: 16px 0;
+  margin-top: 8px;
+  border-radius: 6px;
+  cursor: pointer;
 `;
