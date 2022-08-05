@@ -9,9 +9,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import getAssetURL from '@utils/getAssetURL';
 import Modal from '@components/RegisterTextModal';
+import PostModal from '@components/Modal';
 import SearchCompanyModal from '@components/SearchCompanyModal';
 import { useDispatch } from 'react-redux';
 import { me } from '@data/auth';
+import DaumPostcode from 'react-daum-postcode';
+import axios from 'axios';
 
 enum ButtonType {
   'ABLE',
@@ -52,53 +55,71 @@ export default () => {
   const dispatch = useDispatch();
 
   // # Basic State
-  const [company, setCompany] = useState<string | any>({}); // 회사이름
+  const [company, setCompany] = useState<any>(); // 회사이름
   const [position, setPosition] = useState<string>(''); // 직위 / 직급
   const [department, setDepartment] = useState<string>(''); // 부서
   const [tel, setTel] = useState<string>(''); // 사내 전화번호
-  const [zipCode, setZipCode] = useState<string>(''); // 우편번호 (직접입력 시)
+  const [zoneCode, setZoneCode] = useState<string>(''); // 우편번호 (직접입력 시)
   const [companyAdress, setCompanyAdress] = useState<string>(''); // 기본주소  (직접입력 시)
   const [companyAdress2, setCompanyAdress2] = useState<string>(''); // 상세주소  (직접입력 시)
 
   const [isValid, setIsValid] = useState<boolean>(false); // 전체 유효성 확인
 
-  const [isUserInsert, setIsUserInsert] = useState<boolean>(false); // 회사 직접등록
+  const [isUserInsert, setIsUserInsert] = useState<boolean>(true); // 회사 직접등록
+
+  const [isPostcodeModalOpened, setIsPostcodeModalOpened] = useState(false); //주소검색
 
   // #Modal
   const [successOpenModal, setSuccessOpenModal] = useState(false); // 완료 modal controller
   const [searchCompanyOpenModal, setSearchCompanyOpenModal] = useState(false); // 회사검색 modal controller
+
+  const [constructionCompanyId, setConstructionCompanyId] = useState<any>(); // 건설사 직접입력 회원가입
 
   const userInviteType: boolean = false;
   const companyName: string = '동양건설'; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
   const companyType: string =
     (location.state as any)?.userType === 1 ? 'con' : 'rem'; // 유저 소속에 따른 타입 1: 건설사, 2: 레미콘사
 
-  console.log('location state => ', location?.state);
-
+  // console.log('location state => ', location?.state);
+  // console.log('location state => ', company);
+  const temp1 = 'c';
+  const temp2 = 'qwe123@@';
   const requestSignUpHandler = async () => {
+    await axios
+      .post('http://52.78.198.181:9998/company_reg.php', {
+        company_type: 'CONSTRUCTION',
+        name: companyName,
+        address: companyAdress,
+      })
+      .then((res: any) => setConstructionCompanyId(res?.data?.rsult?.id));
+
     await api
       .post('/auth/register', {
-        signname: (location.state as any)?.signname,
-        password: (location.state as any)?.password,
-        name: (location.state as any)?.name,
+        company_id: companyType === 'con' ? constructionCompanyId : company?.id,
+        signname: temp1 || (location.state as any)?.signname,
+        password: temp2 || (location.state as any)?.password,
+        name: 'asdsd' || (location.state as any)?.name,
         phone: '01000000001' || (location.state as any)?.phone,
         position: position || '',
         tel: tel || '',
-        // company_id: companyType === 'con' ? 2 : 1,
-        company_id: company?.id,
       })
-      .then(() => setSuccessOpenModal(true));
+      .then(async () => {
+        setSuccessOpenModal(true);
+      });
   };
+
   const isValidHandler = (e: any, type: string) => {
     switch (type) {
       case 'company':
         if (!isUserInsert && company !== undefined) {
           setCompany(e);
           setIsValid(() => true);
+        } else {
+          setCompany(e);
         }
         break;
-      case 'zipCode':
-        setZipCode(e);
+      case 'zoneCode':
+        setZoneCode(e);
         break;
       case 'companyAdress':
         setCompanyAdress(e);
@@ -120,6 +141,12 @@ export default () => {
     }
   };
 
+  useEffect(() => {
+    if (isUserInsert) {
+      setCompany('');
+    }
+  }, []);
+
   const insertUserCompany = () => {
     setIsUserInsert(true);
     setIsValid(false);
@@ -127,36 +154,32 @@ export default () => {
     setPosition('');
     setDepartment('');
     setTel('');
-    setZipCode('');
+    setZoneCode('');
     setCompanyAdress('');
     setCompanyAdress2('');
   };
 
   useEffect(() => {
     if (isUserInsert) {
-      if (
-        zipCode?.length >= 1 &&
-        company?.length >= 1 &&
-        companyAdress?.length >= 1 &&
-        companyAdress2?.length >= 1
-      ) {
+      if (company?.length >= 1 && companyAdress?.length >= 1) {
         setIsValid(true);
+        console.log();
       } else {
         setIsValid(false);
       }
     }
-  }, []);
+  }, [zoneCode, companyAdress]);
 
   const successCloseModal = async () => {
     await api
       .post('/auth/login', {
-        username: (location?.state as any)?.signname,
-        password: (location?.state as any)?.password,
+        username: temp1 || (location?.state as any)?.signname,
+        password: temp2 || (location?.state as any)?.password,
       })
       .then(async (res) => {
         setToken(res.data);
         await dispatch(me());
-        await navigate('/');
+        navigate('/my-space');
       });
   };
 
@@ -165,7 +188,7 @@ export default () => {
   };
 
   useEffect(() => {
-    company.name && setIsValid(true);
+    company?.name && setIsValid(true);
   }, [company]);
 
   return (
@@ -199,8 +222,23 @@ export default () => {
             <ProgressCircle>3</ProgressCircle>
           </ProgressBar>
           <MainContentBox>
-            {isUserInsert ? (
+            {isUserInsert && companyType === 'con' ? (
               <>
+                <PostModal
+                  open={isPostcodeModalOpened}
+                  onClose={() => setIsPostcodeModalOpened(false)}
+                >
+                  <PostContainer style={{ width: 400, height: 600 }}>
+                    <DaumPostcode
+                      onComplete={(v: any) => {
+                        console.log(v);
+                        setZoneCode(v.zonecode);
+                        setCompanyAdress(v.autoRoadAddress || v.roadAddress);
+                        setIsPostcodeModalOpened(false);
+                      }}
+                    />
+                  </PostContainer>
+                </PostModal>
                 <LineWrapper style={{ margin: 0 }}>
                   <RepeatTitle>
                     {companyType == 'con' ? '회사명' : '레미콘 공장 상호명'}
@@ -232,15 +270,13 @@ export default () => {
                         margin: 0,
                       }}
                       type="text"
-                      onChange={(e) => {
-                        isValidHandler(e.target.value, 'zipCode');
-                      }}
-                      value={zipCode || ''}
+                      value={zoneCode}
+                      disabled={true}
                       placeholder={'우편번호 검색'}
                     />
                     <SendButton
                       onClick={() => {
-                        ('');
+                        setIsPostcodeModalOpened(true);
                       }}
                     >
                       우편번호 조회
@@ -339,26 +375,33 @@ export default () => {
                   <RepeatTitle>
                     {companyType == 'con' ? '회사명' : '레미콘 공장 상호명'}
                   </RepeatTitle>
-                  <SearchInput
-                    containerStyle={{
-                      border: '1px solid #c7c7c7',
-                      backgroundColor: '#fff',
-                      marginTop: '8px',
-                    }}
-                    style={{ padding: '11px 20px', height: '42px' }}
-                    onChange={(e) => {
-                      isValidHandler(e.target.value, 'company');
-                    }}
-                    value={company?.name}
-                    placeholder={
-                      companyType == 'con'
-                        ? '회사명을 검색해 주세요'
-                        : '레미콘 공장을 검색해 주세요'
-                    }
+                  <div
                     onClick={() => {
                       setSearchCompanyOpenModal(true);
                     }}
-                  />
+                  >
+                    <SearchInput
+                      containerStyle={{
+                        border: '1px solid #c7c7c7',
+                        backgroundColor: '#fff',
+                        marginTop: '8px',
+                      }}
+                      disabled={true}
+                      style={{ padding: '11px 20px', height: '42px' }}
+                      onChange={(e) => {
+                        isValidHandler(e.target.value, 'company');
+                      }}
+                      value={company?.name}
+                      placeholder={
+                        companyType == 'con'
+                          ? '회사명을 검색해 주세요'
+                          : '레미콘 공장을 검색해 주세요'
+                      }
+                      onClick={() => {
+                        setSearchCompanyOpenModal(true);
+                      }}
+                    />
+                  </div>
                   {userInviteType ? (
                     <></>
                   ) : (
@@ -626,3 +669,5 @@ const InsertCompany = styled.div`
   text-decoration: underline;
   cursor: pointer;
 `;
+
+const PostContainer = styled.div``;
