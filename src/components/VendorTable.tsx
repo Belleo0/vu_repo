@@ -119,7 +119,7 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
   return (
     <Container>
       <CellWrap>
-        <LabelCell style={{ maxWidth: 130 }}>
+        <LabelCell style={{ maxWidth: 120 }}>
           <DeleteButton
             disabled={selectedIds.length === 0}
             onClick={
@@ -133,8 +133,8 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
         </LabelCell>
         <LabelCell>레미콘 공장</LabelCell>
         <LabelCell>상태</LabelCell>
-        <LabelCell>거리/시간</LabelCell>
-        <LabelCell>생산설비</LabelCell>
+        <LabelCell style={{ minWidth: 150 }}>거리/시간</LabelCell>
+        <LabelCell style={{ minWidth: 140 }}>생산설비</LabelCell>
         <LabelCell>영업사원</LabelCell>
         <LabelCell>
           단가율
@@ -179,7 +179,7 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
       </CellWrap>
       {sortedData?.map((v: any) => (
         <CellWrap key={v?.id}>
-          <ValueCell style={{ maxWidth: 130 }}>
+          <ValueCell style={{ maxWidth: 120 }}>
             <DeleteRadio
               active={selectedIds.includes(v?.id)}
               onClick={() => handleClickRadio(v?.id)}
@@ -209,12 +209,12 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
           <ValueCell style={{ flexDirection: 'column' }}>
             <EstimationStatusValue status={v?.status} />
           </ValueCell>
-          <ValueCell>
+          <ValueCell style={{ minWidth: 150 }}>
             <Distance>{convertDistance(v?.direction?.distance)}km</Distance>
             <DistanceDivider />
             <Duration>{convertDuration(v?.direction?.duration)}분</Duration>
           </ValueCell>
-          <ValueCell>B/P 210m³/h x 2</ValueCell>
+          <ValueCell style={{ minWidth: 140 }}>B/P 210m³/h x 2</ValueCell>
           <ValueCell>
             <SaleUserName
               onClick={() => {
@@ -252,7 +252,7 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
             )}
           </ValueCell>
 
-          <ValueCell>
+          <ValueCell style={{ minWidth: 140 }}>
             <TotalAmount>
               <SubmitButton
                 disabled={v.status === 'REGISTERED' || v.status === 'REQUESTED'}
@@ -281,7 +281,7 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
               onClick={
                 v.status !== 'REGISTERED'
                   ? () => setIsNotRegisterModalOpen(true)
-                  : () => handleOrder(v.id, v?.is_chat_room_joined)
+                  : () => handleOrder(v.id, v?.chat_room_id)
               }
             >
               주문
@@ -385,10 +385,10 @@ const ValueCell = styled.div`
   flex: 1;
   padding: 18px;
 
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 
-  letter-spacing: -0.32px;
+  letter-spacing: -0.5px;
   text-align: left;
   color: #222;
 `;
@@ -415,10 +415,10 @@ const FactoryAddress = styled.span`
 `;
 
 const Distance = styled.span`
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 
-  letter-spacing: -0.32px;
+  letter-spacing: -0.5px;
   text-align: left;
   color: #000;
 `;
@@ -432,8 +432,8 @@ const DistanceDivider = styled.span`
 `;
 
 const Duration = styled.span`
-  font-size: 16px;
-  letter-spacing: -0.32px;
+  font-size: 15px;
+  letter-spacing: -0.5px;
   text-align: left;
   color: #000;
 `;
