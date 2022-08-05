@@ -56,7 +56,7 @@ export default ({
     const filteredData = data.filter((v: any) => {
       return (
         new Date(v.start_time).getHours() >= 3 &&
-        new Date(v.start_time).getHours() <= 12
+        new Date(v.start_time).getHours() <= 24
       );
     });
     const sortedData = filteredData.sort(
@@ -121,6 +121,8 @@ export default ({
       return { ...v, left };
     });
   }, [data, defaultLeftWidth, defaultTopMargin]);
+
+  console.log('calendar data', data);
 
   return (
     <Container>

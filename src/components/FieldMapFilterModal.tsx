@@ -31,13 +31,7 @@ export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <ModalContainer
-        style={{
-          minWidth: 440,
-          maxHeight: 760,
-          paddingTop: 50,
-        }}
-      >
+      <Container>
         <TopSection>
           <CloseIcon
             src={getAssetURL('../assets/ic-del.svg')}
@@ -46,147 +40,150 @@ export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
         </TopSection>
         <ModalTitle>필터</ModalTitle>
         <MapFieldFilterWrap>
-          <FilterSection>
-            <MapFilterLabel>건축단계</MapFilterLabel>
-            <FilterStepWrap>
-              <FilterStepBox>
-                <StepIcon
-                  src={getAssetURL('../assets/ic-filter-permission.svg')}
-                />
-                허가
-              </FilterStepBox>
-              <FilterStepBox>
-                <StepIcon
-                  src={getAssetURL('../assets/ic-filter-schedule.svg')}
-                />
-                착공예정
-              </FilterStepBox>
-              <FilterStepBox>
-                <StepIcon src={getAssetURL('../assets/ic-filter-delay.svg')} />
-                착공연기
-              </FilterStepBox>
-              <FilterStepBox>
-                <StepIcon src={getAssetURL('../assets/ic-filter-ing.svg')} />
-                착공진행
-              </FilterStepBox>
-              <FilterStepBox>
-                <StepIcon
-                  src={getAssetURL('../assets/ic-filter-approval.svg')}
-                />
-                사용승인
-              </FilterStepBox>
-            </FilterStepWrap>
-          </FilterSection>
-          <FilterSection>
-            <MapFilterLabel>인허가시기</MapFilterLabel>
-            <ChipWrap>
-              <Chip
-                active={chipType === '1주일'}
-                onClick={() => handleChangeChipType('1주일')}
-              >
-                1주일
-              </Chip>
-              <Chip
-                active={chipType === '1개월'}
-                onClick={() => handleChangeChipType('1개월')}
-              >
-                1개월
-              </Chip>
-              <Chip
-                active={chipType === '3개월'}
-                onClick={() => handleChangeChipType('3개월')}
-              >
-                3개월
-              </Chip>
-              <Chip
-                active={chipType === '6개월'}
-                onClick={() => handleChangeChipType('6개월')}
-              >
-                6개월
-              </Chip>
-            </ChipWrap>
-            <DateFilterWrap>
-              <BlackInput
-                type="date"
-                placeholder="yyyy.mm.dd"
-                containerStyle={{
-                  minWidth: 160,
-                }}
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-              ~
-              <BlackInput
-                type="date"
-                placeholder="yyyy.mm.dd"
-                containerStyle={{ maxWidth: 160 }}
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </DateFilterWrap>
-          </FilterSection>
-          <FilterSection>
-            <MapFilterLabel>연면적</MapFilterLabel>
-            <DateFilterWrap>
-              <BlackInput
-                placeholder="000m³"
-                containerStyle={{
-                  width: 164,
-                  marginRight: 4,
-                  color: '#258fff',
-                }}
-                onChange={() => {}}
-              />
-              ~
-              <BlackInput
-                placeholder="000m³"
-                containerStyle={{
-                  width: 164,
-                  marginRight: 4,
-                  color: '#258fff',
-                }}
-                onChange={() => {}}
-              />
-            </DateFilterWrap>
-          </FilterSection>
-          <FilterSection>
-            <MapFilterLabel>
-              허가구분
-              <CheckedAll>
-                <CheckBox active={false} onClick={() => {}}>
-                  <CheckIcon
-                    src={getAssetURL('../assets/ic-check-only-ic-grey.svg')}
+          <MapFieldFilterBox>
+            <FilterSection>
+              <MapFilterLabel>건축단계</MapFilterLabel>
+              <FilterStepWrap>
+                <FilterStepBox>
+                  <StepIcon
+                    src={getAssetURL('../assets/ic-filter-permission.svg')}
                   />
-                </CheckBox>
-                전체
-              </CheckedAll>
-            </MapFilterLabel>
-            <FilterTypeLabel>
-              건축허가
-              <Icon src={getAssetURL('../assets/ic-arrow.svg')} />
-            </FilterTypeLabel>
-            <OptionWrap>
-              <OptionBox
-                active={constructionOption === 1}
-                onClick={() => {
-                  setConstructionOption(1);
-                }}
-              >
-                전체
-              </OptionBox>
-              {FieldPerOptions.map((v) => (
+                  허가
+                </FilterStepBox>
+                <FilterStepBox>
+                  <StepIcon
+                    src={getAssetURL('../assets/ic-filter-schedule.svg')}
+                  />
+                  착공예정
+                </FilterStepBox>
+                <FilterStepBox>
+                  <StepIcon
+                    src={getAssetURL('../assets/ic-filter-delay.svg')}
+                  />
+                  착공연기
+                </FilterStepBox>
+                <FilterStepBox>
+                  <StepIcon src={getAssetURL('../assets/ic-filter-ing.svg')} />
+                  착공진행
+                </FilterStepBox>
+                <FilterStepBox>
+                  <StepIcon
+                    src={getAssetURL('../assets/ic-filter-approval.svg')}
+                  />
+                  사용승인
+                </FilterStepBox>
+              </FilterStepWrap>
+            </FilterSection>
+            <FilterSection>
+              <MapFilterLabel>인허가시기</MapFilterLabel>
+              <ChipWrap>
+                <Chip
+                  active={chipType === '1주일'}
+                  onClick={() => handleChangeChipType('1주일')}
+                >
+                  1주일
+                </Chip>
+                <Chip
+                  active={chipType === '1개월'}
+                  onClick={() => handleChangeChipType('1개월')}
+                >
+                  1개월
+                </Chip>
+                <Chip
+                  active={chipType === '3개월'}
+                  onClick={() => handleChangeChipType('3개월')}
+                >
+                  3개월
+                </Chip>
+                <Chip
+                  active={chipType === '6개월'}
+                  onClick={() => handleChangeChipType('6개월')}
+                >
+                  6개월
+                </Chip>
+              </ChipWrap>
+              <DateFilterWrap>
+                <BlackInput
+                  type="date"
+                  placeholder="yyyy.mm.dd"
+                  containerStyle={{
+                    minWidth: 160,
+                  }}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                ~
+                <BlackInput
+                  type="date"
+                  placeholder="yyyy.mm.dd"
+                  containerStyle={{ maxWidth: 160 }}
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </DateFilterWrap>
+            </FilterSection>
+            <FilterSection>
+              <MapFilterLabel>연면적</MapFilterLabel>
+              <DateFilterWrap>
+                <BlackInput
+                  placeholder="000m³"
+                  containerStyle={{
+                    width: 164,
+                    marginRight: 4,
+                    color: '#258fff',
+                  }}
+                  onChange={() => {}}
+                />
+                ~
+                <BlackInput
+                  placeholder="000m³"
+                  containerStyle={{
+                    width: 164,
+                    marginRight: 4,
+                    color: '#258fff',
+                  }}
+                  onChange={() => {}}
+                />
+              </DateFilterWrap>
+            </FilterSection>
+            <FilterSection>
+              <MapFilterLabel>
+                허가구분
+                <CheckedAll>
+                  <CheckBox active={false} onClick={() => {}}>
+                    <CheckIcon
+                      src={getAssetURL('../assets/ic-check-only-ic-grey.svg')}
+                    />
+                  </CheckBox>
+                  전체
+                </CheckedAll>
+              </MapFilterLabel>
+              <FilterTypeLabel>
+                건축허가
+                <Icon src={getAssetURL('../assets/ic-arrow.svg')} />
+              </FilterTypeLabel>
+              <OptionWrap>
                 <OptionBox
-                  key={v.value}
-                  active={constructionOption === v.value}
+                  active={constructionOption === 1}
                   onClick={() => {
-                    setConstructionOption(v.value);
+                    setConstructionOption(1);
                   }}
                 >
-                  {v.label}
+                  전체
                 </OptionBox>
-              ))}
-            </OptionWrap>
-            {/* <FilterTypeLabel>
+                {FieldPerOptions.map((v) => (
+                  <OptionBox
+                    key={v.value}
+                    active={constructionOption === v.value}
+                    onClick={() => {
+                      setConstructionOption(v.value);
+                    }}
+                  >
+                    {v.label}
+                  </OptionBox>
+                ))}
+              </OptionWrap>
+              {/* <FilterTypeLabel>
               건축신고
               <Icon src={getAssetURL('../assets/ic-arrow.svg')} />
             </FilterTypeLabel>
@@ -200,21 +197,22 @@ export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
                 </OptionBox>
               ))}
             </OptionWrap> */}
-            <FilterTypeLabel>
-              사업승인
-              <Icon src={getAssetURL('../assets/ic-arrow.svg')} />
-            </FilterTypeLabel>
-            <OptionWrap>
-              <OptionBox
-                active={approvalOption === 1}
-                onClick={() => {
-                  setApprovalOption(1);
-                }}
-              >
-                전체
-              </OptionBox>
-            </OptionWrap>
-          </FilterSection>
+              <FilterTypeLabel>
+                사업승인
+                <Icon src={getAssetURL('../assets/ic-arrow.svg')} />
+              </FilterTypeLabel>
+              <OptionWrap>
+                <OptionBox
+                  active={approvalOption === 1}
+                  onClick={() => {
+                    setApprovalOption(1);
+                  }}
+                >
+                  전체
+                </OptionBox>
+              </OptionWrap>
+            </FilterSection>
+          </MapFieldFilterBox>
         </MapFieldFilterWrap>
         <ShadowButtonWrap>
           <Button
@@ -226,14 +224,24 @@ export default ({ open, onClose, handleSubmit, revalidate, data }: any) => {
           </Button>
           <Button onClick={handleSubmit}>적용</Button>
         </ShadowButtonWrap>
-      </ModalContainer>
+      </Container>
     </Modal>
   );
 };
 
+const Container = styled.div`
+  min-width: 440;
+  max-height: 760;
+  border-radius: 20px;
+  padding: 30px 14px;
+  background-color: #fff;
+
+  overflow: hidden;
+`;
+
 // modal styles
 const MapFieldFilterWrap = styled.div`
-  width: 380px;
+  width: 440px;
   height: 550px;
 
   overflow-y: scroll;
@@ -258,6 +266,12 @@ const MapFieldFilterWrap = styled.div`
   &::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0);
   }
+`;
+
+const MapFieldFilterBox = styled.div`
+  width: 440;
+  height: 550px;
+  padding: 0px 36px;
 `;
 
 const MapFilterLabel = styled.div`

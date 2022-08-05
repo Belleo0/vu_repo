@@ -68,7 +68,7 @@ export default ({ data = [], revalidate }: IVendorTable) => {
   return (
     <Container>
       <CellWrap>
-        <LabelCell style={{ maxWidth: 130 }}>일자</LabelCell>
+        <LabelCell style={{ maxWidth: 120 }}>일자</LabelCell>
         <LabelCell style={{ maxWidth: 180 }}>건설사</LabelCell>
         <LabelCell>건설현장</LabelCell>
         <LabelCell style={{ maxWidth: 180 }}>거리/시간</LabelCell>
@@ -81,7 +81,7 @@ export default ({ data = [], revalidate }: IVendorTable) => {
       </CellWrap>
       {sortedDescData?.map((v: any) => (
         <CellWrap key={v?.id}>
-          <ValueCell style={{ maxWidth: 130 }}>
+          <ValueCell style={{ maxWidth: 120 }}>
             <DateValue>{moment(v?.created_at).format('YYYY.MM.DD')}</DateValue>
           </ValueCell>
           <ValueCell style={{ flexDirection: 'column', maxWidth: 180 }}>
@@ -161,7 +161,12 @@ export default ({ data = [], revalidate }: IVendorTable) => {
                     setIsEstimationModalOpen(true);
                   }}
                 />
-                <RequestedAtLabel style={{ color: '#ff5517', fontSize: 15 }}>
+                <RequestedAtLabel
+                  style={{
+                    color: '#ff5517',
+                    fontSize: 15,
+                  }}
+                >
                   납품사 등록완료
                 </RequestedAtLabel>
                 <RequestedAtValue>
@@ -188,14 +193,12 @@ export default ({ data = [], revalidate }: IVendorTable) => {
           )}
           <ValueCell style={{ maxWidth: 120 }}>
             <ChatButton
-              active={v?.is_chat_room_joined}
-              onClick={() => handleOrder(v?.id, v?.is_chat_room_joined)}
+              active={v?.chat_room_id}
+              onClick={() => handleOrder(v?.id, v?.chat_room_id)}
             >
               <ChatIcon
                 src={getAssetURL(
-                  `../assets/ic-chat${
-                    v?.is_chat_room_joined ? '' : '-grey'
-                  }.svg`,
+                  `../assets/ic-chat${v?.chat_room_id ? '' : '-grey'}.svg`,
                 )}
               />
               채팅
@@ -256,6 +259,10 @@ const LabelCell = styled.div`
   flex: 1;
   padding: 17px;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   font-size: 14px;
   letter-spacing: -0.28px;
   text-align: center;
@@ -270,10 +277,10 @@ const ValueCell = styled.div`
   flex: 1;
   padding: 18px;
 
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 
-  letter-spacing: -0.32px;
+  letter-spacing: -0.5px;
   text-align: left;
   color: #222;
 `;
@@ -300,10 +307,10 @@ const FactoryAddress = styled.span`
 `;
 
 const Distance = styled.span`
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 
-  letter-spacing: -0.32px;
+  letter-spacing: -0.5px;
   text-align: left;
   color: #000;
 `;
@@ -317,8 +324,8 @@ const DistanceDivider = styled.span`
 `;
 
 const Duration = styled.span`
-  font-size: 16px;
-  letter-spacing: -0.32px;
+  font-size: 15px;
+  letter-spacing: -0.5px;
   text-align: left;
   color: #000;
 `;
