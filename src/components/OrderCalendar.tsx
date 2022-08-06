@@ -1,4 +1,5 @@
 import useFieldSpaceWeathers from '@api/useFieldSpaceWeathers';
+import CalendarBarColors from '@constance/CalendarBarColors';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
@@ -119,12 +120,12 @@ export default ({
                   ) : null}
                 </DayAmountWrap>
                 <BarContainer>
-                  {data?.map((v: any) => (
+                  {data?.map((v: any, i: number) => (
                     <Bar
                       style={
                         v?.status === 'REQUESTED'
                           ? RequestedBarStyle
-                          : { backgroundColor: v?.estimation?.color }
+                          : { backgroundColor: CalendarBarColors?.[i] }
                       }
                       onClick={(e) => {
                         setSelectedBarInfo(v);
