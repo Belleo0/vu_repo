@@ -216,18 +216,19 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
           </ValueCell>
           <ValueCell style={{ minWidth: 140 }}>B/P 210m³/h x 2</ValueCell>
           <ValueCell>
-            <SaleUserName
-              onClick={() => {
-                setSelectedSpaceInfo(v?.factory_space?.site_user);
-                setCompanyName(v?.factory_space?.company?.name);
-                setTimeout(() => {
-                  setIsUserModalOpen(true);
-                }, 250);
-              }}
-            >
-              {v?.factory_space?.site_user?.name}{' '}
-              {v?.factory_space?.site_user?.position}
-            </SaleUserName>
+            {v?.sales_user?.name && (
+              <SaleUserName
+                onClick={() => {
+                  setSelectedSpaceInfo(v?.sales_user);
+                  setCompanyName(v?.factory_space?.company?.name);
+                  setTimeout(() => {
+                    setIsUserModalOpen(true);
+                  }, 250);
+                }}
+              >
+                {v?.sales_user?.name} {v?.sales_user?.position}
+              </SaleUserName>
+            )}
           </ValueCell>
           <ValueCell>
             {v.status === 'REQUESTED' ? (
