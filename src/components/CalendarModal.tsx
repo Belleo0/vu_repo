@@ -1,6 +1,7 @@
 import api from '@api';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
+import { useScroll } from '@hooks/useScroll';
 import { convertTime } from '@utils/date';
 import getAssetURL from '@utils/getAssetURL';
 import { weatherData } from '@utils/weatherData';
@@ -38,10 +39,17 @@ export default ({
 }: ICalendarModal) => {
   const isFieldUser = useIsFieldUser();
 
+  const { scrollY } = useScroll();
+
+  const [clickedScrollY, setClickedScrollY] = useState(scrollY);
+  const [clickedPosition, setClickedPosition] = useState<{
+    x: number;
+    y: number;
+  }>({ x: -1000000, y: -1000000 });
   const [realPosition, setRealPosition] = useState<{
     x: number;
     y: number;
-  } | null>(null);
+  }>({ x: -1000000, y: -1000000 });
 
   const [isRemoveModalOpened, setIsRemoveModalOpened] = useState(false);
   const [isRemoveLoading, setIsRemoveLoading] = useState(false);
@@ -64,9 +72,11 @@ export default ({
 
   useEffect(() => {
     if (position.x === 0 && position.y === 0) {
-      setRealPosition({ x: -100000, y: -1000000 });
+      setRealPosition({ x: -1000000, y: -1000000 });
     } else {
+      setClickedScrollY(scrollY);
       setRealPosition({ x: position.x - 100, y: position.y });
+      setClickedPosition({ x: position.x - 100, y: position.y });
     }
   }, [position]);
 
@@ -85,6 +95,11 @@ export default ({
       }
     }
   };
+
+  useEffect(() => {
+    const gap = clickedScrollY - scrollY;
+    setRealPosition((prev) => ({ ...prev, y: clickedPosition.y + gap }));
+  }, [scrollY]);
 
   return open && realPosition !== null
     ? ReactDOM.createPortal(
@@ -231,6 +246,7 @@ const Container = styled.div`
   box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
   background-color: #fff;
   z-index: 500;
+  transition: top 0.1s linear, left 0.1s linear;
 `;
 
 const Header = styled.div`
