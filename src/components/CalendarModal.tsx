@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Button, { ButtonType } from './Button';
 import Checkbox from './Checkbox';
+import OrderAssignmentButton from './OrderAssignmentButton';
 import OrderAssignmentModal from './OrderAssignmentModal';
 import TextModal from './TextModal';
 
@@ -185,7 +186,7 @@ export default ({
               {info?.total?.toLocaleString?.('ko')}m³
             </TotalAmountValue>
           </TotalAmountWrap>
-          <ButtonWrap>
+          {/* <ButtonWrap>
             <Button
               type={ButtonType.GRAY_BLACK}
               containerStyle={{ marginRight: 20 }}
@@ -202,7 +203,17 @@ export default ({
             >
               주문 변경
             </Button>
-          </ButtonWrap>
+          </ButtonWrap> */}
+          <OrderAssignmentButton
+            id={info?.id}
+            type={info?.type}
+            onModify={() => {
+              setIsEditModalOpened(true);
+              setModalPosition({ x: 0, y: 0 });
+            }}
+            onRemove={() => setIsRemoveModalOpened(true)}
+            mutate={() => revalidate()}
+          />
           <TextModal
             open={isRemoveModalOpened}
             onClose={() => setIsRemoveModalOpened(false)}

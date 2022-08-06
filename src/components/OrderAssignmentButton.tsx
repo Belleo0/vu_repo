@@ -7,22 +7,11 @@ import { useNavigate } from 'react-router-dom';
 import Button, { ButtonSize, ButtonType } from './Button';
 import TextModal from './TextModal';
 
-export default ({
-  id,
-  type,
-  mutate: mutateMessages,
-}: {
-  id: number;
-  type: string;
-  mutate: () => any;
-}) => {
+export default ({ id, type, mutate, onModify, onRemove }: any) => {
   const navigate = useNavigate();
   const isFieldUser = useIsFieldUser();
   const { data: assignmentData, refetch } = useAssignmentInfo(id);
   const [loading, setLoading] = useState(false);
-
-  const [isRemoveModalOpened, setIsRemoveModalOpened] = useState(false);
-  const [isRemoveLoading, setIsRemoveLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (loading === false) {
@@ -34,23 +23,8 @@ export default ({
         window.alert('에러 발생..');
       } finally {
         await refetch();
-        await mutateMessages();
+        await mutate();
         setLoading(false);
-      }
-    }
-  };
-
-  const handleRemoveAssignment = async () => {
-    if (isRemoveLoading === false) {
-      setIsRemoveLoading(true);
-      try {
-        await api.delete(`/assignments/${id}`);
-        setIsRemoveModalOpened(false);
-        await mutateMessages();
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsRemoveLoading(false);
       }
     }
   };
@@ -63,16 +37,28 @@ export default ({
     if (assignmentData?.status === 'REQUESTED') {
       return (
         <ButtonWrap>
-          <Button type={ButtonType.OUTLINE} size={ButtonSize.SMALL}>
-            확인 중
+          <Button
+            type={ButtonType.OUTLINE}
+            containerStyle={{ marginRight: 14 }}
+            onClick={onRemove}
+          >
+            취소하기
           </Button>
+          <Button type={ButtonType.GRAY}>확인 중</Button>
         </ButtonWrap>
       );
     } else if (assignmentData?.status === 'CONFIRMED') {
       return (
         <ButtonWrap>
-          <Button type={ButtonType.GRAY} size={ButtonSize.SMALL}>
-            확인완료
+          <Button
+            type={ButtonType.OUTLINE}
+            containerStyle={{ marginRight: 14 }}
+            onClick={onRemove}
+          >
+            취소하기
+          </Button>
+          <Button type={ButtonType.PRIMARY} onClick={onModify}>
+            변경하기
           </Button>
         </ButtonWrap>
       );
@@ -87,32 +73,28 @@ export default ({
         <ButtonWrap>
           <Button
             type={ButtonType.OUTLINE}
-            size={ButtonSize.SMALL}
             containerStyle={{ marginRight: 14 }}
-            onClick={() => setIsRemoveModalOpened(true)}
+            onClick={onRemove}
           >
             취소하기
           </Button>
-          <Button
-            type={ButtonType.PRIMARY}
-            size={ButtonSize.SMALL}
-            onClick={handleSubmit}
-          >
+          <Button type={ButtonType.PRIMARY} onClick={handleSubmit}>
             확인하기
           </Button>
-          <TextModal
-            open={isRemoveModalOpened}
-            onClose={() => setIsRemoveModalOpened(false)}
-            onSubmit={handleRemoveAssignment}
-            content="주문을 취소하시겠습니까?"
-          />
         </ButtonWrap>
       );
     } else if (assignmentData?.status === 'CONFIRMED') {
       return (
         <ButtonWrap>
-          <Button type={ButtonType.GRAY} size={ButtonSize.SMALL}>
-            확인완료
+          <Button
+            type={ButtonType.OUTLINE}
+            containerStyle={{ marginRight: 14 }}
+            onClick={onRemove}
+          >
+            취소하기
+          </Button>
+          <Button type={ButtonType.PRIMARY} onClick={onModify}>
+            변경하기
           </Button>
         </ButtonWrap>
       );

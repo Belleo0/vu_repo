@@ -373,7 +373,10 @@ export default ({
                     data={v?.data}
                     sendAt={v?.created_at}
                     isMyChat={v?.send_user?.id === userInfo?.id}
-                    mutate={() => mutateMessages()}
+                    mutate={() => {
+                      mutate();
+                      mutateMessages();
+                    }}
                   />
                 ),
               )}
