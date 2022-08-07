@@ -1,4 +1,7 @@
 import api from '@api';
+import useFieldSpaceWeathers from '@api/useFieldSpaceWeathers';
+import useSpaceInfo from '@api/useSpaceInfo';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import { useScroll } from '@hooks/useScroll';
@@ -13,6 +16,7 @@ import Checkbox from './Checkbox';
 import OrderAssignmentButton from './OrderAssignmentButton';
 import OrderAssignmentModal from './OrderAssignmentModal';
 import TextModal from './TextModal';
+import WeatherModal from './WeatherModal';
 
 interface ICalendarModal {
   open: boolean;
@@ -34,10 +38,18 @@ export default ({
   info,
   position,
   revalidate,
-  weatherInfo,
   setIsModalOpened,
   setModalPosition,
 }: ICalendarModal) => {
+  const [mount, setMount] = useState(false);
+
+  const { data: weatherInfo } = useFieldSpaceWeathers(
+    info?.estimation?.field_space?.id,
+  );
+  const { data: fieldSpaceInfo } = useSpaceInfo(
+    info?.estimation?.field_space?.id,
+  );
+
   const isFieldUser = useIsFieldUser();
 
   const { scrollY } = useScroll();
@@ -57,6 +69,8 @@ export default ({
 
   const [isEditModalOpened, setIsEditModalOpened] = useState(false);
 
+  const [isWeatherModalOpen, setIsWeatherModalOpen] = useState(false);
+
   const weatherIcon = useMemo(() => {
     const date = moment(info?.date).format('YYYY-MM-DD');
 
@@ -75,6 +89,9 @@ export default ({
     if (position.x === 0 && position.y === 0) {
       setRealPosition({ x: -1000000, y: -1000000 });
     } else {
+      setTimeout(() => {
+        setMount(true);
+      }, 150);
       setClickedScrollY(scrollY);
       setRealPosition({ x: position.x - 100, y: position.y });
       setClickedPosition({ x: position.x - 100, y: position.y });
@@ -104,16 +121,19 @@ export default ({
 
   return open && realPosition !== null
     ? ReactDOM.createPortal(
-        <Container style={{ top: realPosition.y, left: realPosition.x }}>
+        <Container
+          style={{ top: realPosition.y, left: realPosition.x }}
+          mount={mount}
+        >
           <Header>
             {weatherIcon.isAvaildableVisibleWeather && (
-              <>
+              <WeatherIconWrap onClick={() => setIsWeatherModalOpen(true)}>
                 <DayIcon src={getAssetURL(weatherIcon.icon)} />
                 <DayLabel>
                   {(weatherData as any)?.[weatherIcon?.data?.weather?.[0]?.id]}{' '}
                   <b>{(weatherIcon?.data?.temp?.day / 10).toFixed(1)}°</b>
                 </DayLabel>
-              </>
+              </WeatherIconWrap>
             )}
 
             <XIcon
@@ -186,30 +206,12 @@ export default ({
               {info?.total?.toLocaleString?.('ko')}m³
             </TotalAmountValue>
           </TotalAmountWrap>
-          {/* <ButtonWrap>
-            <Button
-              type={ButtonType.GRAY_BLACK}
-              containerStyle={{ marginRight: 20 }}
-              onClick={() => setIsRemoveModalOpened(true)}
-            >
-              주문 삭제
-            </Button>
-            <Button
-              type={ButtonType.PRIMARY}
-              onClick={() => {
-                setIsEditModalOpened(true);
-                setModalPosition({ x: 0, y: 0 });
-              }}
-            >
-              주문 변경
-            </Button>
-          </ButtonWrap> */}
           <OrderAssignmentButton
             id={info?.id}
             type={info?.type}
             onModify={() => {
               setIsEditModalOpened(true);
-              setModalPosition({ x: 0, y: 0 });
+              setRealPosition({ x: -1000000, y: -1000000 });
             }}
             onRemove={() => setIsRemoveModalOpened(true)}
             mutate={() => revalidate()}
@@ -240,13 +242,21 @@ export default ({
               initialInfo={info}
             />
           )}
+          {weatherIcon.isAvaildableVisibleWeather && (
+            <WeatherModal
+              open={isWeatherModalOpen}
+              onClose={() => setIsWeatherModalOpen(false)}
+              data={weatherIcon?.data}
+              spaceInfo={fieldSpaceInfo}
+            />
+          )}
         </Container>,
         document.getElementById('root') as HTMLElement,
       )
     : null;
 };
 
-const Container = styled.div`
+const Container = styled.div<{ mount: boolean }>`
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -257,7 +267,11 @@ const Container = styled.div`
   box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
   background-color: #fff;
   z-index: 500;
-  transition: top 0.1s linear, left 0.1s linear;
+  ${({ mount }) =>
+    mount &&
+    css`
+      transition: top 0.1s linear, left 0.1s linear;
+    `}
 `;
 
 const Header = styled.div`
@@ -419,4 +433,10 @@ const CheckboxWrap = styled.div`
   border-bottom: 1px solid #f2f2f2;
   margin-bottom: 16px;
   margin-top: 16px;
+`;
+
+const WeatherIconWrap = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 `;

@@ -24,6 +24,7 @@ const calendarTypeOptions = [
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import useFieldSpaceWeathers from '@api/useFieldSpaceWeathers';
+import WeatherModal from '@components/WeatherModal';
 
 const hours = [
   4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
