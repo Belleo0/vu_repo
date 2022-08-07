@@ -178,7 +178,7 @@ export default ({
                   ? RequestedBarStyle
                   : { backgroundColor: CalendarBarColors?.[i] }
               }
-              onClick={(e) => {
+              onClick={(e: any) => {
                 setSelectedBarInfo(v);
                 setIsModalOpened(true);
                 setModalPosition({ x: e.clientX, y: e.clientY });
@@ -208,7 +208,7 @@ export default ({
                   ? RequestedBarStyle
                   : { backgroundColor: CalendarBarColors?.[i] }
               }
-              onClick={(e) => {
+              onClick={(e: any) => {
                 setSelectedBarInfo(v);
                 setIsModalOpened(true);
                 setModalPosition({ x: e.clientX, y: e.clientY });
