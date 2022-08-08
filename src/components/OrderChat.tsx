@@ -46,6 +46,12 @@ export default ({
 
   const [search, setSearch] = useState('');
 
+  useEffect(() => {
+    spaces.sort((v: any, i: any) => {
+      return i.id - v.id;
+    });
+  }, [spaces]);
+
   const searchedSpaces = useMemo(() => {
     if (!spaces) return [];
     return spaces.filter((v: any) =>
