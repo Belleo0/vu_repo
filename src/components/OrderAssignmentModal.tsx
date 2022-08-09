@@ -41,6 +41,16 @@ export default ({
   const [startAt, setStartAt] = useState<string | null>(null);
   const [endAt, setEndAt] = useState<string | null>(null);
 
+  const isStartAtAfterEndAt = useMemo(() => {
+    const startAtIndex = assignmentTimeOptions.indexOf(
+      assignmentTimeOptions.find((v) => v.value === startAt)!,
+    );
+    const endAtIndex = assignmentTimeOptions.indexOf(
+      assignmentTimeOptions.find((v) => v.value === endAt)!,
+    );
+    return startAtIndex > endAtIndex;
+  }, [startAt, endAt]);
+
   const [specs, setSpecs] = useState<ISpec[]>([defaultSpec]);
 
   const [checkbox, setCheckbox] = useState({
@@ -109,6 +119,10 @@ export default ({
   };
 
   const handleSubmit = async () => {
+    if (isStartAtAfterEndAt) {
+      window.alert(`배정 시작시간은 배정 종료시간보다 이전으로 설정해주세요.`);
+      return;
+    }
     if (loading === false) {
       setLoading(true);
       try {

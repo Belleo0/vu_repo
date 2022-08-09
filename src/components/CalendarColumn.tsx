@@ -1,3 +1,6 @@
+import useFieldSpaceWeathers from '@api/useFieldSpaceWeathers';
+import useSpaceInfo from '@api/useSpaceInfo';
+import CalendarBarColors from '@constance/CalendarBarColors';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
@@ -6,6 +9,7 @@ import { CalendarTypeState, days, isDateToday } from '@utils/calendar';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
 import { useMemo, useState } from 'react';
+import WeatherModal from './WeatherModal';
 
 const hours = [
   4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
@@ -32,6 +36,8 @@ export default ({
     if (weatherInfo?.[dateString]) return true;
     return false;
   }, [weatherInfo, dateString]);
+
+  const [isWeatherModalOpen, setIsWeatherModalOpen] = useState(false);
 
   const weatherIcon = useMemo(() => {
     const iconType = weatherInfo?.[dateString]?.weather?.[0]?.icon?.slice?.(
@@ -122,8 +128,6 @@ export default ({
     });
   }, [data, defaultLeftWidth, defaultTopMargin]);
 
-  console.log('calendar data', data);
-
   return (
     <Container>
       {type === CalendarTypeState.WEEK ? (
@@ -140,18 +144,22 @@ export default ({
               isAvaildableVisibleWeather ? {} : { justifyContent: 'center' }
             }
           >
-            {isAvaildableVisibleWeather ? (
+            {isAvaildableVisibleWeather && (
               <CalendarTopIcon
                 src={getAssetURL(weatherIcon)}
                 style={{ opacity: 0 }}
               />
-            ) : null}
+            )}
             <CalendarTopDay active={isDateToday(date)}>
               {date.getDate().toString().padStart(2, '0')}
             </CalendarTopDay>
-            {isAvaildableVisibleWeather ? (
-              <CalendarTopIcon src={getAssetURL(weatherIcon)} />
-            ) : null}
+            {isAvaildableVisibleWeather && (
+              <CalendarTopIcon
+                src={getAssetURL(weatherIcon)}
+                onClick={() => setIsWeatherModalOpen(true)}
+                style={{ cursor: 'pointer' }}
+              />
+            )}
           </CalendarTopWrap>
         </CalendarDay>
       )}
@@ -164,12 +172,13 @@ export default ({
               top={v.top}
               left={v.left + defaultLeftMargin}
               height={Math.abs(v.height)}
+              fieldSpaceId={v?.estimation?.field_space?.id}
               style={
                 v?.status === 'REQUESTED'
                   ? RequestedBarStyle
-                  : { backgroundColor: v?.estimation?.color }
+                  : { backgroundColor: CalendarBarColors?.[i] }
               }
-              onClick={(e) => {
+              onClick={(e: any) => {
                 setSelectedBarInfo(v);
                 setIsModalOpened(true);
                 setModalPosition({ x: e.clientX, y: e.clientY });
@@ -197,9 +206,9 @@ export default ({
               style={
                 v?.status === 'REQUESTED'
                   ? RequestedBarStyle
-                  : { backgroundColor: v?.estimation?.color }
+                  : { backgroundColor: CalendarBarColors?.[i] }
               }
-              onClick={(e) => {
+              onClick={(e: any) => {
                 setSelectedBarInfo(v);
                 setIsModalOpened(true);
                 setModalPosition({ x: e.clientX, y: e.clientY });
@@ -215,6 +224,13 @@ export default ({
               <Amount>{v?.total?.toLocaleString?.('ko')}m³</Amount>
             </Bar>
           ),
+        )}
+        {isAvaildableVisibleWeather && (
+          <WeatherModal
+            open={isWeatherModalOpen}
+            onClose={() => setIsWeatherModalOpen(false)}
+            data={weatherInfo?.[dateString]}
+          />
         )}
       </BarContainer>
     </Container>
@@ -346,12 +362,21 @@ const CalendarTopDay = styled.span<{ active: boolean }>`
         `}
 `;
 
-const Bar = styled.div<{
+interface IBar {
+  fieldSpaceId: any;
   type: CalendarTypeState;
   top: number;
   left: number;
   height: number;
-}>`
+}
+
+const Bar = ({ fieldSpaceId, ...props }: IBar & any) => {
+  useSpaceInfo(fieldSpaceId);
+  useFieldSpaceWeathers(fieldSpaceId);
+  return <StyledBar fieldSpaceId={fieldSpaceId} {...props} />;
+};
+
+const StyledBar = styled.div<IBar>`
   display: flex;
   flex-direction: column;
 

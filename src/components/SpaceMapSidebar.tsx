@@ -66,6 +66,10 @@ export default ({
   };
 
   const handleOpenAddSpaceModal = () => {
+    if (!selectedFieldInfo) {
+      setIsSelectModalOpen(true);
+      return;
+    }
     if (spaces && spaces.length > 0 && !(location?.state as any)?.searchText) {
       setIsSelectModalOpen(true);
     } else {

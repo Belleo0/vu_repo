@@ -10,7 +10,7 @@ export default ({ children }: { children: React.ReactNode }) => {
       <Header />
       <ContentContainer>
         <SpaceSidebar />
-        <ContentWrap>
+        <ContentWrap id="content-container">
           <Content>{children}</Content>
           <Footer />
         </ContentWrap>

@@ -4,12 +4,12 @@ import useSelectedSpaceInfo from '@hooks/useSelectedSpaceInfo';
 
 export const FIELD_SPACE_WEATHER_KEY = 'FIELD_SPACE_WEATHER';
 
-export default () => {
+export default (fieldSpaceId?: number) => {
   const spaceInfo = useSelectedSpaceInfo();
 
   return useQuery(
-    [FIELD_SPACE_WEATHER_KEY, spaceInfo?.id],
-    () => api.get(`/factory-spaces/${spaceInfo?.id}/weathers`),
+    [FIELD_SPACE_WEATHER_KEY, fieldSpaceId ?? spaceInfo?.id],
+    () => api.get(`/factory-spaces/${fieldSpaceId ?? spaceInfo?.id}/weathers`),
     { enabled: !!spaceInfo },
   );
 };
