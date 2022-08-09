@@ -18,7 +18,7 @@ import SpaceMarkerContent from '@components/SpaceMarkerContent';
 import getAssetURL from '@utils/getAssetURL';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import NaverMapPolyline from '@components/NaverMapPolyline';
-import { setPolylineInfo } from '@data/map';
+import { clearPolylineInfo, setPolylineInfo } from '@data/map';
 import NaverMapImageMarker from '@components/NaverMapImageMarker';
 import NaverMapDirectionMarker from '@components/NaverMapDirectionMarker';
 import DirectionMarkerContent from '@components/DirectionMarkerContent';
@@ -324,6 +324,10 @@ export default () => {
       }
     } else return;
   }, [factories, order]);
+
+  useEffect(() => {
+    dispatch(clearPolylineInfo());
+  }, [isLoading]);
 
   if (error) {
     alert('위치서비스를 활성화 해주세요');
