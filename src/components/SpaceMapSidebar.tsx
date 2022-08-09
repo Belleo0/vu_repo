@@ -104,9 +104,12 @@ export default ({
 
   function handleCheckSpaces(v: any) {
     if (spaces) {
-      return handleClickFactoryCard(v);
+      if (!selectedFieldInfo) {
+        setIsSelectModalOpen(true);
+      } else handleClickFactoryCard(v);
+    } else {
+      setIsNotFoundSpaceModal(true);
     }
-    setIsNotFoundSpaceModal(true);
   }
 
   function handleAddConstruction() {
