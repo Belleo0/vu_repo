@@ -80,31 +80,35 @@ export default () => {
   const companyType: string =
     (location.state as any)?.userType === 1 ? 'con' : 'rem'; // 유저 소속에 따른 타입 1: 건설사, 2: 레미콘사
 
-  // console.log('location state => ', location?.state);
-  // console.log('location state => ', company);
-  const temp1 = 'c';
-  const temp2 = 'qwe123@@';
+  // const temp1 = 'cc';
+  // const temp2 = 'qwe123@@';
+
   const requestSignUpHandler = async () => {
-    await axios
-      .post('http://52.78.198.181:9998/company_reg.php', {
-        company_type: 'CONSTRUCTION',
-        name: companyName,
-        address: companyAdress,
-      })
-      .then((res: any) => setConstructionCompanyId(res?.data?.rsult?.id));
+    if (companyType === 'con') {
+      await axios
+        .post('http://52.78.198.181:9998/company_reg.php', {
+          company_type: 'CONSTRUCTION',
+          name: companyName,
+          address: companyAdress,
+        })
+        .then((res: any) => setConstructionCompanyId(res?.data?.rsult?.id));
+    }
 
     await api
       .post('/auth/register', {
         company_id: companyType === 'con' ? constructionCompanyId : company?.id,
-        signname: temp1 || (location.state as any)?.signname,
-        password: temp2 || (location.state as any)?.password,
-        name: 'asdsd' || (location.state as any)?.name,
+        signname: (location.state as any)?.signname,
+        password: (location.state as any)?.password,
+        name: '11' || (location.state as any)?.name,
         phone: '01000000001' || (location.state as any)?.phone,
         position: position || '',
         tel: tel || '',
       })
       .then(async () => {
         setSuccessOpenModal(true);
+      })
+      .catch((e) => {
+        console.log(e);
       });
   };
 
@@ -173,8 +177,8 @@ export default () => {
   const successCloseModal = async () => {
     await api
       .post('/auth/login', {
-        username: temp1 || (location?.state as any)?.signname,
-        password: temp2 || (location?.state as any)?.password,
+        username: (location?.state as any)?.signname,
+        password: (location?.state as any)?.password,
       })
       .then(async (res) => {
         setToken(res.data);
