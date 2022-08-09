@@ -154,6 +154,11 @@ export default () => {
           if (status !== naver.maps.Service.Status.OK) {
             return alert('문제가 발생했습니다.');
           }
+          if (!response.v2.addresses[0]) {
+            alert('주소 위치를 찾을 수 없습니다.');
+            setRealAddress('');
+            navigate('/remicon-map', { state: { searchText: '' } });
+          }
           const result = response.v2.addresses[0];
           const sido = result.addressElements.find((element: any) =>
             element.types.includes('SIDO'),
@@ -188,7 +193,6 @@ export default () => {
             if (status !== naver.maps.Service.Status.OK) {
               return alert('문제가 발생했습니다.');
             }
-
             const result = response.result.items?.[0]; // 검색결과 단일
             const address = result.address;
             const sido = result.addrdetail.sido;
