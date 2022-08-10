@@ -74,24 +74,39 @@ export default ({
 
       const thisStartTime = new Date(v.start_time);
       const thisStartTimeHour = thisStartTime.getHours();
+      const thisStartTimeMinutes = thisStartTime.getMinutes();
 
       const thisEndTime = new Date(v.end_time);
       const thisEndTimeHour = thisEndTime.getHours();
+      const thisEndTimeMinutes = thisEndTime.getMinutes();
 
       const beforeStartTime = isFirstBar
         ? null
         : new Date(data[i - 1].start_time);
+
       const beforeEndTime = isFirstBar
         ? null
         : new Date(sortedData[i - 1].end_time);
 
+      // const isDuplicated = isFirstBar
+      //   ? false
+      //   : beforeStartTime! < thisStartTime && thisStartTime < beforeEndTime!;
+
       const isDuplicated = isFirstBar
         ? false
-        : beforeStartTime! < thisStartTime && thisStartTime < beforeEndTime!;
+        : beforeStartTime!.getTime() === thisStartTime.getTime() ||
+          thisEndTime.getTime() === beforeEndTime!.getTime();
+
+      const isOverwrapped = isFirstBar
+        ? false
+        : beforeStartTime!.getTime() <= thisStartTime.getTime() ||
+          thisEndTime.getTime() <= beforeEndTime!.getTime();
 
       const time = `${thisStartTimeHour >= 12 ? '오후' : '오전'} ${
         thisStartTimeHour > 12 ? thisStartTimeHour - 12 : thisStartTimeHour
-      }시 ~ ${thisEndTimeHour > 12 ? thisEndTimeHour - 12 : thisEndTimeHour}시`;
+      }시 ${thisStartTimeMinutes > 0 ? thisStartTimeMinutes + '분' : ''} ~ ${
+        thisEndTimeHour > 12 ? thisEndTimeHour - 12 : thisEndTimeHour
+      }시 ${thisEndTimeMinutes > 0 ? thisEndTimeMinutes + '분' : ''}`;
 
       return {
         ...v,
@@ -107,6 +122,7 @@ export default ({
             hourHeight,
         ),
         isDuplicated,
+        isOverwrapped,
         left: isFirstBar ? 0 : isDuplicated ? defaultLeftWidth : 0,
       };
     });
@@ -170,7 +186,10 @@ export default ({
               key={i}
               type={type}
               top={v.top}
-              left={v.left + defaultLeftMargin}
+              // left={v.left + defaultLeftMargin}
+              left={
+                v.isOverwrapped ? v.left + i * 5 : v.left + defaultLeftMargin
+              }
               height={Math.abs(v.height)}
               fieldSpaceId={v?.estimation?.field_space?.id}
               style={
@@ -201,7 +220,10 @@ export default ({
               key={i}
               type={type}
               top={v.top}
-              left={v.left + defaultLeftMargin}
+              // left={v.left + defaultLeftMargin}
+              left={
+                v.isOverwrapped ? v.left + i * 20 : v.left + defaultLeftMargin
+              }
               height={Math.abs(v.height)}
               style={
                 v?.status === 'REQUESTED'
@@ -265,6 +287,10 @@ const Name = styled.span`
   text-align: left;
   color: #000;
   margin-bottom: 4px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Time = styled.span`
@@ -386,6 +412,9 @@ const StyledBar = styled.div<IBar>`
   z-index: 300;
 
   cursor: pointer;
+  &:hover {
+    z-index: 9999;
+  }
 
   ${({ top }) =>
     css`
@@ -411,9 +440,6 @@ const RequestedBarStyle = {
   backgroundColor: '#ffffff',
   backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23c7c7c7' stroke-width='3' stroke-dasharray='2%2c7' stroke-dashoffset='57' stroke-linecap='square'/%3e%3c/svg%3e")`,
   borderRadius: ' 6px',
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
   padding: '8px 10px',
   marginBottom: '2px',
   cursor: 'pointer',
