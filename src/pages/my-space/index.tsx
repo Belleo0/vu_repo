@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import SpaceBar from '@components/SpaceBar';
@@ -10,6 +10,9 @@ import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import MyFactoryVendorTable from '@components/MyFactoryVendorTable';
+import Button, { ButtonSize, ButtonType } from '@components/Button';
+import InviteModal from '@components/InviteModal';
+import { useNavigate } from 'react-router-dom';
 
 export default () => {
   const isFieldUser = useIsFieldUser();
@@ -20,6 +23,10 @@ export default () => {
     isLoading,
     supplierMutate,
   } = useMySpaceInfo(selectedSpaceId);
+
+  const navigate = useNavigate();
+
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   return (
     <SpaceLayout>
@@ -62,13 +69,37 @@ export default () => {
             />
           </MidSectionInSection>
           <MidSectionInSection>
-            <Title>현장멤버 ({members?.length})</Title>
+            <TitleRow>
+              <Title>현장멤버 ({members?.length})</Title>
+              <Button
+                size={ButtonSize.SMALL}
+                type={ButtonType.OUTLINE}
+                icon="ic-circle-more"
+                iconStyle={{ width: 12 }}
+                containerStyle={{ width: 106, height: 36 }}
+                onClick={() => setInviteModalOpen(true)}
+              >
+                초대하기
+              </Button>
+            </TitleRow>
             <SpaceMembers data={members} />
           </MidSectionInSection>
         </MidSection>
         {isFieldUser ? (
           <BottomSection>
-            <Title>납품사 ({suppliers?.length})</Title>
+            <TitleRow>
+              <Title>납품사 ({suppliers?.length})</Title>
+              <Button
+                size={ButtonSize.SMALL}
+                type={ButtonType.PRIMARY}
+                icon="ic-more-white"
+                iconStyle={{ width: 10 }}
+                containerStyle={{ width: 106, height: 36 }}
+                onClick={() => navigate('/supplier-choice')}
+              >
+                업체추가
+              </Button>
+            </TitleRow>
             <MyFieldVendorTable data={suppliers} />
           </BottomSection>
         ) : (
@@ -77,6 +108,10 @@ export default () => {
             revalidate={() => supplierMutate()}
           />
         )}
+        <InviteModal
+          open={inviteModalOpen}
+          onClose={() => setInviteModalOpen(false)}
+        />
       </Container>
     </SpaceLayout>
   );
@@ -131,4 +166,10 @@ const RemiconSpaceTitle = styled.span`
   text-align: left;
   color: #222;
   margin-bottom: 40px;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 `;
