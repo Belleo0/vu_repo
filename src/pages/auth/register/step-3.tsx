@@ -555,7 +555,7 @@ const ProgressCircle = styled.div`
 
 const ProgressDashed = styled.img`
   width: 14px;
-  hieght: 1px;
+  height: 1px;
   margin: 0 6px;
 `;
 
