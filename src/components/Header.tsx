@@ -93,7 +93,7 @@ export default () => {
   return (
     <Container>
       <LogoWrap onClick={() => navigate('/')}>
-        <img src={getAssetURL('../assets/logo.svg')} />
+        <img src={getAssetURL('../assets/logo2.svg')} />
       </LogoWrap>
       <ContentContainer>
         <MenuWrap>
