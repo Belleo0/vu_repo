@@ -191,15 +191,15 @@ const Container = styled.div`
 
 const LogoWrap = styled.div`
   display: block;
-  width: 120px;
-  height: 34px;
+  width: 219px;
+  height: 35px;
   margin-top: 4px;
-  margin-right: 288px;
+  margin-right: 200px;
   cursor: pointer;
 
   & > img {
-    width: 120px;
-    height: 34px;
+    width: 219px;
+    height: 35px;
   }
 `;
 
