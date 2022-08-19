@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,30 +8,25 @@ import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
 import MemberListTable from '@components/MemberListTable';
 import FriendSideBar from '@components/FriendSideBar';
-
-const friendData = [
-  {
-    name: '김건설',
-    company: '(주)대성건설',
-    position: '대리',
-    authority: '1',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 0,
-  },
-];
+import useFriends from '@api/useFriends';
+import FriendListTable from '@components/FriendListTable';
 
 export default () => {
-  const userInfo = useUserInfo();
-  const navigate = useNavigate();
-  const selectedSpaceId = useSelectedSpaceId();
+  const [selectedFriendInfo, setSelectedFriendInfo] = useState<any>(null);
 
   const {
-    data: { info, suppliers },
-    isLoading,
-    supplierMutate,
-  } = useMySpaceInfo(selectedSpaceId);
+    data: { friends, error, refetch },
+  } = useFriends();
+
+  const setSelectedIdWithFirstId = () => {
+    if (friends && friends?.length > 0) {
+      setSelectedFriendInfo(friends?.[0]);
+    }
+  };
+
+  useEffect(() => {
+    setSelectedIdWithFirstId();
+  }, [friends]);
 
   return (
     <MypageLayout>
@@ -39,10 +34,15 @@ export default () => {
         <Title>친구관리</Title>
         <MemberWrap>
           <SideBarSection>
-            <FriendSideBar />
+            <FriendSideBar
+              data={friends}
+              selectedFriendInfo={selectedFriendInfo}
+              setSelectedFriendInfo={setSelectedFriendInfo}
+              mutate={refetch}
+            />
           </SideBarSection>
           <RightSection>
-            <MemberListTable data={friendData} />
+            <FriendListTable data={selectedFriendInfo} mutate={refetch} />
           </RightSection>
         </MemberWrap>
       </Container>

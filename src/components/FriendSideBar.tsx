@@ -4,33 +4,21 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import SearchInput from './SearchInput';
-import Button, { ButtonType } from './Button';
 import { useNavigate } from 'react-router-dom';
-import { Container } from './Atoms';
-import SpaceCard from './SpaceCard';
-import useSpaces from '@api/useSpaces';
-import { useDispatch } from 'react-redux';
 import MemberCard from './MemberCard';
 import ScrollBox from './ScrollBox';
 import FriendCard from './FriendCard';
 
-enum ChipTypeEnum {
-  DEFAULT,
-  ACTIVE,
-  HIDE,
-}
-
 enum TabTypeEnum {
   DEFAULT,
-  HIDE,
+  REQUEST,
 }
-
-export default () => {
-  const isFieldUser = useIsFieldUser();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const [chipType, setChipType] = useState<ChipTypeEnum>(ChipTypeEnum.DEFAULT);
+export default ({
+  data,
+  selectedFriendInfo,
+  setSelectedFriendInfo,
+  mutate,
+}: any) => {
   const [tabType, setTabType] = useState<TabTypeEnum>(TabTypeEnum.DEFAULT);
   const [isMounted, setIsMounted] = useState(false);
   const [search, setSearch] = useState('');
@@ -39,29 +27,14 @@ export default () => {
     return tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y';
   }, [tabType]);
 
-  const { data: spaces = [], refetch } = useSpaces(isHide);
-
-  const searchedSpaces: any[] = useMemo(() => {
-    if (!spaces) return [];
-    return spaces.filter((v: any) => v?.name?.includes(search));
-  }, [spaces, search]);
+  const searchedFriend: any[] = useMemo(() => {
+    if (!data) return [];
+    return data.filter((v: any) => v?.name?.includes(search));
+  }, [data, search]);
 
   const handleChangeTabType = (type: TabTypeEnum) => {
     setTabType(type);
     setIsMounted(false);
-  };
-
-  const handleChangeChipType = (type: ChipTypeEnum) => {
-    setChipType(type);
-    setIsMounted(false);
-  };
-
-  const setSelectedIdWithFirstId = () => {
-    if (spaces && spaces?.length > 0) {
-      // console.log('data?.result?.[0]?.id', spaces?.[0]?.id);
-      dispatch(setSelectedSpaceInfo(spaces?.[0]));
-      setIsMounted(true);
-    }
   };
 
   return (
@@ -78,27 +51,28 @@ export default () => {
             active={tabType === TabTypeEnum.DEFAULT}
             onClick={() => handleChangeTabType(TabTypeEnum.DEFAULT)}
           >
-            친구목록 (99)
+            친구목록 ({data?.length})
           </Tab>
           <Tab
-            active={tabType === TabTypeEnum.HIDE}
-            onClick={() => handleChangeTabType(TabTypeEnum.HIDE)}
+            active={tabType === TabTypeEnum.REQUEST}
+            onClick={() => handleChangeTabType(TabTypeEnum.REQUEST)}
           >
             받은요청 (03)
           </Tab>
         </TabContainer>
       </SpaceFilterWrap>
       <SearchedSpaceWrap>
-        {searchedSpaces.map((v: any, i: number) => (
+        {searchedFriend?.map((v: any, i: number) => (
           <FriendCard
-            key={`space-${v.id}-${i}`}
+            key={v?.id}
             info={v}
-            id={v.id}
+            id={v?.id}
             name={v?.name}
-            address={v?.basic_address}
-            revalidate={refetch}
-            isHide={tabType === TabTypeEnum.HIDE}
-            setSelectedIdWithFirstId={setSelectedIdWithFirstId}
+            position={v?.position}
+            revalidate={mutate}
+            isHide={tabType === TabTypeEnum.REQUEST}
+            active={v.id === selectedFriendInfo?.id}
+            onClick={() => setSelectedFriendInfo(v)}
           />
         ))}
       </SearchedSpaceWrap>

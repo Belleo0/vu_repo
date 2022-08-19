@@ -12,21 +12,22 @@ import ScrollBox from './ScrollBox';
 import TextModal from './TextModal';
 import ImgModal from './ImgModal';
 import useIsFieldUser from '@hooks/useIsFieldUser';
+import api from '@api';
 
 interface IMemberTable {
-  data: any[];
-  revalidate?: any;
+  data: any;
+  mutate?: any;
 }
 
-export default ({ data = [], revalidate }: IMemberTable) => {
-  console.log('data', data);
+export default ({ data, mutate }: IMemberTable) => {
   const navigate = useNavigate();
   const isFieldUser = useIsFieldUser();
 
   const [isOrderAuthority, setIsOrderAuthority] = useState<boolean>(false);
   const [confirmAuthorityModal, setConfirmAuthorityModal] =
     useState<boolean>(false);
-  const [isDeleteMember, setIsDeleteMember] = useState<boolean>(false);
+  const [isDeleteMemberModal, setIsDeleteMemberModal] =
+    useState<boolean>(false);
   const [ConfirmDeleteMember, setConfirmDeleteMember] =
     useState<boolean>(false);
 
@@ -35,51 +36,47 @@ export default ({ data = [], revalidate }: IMemberTable) => {
     setConfirmAuthorityModal(!confirmAuthorityModal);
   };
 
-  const handleDeleteMember = () => {
-    setIsDeleteMember(!isDeleteMember);
+  const handleDeleteMember = async () => {
+    try {
+      await api.delete(`/frineds/${data?.id}`);
+      setIsDeleteMemberModal(false);
+      await mutate();
+    } catch (err) {
+      console.log(err);
+      window.alert('에러 발생..');
+    }
   };
 
   return (
     <MemberListContainer>
-      {data?.map((v: any, i: number) => (
-        <MemberCell key={i}>
+      {data && (
+        <MemberCell>
           <CellLeftSection>
             <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
             <MemberRow>
               <MemberInfoWrap>
-                <CompanyInfo>{v?.company.name}</CompanyInfo>
-                <NameInfo>{v?.name}</NameInfo>
-                <PositionInfo>{v.position}</PositionInfo>
-                {v?.authority && isFieldUser ? (
+                <CompanyInfo>{data?.company.name}</CompanyInfo>
+                <NameInfo>{data?.name}</NameInfo>
+                <PositionInfo>{data?.position}</PositionInfo>
+                {data?.authority && isFieldUser ? (
                   <Chip>주문담당자</Chip>
-                ) : v?.authority ? (
+                ) : data?.authority ? (
                   <Chip>공장관리자</Chip>
                 ) : null}
               </MemberInfoWrap>
               <MemberButtonWrap>
                 <Button
                   size={ButtonSize.SMALL}
-                  type={
-                    v?.status === 0
-                      ? ButtonType.DISABLED
-                      : v.status === 1
-                      ? ButtonType.GRAY_BLACK
-                      : ButtonType.PRIMARY
-                  }
-                  icon={
-                    v?.status === 0
-                      ? 'ic-add-person-gray'
-                      : v.status === 1
-                      ? 'ic-minus-people-bk'
-                      : 'ic-add-person-white'
-                  }
+                  type={ButtonType.GRAY_BLACK}
+                  icon={'ic-minus-people-bk'}
                   containerStyle={{
                     width: 'auto',
                     height: '42px',
                     marginRight: 10,
                   }}
+                  onClick={() => setIsDeleteMemberModal(true)}
                 >
-                  {v.status === 1 ? '친구삭제 ' : '친구추가'}
+                  친구삭제
                 </Button>
                 <Button
                   size={ButtonSize.SMALL}
@@ -95,23 +92,23 @@ export default ({ data = [], revalidate }: IMemberTable) => {
               <MemberContactWrap>
                 <ContactInfo>
                   <Icon src={getAssetURL('../assets/ic-cellphone-bk.svg')} />
-                  {v?.phone}
+                  {data?.phone}
                 </ContactInfo>
                 <ContactInfo>
                   <Icon src={getAssetURL('../assets/ic-phone-bk.svg')} />
-                  {v?.tel}
+                  {data?.tel}
                 </ContactInfo>
                 <ContactInfo>
                   <Icon src={getAssetURL('../assets/ic-email-bk.svg')} />
-                  {v?.signname}
+                  {data?.signname}
                 </ContactInfo>
               </MemberContactWrap>
             </MemberRow>
           </CellLeftSection>
-          {v?.authority ? null : (
+          {!data?.request ? null : (
             <AuthorityButtonWrap>
               <Button
-                type={ButtonType.BLACK_OUTLINE}
+                type={ButtonType.OUTLINE}
                 size={ButtonSize.SMALL}
                 containerStyle={{
                   width: 86,
@@ -121,7 +118,7 @@ export default ({ data = [], revalidate }: IMemberTable) => {
                 }}
                 onClick={() => setIsOrderAuthority(true)}
               >
-                권한위임
+                수락
               </Button>
               <Button
                 type={ButtonType.BLACK_OUTLINE}
@@ -131,14 +128,14 @@ export default ({ data = [], revalidate }: IMemberTable) => {
                   height: 36,
                   borderRadius: 40,
                 }}
-                onClick={() => setIsDeleteMember(true)}
+                onClick={() => setIsDeleteMemberModal(true)}
               >
-                삭제
+                거절
               </Button>
             </AuthorityButtonWrap>
           )}
         </MemberCell>
-      ))}
+      )}
       <TextModal
         open={isOrderAuthority}
         onClose={() => setIsOrderAuthority(false)}
@@ -147,10 +144,10 @@ export default ({ data = [], revalidate }: IMemberTable) => {
         submitText={'권한위임'}
       />
       <TextModal
-        open={isDeleteMember}
-        onClose={() => setIsDeleteMember(false)}
+        open={isDeleteMemberModal}
+        onClose={() => setIsDeleteMemberModal(false)}
         onSubmit={handleDeleteMember}
-        content={`구성원을 중앙동 일동미라주더마린에서\n삭제하시겠습니까?\n삭제 시 거래 및 모든 채팅방에서 삭제됩니다.`}
+        content={`친구를 삭제하시겠습니까?`}
         submitText={'삭제'}
       />
       <ImgModal
