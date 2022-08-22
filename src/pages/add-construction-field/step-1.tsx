@@ -147,6 +147,7 @@ export default () => {
     setSearchedAreas([]);
     setSearchedJibun([]);
     setJibun('');
+    setResultMessage('');
     setIsPostcodeModalOpened(false);
   };
 
