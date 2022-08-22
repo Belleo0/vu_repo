@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
+import ScrollBox from './ScrollBox';
 
 interface IMembers {
   data: any[];
@@ -29,7 +30,7 @@ export default ({ data = [] }: IMembers) => {
   );
 };
 
-const Container = styled.div`
+const Container = styled(ScrollBox)`
   display: flex;
   flex-direction: column;
   width: 100%;

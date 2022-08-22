@@ -12,41 +12,34 @@ interface ISpaceCard {
   info: any;
   id: number;
   name: string;
-  address: string;
+  position: string;
   revalidate: () => any;
   isHide: boolean;
-  setSelectedIdWithFirstId: any;
+  active: boolean;
+  onClick: any;
 }
 
 export default ({
   info,
   id,
   name,
-  address,
+  active,
+  position,
   revalidate,
   isHide,
-  setSelectedIdWithFirstId,
+  onClick,
 }: ISpaceCard) => {
-  const isFieldUser = useIsFieldUser();
-
-  const dispatch = useDispatch();
-  const selectedSpaceId = useSelectedSpaceId();
-
-  const isActive = useMemo(() => {
-    return selectedSpaceId === id;
-  }, [selectedSpaceId]);
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Container isActive={isActive} isOpen={isOpen}>
-      <InfoContainer onClick={() => dispatch(setSelectedSpaceInfo(info))}>
+    <Container isActive={active} isOpen={isOpen}>
+      <InfoContainer onClick={onClick}>
         <InfoWrap>
           <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
         </InfoWrap>
         <PeopleCountWrap>
           <Title>{name}</Title>
-          <Position>대리</Position>
+          <Position>{position}</Position>
         </PeopleCountWrap>
       </InfoContainer>
     </Container>
