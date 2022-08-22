@@ -58,7 +58,7 @@ export default () => {
           )}
         </BarSection>
         <MidSection>
-          <MidSectionInSection>
+          <MidSectionInSection style={{ marginTop: 14 }}>
             <Title>알림내역 (999) - 2차 범위</Title>
             <Notifications
               data={new Array(15).fill({

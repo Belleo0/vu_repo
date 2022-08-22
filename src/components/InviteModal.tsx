@@ -3,10 +3,42 @@ import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
+import { useState } from 'react';
 import Button, { ButtonSize, ButtonType } from './Button';
 import Modal from './Modal';
+import TextModal from './TextModal';
+
+const inviteButtonItems = [
+  {
+    icon: '../assets/ic-member-talk.png',
+    title: '카카오톡으로 현장멤버 초대 링크 전송하기',
+    helperText: '번호 입력시 카카오톡으로 초대할 수 있습니다.',
+    onClick: () => {},
+  },
+  {
+    icon: '../assets/ic-member-email.png',
+    title: '이메일로 현장멤버 초대 링크 전송하기',
+    helperText: '메일 주소 입력시 이메일로 초대할 수 있습니다.',
+    onClick: () => {},
+  },
+  {
+    icon: '../assets/ic-member-list.png',
+    title: '내 친구목록 중에서 초대하기',
+    helperText: '내 친구를 초대할 수 있습니다.',
+    onClick: () => {},
+  },
+  {
+    icon: '../assets/ic-member-search.png',
+    title: '회원 직접 검색하여 초대하기',
+    helperText: '회원을 직접 검색하여 초대할 수 있습니다.',
+    onClick: () => {},
+  },
+];
 
 export default ({ open, data, onClose }: any) => {
+  const [isEmailInvitationModal, setIsEmailInvitationModal] =
+    useState<boolean>(false);
+
   return (
     <Modal open={open} onClose={onClose}>
       <Container>
@@ -21,45 +53,24 @@ export default ({ open, data, onClose }: any) => {
             <Title>초대하기</Title>
           </TitleWrap>
           <InviteButtonWrap>
-            <InviteButton>
-              <Icon src={getAssetURL(`../assets/ic-member-talk.png`)} />
-              <TextWrap>
-                <ButtonTitle>
-                  카카오톡으로 현장멤버 초대 링크 전송하기
-                </ButtonTitle>
-                <HelperText>
-                  번호 입력시 카카오톡으로 초대할 수 있습니다.
-                </HelperText>
-              </TextWrap>
-            </InviteButton>
-            <InviteButton>
-              <Icon src={getAssetURL(`../assets/ic-member-email.png`)} />
-              <TextWrap>
-                <ButtonTitle>이메일로 현장멤버 초대 링크 전송하기</ButtonTitle>
-                <HelperText>
-                  메일 주소 입력시 이메일로 초대할 수 있습니다.
-                </HelperText>
-              </TextWrap>
-            </InviteButton>
-            <InviteButton>
-              <Icon src={getAssetURL(`../assets/ic-member-list.png`)} />
-              <TextWrap>
-                <ButtonTitle>내 친구목록 중에서 초대하기</ButtonTitle>
-                <HelperText>내 친구를 초대할 수 있습니다.</HelperText>
-              </TextWrap>
-            </InviteButton>
-            <InviteButton>
-              <Icon src={getAssetURL(`../assets/ic-member-search.png`)} />
-              <TextWrap>
-                <ButtonTitle>회원 직접 검색하여 초대하기</ButtonTitle>
-                <HelperText>
-                  회원을 직접 검색하여 초대할 수 있습니다.
-                </HelperText>
-              </TextWrap>
-            </InviteButton>
+            {inviteButtonItems.map((v: any, i: number) => (
+              <InviteButton onClick={v.onClick}>
+                <Icon src={getAssetURL(`${v.icon}`)} />
+                <TextWrap>
+                  <ButtonTitle>{v.title}</ButtonTitle>
+                  <HelperText>{v.helperText}</HelperText>
+                </TextWrap>
+              </InviteButton>
+            ))}
           </InviteButtonWrap>
         </Contents>
       </Container>
+      <TextModal
+        open={isEmailInvitationModal}
+        onClose={() => setIsEmailInvitationModal(false)}
+        content={'주문담당자 권한을 위임하시겠습니까?'}
+        submitText={'권한위임'}
+      />
     </Modal>
   );
 };
