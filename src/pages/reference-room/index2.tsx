@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { useLocation } from 'react-router-dom';
 import ReferenceRoomLayout from '@layout/ReferenceRoomLayout';
 import api from '@api';
+
 import _01 from '../../assets/01_img.png';
 import _02 from '../../assets/02_img.png';
 import _03 from '../../assets/03_img.png';
@@ -15,12 +16,6 @@ import Select from '../../components/Select';
 import Search from '../../components/SearchInput';
 
 import NaverMap from '@components/NaverMap';
-import NaverMapSpaceMarker from '@components/NaverMapSpaceMarker';
-
-import NaverMapPolyline from '@components/NaverMapPolyline';
-import NaverMapDirectionMarker from '@components/NaverMapDirectionMarker';
-import DirectionMarkerContent from '@components/DirectionMarkerContent';
-import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 
 enum Active {
   ACTIVE,
@@ -152,9 +147,9 @@ export default () => {
           })}
         </LocationWrap>
         <NaverMap
-          lat={37.3591614}
-          lng={127.1054221}
-          zoom={15}
+          lat={37.5642135}
+          lng={127.0016985}
+          zoom={12}
           style={{
             width: 'auto',
             height: '520px',
