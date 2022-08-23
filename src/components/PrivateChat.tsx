@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState, useRef } from 'react';
 import FileUpload from '@components/FileUpload';
+import api from '@api';
 
 interface IPrivateChat {
   user: any;
@@ -128,10 +129,19 @@ export default ({
   const [image, setImage] = useState<any>();
   const [reple, setReple] = useState<any>();
 
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files;
     setImage(newFile);
   };
+
+  useEffect(() => {
+    scrollRef.current!.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+  }, []);
 
   useEffect(() => {
     console.log(reple);
@@ -163,7 +173,7 @@ export default ({
       <ChatContent>
         {chatModel.map((v: any) => {
           return v.me ? (
-            <MeCharacterWrap key={v.id}>
+            <MeCharacterWrap key={v.id} ref={scrollRef}>
               <ChatWrap>
                 <RightDateWrap>
                   <RightRepeatItem>{v.date}</RightRepeatItem>
@@ -184,7 +194,7 @@ export default ({
               </ChatWrap>
             </MeCharacterWrap>
           ) : (
-            <NotMeChatWrap>
+            <NotMeChatWrap ref={scrollRef}>
               <CharacterWrap key={v.id}>
                 <Avatar src={getAssetURL('../assets/tempAvator.png')} />
                 <UserInfoWrap>
