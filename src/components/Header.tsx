@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import ScrollBox from './ScrollBox';
 import PrivateChat from './PrivateChat';
@@ -15,8 +15,10 @@ import { clearSelectedSpaceInfo } from '@data/space';
 import { clearPolylineInfo } from '@data/map';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import Select from './Select';
+import { userModel, friendsModel } from './temp';
 
 import SearchInput from './SearchInput';
+import api from '@api';
 
 const fieldMenus = [
   {
@@ -73,7 +75,6 @@ const profileMenus = [
     path: '/notification',
   },
 ];
-
 export default () => {
   const isLogin = useIsLogin();
   const userInfo = useUserInfo();
@@ -82,10 +83,14 @@ export default () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [openProfileNav, setOpenProfileNav] = useState<any>(false);
-  const [oepnChat, setOpenChat] = useState(false);
-  const [swapList, setSwapList] = useState('c'); //f: friends , c: chat
+  const [oepnChat, setOpenChat] = useState(true);
+  const [swapList, setSwapList] = useState('f'); //f: friends , c: chat
   const [search, setSearch] = useState<string>('');
   const [openPrivateChat, setOpenPrivateChat] = useState(false);
+
+  const [friendsList, setFriendsList] = useState<any>();
+  const [chatList, setChatList] = useState<any>();
+  const [outNotificationCount, setOutNotificationCount] = useState(100);
 
   const dispatch = useDispatch();
 
@@ -98,118 +103,30 @@ export default () => {
     dispatch(clearPolylineInfo());
   };
 
-  const friendsModel = [
-    {
-      company: '(주)대성건설',
-      name: '김수현',
-      rank: '대리',
-    },
-    {
-      company: '(주)2',
-      name: '차차장',
-      rank: '차장',
+  const handleChangeSearch = (e: any) => {
+    const searched = e;
+    if (swapList.includes('c')) {
+      const searchedItem = userModel.filter((el: any) => {
+        return el.name === searched || el.company === searched;
+      });
+      setChatList(searchedItem);
+    } else {
+      const searchedItem = friendsModel.filter((el: any) => {
+        return el.name === searched || el.company === searched;
+      });
+      setFriendsList(searchedItem);
+    }
+  };
 
-      content: '내용입니다123123zxcxzc23dsvdfsv',
-      date: '05.15',
-      time: '15:24',
-      count: 20,
-    },
-    {
-      company: '(주)3',
-      name: '대대리',
-      rank: '대리',
+  useEffect(() => {
+    setSearch('');
+  }, [swapList]);
 
-      content: '내용입니34543543543534453654645654654654다',
-      date: '07.26',
-      time: '15:24',
-      count: 333,
-    },
-    {
-      company: '(주)대성건설',
-      name: '김수현',
-      rank: '대리',
-    },
-    {
-      company: '(주)2',
-      name: '차차장',
-      rank: '차장',
-
-      content: '내용입니다123123zxcxzc23dsvdfsv',
-      date: '05.15',
-      time: '15:24',
-      count: 20,
-    },
-    {
-      company: '(주)3',
-      name: '대대리',
-      rank: '대리',
-
-      content: '내용입니34543543543534453654645654654654다',
-      date: '07.26',
-      time: '15:24',
-      count: 333,
-    },
-  ];
-  const userModel = [
-    {
-      company: '(주)대성건설',
-      name: '김수현',
-      rank: '대리',
-      content: '내용입니다,,,,, ,,,,,,ASD#Q@WD@#QFDEFV $T%#$@@^$%^$#@$',
-      date: '02.36',
-      time: '15:24',
-      count: 1,
-    },
-    {
-      company: '(주)2',
-      name: '차차장',
-      rank: '차장',
-
-      content: '내용입니다123123zxcxzc23dsvdfsv',
-      date: '05.15',
-      time: '15:24',
-      count: 20,
-    },
-    {
-      company: '(주)3',
-      name: '대대리',
-      rank: '대리',
-
-      content: '내용입니34543543543534453654645654654654다',
-      date: '07.26',
-      time: '15:24',
-      count: 333,
-    },
-    {
-      company: '(주)대성건설',
-      name: '김수현',
-      rank: '대리',
-      content: '내용입니다,,,,, ,,,,,,ASD#Q@WD@#QFDEFV $T%#$@@^$%^$#@$',
-      date: '02.36',
-      time: '15:24',
-      count: 1,
-    },
-    {
-      company: '(주)2',
-      name: '차차장',
-      rank: '차장',
-
-      content: '내용입니다123123zxcxzc23dsvdfsv',
-      date: '05.15',
-      time: '15:24',
-      count: 20,
-    },
-    {
-      company: '(주)3',
-      name: '대대리',
-      rank: '대리',
-
-      content: '내용입니34543543543534453654645654654654다',
-      date: '07.26',
-      time: '15:24',
-      count: 333,
-    },
-  ];
+  useEffect(() => {
+    api.get(`/frineds?keyword=${search}`).then((res) => {
+      setFriendsList(res.data.result);
+    });
+  }, [search]);
 
   return (
     <Container>
@@ -243,121 +160,131 @@ export default () => {
               <IconContainer>
                 <IconWrap>
                   <ChatIcon
-                    src={getAssetURL('../assets/ic-chat.svg')}
                     onClick={() => {
                       setOpenChat(!oepnChat);
                     }}
-                  />
-                  {oepnChat && !openPrivateChat ? (
-                    <CahtingWrap>
-                      <ChatTitleWrap>
-                        <ChatTitle
-                          onClick={() => {
-                            setSwapList('c');
-                          }}
-                          active={swapList.includes('c')}
-                        >
-                          채팅
-                        </ChatTitle>
-                        <FriendsTitle
-                          onClick={() => {
-                            setSwapList('f');
-                          }}
-                          active={swapList.includes('f')}
-                        >
-                          친구
-                        </FriendsTitle>
-                      </ChatTitleWrap>
-                      <SearchWrap>
-                        <SearchInput
-                          value={search}
-                          onChange={(e: any) => setSearch(e.target.value)}
-                          containerStyle={{ width: '320px' }}
-                          placeholder={'이름 검색'}
-                        />
-                      </SearchWrap>
-                      <ChatWrap>
-                        {swapList.includes('c')
-                          ? userModel.map((v: any, i: any) => {
-                              return (
-                                <>
-                                  <ChatMenuList
-                                    key={i}
-                                    onClick={() => {
-                                      setOpenPrivateChat(true);
-                                    }}
-                                  >
-                                    <Avatar
-                                      src={getAssetURL(
-                                        '../assets/tempAvator.png',
-                                      )}
-                                    />
-                                    <ChatLeftWrap>
-                                      <CompanyWrapper>
-                                        <CompanyName>{v.company}</CompanyName>
-                                        <UserName>{v.name}</UserName>
-                                        <Rank>{v.rank}</Rank>
-                                      </CompanyWrapper>
-                                      <Content>{v.content}</Content>
-                                    </ChatLeftWrap>
-                                    <ChatRightWrap>
-                                      <DateWrap>
-                                        <Date>{v.date}</Date>
-                                        <Date>{v.time}</Date>
-                                      </DateWrap>
-                                      <NotificationCount>
-                                        {v.count}
-                                      </NotificationCount>
-                                    </ChatRightWrap>
-                                  </ChatMenuList>
-                                  <LineGuard />
-                                </>
-                              );
-                            })
-                          : friendsModel.map((v: any, i: any) => {
-                              return (
-                                <FriendsMenuList
-                                  key={i}
-                                  onClick={() => {
-                                    setOpenPrivateChat(true);
-                                  }}
-                                >
+                  >
+                    <OutNotificationCnt>
+                      {outNotificationCount > 99 ? '9' : outNotificationCount}
+                    </OutNotificationCnt>
+
+                    {oepnChat && !openPrivateChat ? (
+                      <CahtingWrap onClick={(e) => e.stopPropagation()}>
+                        <ChatTitleWrap>
+                          <ChatTitle
+                            onClick={() => {
+                              setSwapList('c');
+                            }}
+                            active={swapList.includes('c')}
+                          >
+                            채팅
+                          </ChatTitle>
+                          <FriendsTitle
+                            onClick={() => {
+                              setSwapList('f');
+                            }}
+                            active={swapList.includes('f')}
+                          >
+                            친구
+                          </FriendsTitle>
+                        </ChatTitleWrap>
+                        <SearchWrap>
+                          <SearchInput
+                            value={search}
+                            onChange={(e: any) => {
+                              setSearch(e.target.value);
+                              handleChangeSearch(e.target.value);
+                            }}
+                            containerStyle={{ width: '320px' }}
+                            placeholder={'이름 검색'}
+                          />
+                        </SearchWrap>
+                        <ChatWrap>
+                          {swapList.includes('c')
+                            ? userModel.map((v: any, i: any) => {
+                                return (
                                   <>
-                                    <Avatar
-                                      src={getAssetURL(
-                                        '../assets/tempAvator.png',
-                                      )}
-                                    />
-                                    <FriendsLeftWrap>
-                                      <CompanyName>{v.company}</CompanyName>
-                                      <CompanyWrapper>
-                                        <UserName>{v.name}</UserName>
-                                        <Rank>{v.rank}</Rank>
-                                      </CompanyWrapper>
-                                    </FriendsLeftWrap>
+                                    <ChatMenuList
+                                      key={i}
+                                      onClick={() => {
+                                        setOpenPrivateChat(true);
+                                      }}
+                                    >
+                                      <Avatar
+                                        src={getAssetURL(
+                                          '../assets/tempAvator.png',
+                                        )}
+                                      />
+                                      <ChatLeftWrap>
+                                        <CompanyWrapper>
+                                          <CompanyName>{v.company}</CompanyName>
+                                          <UserName>{v.name}</UserName>
+                                          <Rank>{v.rank}</Rank>
+                                        </CompanyWrapper>
+                                        <Content>{v.content}</Content>
+                                      </ChatLeftWrap>
+                                      <ChatRightWrap>
+                                        <DateWrap>
+                                          <Date>{v.date}</Date>
+                                          <Date>{v.time}</Date>
+                                        </DateWrap>
+                                        <NotificationCount>
+                                          {v.count}
+                                        </NotificationCount>
+                                      </ChatRightWrap>
+                                    </ChatMenuList>
+                                    <LineGuard />
                                   </>
-                                  <FriendsIconWrap>
-                                    <SecondChatIcon
-                                      src={getAssetURL('../assets/chat_ic.svg')}
-                                    />
-                                    <ChatText>1:1 채팅</ChatText>
-                                  </FriendsIconWrap>
-                                </FriendsMenuList>
-                              );
-                            })}
-                      </ChatWrap>
-                    </CahtingWrap>
-                  ) : oepnChat && openPrivateChat ? (
-                    <PrivateCahtingWrap>
-                      <PrivateChat
-                        user={''}
-                        chat={''}
-                        onClick={() => {}}
-                        setOpenPrivateChat={setOpenPrivateChat}
-                        setOpenChat={setOpenChat}
-                      />
-                    </PrivateCahtingWrap>
-                  ) : null}
+                                );
+                              })
+                            : friendsList?.map((v: any, i: any) => {
+                                return (
+                                  <FriendsMenuList key={i}>
+                                    <>
+                                      <Avatar
+                                        src={getAssetURL(
+                                          '../assets/tempAvator.png',
+                                        )}
+                                      />
+                                      <FriendsLeftWrap>
+                                        <CompanyName>
+                                          {v?.company.name}
+                                        </CompanyName>
+                                        <CompanyWrapper>
+                                          <UserName>{v?.name}</UserName>
+                                          <Rank>{v?.position}</Rank>
+                                        </CompanyWrapper>
+                                      </FriendsLeftWrap>
+                                    </>
+                                    <FriendsIconWrap
+                                      onClick={() => {
+                                        setOpenPrivateChat(true);
+                                      }}
+                                    >
+                                      <SecondChatIcon
+                                        src={getAssetURL(
+                                          '../assets/chat_ic.svg',
+                                        )}
+                                      />
+                                      <ChatText>1:1 채팅</ChatText>
+                                    </FriendsIconWrap>
+                                  </FriendsMenuList>
+                                );
+                              })}
+                        </ChatWrap>
+                      </CahtingWrap>
+                    ) : oepnChat && openPrivateChat ? (
+                      <PrivateCahtingWrap onClick={(e) => e.stopPropagation()}>
+                        <PrivateChat
+                          user={''}
+                          chat={''}
+                          onClick={() => {}}
+                          setOpenPrivateChat={setOpenPrivateChat}
+                          setOpenChat={setOpenChat}
+                        />
+                      </PrivateCahtingWrap>
+                    ) : null}
+                  </ChatIcon>
                 </IconWrap>
                 <IconWrap>
                   <Icon src={getAssetURL('../assets/ic-alert.svg')} />
@@ -414,6 +341,20 @@ export default () => {
     </Container>
   );
 };
+
+const OutNotificationCnt = styled.div`
+  z-index: 99999;
+  position: absolute;
+  top: -1px;
+  right: 0;
+  transform: translateX(50%);
+  padding: 2px 6px;
+  background-color: #ff5517;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1;
+  border-radius: 10px;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -499,10 +440,13 @@ const Icon = styled.img`
   height: 26px;
   cursor: pointer;
 `;
-const ChatIcon = styled.img`
+const ChatIcon = styled.div`
   position: relative;
   width: 26px;
   height: 26px;
+  background: url(${getAssetURL('../assets/ic-chat.svg')}) no-repeat;
+  background-position: center center;
+  background-size: 100%;
   cursor: pointer;
 `;
 
@@ -612,9 +556,8 @@ const CahtingWrap = styled.div`
   width: 360px;
   height: 498px;
   box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
-  top: 0;
-  right: 200px;
-  margin-top: 70px;
+  top: 36px;
+  right: -22px;
   padding-top: 20px;
   padding-bottom: 8px;
   z-index: 999999999;
@@ -627,9 +570,8 @@ const PrivateCahtingWrap = styled.div`
   width: 360px;
   max-height: 498px;
   box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.1);
-  top: 0;
-  right: 200px;
-  margin-top: 70px;
+  top: 36px;
+  right: -22px;
   padding-bottom: 8px;
   z-index: 999999999;
   background-color: #ffffff;
