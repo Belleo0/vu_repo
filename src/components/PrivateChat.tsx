@@ -539,6 +539,7 @@ const CompanyCard = styled.div`
   border-radius: 20px;
 
   -webkit-user-drag: none;
+  cursor: default;
 `;
 
 const TopNavWrap = styled.div`
