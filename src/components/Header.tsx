@@ -563,6 +563,7 @@ const CahtingWrap = styled.div`
   z-index: 999999999;
   background-color: #ffffff;
   border-radius: 20px;
+  cursor: default;
 `;
 
 const PrivateCahtingWrap = styled.div`
