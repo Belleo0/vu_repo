@@ -12,10 +12,7 @@ import NaverMapImageMarker from '@components/NaverMapImageMarker';
 import getAssetURL from '@utils/getAssetURL';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 
-import TextModal from '@components/TextModal';
-import BlackSelect from '@components/BlackSelect';
 import Button, { ButtonType } from '@components/Button';
-import AreaButton, { IArea } from '@components/AreaButton';
 import ScrollBox from '@components/ScrollBox';
 
 // @ts-ignore
@@ -29,20 +26,10 @@ export default () => {
   const [position, setPosition] = useState<any>();
   const [searchItem, setSearchItem] = useState<any>();
 
-  const [areas, setAreas] = useState<IArea[]>([]);
-
-  const [stateId, setStateId] = useState(null);
-  const [cityId, setCityId] = useState(null);
-  const [dongId, setDongId] = useState(null);
   const [jibun, setJibun] = useState('');
 
-  const [stateOptions, setStateOptions] = useState<any>([]);
-  const [cityOptions, setCityOptions] = useState<any>([]);
-  const [dongOptions, setDongOptions] = useState<any>([]);
-
-  const [searchedAreas, setSearchedAreas] = useState<any>([]);
-  const [searchedJibun, setSearchedJibun] = useState<any>([]);
-  const [resultMessage, setResultMessage] = useState('');
+  const [searchedJibuns, setSearchedJibuns] = useState<any>([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [state, setState] = useLocalStorage('@add-construction-field', {
     fieldNm,
@@ -67,52 +54,6 @@ export default () => {
 
   const step = fieldNm && fieldAddr ? true : false;
 
-  const getAddressCode = async (parentId: any) => {
-    const { data } = await api.get(`/codes/addresses`, {
-      params: { parent_id: parentId },
-    });
-
-    const result = data?.result.map((v: any) => {
-      return {
-        code: v.code,
-        label: v.name,
-        value: v.id,
-      };
-    });
-
-    return result;
-  };
-
-  const handleAddArea = () => {
-    if (stateId === null && cityId === null) return;
-
-    const state = stateOptions.find((v: any) => v.value === stateId);
-    const city = cityOptions.find((v: any) => v.value === cityId);
-    const dong = dongOptions.find((v: any) => v.value === dongId);
-
-    if (areas !== null) setAreas([]);
-
-    if (stateId !== null && cityId !== null) {
-      const baseArea = state.label.concat(' ', city.label);
-      const areaList = dongOptions.map((v: any) =>
-        baseArea.concat(' ', v.label),
-      );
-      setSearchedAreas(areaList);
-      setJibun('');
-    }
-    if (!dongId) {
-      setResultMessage('검색된 결과가 없습니다.');
-    }
-
-    setStateId(null);
-    setCityId(null);
-    setDongId(null);
-
-    setSearchedJibun([]);
-    setCityOptions([]);
-    setDongOptions([]);
-  };
-
   const handleSearchJibun = () => {
     if (!jibun) return;
     if (jibun) {
@@ -125,29 +66,21 @@ export default () => {
             return alert('문제가 발생했습니다.');
           }
           if (!response.v2.addresses[0]) {
-            setResultMessage('주소를 찾을 수 없습니다.');
+            setErrorMessage('주소를 찾을 수 없습니다.');
             setJibun('');
           }
           const result = response.v2.addresses;
           console.log('result', result);
-          setSearchedJibun(result);
+          setSearchedJibuns(result);
         },
       );
     }
-    setStateId(null);
-    setCityId(null);
-    setDongId(null);
-
-    setSearchedAreas([]);
-    setCityOptions([]);
-    setDongOptions([]);
   };
 
   const handleCloseAddrModal = () => {
-    setSearchedAreas([]);
-    setSearchedJibun([]);
+    setSearchedJibuns([]);
     setJibun('');
-    setResultMessage('');
+    setErrorMessage('');
     setIsPostcodeModalOpened(false);
   };
 
@@ -189,31 +122,8 @@ export default () => {
   }, [fieldAddr]);
 
   useEffect(() => {
-    (async () => {
-      const data = await getAddressCode(undefined);
-      setStateOptions(data);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (!stateId) return;
-      const data = await getAddressCode(stateId);
-      setCityOptions(data);
-    })();
-  }, [stateId]);
-
-  useEffect(() => {
-    (async () => {
-      if (!cityId) return;
-      const data = await getAddressCode(cityId);
-      setDongOptions(data);
-    })();
-  }, [cityId]);
-
-  useEffect(() => {
     if (jibun === '') {
-      setSearchedJibun([]);
+      setSearchedJibuns([]);
     }
     return;
   }, [jibun]);
@@ -271,7 +181,7 @@ export default () => {
               찾기
             </FindBtn>
           </FindInputBtnWrapper>
-          <Input
+          {/* <Input
             type="text"
             placeholder="상세주소를 입력해 주세요 (선택)"
             value={secFieldAddr}
@@ -284,7 +194,7 @@ export default () => {
               marginTop: '14px',
             }}
             style={{ height: '42px', padding: '11px 20px' }}
-          />
+          /> */}
         </InputItemWrapper>
         <MapContentWrapper>
           <NaverMap
@@ -307,7 +217,6 @@ export default () => {
             )}
           </NaverMap>
         </MapContentWrapper>
-
         <BottomBtnWrapper>
           <InActiveBtn>이전</InActiveBtn>
           {step ? (
@@ -341,35 +250,8 @@ export default () => {
           <TopBox>
             <ModalTitle>지번검색</ModalTitle>
           </TopBox>
-          <SelectWrap>
-            <BlackSelect
-              placeholder="광역시도"
-              width={150}
-              value={stateId}
-              onChange={(v: any) => setStateId(v)}
-              options={stateOptions}
-              absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
-            />
-            <BlackSelect
-              placeholder="시군구"
-              value={cityId}
-              width={150}
-              onChange={(v: any) => setCityId(v)}
-              options={cityOptions}
-              absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
-              containerStyle={{ marginLeft: 10 }}
-            />
-            {/* <BlackSelect
-              placeholder="읍면동"
-              width={98}
-              value={dongId}
-              onChange={(v: any) => setDongId(v)}
-              options={dongOptions}
-              absoluteStyle={{ border: 'solid 1px #c7c7c7' }}
-            /> */}
-          </SelectWrap>
           <Input
-            placeholder="읍면동 검색"
+            placeholder="읍면동 지번을 입력해 주세요."
             value={jibun}
             onChange={(e) => {
               setJibun(e.target.value);
@@ -377,56 +259,33 @@ export default () => {
             style={{ height: 37 }}
           />
           <Button
-            type={
-              (stateId !== null && cityId !== null) || jibun
-                ? ButtonType.PRIMARY
-                : ButtonType.GRAY
-            }
+            type={jibun ? ButtonType.PRIMARY : ButtonType.GRAY}
             containerStyle={{
-              marginBottom: areas.length > 0 ? 20 : 30,
+              marginBottom: 30,
               height: 40,
             }}
-            onClick={
-              stateId !== null && cityId !== null
-                ? handleAddArea
-                : jibun
-                ? handleSearchJibun
-                : () => {}
-            }
+            onClick={jibun ? handleSearchJibun : () => {}}
           >
             검색
           </Button>
           <TableBox>
-            {searchedJibun.length > 0
-              ? searchedJibun?.map((v: any, i: number) => (
-                  <TableRow
-                    key={i}
-                    onClick={() => {
-                      setFieldAddr(v.jibunAddress);
-                      setIsPostcodeModalOpened(false);
-                      setSearchedJibun([]);
-                      setSearchedAreas([]);
-                    }}
-                  >
-                    {v.jibunAddress}
-                  </TableRow>
-                ))
-              : searchedAreas?.map((v: any, i: number) => (
-                  <TableRow
-                    key={i}
-                    onClick={() => {
-                      setFieldAddr(v);
-                      setIsPostcodeModalOpened(false);
-                      setSearchedAreas([]);
-                      setSearchedJibun([]);
-                    }}
-                  >
-                    {v}
-                  </TableRow>
-                ))}
-            {resultMessage &&
-              !searchedAreas?.length &&
-              !searchedJibun?.length && <Message>{resultMessage}</Message>}
+            {searchedJibuns.length > 0 &&
+              searchedJibuns?.map((v: any, i: number) => (
+                <TableRow
+                  key={i}
+                  onClick={() => {
+                    setFieldAddr(v.jibunAddress);
+                    setJibun('');
+                    setSearchedJibuns([]);
+                    setIsPostcodeModalOpened(false);
+                  }}
+                >
+                  {v.jibunAddress}
+                </TableRow>
+              ))}
+            {errorMessage && !searchedJibuns?.length && (
+              <Message>{errorMessage}</Message>
+            )}
           </TableBox>
         </SearchAddressContainer>
       </Modal>
