@@ -1,18 +1,49 @@
+import api from '@api';
+import useFriends from '@api/useFriends';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
+import { addHyphen } from '@utils/common';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
+import { useMemo } from 'react';
 import Button, { ButtonSize, ButtonType } from './Button';
 import Modal from './Modal';
 
 export default ({ open, data, onClose, companyName }: any) => {
-  const addHyphen = (v: any) => {
-    return v?.replace(
-      /(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,
-      '$1-$2-$3',
-    );
+  const {
+    data: { friends, error, refetch },
+  } = useFriends();
+
+  const handleAddFriend = async () => {
+    if (!data.id) return;
+    try {
+      await api.post(`/frineds/${data?.id}`);
+      onClose();
+      refetch();
+    } catch (err) {
+      console.log(err);
+      window.alert('에러 발생..');
+    }
   };
+
+  const handleDeleteFriend = async () => {
+    if (!data.id) return;
+    try {
+      await api.delete(`/frineds/${data?.id}`);
+      onClose();
+      refetch();
+    } catch (err) {
+      console.log(err);
+      window.alert('에러 발생..');
+    }
+  };
+
+  const isFriend = useMemo(() => {
+    return friends?.filter((v: any) => v.id === data?.id);
+  }, [friends, data]);
+
+  console.log(isFriend);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -53,20 +84,33 @@ export default ({ open, data, onClose, companyName }: any) => {
             <ButtonSection>
               <Button
                 size={ButtonSize.PRIMARY}
-                type={ButtonType.PRIMARY}
-                icon={'ic-add-person-white'}
+                type={
+                  isFriend.length > 0
+                    ? ButtonType.GRAY_BLACK
+                    : ButtonType.PRIMARY
+                }
+                icon={
+                  isFriend.length > 0
+                    ? 'ic-minus-people-bk'
+                    : 'ic-add-person-white'
+                }
+                iconStyle={{ width: '19px', height: '19px' }}
                 containerStyle={{
                   height: '50px',
                   marginRight: 20,
                 }}
+                onClick={
+                  isFriend.length > 0 ? handleDeleteFriend : handleAddFriend
+                }
               >
-                친구추가
+                {isFriend.length > 0 ? '친구삭제' : '친구추가'}
               </Button>
               <Button
                 size={ButtonSize.PRIMARY}
                 type={ButtonType.PRIMARY}
                 icon="ic-chat-white"
                 containerStyle={{ height: '50px' }}
+                iconStyle={{ width: '19px', height: '19px' }}
               >
                 채팅하기
               </Button>

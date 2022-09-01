@@ -20,7 +20,7 @@ const ScrollBox = styled.div`
   /* 스크롤바 뒷 배경 설정*/
   &::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0);
-    margin: 14px 0;
+    /* margin: 14px 0; */
   }
 `;
 

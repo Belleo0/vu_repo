@@ -65,6 +65,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
   const dataListIds = dataList.map((v: any) => v.id);
 
   const [editData, setEditData] = useState(data);
+  const [realAmount, setRealAmount] = useState('');
   const [specs, setSpecs] = useState<ISpec[]>([defaultSpec]);
 
   const [isFocused, setIsFocused] = useState(false);
@@ -74,7 +75,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isEditAmount, setIsEditAmount] = useState<any>({});
 
-  const handleToggleAnswer = (id: number) => {
+  const handleEditAmount = (id: number) => {
     console.log(id);
     setIsEditAmount((prev: any) => ({ ...prev, [id]: !prev[id] }));
   };
@@ -139,10 +140,6 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
         return mappedData;
       });
     }
-  };
-
-  const handleEditAmount = () => {
-    setIsEditAmount(true);
   };
 
   const renderSpecInput = () => {
@@ -239,10 +236,8 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                     marginRight: 4,
                     color: '#258fff',
                   }}
-                  value={v.quantity === 0 ? '' : v.quantity}
-                  onChange={(e) =>
-                    handleChangeSpecValue(i, 'quantity', e.target.value)
-                  }
+                  value={realAmount}
+                  onChange={(e) => setRealAmount(e.target.value)}
                 />
                 m³
               </ValueCell>
@@ -281,7 +276,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                   type={
                     v.status === '0'
                       ? ButtonType.CONFIRMED
-                      : v.status === '1'
+                      : v.status === '1' || isEditAmount[v?.id]
                       ? ButtonType.DONE
                       : ButtonType.ABLE
                   }
@@ -290,12 +285,12 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
                       ? null
                       : v.status === '1'
                       ? null
-                      : handleToggleAnswer(v?.id);
+                      : handleEditAmount(v?.id);
                   }}
                 >
                   {v.status === '0'
                     ? '확인완료'
-                    : v.status === '1'
+                    : v.status === '1' || isEditAmount[v?.id]
                     ? '변경완료'
                     : '수량변경'}
                 </SubmitButton>
