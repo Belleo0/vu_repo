@@ -111,3 +111,103 @@ export const userModel = [
     count: 333,
   },
 ];
+
+export const notifications = [
+  {
+    title: '(주)로마 레미콘의 견적이 접수되었습니다. ',
+    date: '02.36',
+    time: '15:24',
+    status: 'unread',
+    isHiddenPlace: true,
+  },
+  {
+    title: '(주)동양 부산공장의 견적이 접수되었습니다. ',
+    date: '02.36',
+    time: '15:24',
+    status: 'unread',
+    isHiddenPlace: true,
+  },
+  {
+    title: '(주)표주레미콘의 견적이 접수되었습니다.  ',
+    date: '02.36',
+    time: '15:24',
+    status: 'read',
+    isHiddenPlace: true,
+  },
+  {
+    title: '(주)표주레미콘의 견적이 접수되었습니다.  ',
+    date: '02.36',
+    time: '15:24',
+    status: 'read',
+  },
+  {
+    title: '(주)표주레미콘의 견적이 접수되었습니다.  ',
+    date: '02.36',
+    time: '15:24',
+    status: 'read',
+  },
+  {
+    title: '(주)표주레미콘의 견적이 접수되었습니다.  ',
+    date: '02.36',
+    time: '15:24',
+    status: 'read',
+  },
+  {
+    title: '(주)표주레미콘의 견적이 접수되었습니다.  ',
+    date: '02.36',
+    time: '15:24',
+    status: 'read',
+  },
+  {
+    title: '(주)표주레미콘의 견적이 접수되었습니다.  ',
+    date: '02.36',
+    time: '15:24',
+    status: 'read',
+  },
+];
+
+export const unreadNotifications = [
+  {
+    title: '(주)로마 레미콘의 견적이 접수되었습니다. ',
+    date: '02.36',
+    time: '15:24',
+    status: 'unread',
+    isHiddenPlace: true,
+  },
+  {
+    title: '(주)동양 부산공장의 견적이 접수되었습니다. ',
+    date: '02.36',
+    time: '15:24',
+    status: 'unread',
+  },
+  {
+    title: '(주)동양 부산공장의 견적이 접수되었습니다. ',
+    date: '02.36',
+    time: '15:24',
+    status: 'unread',
+  },
+  {
+    title: '(주)동양 부산공장의 견적이 접수되었습니다. ',
+    date: '02.36',
+    time: '15:24',
+    status: 'unread',
+  },
+  {
+    title: '(주)동양 부산공장의 견적이 접수되었습니다. ',
+    date: '02.36',
+    time: '15:24',
+    status: 'unread',
+  },
+  {
+    title: '(주)동양 부산공장의 견적이 접수되었습니다. ',
+    date: '02.36',
+    time: '15:24',
+    status: 'unread',
+  },
+  {
+    title: '(주)동양 부산공장의 견적이 접수되었습니다. ',
+    date: '02.36',
+    time: '15:24',
+    status: 'unread',
+  },
+];
