@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { useLocation } from 'react-router-dom';
@@ -10,6 +10,7 @@ import _03 from '../../assets/03_img.png';
 import _04 from '../../assets/04_img.png';
 import _05 from '../../assets/05_img.png';
 import getAssetUrl from '@utils/getAssetURL';
+import { onPrint } from '@utils/onPrint';
 
 enum Active {
   ACTIVE,
@@ -84,6 +85,7 @@ const listArr = [
 
 export default () => {
   const state = useLocation();
+  const { divRef, handleOnPrint } = onPrint();
   // console.log(state);
   const [location, setLocation] = useState<string>('서울');
   const [unitPrice, setUnitPrice] = useState<any>(100);
@@ -100,11 +102,14 @@ export default () => {
 
   return (
     <ReferenceRoomLayout>
-      <Container>
+      <Container ref={divRef}>
         <TopList style={{ width: '1420px' }}>
           <TopListText>레미콘 단가표</TopListText>
           <TopBtnWrap>
-            <TopIconListBtn style={{ marginRight: '20px' }}>
+            <TopIconListBtn
+              style={{ marginRight: '20px' }}
+              onClick={handleOnPrint}
+            >
               <ReportSvgImage src={getAssetUrl('../assets/print_ic.svg')} />
               리포트 출력
             </TopIconListBtn>

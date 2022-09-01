@@ -16,7 +16,7 @@ export default () => {
           <Role>{userInfo?.position}</Role>
         </NameRoleWrap>
       </ProfileInfoWrap>
-      {userInfo.company.company_type === 'REMICON' && (
+      {userInfo?.company.company_type === 'REMICON' && (
         <LikeWrap>
           <Icon src={getAssetURL('../assets/ic-like.svg')} />
           <Count>{userInfo?.likeCount ? userInfo?.likeCount : '0'}</Count>

@@ -7,10 +7,13 @@ import Modal from './Modal';
 import convertDistance from '@utils/convertDistance';
 import convertDuration from '@utils/convertDuration';
 import { makeComma } from '@utils/makeComma';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import RemiconUnitPriceListModal from './RemiconUnitPriceListModal';
+import { onPrint } from '@utils/onPrint';
 
 export default ({ open, data, estimation, onClose }: any) => {
+  const { divRef, handleOnPrint } = onPrint();
+
   const field = estimation?.field_space;
   const factory = estimation?.factory_space;
 
@@ -19,7 +22,7 @@ export default ({ open, data, estimation, onClose }: any) => {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Container>
+      <Container ref={divRef}>
         {data && (
           <Contents>
             <TitleWrap>
@@ -117,7 +120,7 @@ export default ({ open, data, estimation, onClose }: any) => {
                     paddingBottom: 9,
                     fontSize: 14,
                   }}
-                  onClick={() => window.alert(`TODO : 2차 범위입니다.`)}
+                  onClick={handleOnPrint}
                 >
                   견적서출력
                 </Button>
