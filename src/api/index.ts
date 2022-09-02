@@ -1,12 +1,14 @@
 import axios from 'axios';
 
 export const getAPIHost = () => {
-  return 'https://conaz-core-api.02.dance';
+  return 'http://52.78.198.181:9997';
+  // return 'https://conaz-core-api.02.dance';
   // return 'http://localhost:8090';
 };
 
 export const getSocketHost = () => {
-  return 'https://conaz-core-api.02.dance';
+  return 'http://52.78.198.181:9997';
+  // return 'https://conaz-core-api.02.dance';
   // return 'http://localhost:8080';
 };
 

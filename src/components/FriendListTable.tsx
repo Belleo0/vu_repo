@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import getAssetURL from '@utils/getAssetURL';
+import { addHyphen } from '@utils/common';
 
 import MypageLayout from '@layout/MypageLayout';
 
@@ -92,11 +93,11 @@ export default ({ data, mutate }: IMemberTable) => {
               <MemberContactWrap>
                 <ContactInfo>
                   <Icon src={getAssetURL('../assets/ic-cellphone-bk.svg')} />
-                  {data?.phone}
+                  {addHyphen(data?.phone)}
                 </ContactInfo>
                 <ContactInfo>
                   <Icon src={getAssetURL('../assets/ic-phone-bk.svg')} />
-                  {data?.tel}
+                  {addHyphen(data?.tel)}
                 </ContactInfo>
                 <ContactInfo>
                   <Icon src={getAssetURL('../assets/ic-email-bk.svg')} />

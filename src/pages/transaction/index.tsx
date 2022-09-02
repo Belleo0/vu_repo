@@ -1,17 +1,14 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
-import MyFieldVendorTable from '@components/MyFieldVendorTable';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
-import VendorTable from '@components/VendorTable';
 import TransactionSpaceBar from '@components/TransactionSpaceBar';
 import TransactionTable from '@components/TransactionTable';
-import Button from '@components/Button';
 import TransactionFilter from '@components/TransactionFilter';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import FactoryTransactionTable from '@components/FactoryTransactionTable';
-import FactoryTransactionFilter from '@components/FactoryTransactionFilter';
+import { onPrint } from '@utils/onPrint';
 
 const transactions = [
   {
@@ -68,6 +65,8 @@ const transactions = [
 
 export default () => {
   const isFieldUser = useIsFieldUser();
+
+  const { divRef, handleOnPrint } = onPrint();
   const selectedSpaceId = useSelectedSpaceId();
   const {
     data: { info, suppliers },
@@ -78,7 +77,7 @@ export default () => {
   return (
     <SpaceLayout>
       {selectedSpaceId === undefined ? null : isLoading ? null : (
-        <Container>
+        <Container ref={divRef}>
           <BarSection>
             {isFieldUser ? <Title>건설현장</Title> : <Title>공장명</Title>}
             <TransactionSpaceBar
@@ -88,7 +87,7 @@ export default () => {
             />
           </BarSection>
           <FilterSection>
-            {isFieldUser ? <TransactionFilter /> : <FactoryTransactionFilter />}
+            <TransactionFilter data={transactions} onPrint={handleOnPrint} />
           </FilterSection>
           <BottomSection>
             {isFieldUser ? (
@@ -132,9 +131,39 @@ const BarSection = styled.div`
 
 const FilterSection = styled.div`
   width: 100%;
+  align-items: center;
+
   margin-bottom: 24px;
 `;
 
 const BottomSection = styled.div`
   width: 100%;
+`;
+
+const ButtonsWrap = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+`;
+
+const Icon = styled.img`
+  width: 20px;
+  margin-right: 6px;
+  cursor: pointer;
+`;
+
+const PrintButton = styled.span`
+  height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 11px 18px;
+  border-radius: 6px;
+  border: solid 1px #4490f7;
+  background-color: #fff;
+  color: #4490f7;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
 `;
