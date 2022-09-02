@@ -11,6 +11,7 @@ interface IPrivateChat {
   onClick: () => any;
   setOpenPrivateChat: any;
   setOpenChat: any;
+  chatData: any;
 }
 
 const chatModel = [
@@ -120,6 +121,7 @@ const name = '김수현';
 const rank = '대리';
 
 export default ({
+  chatData,
   user,
   onClick,
   setOpenPrivateChat,
@@ -155,6 +157,8 @@ export default ({
     setOpenPrivateChat(false);
     setOpenChat(true);
   };
+
+  console.log('chatData', chatData);
 
   return (
     <CompanyCard onClick={onClick}>
