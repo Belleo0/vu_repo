@@ -1,153 +1,67 @@
+import io from 'socket.io-client';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import { ChangeEvent, useEffect, useState, useRef } from 'react';
 import FileUpload from '@components/FileUpload';
-import api from '@api';
+import api, { getSocketHost } from '@api';
+import moment from 'moment';
+import ScrollBox from './ScrollBox';
 
 interface IPrivateChat {
-  user: any;
-  chat: any;
-  onClick: () => any;
   setOpenPrivateChat: any;
   setOpenChat: any;
-  chatData: any;
+  messages: any;
+  userInfo: any;
+  selectedUserInfo: any;
+  mutateMessages: any;
+  chatRoomId: number;
+  mutatePrivateChats: any;
+  previousChatRoomId: any;
 }
 
-const chatModel = [
-  {
-    id: 10,
-    me: true,
-    name: '나',
-    chat: '@#!%$#@%$#@%#$',
-    date: '22.05.03',
-    time: '11:19',
-    fromId: null,
-  },
-  {
-    id: 11,
-    me: false,
-    name: '상대방',
-    chat: 'asdsaqdin123uner23juadsdsaadsadssadadsasdsadnr23',
-    date: '22.05.03',
-    time: '11:19',
-    fromId: null,
-  },
-  {
-    id: 12,
-    me: true,
-    name: '나',
-    chat: '@#!%$#@%$#@%#$',
-    date: '22.05.03',
-    time: '11:19',
-    fromId: null,
-  },
-  {
-    id: 13,
-    me: false,
-    name: '상대방',
-    chat: 'asdsaqdin123uner23junr23',
-    date: '22.05.03',
-    time: '11:19',
-    fromId: null,
-  },
-  {
-    id: 14,
-    me: true,
-    name: '나',
-    chat: '@#!%$#@%$#@%#$',
-    date: '22.05.03',
-    time: '11:19',
-    fromId: null,
-  },
-  {
-    id: 15,
-    me: true,
-    name: '나',
-    chat: '@#!%$#@%$#@%#$',
-    date: '22.05.03',
-    time: '11:19',
-    fromId: null,
-  },
-  {
-    id: 16,
-    me: false,
-    name: '상대방',
-    chat: '575697890',
-    date: '22.05.03',
-    time: '11:19',
-    fromId: null,
-  },
-  {
-    id: 17,
-    me: true,
-    name: '나',
-    chat: '@#!%$#@%$#@%#$',
-    date: '22.05.03',
-    time: '11:19',
-    fromId: null,
-  },
-  {
-    id: 18,
-    me: false,
-    name: '상대방',
-    chat: 'asdasd',
-    date: '22.05.03',
-    time: '11:19',
-    fromId: null,
-  },
-  {
-    id: 19,
-    me: true,
-    name: '나',
-    chat: 'asdas%$%#@%#@%#@%#@%d',
-    date: '22.05.03',
-    time: '11:20',
-    fromId: 16,
-  },
-  {
-    id: 19,
-    me: false,
-    name: '상대방',
-    chat: '#%$%ㅖㅏ#@ㅜㅒㅜㅖㅒㅜ퍠ㅜㅒㄴㅇ로)*ㅕ)*@#$ㅕ%ㅆ)ㅕ#ㅓ@*){ㅗㅛㄲㅆ*)ㄸ@ㅡㅜㅛㅊ꼐*',
-    date: '22.05.04',
-    time: '11:21',
-    fromId: 18,
-  },
-];
-
-const company = '(주)대성건설';
-const name = '김수현';
-const rank = '대리';
-
 export default ({
-  chatData,
-  user,
-  onClick,
+  messages,
   setOpenPrivateChat,
   setOpenChat,
+  userInfo,
+  selectedUserInfo,
+  mutateMessages,
+  chatRoomId,
+  mutatePrivateChats,
+  previousChatRoomId,
 }: IPrivateChat) => {
-  const [chat, setChat] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
   const [image, setImage] = useState<any>();
   const [reple, setReple] = useState<any>();
 
+  const [socketState, setSocketState] = useState<any>(null);
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const messageContainerRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files;
     setImage(newFile);
   };
 
-  useEffect(() => {
-    scrollRef.current!.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
-  }, []);
+  const scrollToBottom = (init: boolean) => {
+    if (messageContainerRef.current) {
+      if (init || (!init && messageContainerRef.current.scrollTop >= 0)) {
+        messageContainerRef.current.scrollTop =
+          messageContainerRef.current.scrollHeight;
+      }
+    }
+  };
 
-  useEffect(() => {
-    console.log(reple);
-  }, [reple]);
+  // useEffect(() => {
+  //   scrollRef.current!.scrollIntoView({
+  //     behavior: 'smooth',
+  //     block: 'end',
+  //   });
+  // }, []);
+
+  useEffect(() => {}, [reple]);
 
   const handleClearReple = () => {
     setReple('');
@@ -158,10 +72,102 @@ export default ({
     setOpenChat(true);
   };
 
-  console.log('chatData', chatData);
+  const handleSendMessage = async () => {
+    if (message.length > 0) {
+      const tempMessage = message;
+      setMessage('');
+
+      mutateMessages(
+        (v: any) => [
+          {
+            content: tempMessage,
+            created_at: new Date(),
+            data: null,
+            send_user: userInfo,
+            type: 'TEXT',
+          },
+          ...v,
+        ],
+        false,
+      );
+
+      await api.post(`/chats/${chatRoomId}`, {
+        type: 'TEXT',
+        content: tempMessage,
+        data: null,
+      });
+
+      mutateMessages();
+      mutatePrivateChats();
+
+      // scrollToBottom(true);
+
+      // mutate();
+    }
+  };
+
+  useEffect(() => {
+    const socket = io(getSocketHost(), {
+      query: '',
+      transports: ['websocket'],
+      autoConnect: true,
+    });
+    socket.on('connect', () => {
+      socket.on('success', function () {
+        // console.log('Socket 접속 성공');
+      });
+      socket.on('state', function (args: any) {
+        // console.log('참고 상태 : ', args); // 참고용 데이터입니다.
+      });
+      socket.on('chat_message', function (args: any) {
+        const data: any = JSON.stringify(args);
+        // console.log('메세지 데이터: ', data); // 실제 메세지 데이터입니다.
+
+        if (data?.id) {
+          mutateMessages(
+            (v: any) => [
+              {
+                content: message,
+                created_at: new Date(),
+                data: null,
+                send_user: userInfo,
+                type: 'TEXT',
+              },
+              ...v,
+            ],
+            false,
+          );
+          // mutateMessages();
+          scrollToBottom(false);
+
+          // mutate();
+        }
+      });
+    });
+
+    setSocketState(socket);
+
+    return () => {
+      socketState?.disconnect?.();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (socketState !== null) {
+      socketState.emit('/chats/join', { id: chatRoomId });
+    }
+
+    if (socketState !== null && previousChatRoomId !== null) {
+      socketState.emit('/chats/leave', { id: previousChatRoomId });
+    }
+  }, [socketState, chatRoomId]);
+
+  useEffect(() => {
+    // console.log('messages가 바뀜', messages);
+  }, [messages]);
 
   return (
-    <CompanyCard onClick={onClick}>
+    <CompanyCard>
       <TopNavWrap>
         <BackIcon
           src={getAssetURL('../assets/back_ic.svg')}
@@ -170,29 +176,35 @@ export default ({
           }}
         />
         <Title>
-          {company} {name} {rank}
+          {selectedUserInfo?.company?.name} {selectedUserInfo?.name}{' '}
+          {selectedUserInfo?.position}
         </Title>
       </TopNavWrap>
       <LineGuard />
-      <ChatContent>
-        {chatModel.map((v: any) => {
-          return v.me ? (
+      <ChatContent ref={messageContainerRef}>
+        {messages.map((v: any) => {
+          return v?.send_user?.id === userInfo?.id ? (
             <MeCharacterWrap key={v.id} ref={scrollRef}>
               <ChatWrap>
                 <RightDateWrap>
-                  <RightRepeatItem>{v.date}</RightRepeatItem>
-                  <RightRepeatItem>{v.time}</RightRepeatItem>
+                  <RightRepeatItem>
+                    {moment(v?.created_at).format('YY.MM.DD')}
+                  </RightRepeatItem>
+                  <RightRepeatItem>
+                    {moment(v?.created_at).format('HH:mm')}
+                  </RightRepeatItem>
                 </RightDateWrap>
                 {!v.origin_text ? (
-                  <MeChatItem>{v.chat}</MeChatItem>
+                  <MeChatItem>{v?.content}</MeChatItem>
                 ) : (
                   <MeChatItem>
                     <RepleTitle>
-                      {reple.name} {rank}에게 답장
+                      {reple?.send_user?.name} {v?.send_user?.company?.position}
+                      에게 답장
                     </RepleTitle>
                     <LineGuard />
-                    <RepleContent>{reple.chat}</RepleContent>
-                    <MeChatItem>{v.chat}</MeChatItem>
+                    <RepleContent>{v?.content}</RepleContent>
+                    <MeChatItem>{v?.content}</MeChatItem>
                   </MeChatItem>
                 )}
               </ChatWrap>
@@ -202,20 +214,22 @@ export default ({
               <CharacterWrap key={v.id}>
                 <Avatar src={getAssetURL('../assets/tempAvator.png')} />
                 <UserInfoWrap>
-                  {/* <Company>{v.company}</Company> */}
-                  <Company>{company}</Company>
+                  <Company>{v?.send_user?.company?.name}</Company>
                   <InfoRowWrap>
-                    <Name>{v.name}</Name>
-                    {/* <RepeatItem>{v.rank}</RepeatItem> */}
-                    <Rank>{rank}</Rank>
+                    <Name>{v?.send_user?.name}</Name>
+                    <Rank>{v?.send_user?.company?.position}</Rank>
                   </InfoRowWrap>
                 </UserInfoWrap>
               </CharacterWrap>
               <ChatWrap>
-                <ChatItem>{v.chat}</ChatItem>
+                <ChatItem>{v?.content}</ChatItem>
                 <LeftDateWrap>
-                  <LeftRepeatItem>{v.date}</LeftRepeatItem>
-                  <LeftRepeatItem>{v.time}</LeftRepeatItem>
+                  <LeftRepeatItem>
+                    {moment(v?.created_at).format('YY.MM.DD')}
+                  </LeftRepeatItem>
+                  <LeftRepeatItem>
+                    {moment(v?.created_at).format('HH:mm')}
+                  </LeftRepeatItem>
                 </LeftDateWrap>
                 <RepleIconWrap>
                   <RepleIcon
@@ -236,9 +250,9 @@ export default ({
           <RepleWrap>
             <RepleTitleWrap>
               <RepleTitle>
-                {reple.name} {rank}에게 답장
+                {reple?.send_user.name} {reple?.send_user.position}에게 답장
               </RepleTitle>
-              <RepleContent>{reple.chat}</RepleContent>
+              <RepleContent>{reple?.content}</RepleContent>
             </RepleTitleWrap>
             <RepleCloseWrap>
               <RepleCloseIcon
@@ -251,29 +265,29 @@ export default ({
           </RepleWrap>
         ) : null}
         <ChatInputWrap>
-          <FileUploadWrap htmlFor="file">
-            <AddIcon src={getAssetURL('../assets/plus_01_ic.svg')}></AddIcon>
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={(e) => handleChange(e)}
-              style={{ display: 'none' }}
+          <FileUploadWrap>
+            <FileUpload
+              image={image}
+              setImage={setImage}
+              buttonStyle={UploadButton}
+              icon={'plus_01_ic'}
             />
           </FileUploadWrap>
           <InputContainer>
             <ChatInputBox
-              value={chat}
+              value={message}
               onChange={(e: any) => {
-                setChat(e.target.value);
+                setMessage(e.target.value);
               }}
               placeholder={reple ? '답장 쓰기' : ''}
             />
             <SendIcon
               src={getAssetURL(
-                `../assets/ic-send${chat?.length <= 0 ? '-disabled' : ''}.svg`,
+                `../assets/ic-send${
+                  message?.length <= 0 ? '-disabled' : ''
+                }.svg`,
               )}
-              // onClick={() => {}}
+              onClick={handleSendMessage}
             />
           </InputContainer>
         </ChatInputWrap>
@@ -350,11 +364,9 @@ const RepleIcon = styled.img`
   cursor: pointer;
 `;
 
-const FileUploadWrap = styled.label<{ htmlFor: string }>`
+const FileUploadWrap = styled.div`
   display: flex;
   justify-content: flex-start;
-  width: 30px;
-  height: 30px;
 `;
 
 const LeftRepeatItem = styled.div`
@@ -483,11 +495,16 @@ const Rank = styled.div`
 `;
 
 const Title = styled.div`
+  display: flex;
+  justify-content: center;
+
   font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.28px;
   color: #222;
-  margin-left: 68px;
+
+  margin-right: auto;
+  margin-left: auto;
 `;
 
 const InputContainer = styled.div`
@@ -548,10 +565,8 @@ const CompanyCard = styled.div`
 
 const TopNavWrap = styled.div`
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
-  padding-left: 20px;
+  padding: 0px 20px;
   width: 100%;
   height: 60px;
 `;
@@ -564,14 +579,34 @@ const LineGuard = styled.div`
 `;
 
 const BackIcon = styled.img`
+  display: flex;
+  justify-content: flex-start;
   cursor: pointer;
 `;
 
-const ChatContent = styled.div`
-  padding: 20px 20px 0 20px;
+const ChatContent = styled(ScrollBox)`
+  padding: 20px 3px 0 20px;
   width: 100%;
   height: 372px;
+
+  display: flex;
+  position: relative;
+  flex-direction: column-reverse;
 
   overflow: hidden;
   overflow-y: scroll;
 `;
+
+const UploadButton = {
+  width: '30px',
+  height: '30px',
+  display: 'flex',
+  justifyContent: 'center',
+
+  alignItems: 'center',
+  margin: '20 0',
+
+  borderRadius: '6px',
+  border: 'solid 1px #999999',
+  backgroundColor: '#fff',
+};

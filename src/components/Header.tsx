@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '@api';
 
@@ -26,6 +26,9 @@ import {
 } from './temp';
 import PrivateChatsModal from './PrivateChatsModal';
 import usePrivateChat from '@api/usePrivateChat';
+import { usePrevious } from '@hooks/usePrevious';
+import useChatData from '@api/useChatData';
+import useFriends from '@api/useFriends';
 
 const fieldMenus = [
   {
@@ -82,6 +85,7 @@ const profileMenus = [
     path: '/notification',
   },
 ];
+
 export default () => {
   const isLogin = useIsLogin();
   const userInfo = useUserInfo();
@@ -102,16 +106,34 @@ export default () => {
   const [chatList, setChatList] = useState<any>();
   const [outNotificationCount, setOutNotificationCount] = useState(100);
 
+  const [selectedUserInfo, setSelectedUserInfo] = useState<any>(null);
   const [selectedUserId, setSelectedUserId] = useState<number>();
 
   const dispatch = useDispatch();
 
   const {
     data: { privateChat, privateChats },
-    isLoading: isChatLoading,
     mutatePrivateChat,
     mutatePrivateChats,
   } = usePrivateChat(selectedUserId);
+
+  const {
+    data: { messages, members },
+    isLoading: isChatLoading,
+    mutateMessages,
+  } = useChatData(privateChat?.chat_room_id);
+
+  const searchedPrivateChats = useMemo(() => {
+    if (!privateChats) return [];
+    const sortedData = privateChats.sort((a: any, b: any) => {
+      const createdAta = a.latest_chat_message.created_at;
+      const createdAtb = b.latest_chat_message.created_at;
+      return new Date(createdAtb).getTime() - new Date(createdAta).getTime();
+    });
+    return sortedData.filter((v: any) => v?.user.name?.includes(search));
+  }, [privateChats, search]);
+
+  const previousChatRoomId = usePrevious(privateChat?.chat_room_id);
 
   const { isFieldView } = useSelector((s: any) => s.auth, shallowEqual);
 
@@ -125,12 +147,12 @@ export default () => {
   const handleChangeSearch = (e: any) => {
     const searched = e;
     if (swapList.includes('c')) {
-      const searchedItem = userModel.filter((el: any) => {
+      const searchedItem = privateChats.filter((el: any) => {
         return el.name === searched || el.company === searched;
       });
       setChatList(searchedItem);
     } else {
-      const searchedItem = friendsModel.filter((el: any) => {
+      const searchedItem = friendsList.filter((el: any) => {
         return el.name === searched || el.company === searched;
       });
       setFriendsList(searchedItem);
@@ -194,21 +216,26 @@ export default () => {
                         setSwapList={setSwapList}
                         search={search}
                         setSearch={setSearch}
-                        privateChats={privateChats}
+                        privateChats={searchedPrivateChats}
                         friendsList={friendsList}
                         setOpenPrivateChat={setOpenPrivateChat}
                         handleChangeSearch={handleChangeSearch}
+                        setSelectedUserInfo={setSelectedUserInfo}
                         setSelectedUserId={setSelectedUserId}
+                        mutatePrivateChats={mutatePrivateChats}
                       />
                     ) : oepnChat && openPrivateChat ? (
                       <PrivateCahtingWrap onClick={(e) => e.stopPropagation()}>
                         <PrivateChat
-                          chatData={privateChat}
-                          user={''}
-                          chat={''}
-                          onClick={() => {}}
+                          messages={messages}
+                          selectedUserInfo={selectedUserInfo}
                           setOpenPrivateChat={setOpenPrivateChat}
                           setOpenChat={setOpenChat}
+                          userInfo={userInfo}
+                          mutateMessages={mutateMessages}
+                          chatRoomId={privateChat?.chat_room_id}
+                          mutatePrivateChats={mutatePrivateChats}
+                          previousChatRoomId={previousChatRoomId}
                         />
                       </PrivateCahtingWrap>
                     ) : null}

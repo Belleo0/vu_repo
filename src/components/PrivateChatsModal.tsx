@@ -14,7 +14,9 @@ export default ({
   friendsList,
   setOpenPrivateChat,
   handleChangeSearch,
+  setSelectedUserInfo,
   setSelectedUserId,
+  mutatePrivateChats,
 }: any) => {
   return (
     <CahtingWrap onClick={(e) => e.stopPropagation()}>
@@ -49,7 +51,7 @@ export default ({
       </SearchWrap>
       <ChatWrap>
         {swapList.includes('c')
-          ? privateChats.map((v: any, i: any) => {
+          ? privateChats?.map((v: any, i: any) => {
               return (
                 <>
                   <ChatMenuList
@@ -57,6 +59,7 @@ export default ({
                     onClick={() => {
                       setOpenPrivateChat(true);
                       setSelectedUserId(v?.user.id);
+                      setSelectedUserInfo(v?.user);
                     }}
                   >
                     <Avatar src={getAssetURL('../assets/tempAvator.png')} />
@@ -105,6 +108,8 @@ export default ({
                   </>
                   <FriendsIconWrap
                     onClick={() => {
+                      setSelectedUserId(v?.id);
+                      setSelectedUserInfo(v);
                       setOpenPrivateChat(true);
                     }}
                   >
@@ -227,7 +232,6 @@ const ChatLeftWrap = styled.div`
 `;
 
 const FriendsLeftWrap = styled.div`
-  width: 80px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -243,7 +247,8 @@ const ChatRightWrap = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   padding: 3px 0;
-  margin-left: 30px;
+  margin-left: auto;
+  margin-right: 30px;
 `;
 
 const CompanyWrapper = styled.div`
@@ -317,7 +322,8 @@ const FriendsIconWrap = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  margin-left: 130px;
+  margin-left: auto;
+  margin-right: 30px;
   cursor: pointer;
 `;
 const SecondChatIcon = styled.img`
