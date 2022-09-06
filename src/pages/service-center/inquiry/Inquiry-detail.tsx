@@ -14,10 +14,6 @@ export default () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   console.log(currentPage);
 
-  const onClickRow = (id: number) => {
-    navigate(`/service-center/notice/${id}`);
-  };
-
   return (
     <ServiceCenterLayout>
       <Container>
@@ -29,7 +25,7 @@ export default () => {
             <Button
               type={ButtonType.OUTLINE}
               containerStyle={ButtonStyle}
-              onClick={() => navigate('/service-center/notice')}
+              onClick={() => navigate('/service-center/inquiry')}
             >
               목록으로
             </Button>

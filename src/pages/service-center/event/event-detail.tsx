@@ -7,15 +7,23 @@ import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
 import Button, { ButtonType } from '@components/Button';
+import usePostsInfo from '@api/usePostsInfo';
+
+interface LocationState {
+  postId: string
+}
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentPage, setCurrentPage] = useState<number>(1);
   console.log(currentPage);
 
-  const onClickRow = (id: number) => {
-    navigate(`/service-center/notice/${id}`);
-  };
+  /** 파라미터 수신 2022.09.06 */
+  const event_data = location.state as LocationState;
+  const { postId } = event_data;
+  const { data: posts_info = [] } = usePostsInfo(postId);
+  console.log(posts_info); 
 
   return (
     <ServiceCenterLayout>

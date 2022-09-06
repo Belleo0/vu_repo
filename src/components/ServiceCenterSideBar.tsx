@@ -7,7 +7,7 @@ export default () => {
 
   return (
     <Container>
-      <Title>자료실</Title>
+      <Title>고객센터</Title>
       <Box
         className={pathname === '/service-center/notice' ? 'active' : ''}
         onClick={() => {

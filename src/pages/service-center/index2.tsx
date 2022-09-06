@@ -9,6 +9,8 @@ import { temp_data } from './test';
 import fqa_data from './test2';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
+import useFaqData from '@api/useFaqData';
+import usePosts from '@api/usePosts';
 
 enum Active {
   ACTIVE,
@@ -49,6 +51,19 @@ export default () => {
     console.log(location);
   }, [location]);
 
+  /** 상단 메뉴 클릭 시 카테고리별 필터링 처리 2022.09.05 */
+  const filterItem = () => {
+    if(location === '전체') return fqa_data;
+
+    return fqa_data.filter((el) => 
+      el.category.includes(location)
+    )
+  };
+  const all_data = filterItem();
+  
+  const { data: faq_data = [] } = useFaqData(location);
+  console.log(faq_data);
+
   return (
     <ServiceCenterLayout>
       <Container>
@@ -61,7 +76,7 @@ export default () => {
                 key={index}
                 onClick={() => {
                   handleLocationClick(v);
-                  console.log(v);
+                  // console.log(v);
                 }}
               >
                 {v}
@@ -70,7 +85,7 @@ export default () => {
           })}
         </ServiceTopMenuWrap>
         <ListWrap>
-          {fqa_data.map((v: any, i: number) => {
+          {all_data.map((v: any, i: number) => {
             return (
               <ContentWrap key={i}>
                 <ContentList onClick={() => handleToggleAnswer(i)}>
