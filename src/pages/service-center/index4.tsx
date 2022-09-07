@@ -6,6 +6,7 @@ import api from '@api';
 import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from './test';
+import usePosts from '@api/usePosts';
 
 import usePagination from '@hooks/usePagination';
 import Pagination from '@components/Pagination';
@@ -13,9 +14,16 @@ import Pagination from '@components/Pagination';
 export default () => {
   const navigate = useNavigate();
 
-  const onClickRow = (id: number) => {
-    navigate(`/service-center/event/${id}`);
+  const onClickRow = (id: string) => {
+    navigate(`/service-center/event/${id}`, {
+      state: {
+        postId: id
+      }
+    });
   };
+
+  const { data: posts_item = [] } = usePosts('EVENT');
+  console.log(posts_item);
 
   const pagination = usePagination(temp_data);
 
