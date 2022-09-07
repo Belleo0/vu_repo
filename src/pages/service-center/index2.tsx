@@ -47,6 +47,9 @@ export default () => {
   const [location, setLocation] = useState<string>('전체');
   const [isOpenAnswer, setIsOpenAnswer] = useState<any>({});
   
+  const { data: faq_list = [] } = useFaqData(location);
+  console.log(faq_list);
+
   const all_data = filterItem(location);
 
   const handleLocationClick = (val: any | null) => {
@@ -60,9 +63,6 @@ export default () => {
   useEffect(() => {
     console.log(location);
   }, [location]);
-
-  const { data: faq_list = [] } = useFaqData(location);
-  console.log(faq_list);
 
   return (
     <ServiceCenterLayout>

@@ -8,11 +8,27 @@ import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
 import Button, { ButtonType } from '@components/Button';
 import getAssetURL from '@utils/getAssetURL';
+import useQuestionsInfo from '@api/useQuestionsInfo';
+
+interface LocationState {
+  questionId: number
+}
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   console.log(currentPage);
+
+  const question_data = location.state as LocationState;
+  const { questionId } = question_data;
+  const { data: qustion_list = [] } = useQuestionsInfo(questionId.toString());
+  console.log(qustion_list);
+  
+  useEffect(() => {
+    setCurrentPage(questionId);
+  }, []);
 
   return (
     <ServiceCenterLayout>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
+import api from '@api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import BlackSelect from '@components/BlackSelect';
@@ -31,6 +32,7 @@ export default () => {
   const [image, setImage] = useState('');
   const [isBlocking, setIsBlocking] = useState(false);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
+  let submitFlag = false;
 
   const handleBlocking = () => {
     setIsBlocking(!isBlocking);
@@ -38,7 +40,23 @@ export default () => {
   const handleSubmittedForm = () => {
     setIsSubmittedForm(!isSubmittedForm);
     navigate(0);
+    // requestQusetion();
   };
+
+  /** 1:1문의 등록 2022.09.07 */
+  const requestQusetion = () => {
+    submitFlag = true;
+    api.post('/questions', {
+      type: inquiryType,
+      title: title,
+      content: content,
+      attachments: {}
+    })
+    .then(() => {
+      navigate('/service-center/inquiry');
+    })
+    .catch(() => submitFlag = false)
+  }
 
   return (
     <ServiceCenterLayout>

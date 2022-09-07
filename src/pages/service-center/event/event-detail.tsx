@@ -10,7 +10,7 @@ import Button, { ButtonType } from '@components/Button';
 import usePostsInfo from '@api/usePostsInfo';
 
 interface LocationState {
-  postId: string
+  postId: number
 }
 
 export default () => {
@@ -22,8 +22,12 @@ export default () => {
   /** 파라미터 수신 2022.09.06 */
   const event_data = location.state as LocationState;
   const { postId } = event_data;
-  const { data: posts_info = [] } = usePostsInfo(postId);
+  const { data: posts_info = [] } = usePostsInfo(postId.toString());
   console.log(posts_info); 
+  
+  useEffect(() => {
+    setCurrentPage(postId);
+  }, []);
 
   return (
     <ServiceCenterLayout>

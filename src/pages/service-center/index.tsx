@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import styled from '@emotion/styled';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -14,8 +14,9 @@ import { usePrevious } from '@hooks/usePrevious';
 
 export default () => {
   const navigate = useNavigate();
-
-  const onClickRow = (id: string) => {
+  const [date, setData] = useState([]);
+  
+  const onClickRow = (id: number) => {
     navigate(`/service-center/notice/${id}`, {
       state: {
         postId: id

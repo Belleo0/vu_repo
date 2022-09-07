@@ -14,7 +14,11 @@ export default () => {
   const navigate = useNavigate();
 
   const onClickRow = (id: number) => {
-    navigate(`/service-center/inquiry/${id}`);
+    navigate(`/service-center/inquiry/${id}`, {
+      state: {
+        questionId: id
+      }
+    });
   };
 
   const { data: quest_data = [] } = useQuestions(1, 9);
