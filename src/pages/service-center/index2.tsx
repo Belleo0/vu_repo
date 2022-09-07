@@ -10,7 +10,6 @@ import fqa_data from './test2';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
 import useFaqData from '@api/useFaqData';
-import usePosts from '@api/usePosts';
 
 enum Active {
   ACTIVE,
@@ -33,11 +32,22 @@ const ActiveFont = {
 
 const topMenuList = ['전체', '이용방법', '가입/인증', '주문/결제', '기타'];
 
+/** 상단 메뉴 클릭 시 카테고리별 필터링 처리 2022.09.05 */
+const filterItem = (location: string) => {
+  if(location === '전체') return fqa_data;
+
+  return fqa_data.filter((el) => 
+    el.category.includes(location)
+  )
+};
+
 export default () => {
   const navigate = useNavigate();
-
+  
   const [location, setLocation] = useState<string>('전체');
   const [isOpenAnswer, setIsOpenAnswer] = useState<any>({});
+  
+  const all_data = filterItem(location);
 
   const handleLocationClick = (val: any | null) => {
     setLocation(val);
@@ -51,18 +61,8 @@ export default () => {
     console.log(location);
   }, [location]);
 
-  /** 상단 메뉴 클릭 시 카테고리별 필터링 처리 2022.09.05 */
-  const filterItem = () => {
-    if(location === '전체') return fqa_data;
-
-    return fqa_data.filter((el) => 
-      el.category.includes(location)
-    )
-  };
-  const all_data = filterItem();
-  
-  const { data: faq_data = [] } = useFaqData(location);
-  console.log(faq_data);
+  const { data: faq_list = [] } = useFaqData(location);
+  console.log(faq_list);
 
   return (
     <ServiceCenterLayout>
