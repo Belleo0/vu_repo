@@ -8,15 +8,27 @@ import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
 import Button, { ButtonType } from '@components/Button';
 import getAssetURL from '@utils/getAssetURL';
+import useQuestionsInfo from '@api/useQuestionsInfo';
+
+interface LocationState {
+  questionId: number
+}
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   console.log(currentPage);
 
-  const onClickRow = (id: number) => {
-    navigate(`/service-center/notice/${id}`);
-  };
+  const question_data = location.state as LocationState;
+  const { questionId } = question_data;
+  const { data: qustion_list = [] } = useQuestionsInfo(questionId.toString());
+  console.log(qustion_list);
+  
+  useEffect(() => {
+    setCurrentPage(questionId);
+  }, []);
 
   return (
     <ServiceCenterLayout>
@@ -29,7 +41,7 @@ export default () => {
             <Button
               type={ButtonType.OUTLINE}
               containerStyle={ButtonStyle}
-              onClick={() => navigate('/service-center/notice')}
+              onClick={() => navigate('/service-center/inquiry')}
             >
               목록으로
             </Button>
@@ -68,7 +80,6 @@ const Container = styled.div`
 `;
 
 const TopList = styled.div`
-  width: 1420px;
   display: flex;
   justify-content: flex-start;
   align-items: center;

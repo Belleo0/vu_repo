@@ -194,6 +194,7 @@ export default () => {
 
 const Container = styled.div`
   /* width: 1420px; */
+  width: 100%;
   height: 100%;
   padding: 52px 60px 97px 60px;
 

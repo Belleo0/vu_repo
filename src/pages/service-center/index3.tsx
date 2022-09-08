@@ -8,9 +8,22 @@ import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import fqa_data from './test2';
 import Button, { ButtonType } from '@components/Button';
 import { css } from '@emotion/react';
+import useQuestions from '@api/useQuestions';
 
 export default () => {
   const navigate = useNavigate();
+
+  const onClickRow = (id: number) => {
+    navigate(`/service-center/inquiry/${id}`, {
+      state: {
+        questionId: id
+      }
+    });
+  };
+
+  const { data: quest_data = [] } = useQuestions(1, 9);
+  console.log(quest_data);
+
   return (
     <ServiceCenterLayout>
       <Container>
@@ -33,7 +46,7 @@ export default () => {
 
         {fqa_data.map((v: any, i: number) => {
           return (
-            <ContentList key={i}>
+            <ContentList key={i} onClick={() => onClickRow(i)}>
               <ContentNo>{v.no}</ContentNo>
               <ContentTitle>{v.title}</ContentTitle>
               <ContentRegDtm>{v.createDate}</ContentRegDtm>

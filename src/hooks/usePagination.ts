@@ -6,14 +6,16 @@ export default (data: any, deps?: any) => {
   const [skip, setSkip] = useState<number>(0);
   const [limit, setLimit] = useState<any>(10);
   const [items, setItems] = useState<any>([]);
-  const [totalCount, setTotalCount] = useState<any>(data.length);
+  const [totalCount, setTotalCount] = useState<any>();
   const currentPage = skip / limit + 1;
 
   const indexOfLast = currentPage * limit;
   const indexOfFirst = indexOfLast - limit;
+
   const currentPosts = (items: any) => {
-    let currentPosts = 0;
-    currentPosts = items.slice(indexOfFirst, indexOfLast);
+    if (!items) return;
+    console.log(items);
+    const currentPosts = items.slice(indexOfFirst, indexOfLast);
     return currentPosts;
   };
 
@@ -32,8 +34,11 @@ export default (data: any, deps?: any) => {
   };
 
   useEffect(() => {
+    if (!data) return;
+    console.log(data);
     setItems(currentPosts(data));
-  }, [skip, limit]);
+    setTotalCount(data.length);
+  }, [skip, limit, data]);
 
   return returnObject;
 };
