@@ -64,7 +64,6 @@ const Container = styled.div`
 `;
 
 const TopList = styled.div`
-  width: 1420px;
   display: flex;
   justify-content: flex-start;
   align-items: center;

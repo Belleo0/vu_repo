@@ -8,9 +8,10 @@ import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
 import Button, { ButtonType } from '@components/Button';
 import usePostsInfo from '@api/usePostsInfo';
+import moment from 'moment';
 
 interface LocationState {
-  postId: string
+  postId: string;
 }
 
 export default () => {
@@ -23,16 +24,18 @@ export default () => {
   const event_data = location.state as LocationState;
   const { postId } = event_data;
   const { data: posts_info = [] } = usePostsInfo(postId);
-  console.log(posts_info); 
+  console.log(posts_info);
 
   return (
     <ServiceCenterLayout>
       <Container>
         <TopList>이벤트</TopList>
         <TitleWrap>
-          <Title>6월, 고객센터 운영 시간 변동 안내</Title>
+          <Title>{posts_info.title}</Title>
           <TitleRightWrap>
-            <PublishedDate>2022.05.25</PublishedDate>
+            <PublishedDate>
+              {moment(posts_info.created_at).format('YYYY.MM.DD')}
+            </PublishedDate>
             <Button
               type={ButtonType.OUTLINE}
               containerStyle={ButtonStyle}
@@ -43,9 +46,7 @@ export default () => {
           </TitleRightWrap>
         </TitleWrap>
         <ContentWrap>
-          <Content>
-            {`안녕하세요, 코나즈입니다. \n2022년 새롭게 선보이는 코나즈 건설사/레미콘사를 가입해주신 회원 여러분께 감사의 인사를 드립니다.`}
-          </Content>
+          <Content>{posts_info.content}</Content>
         </ContentWrap>
       </Container>
     </ServiceCenterLayout>

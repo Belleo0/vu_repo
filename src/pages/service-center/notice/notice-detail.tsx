@@ -8,9 +8,10 @@ import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from '../test';
 import Button, { ButtonType } from '@components/Button';
 import usePostsInfo from '@api/usePostsInfo';
+import moment from 'moment';
 
 interface LocationState {
-  postId: string
+  postId: string;
 }
 
 export default () => {
@@ -30,9 +31,11 @@ export default () => {
       <Container>
         <TopList>공지사항</TopList>
         <TitleWrap>
-          <Title>6월, 고객센터 운영 시간 변동 안내</Title>
+          <Title>{posts_info.title}</Title>
           <TitleRightWrap>
-            <PublishedDate>2022.05.25</PublishedDate>
+            <PublishedDate>
+              {moment(posts_info.created_at).format('YYYY.MM.DD')}
+            </PublishedDate>
             <Button
               type={ButtonType.OUTLINE}
               containerStyle={ButtonStyle}
@@ -43,9 +46,7 @@ export default () => {
           </TitleRightWrap>
         </TitleWrap>
         <ContentWrap>
-          <Content>
-            {`휴대폰 인증이 되지 않습니다. 해결방안 부탁드립니다.\n 안녕하세요 코나즈입니다. `}
-          </Content>
+          <Content>{posts_info.content}</Content>
         </ContentWrap>
       </Container>
     </ServiceCenterLayout>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -6,77 +6,45 @@ import api from '@api';
 import getAssetUrl from '@utils/getAssetURL';
 import ServiceCenterLayout from '@layout/ServiceCenterLayout';
 import { temp_data } from './test';
-import fqa_data from './test2';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
 import useFaqData from '@api/useFaqData';
 
-enum Active {
-  ACTIVE,
-  INACTIVE,
-}
-
-const ActiveBackground = {
-  [Active.ACTIVE]: '#258fff',
-  [Active.INACTIVE]: '#fff',
-};
-
-const ActiveBorder = {
-  [Active.ACTIVE]: '1px solid #258fff',
-  [Active.INACTIVE]: '1px solid #e3e3e3',
-};
-const ActiveFont = {
-  [Active.ACTIVE]: '#fff',
-  [Active.INACTIVE]: '#999999',
-};
-
 const topMenuList = ['전체', '이용방법', '가입/인증', '주문/결제', '기타'];
 
 /** 상단 메뉴 클릭 시 카테고리별 필터링 처리 2022.09.05 */
-const filterItem = (location: string) => {
-  if(location === '전체') return fqa_data;
-
-  return fqa_data.filter((el) => 
-    el.category.includes(location)
-  )
-};
 
 export default () => {
   const navigate = useNavigate();
-  
-  const [location, setLocation] = useState<string>('전체');
-  const [isOpenAnswer, setIsOpenAnswer] = useState<any>({});
-  
-  const all_data = filterItem(location);
 
-  const handleLocationClick = (val: any | null) => {
-    setLocation(val);
-  };
+  const [type, setType] = useState<string>('전체');
+  const [isOpenAnswer, setIsOpenAnswer] = useState<any>({});
+
+  const { data: faq_list = [] } = useFaqData('전체');
+
+  const filteredfaq = useMemo(() => {
+    if (!faq_list.data) return;
+    if (type === '전체') return faq_list.data;
+    const filteredItems = faq_list.data.filter((el: any) => el.type === type);
+    return filteredItems;
+  }, [type, faq_list]);
 
   const handleToggleAnswer = (id: number) => {
     setIsOpenAnswer((prev: any) => ({ ...prev, [id]: !prev[id] }));
   };
-
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
-
-  const { data: faq_list = [] } = useFaqData(location);
-  console.log(faq_list);
 
   return (
     <ServiceCenterLayout>
       <Container>
         <TopList>FAQ</TopList>
         <ServiceTopMenuWrap>
-          {topMenuList.map((v, index) => {
+          {topMenuList.map((v: any, index) => {
             return (
               <MenuContents
-                type={location === v ? Active.ACTIVE : Active.INACTIVE}
+                active={type === v}
                 key={index}
                 onClick={() => {
-                  handleLocationClick(v);
-                  // console.log(v);
+                  setType(v);
                 }}
               >
                 {v}
@@ -85,26 +53,27 @@ export default () => {
           })}
         </ServiceTopMenuWrap>
         <ListWrap>
-          {all_data.map((v: any, i: number) => {
-            return (
-              <ContentWrap key={i}>
-                <ContentList onClick={() => handleToggleAnswer(i)}>
-                  <ContentNo>{v.category}</ContentNo>
-                  <ContentTitle>{v.title}</ContentTitle>
-                  <Icon
-                    src={
-                      isOpenAnswer[i]
-                        ? getAssetURL('../assets/ic-arrow-up.svg')
-                        : getAssetURL('../assets/ic-arrow.svg')
-                    }
-                  />
-                </ContentList>
-                {isOpenAnswer[i] && v.answer && (
-                  <AnswerBox>{v.answer}</AnswerBox>
-                )}
-              </ContentWrap>
-            );
-          })}
+          {filteredfaq &&
+            filteredfaq?.map((v: any, i: number) => {
+              return (
+                <ContentWrap key={i}>
+                  <ContentList onClick={() => handleToggleAnswer(i)}>
+                    <ContentNo>{v.type}</ContentNo>
+                    <ContentTitle>{v.title}</ContentTitle>
+                    <Icon
+                      src={
+                        isOpenAnswer[i]
+                          ? getAssetURL('../assets/ic-arrow-up.svg')
+                          : getAssetURL('../assets/ic-arrow.svg')
+                      }
+                    />
+                  </ContentList>
+                  {isOpenAnswer[i] && v.content && (
+                    <AnswerBox>{v.content}</AnswerBox>
+                  )}
+                </ContentWrap>
+              );
+            })}
         </ListWrap>
       </Container>
     </ServiceCenterLayout>
@@ -137,7 +106,7 @@ const ServiceTopMenuWrap = styled.div`
   margin-bottom: 60px;
 `;
 
-const MenuContents = styled.div<{ type: Active }>`
+const MenuContents = styled.div<{ active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -149,12 +118,18 @@ const MenuContents = styled.div<{ type: Active }>`
   font-size: 16px;
   font-weight: 500;
 
-  ${({ type }) => `
-    background-color: ${ActiveBackground[type]};
-    border: ${ActiveBorder[type]};
-    color: ${ActiveFont[type]}
-
-  `}
+  ${({ active }) =>
+    active
+      ? css`
+          background-color: #258fff;
+          color: #ffffff;
+          border: 1px solid #258fff;
+        `
+      : css`
+          background-color: #ffffff;
+          color: #999999;
+          border: 1px solid #e3e3e3;
+        `}
 `;
 const ListWrap = styled.div`
   border-top: 1px solid #c7c7c7;

@@ -14,18 +14,26 @@ import Pagination from '@components/Pagination';
 export default () => {
   const navigate = useNavigate();
 
+  const [postsList, setPostsList] = useState([]);
+
+  const { data: posts = [] } = usePosts('EVENT');
+  console.log(posts);
+
+  const pagination = usePagination(postsList);
+
   const onClickRow = (id: string) => {
     navigate(`/service-center/event/${id}`, {
       state: {
-        postId: id
-      }
+        postId: id,
+      },
     });
   };
 
-  const { data: posts_item = [] } = usePosts('EVENT');
-  console.log(posts_item);
-
-  const pagination = usePagination(temp_data);
+  useEffect(() => {
+    if (posts?.data) {
+      setPostsList(posts.data);
+    }
+  }, [posts]);
 
   return (
     <ServiceCenterLayout>
@@ -36,15 +44,16 @@ export default () => {
           <GuideLineTitle>제목</GuideLineTitle>
           <GuideLineRegDtm>등록일</GuideLineRegDtm>
         </ListGuideLine>
-        {pagination.items.map((v: any, i: any) => {
-          return (
-            <ContentList key={i} onClick={() => onClickRow(i)}>
-              <ContentNo>{v.no}</ContentNo>
-              <ContentTitle>{v.title}</ContentTitle>
-              <ContentRegDtm>{v.reg_dtm}</ContentRegDtm>
-            </ContentList>
-          );
-        })}
+        {pagination.items &&
+          pagination.items.map((v: any, i: any) => {
+            return (
+              <ContentList key={i} onClick={() => onClickRow(v.id)}>
+                <ContentNo>{(pagination.totalCount - i).toString()}</ContentNo>
+                <ContentTitle>{v.title}</ContentTitle>
+                <ContentRegDtm>2022.09.08</ContentRegDtm>
+              </ContentList>
+            );
+          })}
         <Pagination
           limit={pagination.limit}
           skip={pagination.skip}
@@ -66,7 +75,6 @@ const Container = styled.div`
 `;
 
 const TopList = styled.div`
-  width: 1420px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
