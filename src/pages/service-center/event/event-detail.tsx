@@ -18,13 +18,11 @@ export default () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  console.log(currentPage);
 
   /** 파라미터 수신 2022.09.06 */
   const event_data = location.state as LocationState;
   const { postId } = event_data;
   const { data: posts_info = [] } = usePostsInfo(postId);
-  console.log(posts_info);
 
   return (
     <ServiceCenterLayout>
