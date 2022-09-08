@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { useLocation } from 'react-router-dom';
@@ -11,6 +11,7 @@ import _04 from '../../assets/04_img.png';
 import _05 from '../../assets/05_img.png';
 import getAssetUrl from '@utils/getAssetURL';
 import { onPrint } from '@utils/onPrint';
+import useUnitPriceInfo from '@api/useUnitPriceInfo';
 
 enum Active {
   ACTIVE,
@@ -52,43 +53,22 @@ const locationArr = [
   '전체',
 ];
 
-const listArr = [
-  {
-    name: '천마콘크리트공업(주)',
-    addr: '서울 강남구 삼성로 417',
-    tel: '02) 1234-1234',
-    rem: 720,
-    have: 110,
-  },
-  {
-    name: '천마콘크리트공업(주)',
-    addr: '서울 강남구 삼성로 417',
-    tel: '02) 1234-1234',
-    rem: 720,
-    have: 110,
-  },
-  {
-    name: '천마콘크리트공업(주)',
-    addr: '서울 송파구 성남대로 1541-32',
-    tel: '02) 1234-1234',
-    rem: 720,
-    have: 110,
-  },
-  {
-    name: '천마콘크리트공업(주)',
-    addr: '서울 강남구 삼성로 417',
-    tel: '02) 1234-1234',
-    rem: 720,
-    have: 110,
-  },
-];
+const norminal_strength = [16, 18, 21, 24, 37, 30, 35, 40, 45, 50];
+const slump = [80, 120, 150, 180, 210];
 
 export default () => {
   const state = useLocation();
-  const { divRef, handleOnPrint } = onPrint();
-  // console.log(state);
   const [location, setLocation] = useState<string>('서울');
-  const [unitPrice, setUnitPrice] = useState<any>(100);
+  const [percent, setPercent] = useState('100');
+  const [chagedPercent, setChangedPercent] = useState('100');
+
+  const {
+    data: unitPrices,
+    isLoading,
+    unitPricesMutate,
+  } = useUnitPriceInfo(location, chagedPercent);
+
+  const { divRef, handleOnPrint } = onPrint();
 
   const selectItem = [{ label: '회사명', value: '회사명' }];
 
@@ -96,14 +76,26 @@ export default () => {
     setLocation(val);
   };
 
+  const handleChangePriceValue = (percent: any) => {
+    setChangedPercent(percent);
+  };
+
   useEffect(() => {
     console.log(location);
   }, [location]);
 
+  const transformedData = useMemo(() => {
+    if (!unitPrices) return;
+    const resultKeys = Object.keys(unitPrices);
+    const resultValues = Object.values(unitPrices);
+
+    console.log(resultKeys, resultValues);
+  }, [unitPrices]);
+
   return (
     <ReferenceRoomLayout>
       <Container ref={divRef}>
-        <TopList style={{ width: '1420px' }}>
+        <TopList>
           <TopListText>레미콘 단가표</TopListText>
           <TopBtnWrap>
             <TopIconListBtn
@@ -139,23 +131,32 @@ export default () => {
           <Caption>2020.03.01 기준</Caption>
         </CaptionWrap>
         <UnitPriceWrap>
-          <UnitPrice style={{ marginRight: '30px' }}>단가율</UnitPrice>
-          <UnitPriceInput
-            value={unitPrice}
-            onChange={(v: any) => {
-              setUnitPrice(v.target.value);
-            }}
-          />
-          <UnitPricePercent>%</UnitPricePercent>
-          <UnitPriceConfirmBtn>적용</UnitPriceConfirmBtn>
+          <UnitInputContainer>
+            <UnitPrice>단가율</UnitPrice>
+            <UnitPriceInput
+              value={percent}
+              onChange={(e) => {
+                if (
+                  !!Number(e.target.value) &&
+                  parseInt(e.target.value, 10) <= 100
+                ) {
+                  setPercent(e.target.value);
+                } else if (e.target.value === '') {
+                  setPercent('');
+                }
+              }}
+            />
+            <Percent>%</Percent>
+          </UnitInputContainer>
+          <UnitPriceConfirmBtn onClick={() => handleChangePriceValue(percent)}>
+            적용
+          </UnitPriceConfirmBtn>
         </UnitPriceWrap>
-        <TopList
-          style={{ marginTop: '44px', marginBottom: '14px', width: '1420px' }}
-        >
+        <TopList style={{ marginTop: '44px', marginBottom: '14px' }}>
           <BottomListText>굵은 골재 최대치수 : 25mm (#57)</BottomListText>
           <Caption>(단위 : 원/m2, 부가세 별도)</Caption>
         </TopList>
-        <BottomContentWrap style={{ width: '1420px' }}>
+        <BottomContentWrap>
           <BottomContentTopGuideLine>
             <BottomContentGrayItem style={{ width: '110px', height: '49px' }}>
               <SlashImage
@@ -164,85 +165,150 @@ export default () => {
                 height={'100%'}
               />
             </BottomContentGrayItem>
-            <BottomContentGrayItem>160</BottomContentGrayItem>
-            <BottomContentGrayItem>180</BottomContentGrayItem>
-            <BottomContentGrayItem>210</BottomContentGrayItem>
-            <BottomContentGrayItem>240</BottomContentGrayItem>
-            <BottomContentGrayItem>270</BottomContentGrayItem>
-            <BottomContentGrayItem>300</BottomContentGrayItem>
-            <BottomContentGrayItem>350</BottomContentGrayItem>
-            <BottomContentGrayItem>400</BottomContentGrayItem>
-            <BottomContentGrayItem>450</BottomContentGrayItem>
-            <BottomContentGrayItem style={{ borderRight: 'none' }}>
-              500
-            </BottomContentGrayItem>
+            {norminal_strength.map((v: any, i: number) => (
+              <BottomContentGrayItem key={i}>{v}</BottomContentGrayItem>
+            ))}
           </BottomContentTopGuideLine>
+
           <BottomContentBasicLine>
             <BottomContentGrayItem style={{ width: '110px', height: '42px' }}>
               8
             </BottomContentGrayItem>
-            <BottomContentWhiteItem>62,200</BottomContentWhiteItem>
-            <BottomContentWhiteItem>64,400</BottomContentWhiteItem>
-            <BottomContentWhiteItem>210</BottomContentWhiteItem>
-            <BottomContentWhiteItem>240</BottomContentWhiteItem>
-            <BottomContentWhiteItem>270</BottomContentWhiteItem>
-            <BottomContentWhiteItem>300</BottomContentWhiteItem>
-            <BottomContentWhiteItem>350</BottomContentWhiteItem>
-            <BottomContentWhiteItem>400</BottomContentWhiteItem>
-            <BottomContentWhiteItem>450</BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_8_nominal_160}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_8_nominal_180}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_8_nominal_210}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_8_nominal_240}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_8_nominal_270}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_8_nominal_300}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_8_nominal_350}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_8_nominal_400}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_8_nominal_450}
+            </BottomContentWhiteItem>
             <BottomContentWhiteItem style={{ borderRight: 'none' }}>
-              500
+              {unitPrices?.slump_8_nominal_500}
             </BottomContentWhiteItem>
           </BottomContentBasicLine>
           <BottomContentBasicLine>
             <BottomContentGrayItem style={{ width: '110px', height: '42px' }}>
               12
             </BottomContentGrayItem>
-            <BottomContentWhiteItem>160</BottomContentWhiteItem>
-            <BottomContentWhiteItem>180</BottomContentWhiteItem>
-            <BottomContentWhiteItem>210</BottomContentWhiteItem>
-            <BottomContentWhiteItem>240</BottomContentWhiteItem>
-            <BottomContentWhiteItem>270</BottomContentWhiteItem>
-            <BottomContentWhiteItem>300</BottomContentWhiteItem>
-            <BottomContentWhiteItem>350</BottomContentWhiteItem>
-            <BottomContentWhiteItem>400</BottomContentWhiteItem>
-            <BottomContentWhiteItem>450</BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_12_nominal_160}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_12_nominal_180}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_12_nominal_210}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_12_nominal_240}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_12_nominal_270}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_12_nominal_300}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_12_nominal_350}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_12_nominal_400}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_12_nominal_450}
+            </BottomContentWhiteItem>
             <BottomContentWhiteItem style={{ borderRight: 'none' }}>
-              500
+              {unitPrices?.slump_12_nominal_500}
             </BottomContentWhiteItem>
           </BottomContentBasicLine>
           <BottomContentBasicLine>
             <BottomContentGrayItem style={{ width: '110px', height: '42px' }}>
               15
             </BottomContentGrayItem>
-            <BottomContentWhiteItem>160</BottomContentWhiteItem>
-            <BottomContentWhiteItem>180</BottomContentWhiteItem>
-            <BottomContentWhiteItem>210</BottomContentWhiteItem>
-            <BottomContentWhiteItem>240</BottomContentWhiteItem>
-            <BottomContentWhiteItem>270</BottomContentWhiteItem>
-            <BottomContentWhiteItem>300</BottomContentWhiteItem>
-            <BottomContentWhiteItem>350</BottomContentWhiteItem>
-            <BottomContentWhiteItem>400</BottomContentWhiteItem>
-            <BottomContentWhiteItem>450</BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_15_nominal_160}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_15_nominal_180}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_15_nominal_210}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_15_nominal_240}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_15_nominal_270}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_15_nominal_300}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_15_nominal_350}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_15_nominal_400}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_15_nominal_450}
+            </BottomContentWhiteItem>
             <BottomContentWhiteItem style={{ borderRight: 'none' }}>
-              500
+              {unitPrices?.slump_15_nominal_500}
             </BottomContentWhiteItem>
           </BottomContentBasicLine>
           <BottomContentBasicLine>
             <BottomContentGrayItem style={{ width: '110px', height: '42px' }}>
               18
             </BottomContentGrayItem>
-            <BottomContentWhiteItem>160</BottomContentWhiteItem>
-            <BottomContentWhiteItem>180</BottomContentWhiteItem>
-            <BottomContentWhiteItem>210</BottomContentWhiteItem>
-            <BottomContentWhiteItem>240</BottomContentWhiteItem>
-            <BottomContentWhiteItem>270</BottomContentWhiteItem>
-            <BottomContentWhiteItem>300</BottomContentWhiteItem>
-            <BottomContentWhiteItem>350</BottomContentWhiteItem>
-            <BottomContentWhiteItem>400</BottomContentWhiteItem>
-            <BottomContentWhiteItem>450</BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_18_nominal_160}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_18_nominal_180}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_18_nominal_210}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_18_nominal_240}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_18_nominal_270}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_18_nominal_300}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_18_nominal_350}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {' '}
+              {unitPrices?.slump_18_nominal_400}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_18_nominal_450}
+            </BottomContentWhiteItem>
             <BottomContentWhiteItem style={{ borderRight: 'none' }}>
-              500
+              {unitPrices?.slump_18_nominal_500}
             </BottomContentWhiteItem>
           </BottomContentBasicLine>
           <BottomContentBasicLine>
@@ -251,18 +317,36 @@ export default () => {
             >
               21
             </BottomContentGrayItem>
-            <BottomContentWhiteLastItem>160</BottomContentWhiteLastItem>
-            <BottomContentWhiteLastItem>180</BottomContentWhiteLastItem>
-            <BottomContentWhiteLastItem>210</BottomContentWhiteLastItem>
-            <BottomContentWhiteLastItem>240</BottomContentWhiteLastItem>
-            <BottomContentWhiteLastItem>270</BottomContentWhiteLastItem>
-            <BottomContentWhiteLastItem>300</BottomContentWhiteLastItem>
-            <BottomContentWhiteLastItem>350</BottomContentWhiteLastItem>
-            <BottomContentWhiteLastItem>400</BottomContentWhiteLastItem>
-            <BottomContentWhiteLastItem>450</BottomContentWhiteLastItem>
-            <BottomContentWhiteLastItem style={{ borderRight: 'none' }}>
-              500
-            </BottomContentWhiteLastItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_21_nominal_160}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_21_nominal_180}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_21_nominal_210}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_21_nominal_240}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_21_nominal_270}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_21_nominal_300}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_21_nominal_350}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_21_nominal_400}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem>
+              {unitPrices?.slump_21_nominal_450}
+            </BottomContentWhiteItem>
+            <BottomContentWhiteItem style={{ borderRight: 'none' }}>
+              {unitPrices?.slump_21_nominal_500}
+            </BottomContentWhiteItem>
           </BottomContentBasicLine>
         </BottomContentWrap>
         <BottomContentSecWrap>
@@ -308,12 +392,20 @@ export default () => {
                 >
                   10 ± 2.5
                 </BottomContentGrayItem>
-                <BottomContentWhiteLastItem>72,400</BottomContentWhiteLastItem>
-                <BottomContentWhiteLastItem>78,100</BottomContentWhiteLastItem>
-                <BottomContentWhiteLastItem>87,600</BottomContentWhiteLastItem>
-                <BottomContentWhiteLastItem>99,300</BottomContentWhiteLastItem>
+                <BottomContentWhiteLastItem>
+                  {unitPrices?.mortar_350}
+                </BottomContentWhiteLastItem>
+                <BottomContentWhiteLastItem>
+                  {unitPrices?.mortar_450}
+                </BottomContentWhiteLastItem>
+                <BottomContentWhiteLastItem>
+                  {unitPrices?.mortar_550}
+                </BottomContentWhiteLastItem>
+                <BottomContentWhiteLastItem>
+                  {unitPrices?.mortar_700}
+                </BottomContentWhiteLastItem>
                 <BottomContentWhiteLastItem style={{ borderRight: 'none' }}>
-                  122.300
+                  {unitPrices?.mortar_100}
                 </BottomContentWhiteLastItem>
               </BottomContentTopGuideLine>
             </BottomContentWrap>
@@ -323,21 +415,7 @@ export default () => {
               <BottomListText>해당지역</BottomListText>
               <Caption>단가율이 포함된 지역입니다.</Caption>
             </TopList>
-            <div
-              style={{
-                backgroundColor: '#f2f2f2',
-                width: '500px',
-                height: '94px',
-                margin: '14px 0 0',
-                padding: '20px',
-
-                fontSize: '14px',
-                fontWeight: 'normal',
-                color: '#222',
-              }}
-            >
-              서울, 경기, 부산
-            </div>
+            <LocationsContiner>{unitPrices?.division}</LocationsContiner>
           </BottomSecRightContent>
         </BottomContentSecWrap>
       </Container>
@@ -346,7 +424,8 @@ export default () => {
 };
 
 const Container = styled.div`
-  width: 1420px;
+  /* width: 1420px; */
+  width: 100%;
   height: 100%;
   padding: 52px 60px 97px 60px;
 
@@ -417,7 +496,6 @@ const ReportSvgImage = styled.img`
 `;
 
 const LocationWrap = styled.div`
-  width: 1420px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -426,7 +504,7 @@ const LocationWrap = styled.div`
 `;
 
 const LineGuard = styled.div`
-  width: 1420px;
+  width: 100%;
   height: 1px;
   margin: 20px 0 30px;
   background-color: #c7c7c7;
@@ -455,7 +533,6 @@ const LocationContent = styled.div<{ type: Active }>`
 const CaptionWrap = styled.div`
   display: flex;
   align-items: center;
-  width: 1420px;
   justify-content: flex-end;
   margin-top: 67px;
   margin-bottom: 8px;
@@ -471,7 +548,6 @@ const UnitPriceWrap = styled.div`
   align-items: center;
   justify-content: flex-end;
   flex-direction: row;
-  width: 1420px;
   height: 80px;
   padding: 15px 30px 15px 0;
   background-color: #f2f2f2;
@@ -495,12 +571,11 @@ const UnitPriceInput = styled.input`
   text-align: center;
   color: #258fff;
 `;
-const UnitPricePercent = styled.div`
+const Percent = styled.div`
   font-size: 18px;
   font-weight: 500;
   color: #000;
   margin-left: 8px;
-  margin-right: 509px;
 `;
 const UnitPriceConfirmBtn = styled.div`
   display: flex;
@@ -620,7 +695,6 @@ const BottomContentWrap = styled.div`
 const BottomContentSecWrap = styled.div`
   display: flex;
   flex-direction: row;
-  width: 1420px;
 
   align-items: center;
   justify-content: space-between;
@@ -629,13 +703,17 @@ const BottomContentSecWrap = styled.div`
 `;
 
 const BottomSecLeftContent = styled.div`
-  width: 765px;
+  width: 100%;
   height: 131px;
+  flex: 1;
 `;
 
 const BottomSecRightContent = styled.div`
-  width: 500px;
+  width: 100%;
   height: 131px;
+  flex: 1;
+
+  margin-left: 100px;
 `;
 
 const CaptionSpan = styled.span`
@@ -645,3 +723,25 @@ const CaptionSpan = styled.span`
 `;
 
 const SlashImage = styled.img``;
+
+const LocationsContiner = styled.div`
+  width: auto;
+  height: 94px;
+  margin: 14px 0 0;
+  padding: 20px;
+
+  background-color: #f2f2f2;
+
+  font-size: 14px;
+  font-weight: normal;
+  color: #222;
+`;
+
+const UnitInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: auto;
+  margin-right: auto;
+`;

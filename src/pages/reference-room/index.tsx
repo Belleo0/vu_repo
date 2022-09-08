@@ -65,7 +65,6 @@ export default () => {
             onClick={(e) => {
               nxtStepHandler('파일');
             }}
-            style={{ marginRight: '0px' }}
           >
             <CardLeftWrap>
               <CardTitleKR>파일</CardTitleKR>
@@ -132,7 +131,6 @@ const SubListText = styled.div`
 const ContentCardWrap = styled.div`
   display: flex;
   margin-top: 24px;
-  width: 1420px;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
