@@ -9,9 +9,10 @@ import { temp_data } from '../test';
 import Button, { ButtonType } from '@components/Button';
 import getAssetURL from '@utils/getAssetURL';
 import useQuestionsInfo from '@api/useQuestionsInfo';
+import moment from 'moment';
 
 interface LocationState {
-  questionId: number
+  questionId: number;
 }
 
 export default () => {
@@ -23,9 +24,9 @@ export default () => {
 
   const question_data = location.state as LocationState;
   const { questionId } = question_data;
-  const { data: qustion_list = [] } = useQuestionsInfo(questionId.toString());
+  const { data: qustion_list = [] } = useQuestionsInfo(questionId);
   console.log(qustion_list);
-  
+
   useEffect(() => {
     setCurrentPage(questionId);
   }, []);
@@ -35,9 +36,11 @@ export default () => {
       <Container>
         <TopList>1:1문의</TopList>
         <TitleWrap>
-          <Title>휴대폰 인증이 안되는 이유와 해결방법은 무엇인가요?</Title>
+          <Title>{qustion_list?.title}</Title>
           <TitleRightWrap>
-            <PublishedDate>2022.05.25</PublishedDate>
+            <PublishedDate>
+              {moment(qustion_list.created_at).format('YYYY.MM.DD')}
+            </PublishedDate>
             <Button
               type={ButtonType.OUTLINE}
               containerStyle={ButtonStyle}
@@ -48,23 +51,19 @@ export default () => {
           </TitleRightWrap>
         </TitleWrap>
         <ContentWrap>
-          <Content>휴대폰 인증이 되지 않습니다. 해결방안 부탁드립니다.</Content>
+          <Content>{qustion_list?.content}</Content>
           <ImageListWrap>
-            <ImageContent src={getAssetURL('../assets/img/img_inquiry.png')} />
+            {/* <ImageContent src={getAssetURL('../assets/img/img_inquiry.png')} />
             <ImageContent
               src={getAssetURL('../assets/img/img_inquiry_2.png')}
             />
             <ImageContent
               src={getAssetURL('../assets/img/img_inquiry_3.png')}
-            />
+            /> */}
           </ImageListWrap>
-          <AnswerBox>
-            안녕하세요. 코나즈입니다. 이미 인증된 정보가 있는 경우, 휴대폰
-            인증단계에서 ‘이미 콘박스에 가입되어 있는 휴대폰 번호입니다’라는
-            안내가 보인다면, 해당 명의자의 정보로 인증된 다른 계정이 존재한다는
-            의미입니다. 더욱 편리하고 안정적인 서비스 제공을 위해
-            노력하겠습니다. 감사합니다.
-          </AnswerBox>
+          {qustion_list?.reply ? (
+            <AnswerBox>{qustion_list?.reply}</AnswerBox>
+          ) : null}
         </ContentWrap>
       </Container>
     </ServiceCenterLayout>
@@ -134,6 +133,12 @@ const ButtonStyle = {
 };
 
 const ContentWrap = styled.div`
+  width: 100%;
+  min-height: 420px;
+
+  display: flex;
+  flex-direction: column;
+
   background-color: #fff;
   padding: 40px;
   line-height: 1.73;
@@ -150,13 +155,15 @@ const Content = styled.div`
 
 const ImageListWrap = styled.div`
   display: flex;
+
+  margin: 30px 0 50px 0;
 `;
 
 const ImageContent = styled.img`
   width: 120px;
   height: 120px;
 
-  margin: 30px 20px 50px 0;
+  margin-right: 20px;
 
   border-radius: 12px;
   background-color: #eff7ff;
@@ -166,13 +173,15 @@ const AnswerBox = styled.div`
   padding: 30px 180px 30px 30px;
   background-color: #f2f2f2;
 
+  width: 100%;
+
   font-size: 15px;
   font-weight: normal;
-  font-style: normal;
   line-height: 1.73;
   letter-spacing: -0.3px;
   text-align: left;
   color: #222;
 
-  margin-bottom: 110px;
+  margin-top: auto;
+  margin-bottom: 40px;
 `;
