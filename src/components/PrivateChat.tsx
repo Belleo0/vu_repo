@@ -32,7 +32,7 @@ export default ({
   previousChatRoomId,
 }: IPrivateChat) => {
   const [message, setMessage] = useState<string>('');
-  const [image, setImage] = useState<any>();
+  const [images, setImages] = useState<any>();
   const [reple, setReple] = useState<any>();
 
   const [socketState, setSocketState] = useState<any>(null);
@@ -42,7 +42,7 @@ export default ({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files;
-    setImage(newFile);
+    setImages(newFile);
   };
 
   const scrollToBottom = (init: boolean) => {
@@ -267,10 +267,12 @@ export default ({
         <ChatInputWrap>
           <FileUploadWrap>
             <FileUpload
-              image={image}
-              setImage={setImage}
+              images={images}
+              setImages={setImages}
               buttonStyle={UploadButton}
               icon={'plus_01_ic'}
+              limit={1}
+              disabledPreview={true}
             />
           </FileUploadWrap>
           <InputContainer>

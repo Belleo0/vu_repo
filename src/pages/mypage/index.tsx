@@ -39,7 +39,7 @@ export default () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [veryfyPhoneCode, setVeryfyPhoneCode] = useState('');
-  const [image, setImage] = useState('');
+  const [images, setImages] = useState([]);
 
   const { name, companyName, position, department, tel } = userData;
 
@@ -267,8 +267,11 @@ export default () => {
               />
               <FileUpload
                 label={'이미지수정'}
-                image={image}
-                setImage={setImage}
+                images={images}
+                setImages={setImages}
+                limit={1}
+                disabledPreview={true}
+                buttonStyle={uploadButton}
               />
             </ProfileImageBox>
             <MyInfoFormBox>
@@ -726,4 +729,10 @@ const buttonStyle2 = {
   padding: '11px 0',
   marginLeft: '10px',
   marginBottom: '20px',
+};
+
+const uploadButton = {
+  backgroundColor: '#ffffff',
+  padding: '8px 11px',
+  marginTop: '14px',
 };

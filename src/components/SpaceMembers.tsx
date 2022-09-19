@@ -2,12 +2,15 @@ import React from 'react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import ScrollBox from './ScrollBox';
+import useUserInfo from '@hooks/useUserInfo';
 
 interface IMembers {
   data: any[];
 }
 
 export default ({ data = [] }: IMembers) => {
+  const userInfo = useUserInfo();
+
   return (
     <Container>
       {data.map((v: any, i: number) => (
@@ -18,12 +21,15 @@ export default ({ data = [] }: IMembers) => {
             <NameRoleWrap>
               <Name>{v?.name}</Name>
               <Role>{v?.position}</Role>
+              {userInfo.id === v.id ? <IsUserCircle>나</IsUserCircle> : null}
             </NameRoleWrap>
           </ProfileInfoWrap>
-          <ProfileChatWrap onClick={() => null}>
-            <ChatIcon src={getAssetURL('../assets/ic-chat.svg')} />
-            <ChatLabel>1:1 채팅</ChatLabel>
-          </ProfileChatWrap>
+          {userInfo.id !== v.id ? (
+            <ProfileChatWrap onClick={() => null}>
+              <ChatIcon src={getAssetURL('../assets/ic-chat.svg')} />
+              <ChatLabel>1:1 채팅</ChatLabel>
+            </ProfileChatWrap>
+          ) : null}
         </ProfileWrap>
       ))}
     </Container>
@@ -38,6 +44,7 @@ const Container = styled(ScrollBox)`
   height: 100%;
   max-height: 360px;
   overflow-y: scroll;
+  overflow-y: overlay;
 `;
 
 const ProfileWrap = styled.div`
@@ -112,4 +119,21 @@ const ChatLabel = styled.span`
   letter-spacing: -0.24px;
   text-align: center;
   color: #444;
+`;
+
+const IsUserCircle = styled.div`
+  width: 18px;
+  height: 18px;
+  padding: 4px 4px;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -0.22px;
+
+  border-radius: 9px;
+  background-color: #000;
+
+  margin-left: 6px;
 `;

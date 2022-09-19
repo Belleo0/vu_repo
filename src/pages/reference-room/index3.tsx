@@ -50,7 +50,7 @@ const locationArr = [
   '전남',
   '전북',
   '제주',
-  '전체',
+  ' ',
 ];
 
 const norminal_strength = [16, 18, 21, 24, 37, 30, 35, 40, 45, 50];
@@ -117,7 +117,6 @@ export default () => {
                 key={index}
                 onClick={() => {
                   handleLocationClick(v);
-                  console.log(v);
                 }}
               >
                 {v}
@@ -544,7 +543,7 @@ const Caption = styled.span`
 const UnitPriceWrap = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   flex-direction: row;
   height: 80px;
   padding: 15px 30px 15px 0;
@@ -590,6 +589,8 @@ const UnitPriceConfirmBtn = styled.div`
   font-weight: normal;
   text-align: center;
   color: #fff;
+
+  margin-left: 30px;
 `;
 
 const BottomContentTopGuideLine = styled.div`
@@ -739,9 +740,6 @@ const UnitInputContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
-  margin-left: auto;
-  margin-right: auto;
 `;
 
 const ColumnTitle = styled.div`

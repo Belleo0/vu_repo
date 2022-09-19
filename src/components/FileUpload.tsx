@@ -20,6 +20,7 @@ interface IFileUpload {
   iconStyle?: CSSProperties;
   icon?: string;
   limit: number;
+  disabledPreview?: boolean;
 }
 
 export default ({
@@ -30,6 +31,7 @@ export default ({
   icon,
   iconStyle,
   limit,
+  disabledPreview,
 }: IFileUpload & InputHTMLAttributes<HTMLDivElement>) => {
   const [thumbnails, setThumbnails] = useState<any>([]);
 
@@ -47,10 +49,9 @@ export default ({
     }
 
     if (imageUrlList.length > limit) {
-      console.log('실행???');
       imageUrlList = imageUrlList.slice(0, limit);
       setThumbnails(imageUrlList);
-      window.alert('이미지는 최대 5장까지 등록 가능합니다.');
+      window.alert(`이미지는 최대 ${limit}장까지 등록 가능합니다.`);
     }
 
     setThumbnails(imageUrlList);
@@ -94,21 +95,23 @@ export default ({
           style={{ display: 'none' }}
         />
       </InputWrap>
-      {thumbnails.length !== 0 &&
-        thumbnails.map((v: string, i: number) => {
-          return (
-            <ImageContainer key={i}>
-              <XIcon
-                src={getAssetURL('../assets/ic-circle-x.svg')}
-                onClick={(e) => {
-                  e.preventDefault();
-                  deleteFileImage(i);
-                }}
-              />
-              <ImageContent url={v} />
-            </ImageContainer>
-          );
-        })}
+
+      {thumbnails.length !== 0 && !disabledPreview
+        ? thumbnails.map((v: string, i: number) => {
+            return (
+              <ImageContainer key={i}>
+                <XIcon
+                  src={getAssetURL('../assets/ic-circle-x.svg')}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    deleteFileImage(i);
+                  }}
+                />
+                <ImageContent url={v} />
+              </ImageContainer>
+            );
+          })
+        : null}
     </Container>
   );
 };
@@ -134,8 +137,6 @@ const UploadButton = styled.label`
   cursor: pointer;
   text-align: center;
   letter-spacing: -0.26px;
-
-  margin-right: 20px;
 `;
 
 const Icon = styled.img`

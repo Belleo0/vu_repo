@@ -3,6 +3,7 @@ import authReducer from './auth';
 import spaceReducer from './space';
 import mapReducer from './map';
 import constructionReducer from './construction';
+import chatReducer from './chat';
 
 export default configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
     space: spaceReducer,
     map: mapReducer,
     construction: constructionReducer,
+    chat: chatReducer,
   },
 });

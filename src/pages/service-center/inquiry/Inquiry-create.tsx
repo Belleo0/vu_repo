@@ -90,9 +90,10 @@ export default () => {
             <FileUpload
               images={images}
               setImages={setImages}
-              buttonStyle={UploadButton}
+              buttonStyle={uploadButton}
               icon={'ic-plus'}
               limit={5}
+              disabledPreview={false}
             />
           </FileUploadWrap>
           <ButtonBox>
@@ -182,7 +183,7 @@ const FileUploadWrap = styled.div`
   margin-right: auto;
 `;
 
-const UploadButton = {
+const uploadButton = {
   width: '120px',
   height: '120px',
   display: 'flex',
@@ -194,6 +195,8 @@ const UploadButton = {
   borderRadius: '12px',
   border: 'solid 1px #000',
   backgroundColor: '#fff',
+
+  marginRight: '20px',
 };
 
 const Icon = styled.img`

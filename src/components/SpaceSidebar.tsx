@@ -40,6 +40,7 @@ import FactoryCard from './FactoryCard';
 import useFactories from '@api/useFactories';
 import { debounce } from 'lodash';
 import TextModal from './TextModal';
+import ScrollBox from './ScrollBox';
 
 enum TabTypeEnum {
   DEFAULT,
@@ -99,30 +100,6 @@ export default () => {
       return spaces.filter((v: any) => v?.name?.includes(search));
     } else return [];
   }, [spaces, order, search]);
-
-  // const searchedFactories = useMemo(() => {
-  //   if (!factories) return [];
-  //   else if (order === '최신순') {
-  //     const stableFactory = factories.map((el: any, i: any) => [el, i]);
-  //     stableFactory.sort((a:any, b:any) => {
-  //       return b[1] - a[1];
-  //     });
-  //     const sortedFactory = stableFactory.map((el: any) =>el[0]);
-  //     return sortedFactory.filter((v: any) => v?.name?.includes(forSearchFactory));
-  //   } else if (order === '오래된순') {
-  //     const sortedFactory = factories.sort((a:any, b:any) => {
-  //       return a.id - b.id;
-  //     });
-  //     return sortedFactory.filter((v: any) => v?.name?.includes(forSearchFactory));
-  //   } else if (order === '이름순') {
-  //     const sortedFactory = factories.sort((a:any, b:any) => {
-  //       return a.name < b.name ? -1 : a.name == b.name ? 0 : 1;
-  //     });
-  //     return sortedFactory.filter((v: any) => v?.name?.includes(forSearchFactory));
-  //   } else if (order === '사용자화') {
-  //     return factories.filter((v: any) => v?.name?.includes(forSearchFactory));
-  //   } else return [];
-  // }, [factories, forSearchFactory]);
 
   const [isOrderChangeModalOpen, setIsOrderChangeModalOpen] = useState(false);
 
@@ -253,8 +230,6 @@ export default () => {
     delayedUpdateCall(v);
     setSearchFactory(v);
   };
-
-  console.log(factories);
 
   return (
     <Container>
@@ -546,10 +521,11 @@ const SpaceOrderIcon = styled.img<{ isOpen?: boolean }>`
         `}
 `;
 
-const ChangeCardWrap = styled.div`
+const ChangeCardWrap = styled(ScrollBox)`
   margin-bottom: 20px;
   max-height: 480px;
   overflow-y: scroll;
+  overflow-y: overlay;
 `;
 
 const SearchedSpaceWrap = styled.div`

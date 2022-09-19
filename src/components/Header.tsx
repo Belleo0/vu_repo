@@ -169,6 +169,8 @@ export default () => {
     });
   }, [search]);
 
+  console.log('selectedUserInfo', selectedUserInfo);
+
   return (
     <Container>
       <LogoWrap onClick={() => navigate('/')}>
