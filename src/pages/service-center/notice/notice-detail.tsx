@@ -61,7 +61,6 @@ const Container = styled.div`
 `;
 
 const TopList = styled.div`
-  width: 1420px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -116,6 +115,11 @@ const ButtonStyle = {
 };
 
 const ContentWrap = styled.div`
+  min-height: 420px;
+
+  display: flex;
+  flex-direction: column;
+
   background-color: #fff;
   padding: 40px;
   line-height: 1.73;

@@ -1,5 +1,6 @@
 import api from '@api';
 import useFriends from '@api/useFriends';
+import { setSelectedUserInfo } from '@data/chat';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
@@ -7,10 +8,13 @@ import { addHyphen } from '@utils/common';
 import getAssetURL from '@utils/getAssetURL';
 import moment from 'moment';
 import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import Button, { ButtonSize, ButtonType } from './Button';
 import Modal from './Modal';
 
 export default ({ open, data, onClose, companyName }: any) => {
+  const dispatch = useDispatch();
+
   const {
     data: { friends, error, refetch },
   } = useFriends();
@@ -43,7 +47,7 @@ export default ({ open, data, onClose, companyName }: any) => {
     return friends?.filter((v: any) => v.id === data?.id);
   }, [friends, data]);
 
-  console.log(isFriend);
+  console.log('data', data);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -111,6 +115,7 @@ export default ({ open, data, onClose, companyName }: any) => {
                 icon="ic-chat-white"
                 containerStyle={{ height: '50px' }}
                 iconStyle={{ width: '19px', height: '19px' }}
+                onClick={() => dispatch(setSelectedUserInfo(data))}
               >
                 채팅하기
               </Button>

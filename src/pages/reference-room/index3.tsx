@@ -50,7 +50,7 @@ const locationArr = [
   '전남',
   '전북',
   '제주',
-  '전체',
+  ' ',
 ];
 
 const norminal_strength = [16, 18, 21, 24, 37, 30, 35, 40, 45, 50];
@@ -117,7 +117,6 @@ export default () => {
                 key={index}
                 onClick={() => {
                   handleLocationClick(v);
-                  console.log(v);
                 }}
               >
                 {v}
@@ -158,13 +157,13 @@ export default () => {
         </TopList>
         <BottomContentWrap>
           <BottomContentTopGuideLine>
-            <BottomContentGrayItem style={{ width: '110px', height: '49px' }}>
-              <SlashImage
-                src={getAssetUrl('/assets/reference_room_one.png')}
-                width={'100%'}
-                height={'100%'}
-              />
-            </BottomContentGrayItem>
+            <ColumnTitle>
+              <DiagonalCell>
+                <DiagonalLeft>슬럼프(mm)</DiagonalLeft>
+                <DiagonalRight>호칭강도</DiagonalRight>
+                <Slash />
+              </DiagonalCell>
+            </ColumnTitle>
             {norminal_strength.map((v: any, i: number) => (
               <BottomContentGrayItem key={i}>{v}</BottomContentGrayItem>
             ))}
@@ -172,7 +171,7 @@ export default () => {
 
           <BottomContentBasicLine>
             <BottomContentGrayItem style={{ width: '110px', height: '42px' }}>
-              8
+              80
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
               {unitPrices?.slump_8_nominal_160}
@@ -207,7 +206,7 @@ export default () => {
           </BottomContentBasicLine>
           <BottomContentBasicLine>
             <BottomContentGrayItem style={{ width: '110px', height: '42px' }}>
-              12
+              120
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
               {unitPrices?.slump_12_nominal_160}
@@ -242,7 +241,7 @@ export default () => {
           </BottomContentBasicLine>
           <BottomContentBasicLine>
             <BottomContentGrayItem style={{ width: '110px', height: '42px' }}>
-              15
+              150
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
               {unitPrices?.slump_15_nominal_160}
@@ -277,7 +276,7 @@ export default () => {
           </BottomContentBasicLine>
           <BottomContentBasicLine>
             <BottomContentGrayItem style={{ width: '110px', height: '42px' }}>
-              18
+              180
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
               {unitPrices?.slump_18_nominal_160}
@@ -315,7 +314,7 @@ export default () => {
             <BottomContentGrayItem
               style={{ width: '110px', height: '42px', borderBottom: 'none' }}
             >
-              21
+              210
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
               {unitPrices?.slump_21_nominal_160}
@@ -357,15 +356,13 @@ export default () => {
             </TopList>
             <BottomContentWrap>
               <BottomContentTopGuideLine>
-                <BottomContentGraySecItem
-                  style={{ width: '110px', height: '49px' }}
-                >
-                  <SlashImage
-                    src={getAssetUrl('/assets/reference_room_two.png')}
-                    width={'100%'}
-                    height={'100%'}
-                  />
-                </BottomContentGraySecItem>
+                <ColumnTitle>
+                  <DiagonalCell>
+                    <DiagonalLeft>슬럼프(mm)</DiagonalLeft>
+                    <DiagonalRight>시멘트량 배합비</DiagonalRight>
+                    <Slash />
+                  </DiagonalCell>
+                </ColumnTitle>
                 <BottomContentGraySecItem>
                   350 <CaptionSpan>(1:5)</CaptionSpan>
                 </BottomContentGraySecItem>
@@ -546,7 +543,7 @@ const Caption = styled.span`
 const UnitPriceWrap = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   flex-direction: row;
   height: 80px;
   padding: 15px 30px 15px 0;
@@ -592,6 +589,8 @@ const UnitPriceConfirmBtn = styled.div`
   font-weight: normal;
   text-align: center;
   color: #fff;
+
+  margin-left: 30px;
 `;
 
 const BottomContentTopGuideLine = styled.div`
@@ -741,7 +740,59 @@ const UnitInputContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
 
-  margin-left: auto;
-  margin-right: auto;
+const ColumnTitle = styled.div`
+  width: 110px;
+  height: 49px;
+  border-right: 1px solid #e3e3e3;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #f2f2f2;
+  border-bottom: 1px solid #e3e3e3;
+
+  font-size: 12px;
+  font-weight: normal;
+  color: #444;
+`;
+
+const DiagonalCell = styled.div`
+  width: 84px;
+  height: 30px;
+`;
+
+const DiagonalLeft = styled.span`
+  position: absolute;
+  bottom: 4px;
+  left: 6px;
+`;
+
+const DiagonalRight = styled.span`
+  width: 50px;
+
+  position: absolute;
+  top: 4px;
+  right: 6px;
+
+  text-align: right;
+`;
+
+const Slash = styled.div`
+  position: absolute;
+  height: 36px; // adjust height td
+  top: 40px;
+  bottom: 14px;
+  margin: auto;
+  right: 5px;
+  width: 100%;
+  border-top: 1px solid #000;
+  // adjust height td
+  -webkit-transform: rotate(22deg);
+  -ms-transform: rotate(22deg);
+  transform: rotate(22deg);
 `;

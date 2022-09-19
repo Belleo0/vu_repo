@@ -48,7 +48,9 @@ export default () => {
           pagination.items.map((v: any, i: any) => {
             return (
               <ContentList key={i} onClick={() => onClickRow(v.id)}>
-                <ContentNo>{(pagination.totalCount - i).toString()}</ContentNo>
+                <ContentNo>
+                  {(pagination.totalCount - i).toString().padStart(2, '0')}
+                </ContentNo>
                 <ContentTitle>{v.title}</ContentTitle>
                 <ContentRegDtm>2022.09.08</ContentRegDtm>
               </ContentList>

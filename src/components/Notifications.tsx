@@ -41,6 +41,7 @@ const NotificationBox = styled(ScrollBox)`
   height: 100%;
   max-height: 360px;
   overflow-y: scroll;
+  overflow-y: overlay;
 `;
 
 const NotificationBar = styled.div`

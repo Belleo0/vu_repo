@@ -9,7 +9,7 @@ export default () => {
     <Container>
       <Title>고객센터</Title>
       <Box
-        className={pathname === '/service-center/notice' ? 'active' : ''}
+        className={pathname.includes('notice') ? 'active' : ''}
         onClick={() => {
           navigate('/service-center/notice');
         }}
@@ -17,7 +17,7 @@ export default () => {
         <Label>공지사항</Label>
       </Box>
       <Box
-        className={pathname === '/service-center/faq' ? 'active' : ''}
+        className={pathname.includes('faq') ? 'active' : ''}
         onClick={() => {
           navigate('/service-center/faq');
         }}
@@ -25,7 +25,7 @@ export default () => {
         <Label>FAQ</Label>
       </Box>
       <Box
-        className={pathname === '/service-center/inquiry' ? 'active' : ''}
+        className={pathname.includes('inquiry') ? 'active' : ''}
         onClick={() => {
           navigate('/service-center/inquiry');
         }}
@@ -33,7 +33,7 @@ export default () => {
         <Label>1:1문의</Label>
       </Box>
       <Box
-        className={pathname === '/service-center/event' ? 'active' : ''}
+        className={pathname.includes('event') ? 'active' : ''}
         onClick={() => {
           navigate('/service-center/event');
         }}

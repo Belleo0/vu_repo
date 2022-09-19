@@ -29,7 +29,7 @@ export default () => {
   const [inquiryType, setInquiryType] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState('');
+  const [images, setImages] = useState([]);
   const [isBlocking, setIsBlocking] = useState(false);
   const [isSubmittedForm, setIsSubmittedForm] = useState(false);
   let submitFlag = false;
@@ -37,26 +37,22 @@ export default () => {
   const handleBlocking = () => {
     setIsBlocking(!isBlocking);
   };
-  const handleSubmittedForm = () => {
-    setIsSubmittedForm(!isSubmittedForm);
-    navigate(0);
-    // requestQusetion();
-  };
 
   /** 1:1문의 등록 2022.09.07 */
-  const requestQusetion = () => {
-    submitFlag = true;
-    api.post('/questions', {
-      type: inquiryType,
-      title: title,
-      content: content,
-      attachments: {}
-    })
-    .then(() => {
+  const handleSubmitForm = async () => {
+    try {
+      await api.post('/questions', {
+        type: inquiryType,
+        title: title,
+        content: content,
+        attachments: images,
+      });
+      setIsSubmittedForm(false);
       navigate('/service-center/inquiry');
-    })
-    .catch(() => submitFlag = false)
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <ServiceCenterLayout>
@@ -92,10 +88,12 @@ export default () => {
           </SubTitle>
           <FileUploadWrap>
             <FileUpload
-              image={image}
-              setImage={setImage}
-              buttonStyle={UploadButton}
+              images={images}
+              setImages={setImages}
+              buttonStyle={uploadButton}
               icon={'ic-plus'}
+              limit={5}
+              disabledPreview={false}
             />
           </FileUploadWrap>
           <ButtonBox>
@@ -123,11 +121,11 @@ export default () => {
           '지금까지 입력한 정보는 임시저장되어 \n다음에 이어서 입력하실 수 있습니다.'
         }
         submitText="나가기"
-        onSubmit={() => navigate(0)}
+        onSubmit={() => navigate(-1)}
       />
       <TextModal
         open={isSubmittedForm}
-        onClose={() => handleSubmittedForm()}
+        onClose={handleSubmitForm}
         submitText={'확인'}
         content={'1:1문의 등록이 완료되었습니다.'}
       />
@@ -185,7 +183,7 @@ const FileUploadWrap = styled.div`
   margin-right: auto;
 `;
 
-const UploadButton = {
+const uploadButton = {
   width: '120px',
   height: '120px',
   display: 'flex',
@@ -197,6 +195,8 @@ const UploadButton = {
   borderRadius: '12px',
   border: 'solid 1px #000',
   backgroundColor: '#fff',
+
+  marginRight: '20px',
 };
 
 const Icon = styled.img`

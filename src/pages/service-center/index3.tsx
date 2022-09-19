@@ -9,20 +9,31 @@ import fqa_data from './test2';
 import Button, { ButtonType } from '@components/Button';
 import { css } from '@emotion/react';
 import useQuestions from '@api/useQuestions';
+import usePagination from '@hooks/usePagination';
+import Pagination from '@components/Pagination';
 
 export default () => {
   const navigate = useNavigate();
 
+  const [postsList, setPostsList] = useState([]);
+
   const onClickRow = (id: number) => {
     navigate(`/service-center/inquiry/${id}`, {
       state: {
-        questionId: id
-      }
+        questionId: id,
+      },
     });
   };
 
-  const { data: quest_data = [] } = useQuestions(1, 9);
-  console.log(quest_data);
+  const { data: quest_data = [] } = useQuestions(0, 9);
+
+  const pagination = usePagination(postsList);
+
+  useEffect(() => {
+    if (quest_data?.data) {
+      setPostsList(quest_data.data);
+    }
+  }, [quest_data]);
 
   return (
     <ServiceCenterLayout>
@@ -44,18 +55,28 @@ export default () => {
           <GuideLineRegDtm>답변여부</GuideLineRegDtm>
         </ListGuideLine>
 
-        {fqa_data.map((v: any, i: number) => {
-          return (
-            <ContentList key={i} onClick={() => onClickRow(i)}>
-              <ContentNo>{v.no}</ContentNo>
-              <ContentTitle>{v.title}</ContentTitle>
-              <ContentRegDtm>{v.createDate}</ContentRegDtm>
-              <ContentStatus status={v.status === '1'}>
-                {v.status === '1' ? '미답변' : '답변완료'}
-              </ContentStatus>
-            </ContentList>
-          );
-        })}
+        {pagination.items &&
+          pagination.items.map((v: any, i: number) => {
+            return (
+              <ContentList key={i} onClick={() => onClickRow(v.id)}>
+                <ContentNo>
+                  {(pagination.totalCount - i).toString().padStart(2, '0')}
+                </ContentNo>
+                <ContentTitle>{v.title}</ContentTitle>
+                <ContentRegDtm>{v.createDate}</ContentRegDtm>
+                <ContentStatus status={!v.reply}>
+                  {!v.reply ? '미답변' : '답변완료'}
+                </ContentStatus>
+              </ContentList>
+            );
+          })}
+        <Pagination
+          limit={pagination.limit}
+          skip={pagination.skip}
+          totalCount={pagination.totalCount}
+          onChangeSkip={pagination.setSkip}
+          onChangeLimit={pagination.setLimit}
+        />
       </Container>
     </ServiceCenterLayout>
   );
