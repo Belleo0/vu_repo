@@ -12,6 +12,7 @@ import useSpaces from '@api/useSpaces';
 import { useDispatch } from 'react-redux';
 import MemberCard from './MemberCard';
 import ScrollBox from './ScrollBox';
+import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 
 enum ChipTypeEnum {
   DEFAULT,
@@ -25,20 +26,29 @@ enum TabTypeEnum {
 }
 
 export default () => {
-  const isFieldUser = useIsFieldUser();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [chipType, setChipType] = useState<ChipTypeEnum>(ChipTypeEnum.DEFAULT);
+  const isFieldUser = useIsFieldUser();
+  const selectedSpaceId = useSelectedSpaceId();
+
   const [tabType, setTabType] = useState<TabTypeEnum>(TabTypeEnum.DEFAULT);
+  const [chipType, setChipType] = useState<ChipTypeEnum>(ChipTypeEnum.DEFAULT);
   const [isMounted, setIsMounted] = useState(false);
   const [search, setSearch] = useState('');
 
   const isHide = useMemo(() => {
-    return tabType === TabTypeEnum.DEFAULT ? 'N' : 'Y';
-  }, [tabType]);
+    switch (chipType) {
+      case ChipTypeEnum.DEFAULT:
+        return ' ';
+      case ChipTypeEnum.ACTIVE:
+        return 'N';
+      case ChipTypeEnum.HIDE:
+        return 'Y';
+    }
+  }, [chipType]);
 
-  const { data: spaces = [], refetch } = useSpaces(isHide);
+  const { data: spaces, refetch } = useSpaces(isHide);
 
   const searchedSpaces: any[] = useMemo(() => {
     if (!spaces) return [];
@@ -51,6 +61,7 @@ export default () => {
   };
 
   const handleChangeChipType = (type: ChipTypeEnum) => {
+    console.log(type);
     setChipType(type);
     setIsMounted(false);
   };
@@ -62,6 +73,21 @@ export default () => {
       setIsMounted(true);
     }
   };
+
+  useEffect(() => {
+    if (
+      !!!selectedSpaceId &&
+      isMounted === false &&
+      spaces &&
+      spaces.length > 0 &&
+      searchedSpaces
+    ) {
+      setSelectedIdWithFirstId();
+      // setIsFilterOpen(false);
+    }
+  }, [tabType, chipType, spaces, isMounted, searchedSpaces]);
+
+  console.log(isHide);
 
   return (
     <SpeceBarWrap>
@@ -77,7 +103,7 @@ export default () => {
             active={tabType === TabTypeEnum.DEFAULT}
             onClick={() => handleChangeTabType(TabTypeEnum.DEFAULT)}
           >
-            건설현장 (99)
+            건설현장 ({spaces?.length})
           </Tab>
           <Tab
             active={tabType === TabTypeEnum.HIDE}
@@ -118,7 +144,7 @@ export default () => {
             name={v?.name}
             address={v?.basic_address}
             revalidate={refetch}
-            isHide={tabType === TabTypeEnum.HIDE}
+            isHide={chipType === ChipTypeEnum.HIDE}
             setSelectedIdWithFirstId={setSelectedIdWithFirstId}
           />
         ))}

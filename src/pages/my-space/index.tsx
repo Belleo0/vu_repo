@@ -111,6 +111,8 @@ export default () => {
         <InviteModal
           open={inviteModalOpen}
           onClose={() => setInviteModalOpen(false)}
+          fieldId={info?.id}
+          fieldName={info?.name}
         />
       </Container>
     </SpaceLayout>

@@ -3,7 +3,6 @@ import Modal, { ModalButtonWrap, ModalContainer, ModalText } from './Modal';
 
 interface ITextModal {
   content: React.ReactNode;
-
   open: boolean;
   onClose: () => any;
   onSubmit?: () => any;

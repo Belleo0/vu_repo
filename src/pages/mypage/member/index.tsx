@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
 import MemberSpaceBar from '@components/MemberSpaceBar';
 import MemberListTable from '@components/MemberListTable';
+import InviteModal from '@components/InviteModal';
 
 const memberData = [
   {
@@ -85,10 +86,13 @@ export default () => {
   const selectedSpaceId = useSelectedSpaceId();
 
   const {
-    data: { info, suppliers },
+    data: { info, members, suppliers },
     isLoading,
     supplierMutate,
   } = useMySpaceInfo(selectedSpaceId);
+
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  console.log(info);
 
   return (
     <MypageLayout>
@@ -102,11 +106,24 @@ export default () => {
             <MemberSpaceBar
               id={info?.id}
               name={info?.name}
+              adminUserName={info?.admin_user?.name}
+              siteUserName={info?.site_user?.name}
               address={info?.basic_address}
+              setInviteModalOpen={setInviteModalOpen}
             />
-            <MemberListTable data={memberData} />
+            <MemberListTable
+              data={members}
+              me={userInfo}
+              siteUserId={info?.site_user?.id}
+            />
           </RightSection>
         </MemberWrap>
+        <InviteModal
+          open={inviteModalOpen}
+          onClose={() => setInviteModalOpen(false)}
+          fieldId={info?.id}
+          fieldName={info?.name}
+        />
       </Container>
     </MypageLayout>
   );

@@ -29,6 +29,8 @@ import usePrivateChat from '@api/usePrivateChat';
 import { usePrevious } from '@hooks/usePrevious';
 import useChatData from '@api/useChatData';
 import useFriends from '@api/useFriends';
+import useSelectedUserInfo from '@hooks/useSelectedUserInfo';
+import { clearSelectedUserInfo } from '@data/chat';
 
 const fieldMenus = [
   {
@@ -90,6 +92,7 @@ export default () => {
   const isLogin = useIsLogin();
   const userInfo = useUserInfo();
   const isFieldUser = useIsFieldUser();
+  const selectedChatUser = useSelectedUserInfo();
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -159,6 +162,18 @@ export default () => {
     }
   };
 
+  const handleChatModal = () => {
+    if (selectedChatUser) {
+      setOpenChat(false);
+      setOpenPrivateChat(false);
+      setOpenNotifications(false);
+      dispatch(clearSelectedUserInfo());
+    } else {
+      setOpenChat(!oepnChat);
+      setOpenNotifications(false);
+    }
+  };
+
   useEffect(() => {
     setSearch('');
   }, [swapList]);
@@ -169,7 +184,11 @@ export default () => {
     });
   }, [search]);
 
-  console.log('selectedUserInfo', selectedUserInfo);
+  useEffect(() => {
+    console.log(selectedUserInfo);
+    setSelectedUserInfo(selectedChatUser);
+    setSelectedUserId(selectedChatUser?.id);
+  }, [selectedChatUser]);
 
   return (
     <Container>
@@ -204,8 +223,7 @@ export default () => {
                 <IconWrap>
                   <ChatIcon
                     onClick={() => {
-                      setOpenChat(!oepnChat);
-                      setOpenNotifications(false);
+                      handleChatModal();
                     }}
                   >
                     <OutNotificationCnt>
@@ -226,7 +244,7 @@ export default () => {
                         setSelectedUserId={setSelectedUserId}
                         mutatePrivateChats={mutatePrivateChats}
                       />
-                    ) : oepnChat && openPrivateChat ? (
+                    ) : (oepnChat && openPrivateChat) || selectedChatUser ? (
                       <PrivateCahtingWrap onClick={(e) => e.stopPropagation()}>
                         <PrivateChat
                           messages={messages}

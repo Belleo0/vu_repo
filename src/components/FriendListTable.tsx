@@ -4,16 +4,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import getAssetURL from '@utils/getAssetURL';
 import { addHyphen } from '@utils/common';
-
-import MypageLayout from '@layout/MypageLayout';
+import { setSelectedUserInfo } from '@data/chat';
 
 import Button, { ButtonSize, ButtonType } from '@components/Button';
-import useUserInfo from '@hooks/useUserInfo';
 import ScrollBox from './ScrollBox';
 import TextModal from './TextModal';
 import ImgModal from './ImgModal';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import api from '@api';
+import { useDispatch } from 'react-redux';
 
 interface IMemberTable {
   data: any;
@@ -22,6 +21,7 @@ interface IMemberTable {
 
 export default ({ data, mutate }: IMemberTable) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isFieldUser = useIsFieldUser();
 
   const [isOrderAuthority, setIsOrderAuthority] = useState<boolean>(false);
@@ -84,6 +84,9 @@ export default ({ data, mutate }: IMemberTable) => {
                   type={ButtonType.PRIMARY}
                   icon="ic-chat-white"
                   containerStyle={{ width: 'auto', height: '42px' }}
+                  onClick={() => {
+                    dispatch(setSelectedUserInfo(data));
+                  }}
                 >
                   채팅하기
                 </Button>

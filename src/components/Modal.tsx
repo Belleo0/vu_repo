@@ -8,6 +8,7 @@ import useHiddenBodyOverflow from '@hooks/useHiddenBodyOverflow';
 export interface ModalProps {
   open: boolean;
   onClose: () => void;
+  modalStyle?: React.CSSProperties;
   containerStyle?: React.CSSProperties;
   wrapperStyle?: React.CSSProperties;
 }
@@ -20,6 +21,7 @@ export default ({
   open,
   onClose,
   children,
+  modalStyle = {},
   containerStyle = {},
   wrapperStyle = {},
 }: ModalComponentProps) => {
@@ -27,7 +29,7 @@ export default ({
 
   return open
     ? ReactDOM.createPortal(
-        <Modal>
+        <Modal style={modalStyle}>
           <AbsoluteContainer style={containerStyle}>
             <CloseContainer onClick={onClose} />
             <Container style={wrapperStyle}>{children}</Container>

@@ -47,7 +47,7 @@ export default ({ open, data, onClose, companyName }: any) => {
     return friends?.filter((v: any) => v.id === data?.id);
   }, [friends, data]);
 
-  console.log('data', data);
+  // console.log('data', data);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -115,7 +115,10 @@ export default ({ open, data, onClose, companyName }: any) => {
                 icon="ic-chat-white"
                 containerStyle={{ height: '50px' }}
                 iconStyle={{ width: '19px', height: '19px' }}
-                onClick={() => dispatch(setSelectedUserInfo(data))}
+                onClick={() => {
+                  dispatch(setSelectedUserInfo(data));
+                  onClose();
+                }}
               >
                 채팅하기
               </Button>
