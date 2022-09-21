@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import getAssetURL from '@utils/getAssetURL';
+import { setSelectedUserInfo } from '@data/chat';
 
 import MypageLayout from '@layout/MypageLayout';
 
@@ -12,16 +13,23 @@ import ScrollBox from './ScrollBox';
 import TextModal from './TextModal';
 import ImgModal from './ImgModal';
 import useIsFieldUser from '@hooks/useIsFieldUser';
+import useFriends from '@api/useFriends';
+import { useDispatch } from 'react-redux';
 
 interface IMemberTable {
   data: any[];
   revalidate?: any;
+  me: any;
+  siteUserId: number;
 }
 
-export default ({ data = [], revalidate }: IMemberTable) => {
-  console.log('data', data);
+export default ({ data = [], revalidate, me, siteUserId }: IMemberTable) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isFieldUser = useIsFieldUser();
+  const {
+    data: { friends, error, refetch },
+  } = useFriends();
 
   const [isOrderAuthority, setIsOrderAuthority] = useState<boolean>(false);
   const [confirmAuthorityModal, setConfirmAuthorityModal] =
@@ -60,14 +68,14 @@ export default ({ data = [], revalidate }: IMemberTable) => {
                 <Button
                   size={ButtonSize.SMALL}
                   type={
-                    v?.status === 0
+                    me
                       ? ButtonType.DISABLED
                       : v.status === 1
                       ? ButtonType.GRAY_BLACK
                       : ButtonType.PRIMARY
                   }
                   icon={
-                    v?.status === 0
+                    me
                       ? 'ic-add-person-gray'
                       : v.status === 1
                       ? 'ic-minus-people-bk'
@@ -86,6 +94,9 @@ export default ({ data = [], revalidate }: IMemberTable) => {
                   type={ButtonType.PRIMARY}
                   icon="ic-chat-white"
                   containerStyle={{ width: 'auto', height: '42px' }}
+                  onClick={() => {
+                    me ? null : dispatch(setSelectedUserInfo(v));
+                  }}
                 >
                   채팅하기
                 </Button>
@@ -108,7 +119,7 @@ export default ({ data = [], revalidate }: IMemberTable) => {
               </MemberContactWrap>
             </MemberRow>
           </CellLeftSection>
-          {v?.authority ? null : (
+          {siteUserId === v.id ? null : (
             <AuthorityButtonWrap>
               <Button
                 type={ButtonType.BLACK_OUTLINE}
