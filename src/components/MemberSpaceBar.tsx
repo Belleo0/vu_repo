@@ -1,16 +1,28 @@
 import styled from '@emotion/styled';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import getAssetURL from '@utils/getAssetURL';
-import React from 'react';
+import React, { useState } from 'react';
+import InviteModal from './InviteModal';
 
 interface ISpaceBar {
   id: number;
   name: string;
-  address?: string;
+  adminUserName: string;
+  siteUserName: string;
+  address: string;
+  setInviteModalOpen: any;
 }
 
-export default ({ id, name, address }: ISpaceBar) => {
+export default ({
+  id,
+  name,
+  adminUserName,
+  siteUserName,
+  address,
+  setInviteModalOpen,
+}: ISpaceBar) => {
   const isFieldUser = useIsFieldUser();
+
   return (
     <SpaceBar>
       <Icon src={getAssetURL('../assets/ic-field.svg')} />
@@ -22,11 +34,11 @@ export default ({ id, name, address }: ISpaceBar) => {
           <InfoRow>
             <PersonWrap>
               <PersonLabel>구매계약 담당자</PersonLabel>
-              <PersonName>{address}</PersonName>
+              <PersonName>{adminUserName}</PersonName>
             </PersonWrap>
             <PersonWrap>
               <PersonLabel>주문담당자(현장)</PersonLabel>
-              <PersonName>{address}</PersonName>
+              <PersonName>{siteUserName}</PersonName>
             </PersonWrap>
           </InfoRow>
         ) : (
@@ -39,9 +51,9 @@ export default ({ id, name, address }: ISpaceBar) => {
         )}
       </InfoContainer>
       <ButtonWrap>
-        <Button>
-          <ButtonIcon src={getAssetURL('../assets/ic-more.svg')} /> 이 공장에
-          멤버 초대하기
+        <Button onClick={() => setInviteModalOpen(true)}>
+          <ButtonIcon src={getAssetURL('../assets/ic-more.svg')} /> 이{' '}
+          {isFieldUser ? '현장' : '공장'}에 멤버 초대하기
         </Button>
       </ButtonWrap>
     </SpaceBar>
