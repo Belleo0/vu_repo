@@ -168,7 +168,9 @@ export default ({ data = [], estimations = [], revalidate }: IVendorTable) => {
                   }}
                 >
                   지역단가표
-                  <Icon src={getAssetURL('../assets/ic-arrow-right.svg')} />
+                  <Icon
+                    src={getAssetURL('../assets/ic-arrow-blue-right.svg')}
+                  />
                 </Button>
               </Popper>
             </Tooltip>

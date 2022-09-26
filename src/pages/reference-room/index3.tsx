@@ -12,6 +12,7 @@ import _05 from '../../assets/05_img.png';
 import getAssetUrl from '@utils/getAssetURL';
 import { onPrint } from '@utils/onPrint';
 import useUnitPriceInfo from '@api/useUnitPriceInfo';
+import RemiconUnitPriceTable from '@components/RemiconUnitPriceTable';
 
 enum Active {
   ACTIVE,
@@ -94,7 +95,7 @@ export default () => {
 
   return (
     <ReferenceRoomLayout>
-      <Container ref={divRef}>
+      <Container>
         <TopList>
           <TopListText>레미콘 단가표</TopListText>
           <TopBtnWrap>
@@ -153,7 +154,7 @@ export default () => {
         </UnitPriceWrap>
         <TopList style={{ marginTop: '44px', marginBottom: '14px' }}>
           <BottomListText>굵은 골재 최대치수 : 25mm (#57)</BottomListText>
-          <Caption>(단위 : 원/m2, 부가세 별도)</Caption>
+          <Caption>(단위 : 원/㎡, 부가세 별도)</Caption>
         </TopList>
         <BottomContentWrap>
           <BottomContentTopGuideLine>
@@ -352,7 +353,7 @@ export default () => {
           <BottomSecLeftContent>
             <TopList>
               <BottomListText>모르타르(Mortar)</BottomListText>
-              <Caption>(단위 : 원/m2, 부가세 별도)</Caption>
+              <Caption>(단위 : 원/㎡, 부가세 별도)</Caption>
             </TopList>
             <BottomContentWrap>
               <BottomContentTopGuideLine>
@@ -415,6 +416,13 @@ export default () => {
             <LocationsContiner>{unitPrices?.division}</LocationsContiner>
           </BottomSecRightContent>
         </BottomContentSecWrap>
+        <PrintUnitPriceWrap ref={divRef}>
+          <RemiconUnitPriceTable
+            print={true}
+            percent={percent}
+            location={location}
+          />
+        </PrintUnitPriceWrap>
       </Container>
     </ReferenceRoomLayout>
   );
@@ -795,4 +803,8 @@ const Slash = styled.div`
   -webkit-transform: rotate(22deg);
   -ms-transform: rotate(22deg);
   transform: rotate(22deg);
+`;
+
+const PrintUnitPriceWrap = styled.div`
+  display: none;
 `;

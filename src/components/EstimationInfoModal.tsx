@@ -10,6 +10,7 @@ import { makeComma } from '@utils/makeComma';
 import { useRef, useState } from 'react';
 import RemiconUnitPriceListModal from './RemiconUnitPriceListModal';
 import { onPrint } from '@utils/onPrint';
+import EstimationPrintForm from './EstimationPrintForm';
 
 export default ({ open, data, estimation, onClose }: any) => {
   const { divRef, handleOnPrint } = onPrint();
@@ -20,9 +21,11 @@ export default ({ open, data, estimation, onClose }: any) => {
   const [isUnitPriceModalOpen, setIsUnitPriceModalOpen] =
     useState<boolean>(false);
 
+  console.log(estimation);
+
   return (
     <Modal open={open} onClose={onClose}>
-      <Container ref={divRef}>
+      <Container>
         {data && (
           <Contents>
             <TitleWrap>
@@ -138,6 +141,19 @@ export default ({ open, data, estimation, onClose }: any) => {
         <RemiconUnitPriceListModal
           open={isUnitPriceModalOpen}
           onClose={() => setIsUnitPriceModalOpen(false)}
+        />
+        <EstimationPrintForm
+          divRef={divRef}
+          fieldName={field?.name}
+          fieldCompany={field?.company.name}
+          paymentMethod={field?.field_info.payment_method}
+          paymentExpireDate={field?.field_info.payment_expire_date}
+          factoryName={factory?.name}
+          factoryAddr={factory?.basic_address}
+          salesUserName={estimation?.sales_user.name}
+          salesUserPhone={estimation?.sales_user.phone}
+          salesUserTel={estimation?.sales_user.tel}
+          estimation={estimation}
         />
       </Container>
     </Modal>
