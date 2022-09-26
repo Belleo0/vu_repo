@@ -4,6 +4,7 @@ import getAssetURL from '@utils/getAssetURL';
 import { makeComma } from '@utils/makeComma';
 import Button, { ButtonSize, ButtonType } from './Button';
 import Modal from './Modal';
+import RemiconUnitPriceTable from './RemiconUnitPriceTable';
 
 export default ({ open, estimation, onClose }: any) => {
   // const result = BusanUnitPrice.filter(
@@ -22,138 +23,14 @@ export default ({ open, estimation, onClose }: any) => {
       <Container>
         {/* {estimation && ( */}
         <Contents>
-          <TitleWrap>
-            <Title>레미콘 단가표</Title>
-          </TitleWrap>
-          <HelperTextWrap>
-            <Caption>부산지역</Caption>
-            <TextDivider />
-            <Caption>2022.03.01 기준</Caption>
-          </HelperTextWrap>
-          <TopSection>
-            <BoxWrap>
-              <Type style={{ marginRight: 20 }}>단가율</Type>
-              <PercentInput>100</PercentInput>
-              <PercentText>%</PercentText>
-              <Type style={{ marginLeft: 20 }}>적용 시</Type>
-            </BoxWrap>
-          </TopSection>
-          {/* Table */}
-          <ModalTableSection>
-            <TableTitleWrap
-              style={{
-                marginTop: '30px',
-              }}
-            >
-              <TableTitle>굵은 골재 최대치수 : 25mm (#57)</TableTitle>
-              <Caption>(단위 : 원/m2, 부가세 별도)</Caption>
-            </TableTitleWrap>
-            <TableWrap>
-              <TableRow>
-                <ColumnTitle>
-                  <DiagonalCell>
-                    <DiagonalLeft>슬럼프(mm)</DiagonalLeft>
-                    <DiagonalRight>호칭강도</DiagonalRight>
-                    <Slash />
-                  </DiagonalCell>
-                </ColumnTitle>
-                <LabelCell>16</LabelCell>
-                <LabelCell>18</LabelCell>
-                <LabelCell>21</LabelCell>
-                <LabelCell>24</LabelCell>
-                <LabelCell>27</LabelCell>
-                <LabelCell>30</LabelCell>
-                <LabelCell>35</LabelCell>
-                <LabelCell>40</LabelCell>
-                <LabelCell>45</LabelCell>
-                <LabelCell style={{ borderRight: 'none' }}>50</LabelCell>
-              </TableRow>
-              <TableRow>
-                <ColumnTitle>80</ColumnTitle>
-                {slump1.map((v: any, i: any) => (
-                  <ValueCell>{makeComma(v.price)}</ValueCell>
-                ))}
-                <ValueCell>{''}</ValueCell>
-                <ValueCell style={{ borderRight: 'none' }}>{''}</ValueCell>
-              </TableRow>
-              <TableRow>
-                <ColumnTitle>120</ColumnTitle>
-                {slump2.map((v: any, i: any) => (
-                  <ValueCell>{makeComma(v.price)}</ValueCell>
-                ))}
-                <ValueCell>{''}</ValueCell>
-                <ValueCell style={{ borderRight: 'none' }}>{''}</ValueCell>
-              </TableRow>
-              <TableRow>
-                <ColumnTitle>150</ColumnTitle>
-                {slump3.map((v: any, i: any) => (
-                  <ValueCell>{makeComma(v.price)}</ValueCell>
-                ))}
-                <ValueCell>{''}</ValueCell>
-                <ValueCell style={{ borderRight: 'none' }}>{''}</ValueCell>
-              </TableRow>
-              <TableRow>
-                <ColumnTitle>180</ColumnTitle>
-                {slump4.map((v: any, i: any) => (
-                  <ValueCell>{makeComma(v.price)}</ValueCell>
-                ))}
-                <ValueCell>{''}</ValueCell>
-                <ValueCell style={{ borderRight: 'none' }}>{''}</ValueCell>
-              </TableRow>
-              <TableRow>
-                <ColumnTitle>210</ColumnTitle>
-                {slump5.map((v: any, i: any) => (
-                  <ValueCell>{makeComma(v.price)}</ValueCell>
-                ))}
-                <ValueCell>{''}</ValueCell>
-                <ValueCell style={{ borderRight: 'none' }}>{''}</ValueCell>
-              </TableRow>
-            </TableWrap>
-            {/* 모르타르 테이블 */}
-            <HalfTableWrap>
-              <TableTitleWrap>
-                <TableTitle>모르타르(Mortar)</TableTitle>
-                <Caption>(단위 : 원/m2, 부가세 별도)</Caption>
-              </TableTitleWrap>
-              <TableWrap>
-                <TableRow>
-                  <ColumnTitle>
-                    <DiagonalCell>
-                      <DiagonalLeft>슬럼프(mm)</DiagonalLeft>
-                      <DiagonalRight>시멘트량 배합비</DiagonalRight>
-                      <Slash />
-                    </DiagonalCell>
-                  </ColumnTitle>
-                  <LabelCell>
-                    350 <CaptionSpan>(1:5)</CaptionSpan>
-                  </LabelCell>
-                  <LabelCell>
-                    450 <CaptionSpan>(1:4)</CaptionSpan>
-                  </LabelCell>
-                  <LabelCell>
-                    550 <CaptionSpan>(1:3)</CaptionSpan>
-                  </LabelCell>
-                  <LabelCell>
-                    700 <CaptionSpan>(1:2)</CaptionSpan>
-                  </LabelCell>
-                  <LabelCell style={{ borderRight: 'none' }}>
-                    1000 <CaptionSpan>(1:1)</CaptionSpan>
-                  </LabelCell>
-                </TableRow>
-                <TableRow>
-                  <ColumnTitle>10 ± 2.5</ColumnTitle>
-                  <ValueCell>86,200</ValueCell>
-                  <ValueCell>93,050</ValueCell>
-                  <ValueCell>104,370</ValueCell>
-                  <ValueCell>118,290</ValueCell>
-                  <ValueCell style={{ borderRight: 'none' }}>145,700</ValueCell>
-                </TableRow>
-              </TableWrap>
-            </HalfTableWrap>
-          </ModalTableSection>
+          <RemiconUnitPriceTable
+            print={false}
+            percent={'100'}
+            location={'부산'}
+          />
           <Button
             type={ButtonType.PRIMARY}
-            containerStyle={{ width: 360, margin: 'auto' }}
+            containerStyle={{ width: 360, margin: 'auto', marginTop: '30px' }}
             onClick={onClose}
           >
             확인
@@ -321,8 +198,8 @@ const ColumnTitle = styled.div`
   background-color: #f2f2f2;
   border-bottom: 1px solid #e3e3e3;
 
-  font-size: 12px;
-  font-weight: normal;
+  font-size: 14px;
+  font-weight: 500;
   color: #444;
 `;
 
@@ -376,6 +253,8 @@ const DiagonalLeft = styled.span`
   position: absolute;
   bottom: 4px;
   left: 6px;
+
+  font-size: 12px;
 `;
 
 const DiagonalRight = styled.span`
@@ -385,6 +264,7 @@ const DiagonalRight = styled.span`
   top: 4px;
   right: 6px;
 
+  font-size: 12px;
   text-align: right;
 `;
 
