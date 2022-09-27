@@ -6,6 +6,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import { css } from '@emotion/react';
 
+import useWindowSize from '@hooks/useWindowSize';
+import { mobile } from '@utils/responsive';
+
+
+
 enum ButtonType {
   'ABLE',
   'INABLE',
@@ -34,6 +39,9 @@ export default () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 현재 가로 화면 사이즈
+  const { width } = useWindowSize();
+
   const companyName: string = '동양건설';
 
   const nxtStepHandler = () => {
@@ -45,6 +53,10 @@ export default () => {
       });
     }
   };
+
+  const backStepHandler = () => {
+    navigate('/auth/register/step-0');
+  }
 
   const [isAllChk, setIsAllChk] = useState<boolean>(false); // 전체동의
   const [chkList, setChkList] = useState<any>([]); // usr가 선택한 리스트를 넣어둔다
@@ -108,9 +120,9 @@ export default () => {
   return (
     <AuthLayout>
       <Container>
-        <MainTitle>
+        <MainTitlePc>
           {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
-        </MainTitle>
+        </MainTitlePc>
         <TermsWrapper>
           <ProgressBar>
             <ProgressCircle>1</ProgressCircle>
@@ -119,6 +131,9 @@ export default () => {
             <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
+          <MainTitleMobile>
+          {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
+          </MainTitleMobile>
           <MiddleTitle>약관동의</MiddleTitle>
           <MainContentBox>
             <LineWrapper>
@@ -158,7 +173,7 @@ export default () => {
                     src={getAssetURL('../assets/check_01_ic_off.svg')}
                   />
                 )}
-                <RepeatTitle>서비스 이용약관에 동의합니다.</RepeatTitle>
+                <RepeatTitle>{width > 360 ? '서비스 이용약관에 동의합니다.' : '서비스 이용약관 동의'}</RepeatTitle>
                 <RequireTitle>(필수)</RequireTitle>
               </TextWrapper>
               <MoreTitle>내용보기</MoreTitle>
@@ -182,7 +197,7 @@ export default () => {
                     src={getAssetURL('../assets/check_01_ic_off.svg')}
                   />
                 )}
-                <RepeatTitle>개인정보 수집 및 이용에 동의합니다.</RepeatTitle>
+                <RepeatTitle>{width > 360 ? '개인정보 수집 및 이용에 동의합니다.' : '개인정보 수집 및 이용 동의'}</RepeatTitle>
                 <RequireTitle style={{ marginRight: '27px' }}>
                   (필수)
                 </RequireTitle>
@@ -208,7 +223,7 @@ export default () => {
                     src={getAssetURL('../assets/check_01_ic_off.svg')}
                   />
                 )}
-                <RepeatTitle>이벤트/마케팅 수신에 동의합니다.</RepeatTitle>
+                <RepeatTitle>{width > 360 ? '이벤트/마케팅 수신에 동의합니다.' : '이벤트/마케팅 수신 동의'}</RepeatTitle>
                 <NoRequireTitle>(선택)</NoRequireTitle>
               </TextWrapper>
             </LineWrapper>
@@ -231,17 +246,28 @@ export default () => {
                     src={getAssetURL('../assets/check_01_ic_off.svg')}
                   />
                 )}
-                <RepeatTitle>내용이 들어갑니다.</RepeatTitle>
+                <RepeatTitle>{width > 360 ? '내용이 들어갑니다.' : '내용'}</RepeatTitle>
                 <NoRequireTitle>(선택)</NoRequireTitle>
               </TextWrapper>
             </LineWrapper>
           </MainContentBox>
-          <Button
-            type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
-            onClick={() => nxtStepHandler()}
-          >
-            다음
-          </Button>
+          <ButtonWrapper>
+            <BackButtonL
+              type={ButtonType.INABLE}
+              onClick={()=> backStepHandler()}
+              style={
+                width > 360? {display:'none'} : {display:'inline-block'}
+              }
+            >
+              이전
+            </BackButtonL>
+            <GoButtonR
+              type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
+              onClick={() => nxtStepHandler()}
+            >
+              다음
+            </GoButtonR>
+          </ButtonWrapper>
         </TermsWrapper>
       </Container>
     </AuthLayout>
@@ -266,9 +292,26 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  /* ${mobile({ height: '760px'})} */
 `;
 
-const MainTitle = styled.div`
+const MainTitleMobile = styled.div`
+  display: none;
+  ${mobile({ display:'block',
+    height: '29px',
+    float: 'left',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    fontStretch: 'normal',
+    fontStyle: 'normal',
+    letterSpacing: '-0.44px',
+    color: '#000',
+    marginTop: '12px',
+    // marginBottom: '46px'
+  })}
+`;
+const MainTitlePc = styled.div`
   height: 32px;
   font-size: 22px;
   font-weight: bold;
@@ -277,6 +320,8 @@ const MainTitle = styled.div`
   letter-spacing: -0.44px;
   text-align: center;
   color: #000;
+
+  ${mobile({ display:'none'})}
 `;
 
 const TermsWrapper = styled.div`
@@ -286,6 +331,8 @@ const TermsWrapper = styled.div`
   padding: 30px 30px 50px 30px;
   border-radius: 20px;
   background-color: #fff;
+
+  ${mobile({ maxWidth: '360px' , padding: '20px 20px' })}
 `;
 
 const ProgressBar = styled.span`
@@ -295,6 +342,7 @@ const ProgressBar = styled.span`
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  ${mobile({ float : 'left' , marginBottom: '0px'})}
 `;
 
 const ProgressCircle = styled.div`
@@ -308,6 +356,8 @@ const ProgressCircle = styled.div`
   font-weight: 500;
   text-align: center;
   color: #fff;
+
+  ${mobile({ width: '18px', height: '18px' , padding: '4px 6px 1px 6px' , fontSize: '10px'})}
 `;
 
 const ProgressCircleOff = styled.div`
@@ -322,11 +372,13 @@ const ProgressCircleOff = styled.div`
   text-align: center;
   color: #999999;
   border: 1px solid #999;
+
+  ${mobile({ width: '18px', height: '18px' , fontSize: '10px', padding: '3px 5px 3px 5px'})}
 `;
 
 const ProgressDashed = styled.img`
   width: 14px;
-  hieght: 1px;
+  height: 1px;
   margin: 0 6px;
 `;
 
@@ -339,6 +391,8 @@ const MiddleTitle = styled.div`
   letter-spacing: -0.26px;
   text-align: left;
   color: #444;
+
+  ${mobile({ fontSize: '14px', marginBottom: '10px'})}
 `;
 
 const MainContentBox = styled.div`
@@ -349,6 +403,11 @@ const MainContentBox = styled.div`
   border-radius: 6px;
   border: solid 1px #c7c7c7;
   background-color: #fff;
+
+  /* emotion styled의 경우 */
+  ${mobile({ maxWidth: '320px' ,
+    maxHeight: '211px', 
+    padding: '20px 20px' })}
 `;
 
 const DistanceIcon = styled.img`
@@ -383,6 +442,8 @@ const LineGuard = styled.div`
   height: 1px;
   border-top: 1px solid #f2f2f2;
   margin: 14px 0;
+
+  ${mobile({ width: '280px'})}
 `;
 
 const RequireTitle = styled.span`
@@ -416,7 +477,30 @@ const MoreTitle = styled.span`
   word-break: keep-all;
 `;
 
-const Button = styled.div<{ type: ButtonType }>`
+const ButtonWrapper = styled.div`
+  width: 100%;
+  /* margin-top: 223px; */
+  height: 42px;
+  display: flex;
+`;
+
+const BackButtonL = styled.div<{ type: ButtonType}>`
+  width:150px;
+  height: 46px;
+  margin-right: 20px;
+  border-radius: 6px;
+  color: #999999;
+  padding-top:14px;
+  background-color: #f2f2f2;
+  border-color: #f2f2f2;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: -0.32px;
+  text-align: center;
+`;
+
+const GoButtonR = styled.div<{ type: ButtonType }>`
   width: 380px;
   height: 50px;
   padding: 15px 0;
@@ -433,6 +517,8 @@ const Button = styled.div<{ type: ButtonType }>`
     border: 1px solid ${borderColors[type]};
     cursor: ${cursor[type]};
   `}
+
+  ${mobile({ width:'150px', height:'46px'})}
 `;
 
 const TextWrapper = styled.div`

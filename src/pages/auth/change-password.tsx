@@ -8,6 +8,8 @@ import { me } from '@data/auth';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ImgModal from '@components/ImgModal';
 import HelperTxt from '@components/HelperTxt';
+import useWindowSize from '@hooks/useWindowSize';
+import { mobile } from '@utils/responsive';
 
 export default () => {
   const navigate = useNavigate();
@@ -16,6 +18,9 @@ export default () => {
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  // 현재 가로 화면 사이즈
+  const { width } = useWindowSize();
 
   const isPasswordValidated = useMemo(() => {
     const regex =
@@ -57,13 +62,22 @@ export default () => {
             placeholder="영문과 숫자, 특수문자 포함 8자 이상 입력해 주세요"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            containerStyle={{ marginBottom: 34 }}
+            containerStyle={
+              width > 360 ? { marginBottom: 34 } : {marginBottom : 24}
+            }
             errorMessage={
               newPassword === ''
                 ? ''
                 : isPasswordValidated
                 ? ''
                 : '영문, 숫자, 특수문자 포함 8자 이상 입력해 주세요'
+            }
+            errorMessageStyle={
+              newPassword === ''
+                ? {display:'none'}
+                : isPasswordValidated
+                ? {display:'none'}
+                : {height: 17}
             }
           />
           <Input
@@ -72,13 +86,22 @@ export default () => {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            containerStyle={{ marginBottom: 14 }}
+            containerStyle={
+              width > 360 ? { marginBottom: 14 } : {marginBottom : 22}
+            }
             errorMessage={
               confirmPassword === ''
                 ? ''
                 : isConfirmPasswordValidated
                 ? ''
                 : '비밀번호가 일치하지 않습니다'
+            }
+            errorMessageStyle={
+              confirmPassword === ''
+                ? {display: 'none'}
+                : isConfirmPasswordValidated
+                ? {display:'none'}
+                : {height: 17}
             }
           />
           <Button
@@ -121,4 +144,6 @@ const Box = styled.div`
   padding: 50px 30px;
   border-radius: 20px;
   background-color: #fff;
+   /* emotion styled의 경우 */
+   ${mobile({ maxWidth: '360px' , padding: '50px 20px' })}
 `;

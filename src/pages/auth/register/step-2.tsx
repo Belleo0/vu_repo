@@ -8,6 +8,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { css } from '@emotion/react';
 import getAssetURL from '@utils/getAssetURL';
 import Modal from '@components/RegisterTextModal';
+import useWindowSize from '@hooks/useWindowSize';
+import { mobile } from '@utils/responsive';
 
 enum ButtonType {
   'ABLE',
@@ -47,6 +49,9 @@ const cursor = {
 export default () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // 현재 가로 화면 사이즈
+  const { width } = useWindowSize();
 
   const nxtStepHandler = () => {
     navigate('/auth/register/step-3', {
@@ -271,9 +276,9 @@ export default () => {
             wrapperStyle={{ height: '240px' }}
           />
         ) : null}
-        <MainTitle>
+        <MainTitlePc>
           {companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
-        </MainTitle>
+        </MainTitlePc>
         <TermsWrapper>
           <ProgressBar>
             <ProgressCircleOff>1</ProgressCircleOff>
@@ -282,6 +287,9 @@ export default () => {
             <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
+          <MainTitleMobile>
+          {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
+          </MainTitleMobile>
           <MainContentBox>
             <LineWrapper
               style={emailCodeVisible ? {} : { marginBottom: '13px' }}
@@ -388,11 +396,12 @@ export default () => {
               <RepeatTitle>비밀번호</RepeatTitle>
               <TextWrapper style={{ flexDirection: 'column' }}>
                 <Input
-                  containerStyle={{
+                  containerStyle={
+                    width > 360 ? {
                     width: '380px',
                     margin: 0,
                     height: '42px',
-                  }}
+                  } : {width: '320px'}}
                   style={{ padding: '11px 20px' }}
                   type="password"
                   onChange={(e) => {
@@ -404,10 +413,11 @@ export default () => {
                   }
                 />
                 <Input
-                  containerStyle={{
+                  containerStyle={
+                    width > 360 ? {
                     width: '380px',
                     marginTop: '13px',
-                  }}
+                  } : {width: '320px'}}
                   style={{ padding: '11px 20px' }}
                   type="password"
                   onChange={(e) => {
@@ -497,22 +507,33 @@ export default () => {
               </LineWrapper>
             ) : null}
           </MainContentBox>
-          <Button
-            // type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
-            type={
-              name && email && password && password2 && phone
-                ? ButtonType.ABLE
-                : ButtonType.INABLE
-            }
-            // onClick={() => (isValid ? nxtStepHandler() : null)}
-            onClick={() =>
-              name && email && password && password2 && phone
-                ? nxtStepHandler()
-                : null
-            }
-          >
-            다음
-          </Button>
+          <ButtonWrapper>
+            <BackButtonL
+              type={ButtonType.INABLE}
+              onClick={()=> backStepHandler()}
+              style={
+                width > 360? {display:'none'} : {display:'inline-block'}
+              }
+            >
+              이전
+            </BackButtonL>
+            <GoButtonR
+              // type={isValid ? ButtonType.ABLE : ButtonType.INABLE}
+              type={
+                name && email && password && password2 && phone
+                  ? ButtonType.ABLE
+                  : ButtonType.INABLE
+              }
+              // onClick={() => (isValid ? nxtStepHandler() : null)}
+              onClick={() =>
+                name && email && password && password2 && phone
+                  ? nxtStepHandler()
+                  : null
+              }
+            >
+              다음
+            </GoButtonR>
+          </ButtonWrapper>
         </TermsWrapper>
       </Container>
     </AuthLayout>
@@ -530,7 +551,23 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const MainTitle = styled.div`
+const MainTitleMobile = styled.div`
+  display: none;
+  ${mobile({ display:'block',
+    height: '29px',
+    float: 'left',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    fontStretch: 'normal',
+    fontStyle: 'normal',
+    letterSpacing: '-0.44px',
+    color: '#000',
+    marginTop: '12px',
+    // marginBottom: '46px'
+  })}
+`;
+const MainTitlePc = styled.div`
+  height: 32px;
   font-size: 22px;
   font-weight: bold;
   font-stretch: normal;
@@ -538,6 +575,8 @@ const MainTitle = styled.div`
   letter-spacing: -0.44px;
   text-align: center;
   color: #000;
+
+  ${mobile({ display:'none'})}
 `;
 
 const TermsWrapper = styled.div`
@@ -546,6 +585,7 @@ const TermsWrapper = styled.div`
   padding: 30px 30px 50px 30px;
   border-radius: 20px;
   background-color: #fff;
+  ${mobile({ maxWidth: '360px' , padding: '20px 20px' })}
 `;
 
 const ProgressBar = styled.span`
@@ -555,6 +595,7 @@ const ProgressBar = styled.span`
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  ${mobile({ float : 'left' , marginBottom: '0px'})}
 `;
 
 const ProgressCircle = styled.div`
@@ -571,11 +612,13 @@ const ProgressCircle = styled.div`
   letter-spacing: -0.28px;
   text-align: center;
   color: #fff;
+
+  ${mobile({ width: '18px', height: '18px' , padding: '4px 6px 1px 6px' , fontSize: '10px'})}
 `;
 
 const ProgressDashed = styled.img`
   width: 14px;
-  hieght: 1px;
+  height: 1px;
   margin: 0 6px;
 `;
 
@@ -584,6 +627,8 @@ const MainContentBox = styled.div`
   margin-bottom: 50px;
   border-radius: 6px;
   background-color: #fff;
+
+  ${mobile({ maxWidth: '320px'})}
 `;
 
 const RepeatTitle = styled.span`
@@ -665,4 +710,50 @@ const ProgressCircleOff = styled.div`
   text-align: center;
   color: #999999;
   border: 1px solid #999;
+
+  ${mobile({ width: '18px', height: '18px' , fontSize: '10px', padding: '3px 5px 3px 5px'})}
+`;
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  /* margin-top: 223px; */
+  height: 42px;
+  display: flex;
+`;
+
+const BackButtonL = styled.div<{ type: ButtonType}>`
+  width:150px;
+  height: 46px;
+  margin-right: 20px;
+  border-radius: 6px;
+  color: #999999;
+  padding-top:14px;
+  background-color: #f2f2f2;
+  border-color: #f2f2f2;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: -0.32px;
+  text-align: center;
+`;
+
+const GoButtonR = styled.div<{ type: ButtonType }>`
+  width: 380px;
+  height: 50px;
+  padding: 15px 0;
+  border-radius: 6px;
+
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: -0.32px;
+  text-align: center;
+  ${({ type }) => css`
+    background-color: ${backgroundColors[type]};
+    color: ${textColors[type]};
+    border: 1px solid ${borderColors[type]};
+    cursor: ${cursor[type]};
+  `}
+
+  ${mobile({ width:'150px', height:'46px'})}
 `;
