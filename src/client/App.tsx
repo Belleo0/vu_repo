@@ -94,7 +94,7 @@ function App() {
 }
 
 const MainContainer = styled.div`
-  min-width: 1640px;
+  /* min-width: 1640px; */
 `;
 
 export default App;

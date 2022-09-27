@@ -353,6 +353,8 @@ const Container = styled.div`
   border-bottom: 1px solid #f2f2f2;
   max-height: 80px;
   height: 80px;
+
+  overflow: hidden;
 `;
 
 const LogoWrap = styled.div`

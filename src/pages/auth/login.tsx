@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import { clearPrincipal, me } from '@data/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TextModal from '@components/TextModal';
+import { mobile } from '@utils/responsive';
+import useWindowSize from '@hooks/useWindowSize';
 
 export default () => {
   const dispatch = useDispatch();
@@ -15,6 +17,9 @@ export default () => {
   const navigate = useNavigate();
 
   const location = useLocation();
+
+  // 현재 가로 화면 사이즈
+  const { width } = useWindowSize();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -47,6 +52,8 @@ export default () => {
     }
   };
 
+  console.log(width);
+
   useEffect(() => {
     dispatch(clearPrincipal());
   }, []);
@@ -62,7 +69,10 @@ export default () => {
             placeholder="이메일을 입력해 주세요"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            containerStyle={{ marginBottom: 34 }}
+            // inline 스타일의 경우
+            containerStyle={
+              width > 360 ? { marginBottom: 34 } : { marginBottom: 0 }
+            }
             errorMessage={
               username === ''
                 ? ''
@@ -137,6 +147,9 @@ const Box = styled.div`
   padding: 50px 30px;
   border-radius: 20px;
   background-color: #fff;
+
+  /* emotion styled의 경우 */
+  ${mobile({ maxWidth: '320px' })}
 `;
 
 const TextButtonWrap = styled.div`
