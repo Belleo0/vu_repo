@@ -65,6 +65,10 @@ export default () => {
     });
   };
 
+  const backStepHandler = () => {
+    navigate('/auth/register/step-1');
+  }
+
   const companyName: string = ''; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
 
   const validItem = {
@@ -281,18 +285,20 @@ export default () => {
         </MainTitlePc>
         <TermsWrapper>
           <ProgressBar>
-            <ProgressCircleOff>1</ProgressCircleOff>
+            <ProgressCircle>1</ProgressCircle>
             <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
             <ProgressCircle>2</ProgressCircle>
             <ProgressDashed src={getAssetURL('../assets/ic-dashed.svg')} />
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
           <MainTitleMobile>
-          {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
+          {companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
           </MainTitleMobile>
           <MainContentBox>
             <LineWrapper
-              style={emailCodeVisible ? {} : { marginBottom: '13px' }}
+              style={emailCodeVisible ? {} : { marginBottom: '13px' }
+                && width > 360 ? {marginBottom: 13} : {marginBottom : 4 }
+              }
             >
               <RepeatTitle>이메일</RepeatTitle>
               <TextWrapper>
@@ -313,6 +319,11 @@ export default () => {
                       ? '이메일 형식이 올바르지 않습니다'
                       : ''
                   }
+                  errorMessageStyle={
+                    !emailValid && email.length > 0
+                      ? {marginBottom : 16}
+                      : {}
+                  }
                 />
                 <SendButton
                   type={
@@ -321,6 +332,11 @@ export default () => {
                   onClick={() => {
                     emailValid ? requestEmailValidateHandler() : null;
                   }}
+                  style={
+                    !emailValid && email.length > 0
+                      ? {marginBottom : 33}
+                      : {}
+                  }
                 >
                   {isEmailDone ? '인증완료' : '이메일 인증'}
                 </SendButton>
@@ -329,7 +345,9 @@ export default () => {
 
             {emailCodeVisible ? (
               <LineWrapper>
-                <TextWrapper style={{ margin: '0 0 14px' }}>
+                <TextWrapper style={
+                  width > 360 ? { margin: '0 0 14px' } : {marginTop: '-10px' , marginBottom:'4px'}
+              }>
                   <Input
                     containerStyle={{
                       width: '250px',
@@ -380,6 +398,7 @@ export default () => {
                   containerStyle={{
                     width: '380px',
                     margin: 0,
+                    marginBottom: 4
                   }}
                   style={{ padding: '11px 20px' }}
                   type="text"
@@ -401,7 +420,10 @@ export default () => {
                     width: '380px',
                     margin: 0,
                     height: '42px',
-                  } : {width: '320px'}}
+                  } : {width: '320px' , marginBottom: 2}}
+                  errorMessageStyle={
+                    {display: 'none'}
+                  }
                   style={{ padding: '11px 20px' }}
                   type="password"
                   onChange={(e) => {
@@ -417,8 +439,8 @@ export default () => {
                     width > 360 ? {
                     width: '380px',
                     marginTop: '13px',
-                  } : {width: '320px'}}
-                  style={{ padding: '11px 20px' }}
+                  } : {width: '320px', marginBottom: '4px'}}
+                  style={{ padding: '11px 20px'}}
                   type="password"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'password2');
@@ -430,11 +452,16 @@ export default () => {
                       ? '비밀번호가 일치하지 않습니다'
                       : ''
                   }
+                  errorMessageStyle={
+                    !isPasswordDone2 && password2.length > 0
+                      ? {height:17}
+                      : {display:'none'}
+                  }
                 />
               </TextWrapper>
             </LineWrapper>
 
-            <LineWrapper style={{ marginBottom: 0 }}>
+            <LineWrapper style={width > 360 ? { marginBottom: 0 } : { height:72.5}}>
               <RepeatTitle>휴대폰 번호</RepeatTitle>
               <TextWrapper>
                 <Input
@@ -448,7 +475,9 @@ export default () => {
                     isValidHandler(e.target.value, 'phone');
                   }}
                   value={phone}
-                  placeholder={" '-' 입력 제외(번호만 입력해 주세요)"}
+                  placeholder={
+                    width > 360 ? " '-' 입력 제외(번호만 입력해 주세요)" : " '-' 입력 제외(숫자만 입력)"}
+                  
                 />
                 <SendButton
                   type={phoneValid ? AbleType.ABLE : AbleType.INABLE}
@@ -469,7 +498,8 @@ export default () => {
                       width: '250px',
                       margin: 0,
                     }}
-                    style={{ padding: '11px 20px' }}
+                    style={
+                      width > 360 ? { padding: '11px 20px' } : { padding: '11px 20px'}}
                     type="text"
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'phoneCode');
@@ -549,11 +579,15 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  ${mobile({ maxWidth: '360px', marginTop:'0px'})}
 `;
 
 const MainTitleMobile = styled.div`
   display: none;
-  ${mobile({ display:'block',
+  ${mobile({ 
+    display:'block',
+    width:'260px',
     height: '29px',
     float: 'left',
     fontSize: '20px',
@@ -562,8 +596,7 @@ const MainTitleMobile = styled.div`
     fontStyle: 'normal',
     letterSpacing: '-0.44px',
     color: '#000',
-    marginTop: '12px',
-    // marginBottom: '46px'
+    margin: '12px 70px 46px 20px'
   })}
 `;
 const MainTitlePc = styled.div`
@@ -585,7 +618,7 @@ const TermsWrapper = styled.div`
   padding: 30px 30px 50px 30px;
   border-radius: 20px;
   background-color: #fff;
-  ${mobile({ maxWidth: '360px' , padding: '20px 20px' })}
+  ${mobile({ maxWidth: '360px' , padding : '1px'})}
 `;
 
 const ProgressBar = styled.span`
@@ -595,7 +628,7 @@ const ProgressBar = styled.span`
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  ${mobile({ float : 'left' , marginBottom: '0px'})}
+  ${mobile({ float : 'left' , margin: '22px 200px 0px 20px'})}
 `;
 
 const ProgressCircle = styled.div`
@@ -628,7 +661,7 @@ const MainContentBox = styled.div`
   border-radius: 6px;
   background-color: #fff;
 
-  ${mobile({ maxWidth: '320px'})}
+  ${mobile({ maxWidth: '320px' , margin: '22px 20px 52px 20px'})}
 `;
 
 const RepeatTitle = styled.span`
@@ -639,6 +672,7 @@ const RepeatTitle = styled.span`
   letter-spacing: -0.26px;
   text-align: center;
   color: #444;
+  ${mobile({ display :'block' , float:'left' , marginBottom: '10px'})}
 `;
 
 const LineWrapper = styled.div`
@@ -673,6 +707,7 @@ const TextWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   margin-top: 8px;
+  margin-bottom: 4px;
 `;
 
 const SendButton = styled.div<{ type: AbleType }>`
@@ -715,18 +750,18 @@ const ProgressCircleOff = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  width: 100%;
-  /* margin-top: 223px; */
-  height: 42px;
-  display: flex;
+  ${mobile({ width:'100%' , 
+    height: '66px' , 
+    display:'flex' , 
+    borderTop : '1px solid #e3e3e3'})}
 `;
 
 const BackButtonL = styled.div<{ type: ButtonType}>`
   width:150px;
   height: 46px;
-  margin-right: 20px;
+  margin: 10px 20px 10px 20px;
   border-radius: 6px;
-  color: #999999;
+  color: #222222;
   padding-top:14px;
   background-color: #f2f2f2;
   border-color: #f2f2f2;
@@ -755,5 +790,7 @@ const GoButtonR = styled.div<{ type: ButtonType }>`
     cursor: ${cursor[type]};
   `}
 
-  ${mobile({ width:'150px', height:'46px'})}
+  ${mobile({ width:'150px', 
+    height:'46px' ,
+    margin: '10px 0px 10px 0px'})}
 `;

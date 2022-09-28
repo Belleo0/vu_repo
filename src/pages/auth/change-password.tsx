@@ -63,7 +63,7 @@ export default () => {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             containerStyle={
-              width > 360 ? { marginBottom: 34 } : {marginBottom : 24}
+              width > 360 ? { marginBottom: 34 } : {marginBottom : 16}
             }
             errorMessage={
               newPassword === ''
@@ -87,7 +87,7 @@ export default () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             containerStyle={
-              width > 360 ? { marginBottom: 14 } : {marginBottom : 22}
+              width > 360 ? { marginBottom: 14 } : {marginBottom : 24}
             }
             errorMessage={
               confirmPassword === ''

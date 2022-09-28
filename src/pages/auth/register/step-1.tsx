@@ -293,7 +293,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
 
-  /* ${mobile({ height: '760px'})} */
+  ${mobile({ maxWidth: '360px', marginTop:'0px'})}
 `;
 
 const MainTitleMobile = styled.div`
@@ -307,8 +307,7 @@ const MainTitleMobile = styled.div`
     fontStyle: 'normal',
     letterSpacing: '-0.44px',
     color: '#000',
-    marginTop: '12px',
-    // marginBottom: '46px'
+    margin: '12px 80px 46px 20px'
   })}
 `;
 const MainTitlePc = styled.div`
@@ -332,7 +331,7 @@ const TermsWrapper = styled.div`
   border-radius: 20px;
   background-color: #fff;
 
-  ${mobile({ maxWidth: '360px' , padding: '20px 20px' })}
+  ${mobile({ maxWidth: '360px' , height:'660px', padding : '0px'})}
 `;
 
 const ProgressBar = styled.span`
@@ -342,7 +341,7 @@ const ProgressBar = styled.span`
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  ${mobile({ float : 'left' , marginBottom: '0px'})}
+  ${mobile({ float : 'left' , margin: '22px 200px 0px 20px'})}
 `;
 
 const ProgressCircle = styled.div`
@@ -384,6 +383,7 @@ const ProgressDashed = styled.img`
 
 const MiddleTitle = styled.div`
   margin: 40px 0 8px 0;
+  display: 'block';
   font-size: 13px;
   font-weight: normal;
   font-stretch: normal;
@@ -392,7 +392,7 @@ const MiddleTitle = styled.div`
   text-align: left;
   color: #444;
 
-  ${mobile({ fontSize: '14px', marginBottom: '10px'})}
+  ${mobile({ fontSize: '14px', marginBottom: '10px', marginLeft:'20px'})}
 `;
 
 const MainContentBox = styled.div`
@@ -404,10 +404,7 @@ const MainContentBox = styled.div`
   border: solid 1px #c7c7c7;
   background-color: #fff;
 
-  /* emotion styled의 경우 */
-  ${mobile({ maxWidth: '320px' ,
-    maxHeight: '211px', 
-    padding: '20px 20px' })}
+  ${mobile({ maxWidth: '320px', margin: '0px 20px 223px 20px'})}
 `;
 
 const DistanceIcon = styled.img`
@@ -425,6 +422,8 @@ const RepeatTitle = styled.span`
   letter-spacing: -0.28px;
   text-align: left;
   color: #000;
+
+  ${mobile({ display :'block' , float:'left' })}
 `;
 
 const LineWrapper = styled.div`
@@ -478,16 +477,16 @@ const MoreTitle = styled.span`
 `;
 
 const ButtonWrapper = styled.div`
-  width: 100%;
-  /* margin-top: 223px; */
-  height: 42px;
-  display: flex;
+  ${mobile({ width:'100%' , 
+    height: '66px' , 
+    display:'flex' , 
+    borderTop : '1px solid #e3e3e3'})}
 `;
 
 const BackButtonL = styled.div<{ type: ButtonType}>`
   width:150px;
   height: 46px;
-  margin-right: 20px;
+  margin: 10px 20px 10px 20px;
   border-radius: 6px;
   color: #999999;
   padding-top:14px;
@@ -518,7 +517,9 @@ const GoButtonR = styled.div<{ type: ButtonType }>`
     cursor: ${cursor[type]};
   `}
 
-  ${mobile({ width:'150px', height:'46px'})}
+  ${mobile({ width:'150px', 
+    height:'46px' ,
+    margin: '10px 0px 10px 0px'})}
 `;
 
 const TextWrapper = styled.div`

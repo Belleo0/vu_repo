@@ -25,7 +25,7 @@ export default () => {
       <ContainerWrapper>
         <Title>CONAZ에 오신 것을 환영합니다</Title>
         <SubTitle>
-          {width > 360 ? 'CONAZ 회원가입을 통해 다양한 혜택과 서비스를 이용하세요.' : '회원가입을 통해 다양한 혜택과 서비스를 이용하세요.'}
+          {width > 360 ? 'CONAZ 회원가입을 통해 다양한 혜택과 서비스를 이용하시기 바랍니다.' : '회원가입을 통해 다양한 혜택과 서비스를 이용하세요.'}
         </SubTitle>
         <ButtonWrap>
           <RegisterButtonL
@@ -59,10 +59,11 @@ const ContainerWrapper = styled.div`
   background-image: url(${getAssetURL('../assets/img/main.png')});
   background-size: cover;
   ${mobile(
-    { maxWidth: '360px' , 
+    { backgroundImage: `url(${getAssetURL('../assets/img/bg.png')})`,
+      maxWidth: '360px' , 
       maxHeight:'720px' , 
-      padding: '50px 20px' , 
-      backgroundSize : 'c' , 
+      padding: '0px 20px 50px 20px' , 
+      backgroundSize : 'cover' , 
       backgroundRepeat : 'no-repeat'
     })}
 `;

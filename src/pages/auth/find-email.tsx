@@ -65,6 +65,7 @@ export default () => {
             inputStyle={
               width > 360 ? {marginBottom :8} : {marginBottom :0}
             }
+            errorMessageStyle={{display:'none'}}
           />
           <Input
             label="휴대폰 번호"

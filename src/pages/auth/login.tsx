@@ -71,7 +71,7 @@ export default () => {
             onChange={(e) => setUsername(e.target.value)}
             // inline 스타일의 경우
             containerStyle={
-              width > 360 ? { marginBottom: 34 } : { marginBottom: 24 }
+              width > 360 ? { marginBottom: 34 } : { marginBottom: 16 }
             }
             errorMessage={
               username === ''
@@ -98,7 +98,7 @@ export default () => {
               width > 360 ? {marginBottom: 8 } : {marginBottom : 0}
             }
             containerStyle={
-              width > 360 ? { marginBottom: 50 } : {marginBottom : 30}
+              width > 360 ? { marginBottom: 50 } : {marginBottom : 22}
             }            
           />
           <Button
