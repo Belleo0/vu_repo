@@ -7,7 +7,7 @@ export const getAPIHost = () => {
 };
 
 export const getSocketHost = () => {
-  return 'https://13.125.245.83:9996';
+  return 'http://13.125.245.83:9996';
   // return 'https://conaz-core-api.02.dance';
   // return 'http://localhost:8080';
 };
