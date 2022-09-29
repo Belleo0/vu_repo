@@ -62,14 +62,13 @@ const locationArr = [
 ];
 
 export default () => {
-  const { state } = useLocation();
-
+  const location = useLocation();
   const [type, setType] = useState<string>('');
   const { data: companyList } = useArchives(type);
   const [remiconList, setRemiconList] = useState([]);
   const [select, setSelect] = useState<string>('회사명');
   const [search, setSearch] = useState<string>('');
-  const [location, setLocation] = useState<string>('서울');
+  const [region, setRegion] = useState<string>('서울');
   const [selectedCompanyInfo, setSelectedCompanyInfo] = useState<any>();
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [longitude, setLongitude] = useState<any>(0);
@@ -81,19 +80,19 @@ export default () => {
   ];
 
   const filteredList = useMemo(() => {
-    return companyList?.filter((v: any) => v.region === location);
-  }, [location]);
+    return companyList?.filter((v: any) => v.region === region);
+  }, [region]);
 
   const filteredRemicon = useMemo(() => {
     const result = remiconList?.filter((v: any) =>
-      v?.basic_address?.include(location),
+      v?.basic_address?.include(region),
     );
     console.log(result);
     return result;
-  }, [location]);
+  }, [region]);
 
   const handleLocationClick = (val: any | null) => {
-    setLocation(val);
+    setRegion(val);
   };
 
   const getFactoryList = async () => {
@@ -106,19 +105,14 @@ export default () => {
   };
 
   useEffect(() => {
-    if (state) {
-      const value = Object.values(state);
-      if (value?.[0] === 'remicon') {
-        console.log('실행');
-        getFactoryList();
-      } else {
-        console.log(value?.[0]);
-        setType(value?.[0]);
-      }
+    if (!(location?.state as any)?.type) return;
+    const value = (location?.state as any)?.type;
+    if (value === 'remicon') {
+      getFactoryList();
+    } else {
+      setType(value);
     }
   }, []);
-
-  console.log(remiconList);
 
   // useEffect(() => {
   //   if (filteredList) {
@@ -167,7 +161,7 @@ export default () => {
           {locationArr.map((v, index) => {
             return (
               <LocationContent
-                type={location === v ? Active.ACTIVE : Active.INACTIVE}
+                type={region === v ? Active.ACTIVE : Active.INACTIVE}
                 key={index}
                 onClick={() => {
                   handleLocationClick(v);

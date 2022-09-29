@@ -112,18 +112,20 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
         {data.map((v: any) => (
           <CellWrap key={v?.id} selected={selectedIds.includes(v.id)}>
             <ValueCell>
-              <SupplyDate>{v?.date}</SupplyDate>
+              <SupplyDate>{moment(v?.date).format('YYYY.MM.DD')}</SupplyDate>
             </ValueCell>
             <ValueCell style={{ flexDirection: 'column' }}>
-              <FactoryCompanyName>{v?.name}</FactoryCompanyName>
-              <FactoryAddress>{v?.basic_address}</FactoryAddress>
+              <FactoryCompanyName>
+                {v?.estimation?.factory_space?.name}
+              </FactoryCompanyName>
+              <FactoryAddress>
+                {v?.estimation?.factory_space?.basic_address}
+              </FactoryAddress>
             </ValueCell>
             <ValueCell>{v?.size}</ValueCell>
-            <ValueCell style={{ marginRight: 50 }}>{v?.preAmount}m³</ValueCell>
+            <ValueCell style={{ marginRight: 50 }}>{v?.total}m³</ValueCell>
             <ValueCell style={{ marginLeft: 50 }}>
-              <SupplyAmount status={v?.status === '0'}>
-                {v?.amount}
-              </SupplyAmount>
+              <SupplyAmount status={v?.status === '0'}>{v?.total}</SupplyAmount>
               m³
             </ValueCell>
             <ValueCell style={{ maxWidth: 150 }}>
