@@ -580,7 +580,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
-  ${mobile({ maxWidth: '360px', marginTop:'0px'})}
+  ${mobile({ maxWidth: '360px', height:'640px' , marginBottom:'0' , marginTop:'0px'})}
 `;
 
 const MainTitleMobile = styled.div`
@@ -618,7 +618,7 @@ const TermsWrapper = styled.div`
   padding: 30px 30px 50px 30px;
   border-radius: 20px;
   background-color: #fff;
-  ${mobile({ maxWidth: '360px' , padding : '1px'})}
+  ${mobile({ maxWidth: '360px' , height:'100%' , marginTop:'0px' , padding : '1px'})}
 `;
 
 const ProgressBar = styled.span`

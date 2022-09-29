@@ -43,7 +43,9 @@ export default () => {
   return (
     <AuthLayout>
       <Container>
-        <Title>이메일 찾기</Title>
+        <Title style={
+          width > 360 ? {} : {display:'none'}
+        }>이메일 찾기</Title>
         <Box>
           <HelperTxt
             helperTxt={
@@ -141,5 +143,5 @@ const Box = styled.div`
   border-radius: 20px;
   background-color: #fff;
    /* emotion styled의 경우 */
-   ${mobile({ maxWidth: '360px' , padding: '50px 20px' })}
+   ${mobile({ maxWidth: '360px' , height: '100%' , padding: '40px 20px' })}
 `;
