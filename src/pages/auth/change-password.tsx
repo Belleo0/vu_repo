@@ -54,7 +54,9 @@ export default () => {
   return (
     <AuthLayout>
       <Container>
-        <Title>비밀번호 재설정</Title>
+        <Title style={
+          width > 360 ? {} : {display:'none'}
+        }>비밀번호 재설정</Title>
         <Box>
           <Input
             label="새 비밀번호"
@@ -145,5 +147,5 @@ const Box = styled.div`
   border-radius: 20px;
   background-color: #fff;
    /* emotion styled의 경우 */
-   ${mobile({ maxWidth: '360px' , padding: '50px 20px' })}
+   ${mobile({ maxWidth: '360px' , height:'100%' , padding: '40px 20px' })}
 `;

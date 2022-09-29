@@ -569,7 +569,7 @@ const TermsWrapper = styled.div<{ type: MainHeightType }>`
     padding: ${paddingPixel[type]};
   `}
 
-  ${mobile({ maxWidth: '360px' , padding : '0px'})}
+  ${mobile({ maxWidth: '360px' , height: '100%' , marginTop: '0', marginBottom:'0' , padding : '0px'})}
 `;
 
 const ProgressBar = styled.span`

@@ -331,7 +331,7 @@ const TermsWrapper = styled.div`
   border-radius: 20px;
   background-color: #fff;
 
-  ${mobile({ maxWidth: '360px' , height:'660px', padding : '0px'})}
+  ${mobile({ maxWidth: '360px' , height:'100%', marginTop:'0' , padding : '0px'})}
 `;
 
 const ProgressBar = styled.span`
