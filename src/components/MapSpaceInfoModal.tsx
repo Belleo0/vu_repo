@@ -21,13 +21,13 @@ export default ({ open, data, onClose }: any) => {
                 회사명
                 <EngName>Trade name.</EngName>
               </LabelCell>
-              <ValueCell>{data?.company?.name}</ValueCell>
+              <ValueCell>{data?.name}</ValueCell>
             </CellWrap>
             <CellWrap>
               <LabelCell>
                 주소 <EngName>Address.</EngName>
               </LabelCell>
-              <ValueCell>{data?.company?.address}</ValueCell>
+              <ValueCell>{data?.basic_address}</ValueCell>
             </CellWrap>
             <CellWrap>
               <LabelCell>
@@ -135,9 +135,11 @@ const Container = styled.div<{ isOpen: boolean }>`
         `
       : css`
           transform: translateX(100%);
+          display: none;
         `}
 
   transition: transform 0.25s ease-in-out;
+  overflow-y: scroll;
 `;
 
 const CloseIcon = styled.img`

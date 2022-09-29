@@ -20,6 +20,7 @@ import useArchives from '@api/useArchives';
 import ArchivesInfoModal from '@components/ArchivesInfoModal';
 import NaverMapSpaceMarker from '@components/NaverMapSpaceMarker';
 import SpaceMarkerContent from '@components/SpaceMarkerContent';
+import MapSpaceInfoModal from '@components/MapSpaceInfoModal';
 
 enum Active {
   ACTIVE,
@@ -63,7 +64,8 @@ const locationArr = [
 
 export default () => {
   const location = useLocation();
-  const [type, setType] = useState<string>('');
+
+  const type = (location?.state as any)?.type;
   const { data: companyList } = useArchives(type);
   const [remiconList, setRemiconList] = useState([]);
   const [select, setSelect] = useState<string>('회사명');
@@ -71,6 +73,7 @@ export default () => {
   const [region, setRegion] = useState<string>('서울');
   const [selectedCompanyInfo, setSelectedCompanyInfo] = useState<any>();
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isRemiconInfoModalOpen, setIsRemiconInfoModalOpen] = useState(false);
   const [longitude, setLongitude] = useState<any>(0);
   const [latitude, setLatitude] = useState<any>(0);
 
@@ -80,16 +83,15 @@ export default () => {
   ];
 
   const filteredList = useMemo(() => {
+    if (type === 'remicon') {
+      const result = remiconList?.filter((v: any) =>
+        v?.basic_address?.includes(region),
+      );
+      console.log(result);
+      return result;
+    }
     return companyList?.filter((v: any) => v.region === region);
-  }, [region]);
-
-  const filteredRemicon = useMemo(() => {
-    const result = remiconList?.filter((v: any) =>
-      v?.basic_address?.include(region),
-    );
-    console.log(result);
-    return result;
-  }, [region]);
+  }, [region, remiconList, companyList]);
 
   const handleLocationClick = (val: any | null) => {
     setRegion(val);
@@ -98,7 +100,8 @@ export default () => {
   const getFactoryList = async () => {
     try {
       const { data } = await api.get('/factories');
-      setRemiconList(data.result);
+      const result = data?.result;
+      setRemiconList(result);
     } catch (error) {
       console.log(error);
     }
@@ -109,8 +112,6 @@ export default () => {
     const value = (location?.state as any)?.type;
     if (value === 'remicon') {
       getFactoryList();
-    } else {
-      setType(value);
     }
   }, []);
 
@@ -182,41 +183,50 @@ export default () => {
             marginTop: '40px',
           }}
         >
-          {type === 'remicon'
-            ? filteredRemicon
-            : filteredList?.map((v: any, i: number) => (
-                <NaverMapSpaceMarker
-                  key={v.id}
-                  lat={v.latitude}
-                  lng={v.longitude}
-                  content={
-                    <SpaceMarkerContent
-                      index={i}
-                      name={v?.company_name}
-                      address={''}
-                      distance={0}
-                      duration={0}
-                      onClick={() => {}}
-                      onInfo={() => {
-                        setIsInfoModalOpen(false);
-                        setSelectedCompanyInfo(v);
-                        setTimeout(() => {
-                          setIsInfoModalOpen(true);
-                        }, 250);
-                      }}
-                      onChangePath={() => {}}
-                      selected={false}
-                      hideWithoutName={false}
-                      totalDuration={'1'}
-                    />
-                  }
+          {filteredList?.map((v: any, i: number) => (
+            <NaverMapSpaceMarker
+              key={v.id}
+              lat={v.latitude}
+              lng={v.longitude}
+              content={
+                <SpaceMarkerContent
+                  index={i}
+                  name={type === 'remicon' ? v?.name : v?.company_name}
+                  address={''}
+                  distance={0}
+                  duration={0}
+                  onClick={() => {}}
+                  onInfo={() => {
+                    setIsInfoModalOpen(false);
+                    setIsRemiconInfoModalOpen(false);
+                    setSelectedCompanyInfo(v);
+                    setTimeout(() => {
+                      type === 'remicon'
+                        ? setIsRemiconInfoModalOpen(true)
+                        : setIsInfoModalOpen(true);
+                    }, 250);
+                  }}
+                  onChangePath={() => {}}
+                  selected={false}
+                  hideWithoutName={false}
+                  totalDuration={'1'}
                 />
-              ))}
+              }
+            />
+          ))}
         </NaverMap>
         <ArchivesInfoModal
           open={isInfoModalOpen}
           onClose={() => {
             setIsInfoModalOpen(false);
+            setSelectedCompanyInfo(null);
+          }}
+          data={selectedCompanyInfo}
+        />
+        <MapSpaceInfoModal
+          open={isRemiconInfoModalOpen}
+          onClose={() => {
+            setIsRemiconInfoModalOpen(false);
             setSelectedCompanyInfo(null);
           }}
           data={selectedCompanyInfo}
@@ -235,20 +245,35 @@ export default () => {
               상세보기
             </BottomContentListItem>
           </BottomContentGuideLine>
+          {filteredList?.length <= 0 && (
+            <EmptyRow>등록된 정보가 없습니다.</EmptyRow>
+          )}
           {filteredList?.map((v: any, i: number) => {
             return (
               <BottomContentList key={i}>
-                <BottomContentListItem>{v.company_name}</BottomContentListItem>
-                <BottomContentListItem>{v.address}</BottomContentListItem>
-                <BottomContentListItem>{v.tel}</BottomContentListItem>
-                <BottomContentListItem>{v?.rem}</BottomContentListItem>
-                <BottomContentListItem>{v?.have}</BottomContentListItem>
+                <BottomContentListItem>
+                  {type === 'remicon' ? v.name : v.company_name}
+                </BottomContentListItem>
+                <BottomContentListItem>
+                  {type === 'remicon' ? v.basic_address : v.address}
+                </BottomContentListItem>
+                <BottomContentListItem>
+                  {type === 'remicon' ? v.factory_info.tel : v.tel}
+                </BottomContentListItem>
+                <BottomContentListItem>
+                  {type === 'remicon' ? v.factory_info.capa : v?.rem}
+                </BottomContentListItem>
+                <BottomContentListItem>
+                  {type === 'remicon' ? v.factory_info.truck_count : v?.have}
+                </BottomContentListItem>
                 <BottomContentListItem style={{ width: '10%' }}>
                   <BottomContentListItemImage
                     src={getAssetUrl('../assets/search_bg_line_ic.svg')}
                     onClick={() => {
                       setSelectedCompanyInfo(v);
-                      setIsInfoModalOpen(true);
+                      type === 'remicon'
+                        ? setIsRemiconInfoModalOpen(true)
+                        : setIsInfoModalOpen(true);
                     }}
                   />
                 </BottomContentListItem>
@@ -396,4 +421,20 @@ const BottomContentListItemImage = styled.img`
   width: 34px;
   height: 34px;
   cursor: pointer;
+`;
+
+const EmptyRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+
+  height: 54px;
+  border-bottom: 1px solid #f2f2f2;
+
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  color: #222;
 `;

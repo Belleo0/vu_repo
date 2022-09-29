@@ -89,8 +89,6 @@ export default () => {
     if (!unitPrices) return;
     const resultKeys = Object.keys(unitPrices);
     const resultValues = Object.values(unitPrices);
-
-    console.log(resultKeys, resultValues);
   }, [unitPrices]);
 
   return (
