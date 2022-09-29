@@ -31,6 +31,7 @@ import useChatData from '@api/useChatData';
 import useFriends from '@api/useFriends';
 import useSelectedUserInfo from '@hooks/useSelectedUserInfo';
 import { clearSelectedUserInfo } from '@data/chat';
+import { mobile } from '@utils/responsive';
 
 const fieldMenus = [
   {
@@ -354,7 +355,7 @@ const Container = styled.div`
   max-height: 80px;
   height: 80px;
 
-  overflow: hidden;
+  ${mobile({ overflow: 'hidden' })}
 `;
 
 const LogoWrap = styled.div`
@@ -366,7 +367,7 @@ const LogoWrap = styled.div`
   cursor: pointer;
 
   & > img {
-    width: 219px;
+    ${mobile({ height: '24px' })}
     height: 35px;
   }
 `;
@@ -379,6 +380,8 @@ const ContentContainer = styled.div`
 
 const MenuWrap = styled.div`
   margin-top: 15px;
+
+  ${mobile({ display: 'none' })}
 `;
 
 const MenuItem = styled.span<{ active?: boolean }>`
@@ -494,6 +497,8 @@ const LoginButton = styled.span`
   cursor: pointer;
 
   margin-right: 18px;
+
+  ${mobile({ display: 'none' })}
 `;
 
 const ProfileNavWrap = styled.div`

@@ -17,7 +17,8 @@ export default ({
   fieldName,
   fieldCompany,
   paymentMethod,
-  paymentExpireDate,
+  fieldStartDate,
+  fieldEndDate,
   factoryName,
   factoryAddr,
   salesUserName,
@@ -43,7 +44,10 @@ export default ({
           </TableRow>
           <TableRow>
             <TableLabel>□ 공급기간:</TableLabel>
-            <TableValue>계약이후</TableValue>
+            <TableValue>
+              {moment(fieldStartDate).format('YYYY.MM')} ~{' '}
+              {moment(fieldEndDate).format('YYYY.MM')}
+            </TableValue>
           </TableRow>
           <TableRow>
             <TableLabel>□ 지불조건:</TableLabel>
@@ -57,15 +61,13 @@ export default ({
           </TableRow>
           <TableRow>
             <TableLabel>□ 유효기간:</TableLabel>
-            <TableValue>{paymentExpireDate}</TableValue>
+            <TableValue>견적제출일로부터 30일</TableValue>
           </TableRow>
         </InfoSection>
         <InfoSection>
           <SubTitle>
-            공급자 견적일자:
-            <RedText>
-              {moment(estimation.updated_at).format('YYYY.MM.DD')}
-            </RedText>
+            공급자 견적일자:{' '}
+            {moment(estimation.updated_at).format('YYYY.MM.DD')}
           </SubTitle>
           <Divider />
           <TableRow>
@@ -132,10 +134,7 @@ export default ({
           <ContentBox>{estimation?.remarks}</ContentBox>
         </InfoSection>
       </SpecWrap>
-      <Caption>
-        *수량을 특정하지 않은 단가계약이며,{' '}
-        <RedText>타규격 동일률 적용</RedText>
-      </Caption>
+      <Caption>*수량을 특정하지 않은 단가계약이며, 타규격 동일률 적용</Caption>
       <UnitPriceWrap>
         <RemiconUnitPriceTable
           print={true}
@@ -163,6 +162,9 @@ const Title = styled.div`
   letter-spacing: -0.36px;
   text-align: center;
   color: #000;
+
+  padding: 20px;
+  border: 1px solid #444;
 `;
 
 const InfoWrap = styled.div`
@@ -188,7 +190,7 @@ const SubTitle = styled.div`
   letter-spacing: -0.36px;
   color: #000;
 
-  margin-top: 20px;
+  margin-top: 10px;
 `;
 
 const Content = styled.div`
@@ -221,9 +223,8 @@ const TableValue = styled.div`
 `;
 
 const Divider = styled.div`
-  height: 1px;
+  border-bottom: 1px solid #e3e3e3;
   margin: 6px 0 10px;
-  background-color: #e3e3e3;
 `;
 
 const SpecWrap = styled.div`
@@ -289,7 +290,4 @@ const Caption = styled.div`
   color: #000;
 
   margin-top: 10px;
-`;
-const RedText = styled.span`
-  color: #ef0000;
 `;

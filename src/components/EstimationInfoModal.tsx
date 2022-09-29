@@ -147,12 +147,13 @@ export default ({ open, data, estimation, onClose }: any) => {
           fieldName={field?.name}
           fieldCompany={field?.company.name}
           paymentMethod={field?.field_info.payment_method}
-          paymentExpireDate={field?.field_info.payment_expire_date}
+          fieldStartDate={field?.field_info.start_at}
+          fieldEndDate={field?.field_info.end_at}
           factoryName={factory?.name}
           factoryAddr={factory?.basic_address}
-          salesUserName={estimation?.sales_user.name}
-          salesUserPhone={estimation?.sales_user.phone}
-          salesUserTel={estimation?.sales_user.tel}
+          salesUserName={factory?.factory_info.ceo}
+          salesUserPhone={factory?.factory_info.tel}
+          salesUserTel={factory?.factory_info.fax}
           estimation={estimation}
         />
       </Container>

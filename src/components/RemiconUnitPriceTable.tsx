@@ -72,68 +72,68 @@ export default ({ print, percent, location }: IUnitPriceTable) => {
           </TableRow>
           <TableRow>
             <ColumnTitle>80</ColumnTitle>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_160)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_180)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_210)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_240)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_270)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_300)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_350)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_400)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_450)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_8_nominal_550)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_16)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_18)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_21)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_24)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_27)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_30)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_35)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_40)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_45)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_80_nominal_50)}</ValueCell>
           </TableRow>
           <TableRow>
             <ColumnTitle>120</ColumnTitle>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_160)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_180)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_210)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_240)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_270)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_300)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_350)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_400)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_450)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_12_nominal_500)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_16)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_18)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_21)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_24)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_27)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_30)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_35)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_40)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_45)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_120_nominal_50)}</ValueCell>
           </TableRow>
           <TableRow>
             <ColumnTitle>150</ColumnTitle>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_160)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_180)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_210)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_240)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_270)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_300)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_350)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_400)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_450)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_15_nominal_550)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_16)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_18)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_21)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_24)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_27)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_30)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_35)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_40)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_45)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_150_nominal_50)}</ValueCell>
           </TableRow>
           <TableRow>
             <ColumnTitle>180</ColumnTitle>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_160)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_180)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_210)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_240)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_270)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_300)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_350)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_400)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_450)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_18_nominal_500)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_16)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_18)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_21)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_24)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_27)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_30)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_35)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_40)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_45)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_180_nominal_50)}</ValueCell>
           </TableRow>
           <TableRow>
             <ColumnTitle>210</ColumnTitle>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_160)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_180)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_210)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_240)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_270)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_300)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_350)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_400)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_450)}</ValueCell>
-            <ValueCell>{makeComma(unitPrices?.slump_21_nominal_500)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_16)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_18)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_21)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_24)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_27)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_30)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_35)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_40)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_45)}</ValueCell>
+            <ValueCell>{makeComma(unitPrices?.slump_210_nominal_50)}</ValueCell>
           </TableRow>
         </TableWrap>
         {/* 모르타르 테이블 */}
@@ -435,7 +435,6 @@ const SubTitle = styled.div`
 `;
 
 const Divider = styled.div`
-  height: 1px;
+  border-bottom: 1px solid #e3e3e3;
   margin: 6px 0 10px;
-  background-color: #e3e3e3;
 `;

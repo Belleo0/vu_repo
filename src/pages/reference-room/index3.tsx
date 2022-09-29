@@ -175,34 +175,34 @@ export default () => {
               80
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_8_nominal_160}
+              {unitPrices?.slump_80_nominal_16}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_8_nominal_180}
+              {unitPrices?.slump_80_nominal_18}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_8_nominal_210}
+              {unitPrices?.slump_80_nominal_21}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_8_nominal_240}
+              {unitPrices?.slump_80_nominal_24}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_8_nominal_270}
+              {unitPrices?.slump_80_nominal_27}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_8_nominal_300}
+              {unitPrices?.slump_80_nominal_30}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_8_nominal_350}
+              {unitPrices?.slump_80_nominal_35}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_8_nominal_400}
+              {unitPrices?.slump_80_nominal_40}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_8_nominal_450}
+              {unitPrices?.slump_80_nominal_45}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem style={{ borderRight: 'none' }}>
-              {unitPrices?.slump_8_nominal_500}
+              {unitPrices?.slump_80_nominal_50}
             </BottomContentWhiteItem>
           </BottomContentBasicLine>
           <BottomContentBasicLine>
@@ -210,34 +210,34 @@ export default () => {
               120
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_12_nominal_160}
+              {unitPrices?.slump_120_nominal_16}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_12_nominal_180}
+              {unitPrices?.slump_120_nominal_18}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_12_nominal_210}
+              {unitPrices?.slump_120_nominal_21}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_12_nominal_240}
+              {unitPrices?.slump_120_nominal_24}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_12_nominal_270}
+              {unitPrices?.slump_120_nominal_27}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_12_nominal_300}
+              {unitPrices?.slump_120_nominal_30}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_12_nominal_350}
+              {unitPrices?.slump_120_nominal_35}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_12_nominal_400}
+              {unitPrices?.slump_120_nominal_40}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_12_nominal_450}
+              {unitPrices?.slump_120_nominal_45}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem style={{ borderRight: 'none' }}>
-              {unitPrices?.slump_12_nominal_500}
+              {unitPrices?.slump_120_nominal_50}
             </BottomContentWhiteItem>
           </BottomContentBasicLine>
           <BottomContentBasicLine>
@@ -245,34 +245,34 @@ export default () => {
               150
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_15_nominal_160}
+              {unitPrices?.slump_150_nominal_16}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_15_nominal_180}
+              {unitPrices?.slump_150_nominal_18}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_15_nominal_210}
+              {unitPrices?.slump_150_nominal_21}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_15_nominal_240}
+              {unitPrices?.slump_150_nominal_24}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_15_nominal_270}
+              {unitPrices?.slump_150_nominal_27}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_15_nominal_300}
+              {unitPrices?.slump_150_nominal_30}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_15_nominal_350}
+              {unitPrices?.slump_150_nominal_35}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_15_nominal_400}
+              {unitPrices?.slump_150_nominal_40}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_15_nominal_450}
+              {unitPrices?.slump_150_nominal_45}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem style={{ borderRight: 'none' }}>
-              {unitPrices?.slump_15_nominal_500}
+              {unitPrices?.slump_150_nominal_50}
             </BottomContentWhiteItem>
           </BottomContentBasicLine>
           <BottomContentBasicLine>
@@ -280,35 +280,34 @@ export default () => {
               180
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_18_nominal_160}
+              {unitPrices?.slump_180_nominal_16}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_18_nominal_180}
+              {unitPrices?.slump_180_nominal_18}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_18_nominal_210}
+              {unitPrices?.slump_180_nominal_21}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_18_nominal_240}
+              {unitPrices?.slump_180_nominal_24}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_18_nominal_270}
+              {unitPrices?.slump_180_nominal_27}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_18_nominal_300}
+              {unitPrices?.slump_180_nominal_30}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_18_nominal_350}
+              {unitPrices?.slump_180_nominal_35}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {' '}
-              {unitPrices?.slump_18_nominal_400}
+              {unitPrices?.slump_180_nominal_40}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_18_nominal_450}
+              {unitPrices?.slump_180_nominal_45}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem style={{ borderRight: 'none' }}>
-              {unitPrices?.slump_18_nominal_500}
+              {unitPrices?.slump_180_nominal_50}
             </BottomContentWhiteItem>
           </BottomContentBasicLine>
           <BottomContentBasicLine>
@@ -318,34 +317,34 @@ export default () => {
               210
             </BottomContentGrayItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_21_nominal_160}
+              {unitPrices?.slump_210_nominal_16}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_21_nominal_180}
+              {unitPrices?.slump_210_nominal_18}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_21_nominal_210}
+              {unitPrices?.slump_210_nominal_21}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_21_nominal_240}
+              {unitPrices?.slump_210_nominal_24}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_21_nominal_270}
+              {unitPrices?.slump_210_nominal_27}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_21_nominal_300}
+              {unitPrices?.slump_210_nominal_30}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_21_nominal_350}
+              {unitPrices?.slump_210_nominal_35}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_21_nominal_400}
+              {unitPrices?.slump_210_nominal_40}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem>
-              {unitPrices?.slump_21_nominal_450}
+              {unitPrices?.slump_210_nominal_45}
             </BottomContentWhiteItem>
             <BottomContentWhiteItem style={{ borderRight: 'none' }}>
-              {unitPrices?.slump_21_nominal_500}
+              {unitPrices?.slump_210_nominal_50}
             </BottomContentWhiteItem>
           </BottomContentBasicLine>
         </BottomContentWrap>
