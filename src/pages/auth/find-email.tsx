@@ -9,11 +9,16 @@ import { me } from '@data/auth';
 import { useNavigate } from 'react-router-dom';
 import ImgModal from '@components/ImgModal';
 import HelperTxt from '@components/HelperTxt';
+import useWindowSize from '@hooks/useWindowSize';
+import { mobile } from '@utils/responsive';
 
 export default () => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  // 현재 가로 화면 사이즈
+  const { width } = useWindowSize();
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -40,14 +45,27 @@ export default () => {
       <Container>
         <Title>이메일 찾기</Title>
         <Box>
+          <HelperTxt
+            helperTxt={
+              '본인인증 받으신 정보를 입력해 주세요. \n SMS로 이메일 주소를 보내드립니다.'
+            }
+            containerStyle={
+              width > 360 ? { display: 'none'} : { marginBottom: 20 }
+            }
+          />
           <Input
             label="이름"
             type="text"
             placeholder="이름을 입력해 주세요"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            containerStyle={{ marginBottom: 34 }}
+            containerStyle={
+              width > 360 ? { marginBottom: 34 } : {marginBottom: 24}}
             // errorMessage={}
+            inputStyle={
+              width > 360 ? {marginBottom :8} : {marginBottom :0}
+            }
+            errorMessageStyle={{display:'none'}}
           />
           <Input
             label="휴대폰 번호"
@@ -62,7 +80,9 @@ export default () => {
             helperTxt={
               '본인인증 받으신 정보를 입력해 주세요. \n SMS로 이메일 주소를 보내드립니다.'
             }
-            containerStyle={{ marginBottom: 30 }}
+            containerStyle={
+              width > 360 ? { marginBottom: 30 } : { display: 'none'}
+            }
           />
           <Button
             type={isFormValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
@@ -120,4 +140,6 @@ const Box = styled.div`
   padding: 50px 30px;
   border-radius: 20px;
   background-color: #fff;
+   /* emotion styled의 경우 */
+   ${mobile({ maxWidth: '360px' , padding: '50px 20px' })}
 `;

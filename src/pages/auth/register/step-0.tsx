@@ -2,6 +2,8 @@ import styled from '@emotion/styled';
 import AuthLayout from '@layout/AuthLayout';
 import { useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
+import { mobile } from '@utils/responsive';
+import useWindowSize from '@hooks/useWindowSize';
 
 export default () => {
   const navigate = useNavigate();
@@ -15,12 +17,15 @@ export default () => {
     });
   };
 
+  // 현재 가로 화면 사이즈
+  const { width } = useWindowSize();
+
   return (
     <AuthLayout>
       <ContainerWrapper>
         <Title>CONAZ에 오신 것을 환영합니다</Title>
         <SubTitle>
-          CONAZ 회원가입을 통해 다양한 혜택과 서비스를 이용하시기 바랍니다.
+          {width > 360 ? 'CONAZ 회원가입을 통해 다양한 혜택과 서비스를 이용하시기 바랍니다.' : '회원가입을 통해 다양한 혜택과 서비스를 이용하세요.'}
         </SubTitle>
         <ButtonWrap>
           <RegisterButtonL
@@ -53,6 +58,14 @@ const ContainerWrapper = styled.div`
   background-blend-mode: multiply;
   background-image: url(${getAssetURL('../assets/img/main.png')});
   background-size: cover;
+  ${mobile(
+    { backgroundImage: `url(${getAssetURL('../assets/img/bg.png')})`,
+      maxWidth: '360px' , 
+      maxHeight:'720px' , 
+      padding: '0px 20px 50px 20px' , 
+      backgroundSize : 'cover' , 
+      backgroundRepeat : 'no-repeat'
+    })}
 `;
 
 const ButtonWrap = styled.div`
@@ -63,6 +76,13 @@ const ButtonWrap = styled.div`
   align-items: center;
   align-self: center;
   justify-content: space-between;
+
+  ${mobile(
+    { 
+      maxWidth: '320px' , 
+      maxHeight:'56px' , 
+      fontSize: '16px' ,
+    })}
 `;
 
 const RegisterButtonL = styled.div`
@@ -78,6 +98,15 @@ const RegisterButtonL = styled.div`
   font-weight: 500;
   color: #fff;
   cursor: pointer;
+
+  ${mobile(
+    { 
+      maxWidth: '150px' , 
+      maxHeight:'56px' , 
+      fontSize: '16px' ,
+      lineHeight: '62px' ,
+      letterSpacing: '-0.4px' ,
+    })}
 `;
 
 const RegisterButtonR = styled.div`
@@ -93,6 +122,15 @@ const RegisterButtonR = styled.div`
   font-weight: 500;
   color: #000;
   cursor: pointer;
+
+  ${mobile(
+    { 
+      maxWidth: '150px' , 
+      maxHeight:'56px' , 
+      fontSize: '16px' ,
+      lineHeight: '62px' ,
+      letterSpacing: '-0.4px' ,
+    })}
 `;
 
 const SubTitle = styled.div`
@@ -101,6 +139,16 @@ const SubTitle = styled.div`
   font-weight: 200;
   font-size: 24px;
   color: #fff;
+  ${mobile(
+    { 
+      marginTop: '6px',
+      maxWidth: '295px' , 
+      maxHeight:'20px' , 
+      fontSize: '14px' ,
+      lineHeight: '15px' ,
+      letterSpacing: '-0.28px' ,
+      textShadow: '0 0 3px rgba(0,0,0,0.5)'
+    })}
 `;
 
 const Title = styled.div`
@@ -111,4 +159,13 @@ const Title = styled.div`
   font-weight: bold;
   color: #fff;
   line-height: 1.48;
+  ${mobile(
+    { 
+      maxWidth: '315px' , 
+      maxHeight:'35px' , 
+      fontSize: '24px' ,
+      lineHeight: '32px' ,
+      letterSpacing: '-0.48px' ,
+      textShadow: '0 0 5px rgba(0,0,0,0.5)'
+    })}
 `;

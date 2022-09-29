@@ -71,7 +71,7 @@ export default () => {
             onChange={(e) => setUsername(e.target.value)}
             // inline 스타일의 경우
             containerStyle={
-              width > 360 ? { marginBottom: 34 } : { marginBottom: 0 }
+              width > 360 ? { marginBottom: 34 } : { marginBottom: 16 }
             }
             errorMessage={
               username === ''
@@ -80,6 +80,13 @@ export default () => {
                 ? ''
                 : '이메일 형식이 올바르지 않습니다.'
             }
+            errorMessageStyle={
+              username === ''
+                ? {display: 'none'}
+                : isEmailValidated
+                ? {display: 'none'}
+                : {height : 17}
+            }
           />
           <Input
             label="비밀번호"
@@ -87,12 +94,19 @@ export default () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            containerStyle={{ marginBottom: 50 }}
+            inputStyle={
+              width > 360 ? {marginBottom: 8 } : {marginBottom : 0}
+            }
+            containerStyle={
+              width > 360 ? { marginBottom: 50 } : {marginBottom : 22}
+            }            
           />
           <Button
             type={isFormValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
             onClick={() => (isFormValidated ? handleLogin() : null)}
-            containerStyle={{ marginBottom: 28 }}
+            containerStyle={
+              width > 360 ? { marginBottom: 28 } : {marginBottom : 12}
+            }
           >
             로그인
           </Button>
@@ -149,7 +163,7 @@ const Box = styled.div`
   background-color: #fff;
 
   /* emotion styled의 경우 */
-  ${mobile({ maxWidth: '320px' })}
+  ${mobile({ maxWidth: '360px' , padding: '50px 20px' })}
 `;
 
 const TextButtonWrap = styled.div`

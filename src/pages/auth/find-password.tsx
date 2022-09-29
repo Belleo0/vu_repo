@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import TextModal from '@components/TextModal';
 import HelperTxt from '@components/HelperTxt';
 import ImgModal from '@components/ImgModal';
+import useWindowSize from '@hooks/useWindowSize';
+import { mobile } from '@utils/responsive';
 
 export default () => {
   const dispatch = useDispatch();
@@ -17,6 +19,9 @@ export default () => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
+
+  // 현재 가로 화면 사이즈
+  const { width } = useWindowSize();
 
   const isEmailValidated = useMemo(() => {
     const regex =
@@ -57,13 +62,21 @@ export default () => {
       <Container>
         <Title>비밀번호 찾기</Title>
         <Box>
+          <HelperTxt
+            helperTxt={
+              '가입 시 등록하신 이메일 주소를 입력해 주세요. \n 비밀번호 재설정 링크를 보내드립니다.'
+            }
+            containerStyle={
+              width > 360 ? { display: 'none' } : {marginBottom: 20}}
+          />
+
           <Input
             label="이메일"
             type="email"
             placeholder="이메일을 입력해 주세요"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            containerStyle={{ marginBottom: 14 }}
+            containerStyle={{ marginBottom: 30 }}
             errorMessage={
               username === ''
                 ? ''
@@ -71,12 +84,20 @@ export default () => {
                 ? ''
                 : '이메일 형식이 올바르지 않습니다.'
             }
+            errorMessageStyle={
+              username === ''
+                ? {display: 'none'}
+                : isEmailValidated
+                ? {display: 'none'}
+                : {height: 17}
+            }
           />
           <HelperTxt
             helperTxt={
               '가입 시 등록하신 이메일 주소를 입력해 주세요. \n 비밀번호 재설정 링크를 보내드립니다.'
             }
-            containerStyle={{ marginBottom: 30 }}
+            containerStyle={
+              width > 360 ? { marginBottom: 30 } : {display: 'none'}}
           />
           <Button
             type={isFormValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
@@ -133,4 +154,6 @@ const Box = styled.div`
   padding: 50px 30px;
   border-radius: 20px;
   background-color: #fff;
+  /* emotion styled의 경우 */
+  ${mobile({ maxWidth: '360px' , padding: '50px 20px' })}
 `;
