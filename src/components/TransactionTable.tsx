@@ -82,6 +82,8 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
     setConfirmModal(!confirmModal);
   };
 
+  console.log(data);
+
   return (
     <>
       <Container>
@@ -110,7 +112,7 @@ export default ({ data = [], revalidate }: ITransactionTable) => {
         {data.map((v: any) => (
           <CellWrap key={v?.id} selected={selectedIds.includes(v.id)}>
             <ValueCell>
-              <SupplyDate>{v?.supplyDate}</SupplyDate>
+              <SupplyDate>{v?.date}</SupplyDate>
             </ValueCell>
             <ValueCell style={{ flexDirection: 'column' }}>
               <FactoryCompanyName>{v?.name}</FactoryCompanyName>

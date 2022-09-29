@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { useLocation } from 'react-router-dom';
@@ -16,6 +16,10 @@ import Select from '../../components/Select';
 import Search from '../../components/SearchInput';
 
 import NaverMap from '@components/NaverMap';
+import useArchives from '@api/useArchives';
+import ArchivesInfoModal from '@components/ArchivesInfoModal';
+import NaverMapSpaceMarker from '@components/NaverMapSpaceMarker';
+import SpaceMarkerContent from '@components/SpaceMarkerContent';
 
 enum Active {
   ACTIVE,
@@ -57,50 +61,78 @@ const locationArr = [
   '전체',
 ];
 
-const listArr = [
-  {
-    name: '천마콘크리트공업(주)',
-    addr: '서울 강남구 삼성로 417',
-    tel: '02) 1234-1234',
-    rem: 720,
-    have: 110,
-  },
-  {
-    name: '천마콘크리트공업(주)',
-    addr: '서울 강남구 삼성로 417',
-    tel: '02) 1234-1234',
-    rem: 720,
-    have: 110,
-  },
-  {
-    name: '천마콘크리트공업(주)',
-    addr: '서울 송파구 성남대로 1541-32',
-    tel: '02) 1234-1234',
-    rem: 720,
-    have: 110,
-  },
-  {
-    name: '천마콘크리트공업(주)',
-    addr: '서울 강남구 삼성로 417',
-    tel: '02) 1234-1234',
-    rem: 720,
-    have: 110,
-  },
-];
-
 export default () => {
-  const state = useLocation();
-  // console.log(state);
+  const { state } = useLocation();
 
+  const [type, setType] = useState<string>('');
+  const { data: companyList } = useArchives(type);
+  const [remiconList, setRemiconList] = useState([]);
   const [select, setSelect] = useState<string>('회사명');
   const [search, setSearch] = useState<string>('');
   const [location, setLocation] = useState<string>('서울');
+  const [selectedCompanyInfo, setSelectedCompanyInfo] = useState<any>();
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [longitude, setLongitude] = useState<any>(0);
+  const [latitude, setLatitude] = useState<any>(0);
 
-  const selectItem = [{ label: '회사명', value: '회사명' }];
+  const selectItem = [
+    { label: '회사명', value: '회사명' },
+    { label: '주소', value: '주소' },
+  ];
+
+  const filteredList = useMemo(() => {
+    return companyList?.filter((v: any) => v.region === location);
+  }, [location]);
+
+  const filteredRemicon = useMemo(() => {
+    const result = remiconList?.filter((v: any) =>
+      v?.basic_address?.include(location),
+    );
+    console.log(result);
+    return result;
+  }, [location]);
 
   const handleLocationClick = (val: any | null) => {
     setLocation(val);
   };
+
+  const getFactoryList = async () => {
+    try {
+      const { data } = await api.get('/factories');
+      setRemiconList(data.result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (state) {
+      const value = Object.values(state);
+      if (value?.[0] === 'remicon') {
+        console.log('실행');
+        getFactoryList();
+      } else {
+        console.log(value?.[0]);
+        setType(value?.[0]);
+      }
+    }
+  }, []);
+
+  console.log(remiconList);
+
+  // useEffect(() => {
+  //   if (filteredList) {
+  //     const firstLongitude = filteredList?.[0].longitude;
+  //     const firstLatitude = filteredList?.[0].latitude;
+
+  //     console.log(firstLongitude, firstLatitude);
+
+  //     setLongitude(firstLongitude);
+  //     setLatitude(firstLatitude);
+  //   }
+  // }, [location]);
+
+  // console.log(longitude, latitude);
 
   return (
     <ReferenceRoomLayout>
@@ -155,6 +187,45 @@ export default () => {
             height: '520px',
             marginTop: '40px',
           }}
+        >
+          {type === 'remicon'
+            ? filteredRemicon
+            : filteredList?.map((v: any, i: number) => (
+                <NaverMapSpaceMarker
+                  key={v.id}
+                  lat={v.latitude}
+                  lng={v.longitude}
+                  content={
+                    <SpaceMarkerContent
+                      index={i}
+                      name={v?.company_name}
+                      address={''}
+                      distance={0}
+                      duration={0}
+                      onClick={() => {}}
+                      onInfo={() => {
+                        setIsInfoModalOpen(false);
+                        setSelectedCompanyInfo(v);
+                        setTimeout(() => {
+                          setIsInfoModalOpen(true);
+                        }, 250);
+                      }}
+                      onChangePath={() => {}}
+                      selected={false}
+                      hideWithoutName={false}
+                      totalDuration={'1'}
+                    />
+                  }
+                />
+              ))}
+        </NaverMap>
+        <ArchivesInfoModal
+          open={isInfoModalOpen}
+          onClose={() => {
+            setIsInfoModalOpen(false);
+            setSelectedCompanyInfo(null);
+          }}
+          data={selectedCompanyInfo}
         />
         <BottomText>리스트</BottomText>
         <BottomContentWrap>
@@ -170,17 +241,21 @@ export default () => {
               상세보기
             </BottomContentListItem>
           </BottomContentGuideLine>
-          {listArr.map((v, idx) => {
+          {filteredList?.map((v: any, i: number) => {
             return (
-              <BottomContentList>
-                <BottomContentListItem>{v.name}</BottomContentListItem>
-                <BottomContentListItem>{v.addr}</BottomContentListItem>
+              <BottomContentList key={i}>
+                <BottomContentListItem>{v.company_name}</BottomContentListItem>
+                <BottomContentListItem>{v.address}</BottomContentListItem>
                 <BottomContentListItem>{v.tel}</BottomContentListItem>
-                <BottomContentListItem>{v.rem}</BottomContentListItem>
-                <BottomContentListItem>{v.have}</BottomContentListItem>
+                <BottomContentListItem>{v?.rem}</BottomContentListItem>
+                <BottomContentListItem>{v?.have}</BottomContentListItem>
                 <BottomContentListItem style={{ width: '10%' }}>
                   <BottomContentListItemImage
                     src={getAssetUrl('../assets/search_bg_line_ic.svg')}
+                    onClick={() => {
+                      setSelectedCompanyInfo(v);
+                      setIsInfoModalOpen(true);
+                    }}
                   />
                 </BottomContentListItem>
               </BottomContentList>

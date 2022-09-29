@@ -10,6 +10,8 @@ import useIsFieldUser from '@hooks/useIsFieldUser';
 interface ITransactionFilter {
   data: any;
   onPrint: any;
+  setStartAt: any;
+  setEndAt: any;
 }
 
 const filterOptions = [
@@ -20,7 +22,12 @@ const filterOptions = [
   { label: '레미콘 일동', value: '1' },
 ];
 
-export default ({ data, onPrint }: ITransactionFilter) => {
+export default ({
+  data,
+  onPrint,
+  setStartAt,
+  setEndAt,
+}: ITransactionFilter) => {
   const isFieldUser = useIsFieldUser();
 
   const [radioButtons, setRadioButtons] = useState({
@@ -45,6 +52,8 @@ export default ({ data, onPrint }: ITransactionFilter) => {
       setEndDate(moment(today).format('YYYY-MM-DD'));
       return;
     }
+    setStartAt(new Date(startDate));
+    setEndAt(new Date(endDate));
   }, [startDate, endDate]);
 
   const handleFilterValue = (label: string, v: string) => {};
@@ -72,7 +81,9 @@ export default ({ data, onPrint }: ITransactionFilter) => {
           placeholder="yyyy.mm.dd"
           containerStyle={{ maxWidth: 130, marginLeft: 20, marginRight: 10 }}
           value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
+          onChange={(e) => {
+            setStartDate(e.target.value);
+          }}
         />
         ~
         <BlackInput

@@ -14,11 +14,13 @@ import MySiteSection from './MySiteSection';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '@hooks/useLocalStorage';
 import useSpaces from '@api/useSpaces';
+import axios from 'axios';
 
 export default () => {
   const navigate = useNavigate();
   const isLogin = useIsLogin();
   const [search, setSearch] = useState('');
+  const [banner, setBanner] = useState<any>();
 
   const { data = [] } = useSpaces('false');
   // const [myspaces, setMyspaces] = useState<any[]>([]);
@@ -49,8 +51,25 @@ export default () => {
     setState((prev: any) => ({ ...prev, searchItem: search }));
   }, [search]);
 
+  const getImage = async () => {
+    try {
+      const { data } = await axios.get('http://13.125.245.83:8090/api/banners');
+      console.log(data);
+      const files = data.files.banners_files;
+      setBanner(files);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(getImage());
+    console.log(banner);
+  }, []);
+
   return (
     <AuthLayout>
+      {/* <img src={`http://13.125.245.83:8090/uploads/${banner}.png`} /> */}
       <Container>
         {/* Section1 */}
         <SearchSection

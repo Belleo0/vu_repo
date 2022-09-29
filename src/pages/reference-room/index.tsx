@@ -10,20 +10,30 @@ import _03 from '../../assets/03_img.png';
 import _04 from '../../assets/04_img.png';
 import _05 from '../../assets/05_img.png';
 import ReferenceRoomLayout from '@layout/ReferenceRoomLayout';
+import useArchives from '@api/useArchives';
 
 export default () => {
   const [item, setItem] = useState('');
   const navigate = useNavigate();
 
   const nxtStepHandler = (type: string) => {
-    setItem(type);
+    switch (type) {
+      case '레미콘':
+        return setItem('remicon');
+      case '아스콘':
+        return setItem('ASPHALT');
+      case '파일':
+        return setItem('FILE');
+      case '펌프카':
+        return setItem('PUMPCAR');
+    }
   };
 
   useEffect(() => {
     if (item?.length > 0) {
       navigate('/reference-room/info', {
         state: {
-          select: item,
+          type: item,
         },
       });
     }

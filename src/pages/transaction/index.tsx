@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import SpaceLayout from '@layout/SpaceLayout';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
@@ -9,62 +9,13 @@ import TransactionFilter from '@components/TransactionFilter';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import FactoryTransactionTable from '@components/FactoryTransactionTable';
 import { onPrint } from '@utils/onPrint';
-
-const transactions = [
-  {
-    id: 1,
-    supplyDate: '2022.06.08',
-    name: '(주)표주레미콘',
-    basic_address: '부산 영도구 해양로 225',
-    size: '25 - 24 - 150',
-    preAmount: 120,
-    amount: 124,
-    status: '0',
-  },
-  {
-    id: 2,
-    supplyDate: '2022.06.09',
-    name: '(주)표주레미콘2',
-    basic_address: '부산 영도구 해양로 225',
-    size: '25 - 24 - 150',
-    preAmount: 120,
-    amount: 124,
-    status: '1',
-  },
-  {
-    id: 3,
-    supplyDate: '2022.06.10',
-    name: '(주)표주레미콘3',
-    basic_address: '부산 영도구 해양로 225',
-    size: ['25 - 24 - 150'],
-    preAmount: 120,
-    amount: 124,
-    status: '2',
-  },
-  {
-    id: 4,
-    supplyDate: '2022.06.10',
-    name: '(주)표주레미콘4',
-    basic_address: '부산 영도구 해양로 225',
-    size: '25 - 24 - 150',
-    preAmount: 120,
-    amount: 124,
-    status: '0',
-  },
-  {
-    id: 5,
-    supplyDate: '2022.06.10',
-    name: '(주)표주레미콘4',
-    basic_address: '부산 영도구 해양로 225',
-    size: '25 - 24 - 150',
-    preAmount: 120,
-    amount: 124,
-    status: '1',
-  },
-];
+import useTransactions from '@api/useTransactions';
 
 export default () => {
   const isFieldUser = useIsFieldUser();
+
+  const [startAt, setStartAt] = useState<Date>(new Date());
+  const [endAt, setEndAt] = useState<Date>(new Date());
 
   const { divRef, handleOnPrint } = onPrint();
   const selectedSpaceId = useSelectedSpaceId();
@@ -73,6 +24,8 @@ export default () => {
     isLoading,
     supplierMutate,
   } = useMySpaceInfo(selectedSpaceId);
+
+  const { data: transactions, refetch } = useTransactions(startAt, endAt);
 
   return (
     <SpaceLayout>
@@ -87,7 +40,12 @@ export default () => {
             />
           </BarSection>
           <FilterSection>
-            <TransactionFilter data={transactions} onPrint={handleOnPrint} />
+            <TransactionFilter
+              data={transactions}
+              onPrint={handleOnPrint}
+              setStartAt={setStartAt}
+              setEndAt={setEndAt}
+            />
           </FilterSection>
           <BottomSection>
             {isFieldUser ? (
