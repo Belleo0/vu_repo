@@ -1,0 +1,91 @@
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+ * [new branch]      dev             -> origin/dev
+ * [new branch]      feature         -> origin/feature
+ * [new branch]      feature_dokyung -> origin/feature_dokyung
+ * [new branch]      feature_ipse    -> origin/feature_ipse
+ * [new branch]      feature_jiwon   -> origin/feature_jiwon
+   51420c0..1bf99e8  master          -> origin/master
+51420c0392e7a4486ff6220ccce81f8108fd6aa8
+fatal: ambiguous argument 'origin/main': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+origin/main
+No local changes to save
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+ * branch            master     -> FETCH_HEAD
+Updating 51420c0..1bf99e8
+Fast-forward
+ src/components/TransactionTable.tsx | 16 +++++++++-------
+ src/pages/reference-room/index2.tsx | 34 ++++++++++++++--------------------
+ 2 files changed, 23 insertions(+), 27 deletions(-)
+풀 완료
+/home/ubuntu/conaz-front/client.sh: 18: npm: not found
+/home/ubuntu/conaz-front/client.sh: 19: npm: not found
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+   1bf99e8..ab7ba09  feature         -> origin/feature
+ * [new branch]      feature-Hoi     -> origin/feature-Hoi
+   1bf99e8..ab7ba09  feature_dokyung -> origin/feature_dokyung
+ab7ba09899e85a2bba762aad7649b41e6f79a5d4
+fatal: ambiguous argument 'origin/main': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+origin/main
+No local changes to save
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+ * branch            master     -> FETCH_HEAD
+Already up to date.
+풀 완료
+/home/ubuntu/conaz-front/client.sh: 18: npm: not found
+/home/ubuntu/conaz-front/client.sh: 19: npm: not found
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+   c4c71ca..589b06c  feature-Hoi -> origin/feature-Hoi
+ab7ba09899e85a2bba762aad7649b41e6f79a5d4
+fatal: ambiguous argument 'origin/main': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+origin/main
+No local changes to save
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+ * branch            master     -> FETCH_HEAD
+Already up to date.
+풀 완료
+/home/ubuntu/conaz-front/client.sh: 18: npm: not found
+/home/ubuntu/conaz-front/client.sh: 19: npm: not found
+ab7ba09899e85a2bba762aad7649b41e6f79a5d4
+fatal: ambiguous argument 'origin/main': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+origin/main
+No local changes to save
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+ * branch            master     -> FETCH_HEAD
+Already up to date.
+풀 완료
+/home/ubuntu/conaz-front/client.sh: 18: npm: not found
+/home/ubuntu/conaz-front/client.sh: 19: npm: not found
+ab7ba09899e85a2bba762aad7649b41e6f79a5d4
+fatal: ambiguous argument 'origin/main': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+origin/main
+No local changes to save
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+ * branch            master     -> FETCH_HEAD
+Already up to date.
+풀 완료
+/home/ubuntu/conaz-front/client.sh: 18: npm: not found
+/home/ubuntu/conaz-front/client.sh: 19: npm: not found
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+   589b06c..159599c  feature-Hoi -> origin/feature-Hoi
+ab7ba09899e85a2bba762aad7649b41e6f79a5d4
+fatal: ambiguous argument 'origin/main': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+origin/main
+No local changes to save
+From https://rsad.backlog.com/git/TONGYANG/conaz_front
+ * branch            master     -> FETCH_HEAD
+Already up to date.
+풀 완료
+/home/ubuntu/conaz-front/client.sh: 18: npm: not found
+/home/ubuntu/conaz-front/client.sh: 19: npm: not found

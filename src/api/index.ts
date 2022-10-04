@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 export const getAPIHost = () => {
-  return 'http://13.125.245.83:9997';
+ return 'https://devapi.rsad.work/';
+       	//return 'http://13.125.245.83:9997';
   // return 'https://conaz-core-api.02.dance';
   // return 'http://localhost:8090';
 };
