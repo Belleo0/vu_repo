@@ -60,16 +60,17 @@ export default () => {
   return (
     <AuthLayout>
       <Container>
-        <Title style={
-          width > 360 ? {} : {display:'none'}
-        }>비밀번호 찾기</Title>
+        <Title style={width > 360 ? {} : { display: 'none' }}>
+          비밀번호 찾기
+        </Title>
         <Box>
           <HelperTxt
             helperTxt={
               '가입 시 등록하신 이메일 주소를 입력해 주세요. \n 비밀번호 재설정 링크를 보내드립니다.'
             }
             containerStyle={
-              width > 360 ? { display: 'none' } : {marginBottom: 20}}
+              width > 360 ? { display: 'none' } : { marginBottom: 20 }
+            }
           />
 
           <Input
@@ -88,10 +89,10 @@ export default () => {
             }
             errorMessageStyle={
               username === ''
-                ? {display: 'none'}
+                ? { display: 'none' }
                 : isEmailValidated
-                ? {display: 'none'}
-                : {height: 17}
+                ? { display: 'none' }
+                : { height: 17 }
             }
           />
           <HelperTxt
@@ -99,7 +100,8 @@ export default () => {
               '가입 시 등록하신 이메일 주소를 입력해 주세요. \n 비밀번호 재설정 링크를 보내드립니다.'
             }
             containerStyle={
-              width > 360 ? { marginBottom: 30 } : {display: 'none'}}
+              width > 360 ? { marginBottom: 30 } : { display: 'none' }
+            }
           />
           <Button
             type={isFormValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
@@ -157,5 +159,5 @@ const Box = styled.div`
   border-radius: 20px;
   background-color: #fff;
   /* emotion styled의 경우 */
-  ${mobile({ maxWidth: '360px' , height: '100%' , padding: '40px 20px' })}
+  ${mobile({ maxWidth: '360px', height: '100%', padding: '40px 20px' })}
 `;

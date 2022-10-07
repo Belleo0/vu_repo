@@ -54,9 +54,9 @@ export default () => {
   return (
     <AuthLayout>
       <Container>
-        <Title style={
-          width > 360 ? {} : {display:'none'}
-        }>비밀번호 재설정</Title>
+        <Title style={width > 360 ? {} : { display: 'none' }}>
+          비밀번호 재설정
+        </Title>
         <Box>
           <Input
             label="새 비밀번호"
@@ -65,7 +65,7 @@ export default () => {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             containerStyle={
-              width > 360 ? { marginBottom: 34 } : {marginBottom : 16}
+              width > 360 ? { marginBottom: 34 } : { marginBottom: 16 }
             }
             errorMessage={
               newPassword === ''
@@ -76,10 +76,10 @@ export default () => {
             }
             errorMessageStyle={
               newPassword === ''
-                ? {display:'none'}
+                ? { display: 'none' }
                 : isPasswordValidated
-                ? {display:'none'}
-                : {height: 17}
+                ? { display: 'none' }
+                : { height: 17 }
             }
           />
           <Input
@@ -89,7 +89,7 @@ export default () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             containerStyle={
-              width > 360 ? { marginBottom: 14 } : {marginBottom : 24}
+              width > 360 ? { marginBottom: 14 } : { marginBottom: 24 }
             }
             errorMessage={
               confirmPassword === ''
@@ -100,10 +100,10 @@ export default () => {
             }
             errorMessageStyle={
               confirmPassword === ''
-                ? {display: 'none'}
+                ? { display: 'none' }
                 : isConfirmPasswordValidated
-                ? {display:'none'}
-                : {height: 17}
+                ? { display: 'none' }
+                : { height: 17 }
             }
           />
           <Button
@@ -146,6 +146,6 @@ const Box = styled.div`
   padding: 50px 30px;
   border-radius: 20px;
   background-color: #fff;
-   /* emotion styled의 경우 */
-   ${mobile({ maxWidth: '360px' , height:'100%' , padding: '40px 20px' })}
+  /* emotion styled의 경우 */
+  ${mobile({ maxWidth: '360px', height: '100%', padding: '40px 20px' })}
 `;

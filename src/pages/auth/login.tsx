@@ -61,9 +61,7 @@ export default () => {
   return (
     <AuthLayout>
       <Container>
-        <Title style={
-          width > 360 ? {} : {display:'none'}
-        }>로그인</Title>
+        <Title style={width > 360 ? {} : { display: 'none' }}>로그인</Title>
         <Box>
           <Input
             label="이메일"
@@ -84,10 +82,10 @@ export default () => {
             }
             errorMessageStyle={
               username === ''
-                ? {display: 'none'}
+                ? { display: 'none' }
                 : isEmailValidated
-                ? {display: 'none'}
-                : {height : 17}
+                ? { display: 'none' }
+                : { height: 17 }
             }
           />
           <Input
@@ -96,18 +94,16 @@ export default () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            inputStyle={
-              width > 360 ? {marginBottom: 8 } : {marginBottom : 0}
-            }
+            inputStyle={width > 360 ? { marginBottom: 8 } : { marginBottom: 0 }}
             containerStyle={
-              width > 360 ? { marginBottom: 50 } : {marginBottom : 22}
-            }            
+              width > 360 ? { marginBottom: 50 } : { marginBottom: 22 }
+            }
           />
           <Button
             type={isFormValidated ? ButtonType.PRIMARY : ButtonType.GRAY}
             onClick={() => (isFormValidated ? handleLogin() : null)}
             containerStyle={
-              width > 360 ? { marginBottom: 28 } : {marginBottom : 12}
+              width > 360 ? { marginBottom: 28 } : { marginBottom: 12 }
             }
           >
             로그인
@@ -165,7 +161,7 @@ const Box = styled.div`
   background-color: #fff;
 
   /* emotion styled의 경우 */
-  ${mobile({ maxWidth: '360px' , height: '100%' , padding: '100px 20px' })}
+  ${mobile({ maxWidth: '360px', height: '100%', padding: '100px 20px' })}
 `;
 
 const TextButtonWrap = styled.div`

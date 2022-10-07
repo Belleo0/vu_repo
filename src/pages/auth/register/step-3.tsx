@@ -61,7 +61,7 @@ export default () => {
 
   const backStepHandler = () => {
     navigate('/auth/register/step-2');
-  }
+  };
 
   // # Basic State
   const [company, setCompany] = useState<any>(); // 회사이름
@@ -235,7 +235,7 @@ export default () => {
             <ProgressCircle>3</ProgressCircle>
           </ProgressBar>
           <MainTitleMobile>
-          {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
+            {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
           </MainTitleMobile>
           <MainContentBox>
             {isUserInsert && companyType === 'con' ? (
@@ -387,7 +387,13 @@ export default () => {
               </>
             ) : (
               <>
-                <LineWrapper style={width > 360 ? { marginBottom: '31px' } : {marginBottom : '25px'}}>
+                <LineWrapper
+                  style={
+                    width > 360
+                      ? { marginBottom: '31px' }
+                      : { marginBottom: '25px' }
+                  }
+                >
                   <RepeatTitle>
                     {companyType == 'con' ? '회사명' : '레미콘 공장 상호명'}
                   </RepeatTitle>
@@ -434,7 +440,11 @@ export default () => {
                   )}
                 </LineWrapper>
 
-                <LineWrapper style={width > 360 ? { marginTop: '31px' } : {marginTop:'0px'}}>
+                <LineWrapper
+                  style={
+                    width > 360 ? { marginTop: '31px' } : { marginTop: '0px' }
+                  }
+                >
                   <RepeatTitle>직위/직급 (선택)</RepeatTitle>
                   <TextWrapper>
                     <Input
@@ -491,29 +501,29 @@ export default () => {
               </>
             )}
           </MainContentBox>
-            <ButtonWrapper>
-              <BackButtonL
-                  type={ButtonType.INABLE}
-                  onClick={()=> backStepHandler()}
-                  style={
-                    width > 360? {display:'none'} : {display:'inline-block'}
-                  }
-                >
-                  이전
-              </BackButtonL>
-              {isValid ? (
-                <RegistButton
-                  type={ButtonType.ABLE}
-                  onClick={() => {
-                    requestSignUpHandler();
-                  }}
-                >
-                  회원가입
-                </RegistButton>
-              ) : (
-                <RegistButton type={ButtonType.INABLE}>회원가입</RegistButton>
-              )}
-            </ButtonWrapper>
+          <ButtonWrapper>
+            <BackButtonL
+              type={ButtonType.INABLE}
+              onClick={() => backStepHandler()}
+              style={
+                width > 360 ? { display: 'none' } : { display: 'inline-block' }
+              }
+            >
+              이전
+            </BackButtonL>
+            {isValid ? (
+              <RegistButton
+                type={ButtonType.ABLE}
+                onClick={() => {
+                  requestSignUpHandler();
+                }}
+              >
+                회원가입
+              </RegistButton>
+            ) : (
+              <RegistButton type={ButtonType.INABLE}>회원가입</RegistButton>
+            )}
+          </ButtonWrapper>
         </TermsWrapper>
       </Container>
     </AuthLayout>
@@ -527,12 +537,13 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
-  ${mobile({ maxWidth: '360px', marginTop:'0px'})}
+  ${mobile({ maxWidth: '360px', marginTop: '0px' })}
 `;
 
 const MainTitleMobile = styled.div`
   display: none;
-  ${mobile({ display:'block',
+  ${mobile({
+    display: 'block',
     height: '29px',
     float: 'left',
     fontSize: '20px',
@@ -541,7 +552,7 @@ const MainTitleMobile = styled.div`
     fontStyle: 'normal',
     letterSpacing: '-0.44px',
     color: '#000',
-    margin: '12px 70px 46px 20px'
+    margin: '12px 70px 46px 20px',
   })}
 `;
 const MainTitlePc = styled.div`
@@ -554,7 +565,7 @@ const MainTitlePc = styled.div`
   text-align: center;
   color: #000;
 
-  ${mobile({ display:'none'})}
+  ${mobile({ display: 'none' })}
 `;
 
 const TermsWrapper = styled.div<{ type: MainHeightType }>`
@@ -569,7 +580,13 @@ const TermsWrapper = styled.div<{ type: MainHeightType }>`
     padding: ${paddingPixel[type]};
   `}
 
-  ${mobile({ maxWidth: '360px' , height: '100%' , marginTop: '0', marginBottom:'0' , padding : '0px'})}
+  ${mobile({
+    maxWidth: '360px',
+    height: '100%',
+    marginTop: '0',
+    marginBottom: '0',
+    padding: '0px',
+  })}
 `;
 
 const ProgressBar = styled.span`
@@ -580,7 +597,7 @@ const ProgressBar = styled.span`
   justify-content: center;
   flex-direction: row;
 
-  ${mobile({ float : 'left' , margin: '22px 200px 0px 20px'})}
+  ${mobile({ float: 'left', margin: '22px 200px 0px 20px' })}
 `;
 
 const ProgressCircle = styled.div`
@@ -598,7 +615,12 @@ const ProgressCircle = styled.div`
   text-align: center;
   color: #fff;
 
-  ${mobile({ width: '18px', height: '18px' , padding: '4px 6px 1px 6px' , fontSize: '10px'})}
+  ${mobile({
+    width: '18px',
+    height: '18px',
+    padding: '4px 6px 1px 6px',
+    fontSize: '10px',
+  })}
 `;
 
 const ProgressDashed = styled.img`
@@ -620,7 +642,12 @@ const ProgressCircleOff = styled.div`
   color: #999999;
   border: 1px solid #999;
 
-  ${mobile({ width: '18px', height: '18px' , fontSize: '10px', padding: '3px 5px 3px 5px'})}
+  ${mobile({
+    width: '18px',
+    height: '18px',
+    fontSize: '10px',
+    padding: '3px 5px 3px 5px',
+  })}
 `;
 
 const MainContentBox = styled.div`
@@ -629,7 +656,7 @@ const MainContentBox = styled.div`
   border-radius: 6px;
   background-color: #fff;
 
-  ${mobile({ maxWidth: '320px' , margin: '22px 20px 76px 20px'})}
+  ${mobile({ maxWidth: '320px', margin: '22px 20px 76px 20px' })}
 `;
 
 const RepeatTitle = styled.span`
@@ -641,7 +668,7 @@ const RepeatTitle = styled.span`
   text-align: center;
   color: #444;
 
-  ${mobile({ display :'block' , float:'left' , marginBottom: '10px'})}
+  ${mobile({ display: 'block', float: 'left', marginBottom: '10px' })}
 `;
 
 const LineWrapper = styled.div`
@@ -652,19 +679,21 @@ const LineWrapper = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  ${mobile({ width:'100%' , 
-    height: '66px' , 
-    display:'flex' , 
-    borderTop : '1px solid #e3e3e3'})}
+  ${mobile({
+    width: '100%',
+    height: '66px',
+    display: 'flex',
+    borderTop: '1px solid #e3e3e3',
+  })}
 `;
 
-const BackButtonL = styled.div<{ type: ButtonType}>`
-  width:150px;
+const BackButtonL = styled.div<{ type: ButtonType }>`
+  width: 150px;
   height: 46px;
   margin: 10px 20px 10px 20px;
   border-radius: 6px;
   color: #222222;
-  padding-top:14px;
+  padding-top: 14px;
   background-color: #f2f2f2;
   border-color: #f2f2f2;
   font-weight: 500;
@@ -693,9 +722,7 @@ const RegistButton = styled.div<{ type: ButtonType }>`
     cursor: ${cursor[type]};
   `}
 
-  ${mobile({ width:'150px', 
-    height:'46px' ,
-    margin: '10px 0px 10px 0px'})}
+  ${mobile({ width: '150px', height: '46px', margin: '10px 0px 10px 0px' })}
 `;
 
 const TextWrapper = styled.div`

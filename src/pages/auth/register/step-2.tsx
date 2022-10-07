@@ -67,7 +67,7 @@ export default () => {
 
   const backStepHandler = () => {
     navigate('/auth/register/step-1');
-  }
+  };
 
   const companyName: string = ''; //추후 초대받은 회사가 있다면 분기에 따라 val 변경
 
@@ -292,12 +292,16 @@ export default () => {
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
           <MainTitleMobile>
-          {companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
+            {companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
           </MainTitleMobile>
           <MainContentBox>
             <LineWrapper
-              style={emailCodeVisible ? {} : { marginBottom: '13px' }
-                && width > 360 ? {marginBottom: 13} : {marginBottom : 4 }
+              style={
+                emailCodeVisible
+                  ? {}
+                  : { marginBottom: '13px' } && width > 360
+                  ? { marginBottom: 13 }
+                  : { marginBottom: 4 }
               }
             >
               <RepeatTitle>이메일</RepeatTitle>
@@ -320,9 +324,7 @@ export default () => {
                       : ''
                   }
                   errorMessageStyle={
-                    !emailValid && email.length > 0
-                      ? {marginBottom : 16}
-                      : {}
+                    !emailValid && email.length > 0 ? { marginBottom: 16 } : {}
                   }
                 />
                 <SendButton
@@ -333,9 +335,7 @@ export default () => {
                     emailValid ? requestEmailValidateHandler() : null;
                   }}
                   style={
-                    !emailValid && email.length > 0
-                      ? {marginBottom : 33}
-                      : {}
+                    !emailValid && email.length > 0 ? { marginBottom: 33 } : {}
                   }
                 >
                   {isEmailDone ? '인증완료' : '이메일 인증'}
@@ -345,9 +345,13 @@ export default () => {
 
             {emailCodeVisible ? (
               <LineWrapper>
-                <TextWrapper style={
-                  width > 360 ? { margin: '0 0 14px' } : {marginTop: '-10px' , marginBottom:'4px'}
-              }>
+                <TextWrapper
+                  style={
+                    width > 360
+                      ? { margin: '0 0 14px' }
+                      : { marginTop: '-10px', marginBottom: '4px' }
+                  }
+                >
                   <Input
                     containerStyle={{
                       width: '250px',
@@ -398,7 +402,7 @@ export default () => {
                   containerStyle={{
                     width: '380px',
                     margin: 0,
-                    marginBottom: 4
+                    marginBottom: 4,
                   }}
                   style={{ padding: '11px 20px' }}
                   type="text"
@@ -416,14 +420,15 @@ export default () => {
               <TextWrapper style={{ flexDirection: 'column' }}>
                 <Input
                   containerStyle={
-                    width > 360 ? {
-                    width: '380px',
-                    margin: 0,
-                    height: '42px',
-                  } : {width: '320px' , marginBottom: 2}}
-                  errorMessageStyle={
-                    {display: 'none'}
+                    width > 360
+                      ? {
+                          width: '380px',
+                          margin: 0,
+                          height: '42px',
+                        }
+                      : { width: '320px', marginBottom: 2 }
                   }
+                  errorMessageStyle={{ display: 'none' }}
                   style={{ padding: '11px 20px' }}
                   type="password"
                   onChange={(e) => {
@@ -436,11 +441,14 @@ export default () => {
                 />
                 <Input
                   containerStyle={
-                    width > 360 ? {
-                    width: '380px',
-                    marginTop: '13px',
-                  } : {width: '320px', marginBottom: '4px'}}
-                  style={{ padding: '11px 20px'}}
+                    width > 360
+                      ? {
+                          width: '380px',
+                          marginTop: '13px',
+                        }
+                      : { width: '320px', marginBottom: '4px' }
+                  }
+                  style={{ padding: '11px 20px' }}
                   type="password"
                   onChange={(e) => {
                     isValidHandler(e.target.value, 'password2');
@@ -454,14 +462,16 @@ export default () => {
                   }
                   errorMessageStyle={
                     !isPasswordDone2 && password2.length > 0
-                      ? {height:17}
-                      : {display:'none'}
+                      ? { height: 17 }
+                      : { display: 'none' }
                   }
                 />
               </TextWrapper>
             </LineWrapper>
 
-            <LineWrapper style={width > 360 ? { marginBottom: 0 } : { height:72.5}}>
+            <LineWrapper
+              style={width > 360 ? { marginBottom: 0 } : { height: 72.5 }}
+            >
               <RepeatTitle>휴대폰 번호</RepeatTitle>
               <TextWrapper>
                 <Input
@@ -476,8 +486,10 @@ export default () => {
                   }}
                   value={phone}
                   placeholder={
-                    width > 360 ? " '-' 입력 제외(번호만 입력해 주세요)" : " '-' 입력 제외(숫자만 입력)"}
-                  
+                    width > 360
+                      ? " '-' 입력 제외(번호만 입력해 주세요)"
+                      : " '-' 입력 제외(숫자만 입력)"
+                  }
                 />
                 <SendButton
                   type={phoneValid ? AbleType.ABLE : AbleType.INABLE}
@@ -499,7 +511,10 @@ export default () => {
                       margin: 0,
                     }}
                     style={
-                      width > 360 ? { padding: '11px 20px' } : { padding: '11px 20px'}}
+                      width > 360
+                        ? { padding: '11px 20px' }
+                        : { padding: '11px 20px' }
+                    }
                     type="text"
                     onChange={(e) => {
                       isValidHandler(e.target.value, 'phoneCode');
@@ -540,9 +555,9 @@ export default () => {
           <ButtonWrapper>
             <BackButtonL
               type={ButtonType.INABLE}
-              onClick={()=> backStepHandler()}
+              onClick={() => backStepHandler()}
               style={
-                width > 360? {display:'none'} : {display:'inline-block'}
+                width > 360 ? { display: 'none' } : { display: 'inline-block' }
               }
             >
               이전
@@ -580,14 +595,19 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
-  ${mobile({ maxWidth: '360px', height:'640px' , marginBottom:'0' , marginTop:'0px'})}
+  ${mobile({
+    maxWidth: '360px',
+    height: '640px',
+    marginBottom: '0',
+    marginTop: '0px',
+  })}
 `;
 
 const MainTitleMobile = styled.div`
   display: none;
-  ${mobile({ 
-    display:'block',
-    width:'260px',
+  ${mobile({
+    display: 'block',
+    width: '260px',
     height: '29px',
     float: 'left',
     fontSize: '20px',
@@ -596,7 +616,7 @@ const MainTitleMobile = styled.div`
     fontStyle: 'normal',
     letterSpacing: '-0.44px',
     color: '#000',
-    margin: '12px 70px 46px 20px'
+    margin: '12px 70px 46px 20px',
   })}
 `;
 const MainTitlePc = styled.div`
@@ -609,7 +629,7 @@ const MainTitlePc = styled.div`
   text-align: center;
   color: #000;
 
-  ${mobile({ display:'none'})}
+  ${mobile({ display: 'none' })}
 `;
 
 const TermsWrapper = styled.div`
@@ -618,7 +638,12 @@ const TermsWrapper = styled.div`
   padding: 30px 30px 50px 30px;
   border-radius: 20px;
   background-color: #fff;
-  ${mobile({ maxWidth: '360px' , height:'100%' , marginTop:'0px' , padding : '1px'})}
+  ${mobile({
+    maxWidth: '360px',
+    height: '100%',
+    marginTop: '0px',
+    padding: '1px',
+  })}
 `;
 
 const ProgressBar = styled.span`
@@ -628,7 +653,7 @@ const ProgressBar = styled.span`
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  ${mobile({ float : 'left' , margin: '22px 200px 0px 20px'})}
+  ${mobile({ float: 'left', margin: '22px 200px 0px 20px' })}
 `;
 
 const ProgressCircle = styled.div`
@@ -646,7 +671,12 @@ const ProgressCircle = styled.div`
   text-align: center;
   color: #fff;
 
-  ${mobile({ width: '18px', height: '18px' , padding: '4px 6px 1px 6px' , fontSize: '10px'})}
+  ${mobile({
+    width: '18px',
+    height: '18px',
+    padding: '4px 6px 1px 6px',
+    fontSize: '10px',
+  })}
 `;
 
 const ProgressDashed = styled.img`
@@ -661,7 +691,7 @@ const MainContentBox = styled.div`
   border-radius: 6px;
   background-color: #fff;
 
-  ${mobile({ maxWidth: '320px' , margin: '22px 20px 52px 20px'})}
+  ${mobile({ maxWidth: '320px', margin: '22px 20px 52px 20px' })}
 `;
 
 const RepeatTitle = styled.span`
@@ -672,7 +702,7 @@ const RepeatTitle = styled.span`
   letter-spacing: -0.26px;
   text-align: center;
   color: #444;
-  ${mobile({ display :'block' , float:'left' , marginBottom: '10px'})}
+  ${mobile({ display: 'block', float: 'left', marginBottom: '10px' })}
 `;
 
 const LineWrapper = styled.div`
@@ -746,23 +776,30 @@ const ProgressCircleOff = styled.div`
   color: #999999;
   border: 1px solid #999;
 
-  ${mobile({ width: '18px', height: '18px' , fontSize: '10px', padding: '3px 5px 3px 5px'})}
+  ${mobile({
+    width: '18px',
+    height: '18px',
+    fontSize: '10px',
+    padding: '3px 5px 3px 5px',
+  })}
 `;
 
 const ButtonWrapper = styled.div`
-  ${mobile({ width:'100%' , 
-    height: '66px' , 
-    display:'flex' , 
-    borderTop : '1px solid #e3e3e3'})}
+  ${mobile({
+    width: '100%',
+    height: '66px',
+    display: 'flex',
+    borderTop: '1px solid #e3e3e3',
+  })}
 `;
 
-const BackButtonL = styled.div<{ type: ButtonType}>`
-  width:150px;
+const BackButtonL = styled.div<{ type: ButtonType }>`
+  width: 150px;
   height: 46px;
   margin: 10px 20px 10px 20px;
   border-radius: 6px;
   color: #222222;
-  padding-top:14px;
+  padding-top: 14px;
   background-color: #f2f2f2;
   border-color: #f2f2f2;
   font-weight: 500;
@@ -790,7 +827,5 @@ const GoButtonR = styled.div<{ type: ButtonType }>`
     cursor: ${cursor[type]};
   `}
 
-  ${mobile({ width:'150px', 
-    height:'46px' ,
-    margin: '10px 0px 10px 0px'})}
+  ${mobile({ width: '150px', height: '46px', margin: '10px 0px 10px 0px' })}
 `;

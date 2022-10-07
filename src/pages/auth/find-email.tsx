@@ -43,16 +43,16 @@ export default () => {
   return (
     <AuthLayout>
       <Container>
-        <Title style={
-          width > 360 ? {} : {display:'none'}
-        }>이메일 찾기</Title>
+        <Title style={width > 360 ? {} : { display: 'none' }}>
+          이메일 찾기
+        </Title>
         <Box>
           <HelperTxt
             helperTxt={
               '본인인증 받으신 정보를 입력해 주세요. \n SMS로 이메일 주소를 보내드립니다.'
             }
             containerStyle={
-              width > 360 ? { display: 'none'} : { marginBottom: 20 }
+              width > 360 ? { display: 'none' } : { marginBottom: 20 }
             }
           />
           <Input
@@ -62,12 +62,11 @@ export default () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             containerStyle={
-              width > 360 ? { marginBottom: 34 } : {marginBottom: 24}}
-            // errorMessage={}
-            inputStyle={
-              width > 360 ? {marginBottom :8} : {marginBottom :0}
+              width > 360 ? { marginBottom: 34 } : { marginBottom: 24 }
             }
-            errorMessageStyle={{display:'none'}}
+            // errorMessage={}
+            inputStyle={width > 360 ? { marginBottom: 8 } : { marginBottom: 0 }}
+            errorMessageStyle={{ display: 'none' }}
           />
           <Input
             label="휴대폰 번호"
@@ -83,7 +82,7 @@ export default () => {
               '본인인증 받으신 정보를 입력해 주세요. \n SMS로 이메일 주소를 보내드립니다.'
             }
             containerStyle={
-              width > 360 ? { marginBottom: 30 } : { display: 'none'}
+              width > 360 ? { marginBottom: 30 } : { display: 'none' }
             }
           />
           <Button
@@ -142,6 +141,6 @@ const Box = styled.div`
   padding: 50px 30px;
   border-radius: 20px;
   background-color: #fff;
-   /* emotion styled의 경우 */
-   ${mobile({ maxWidth: '360px' , height: '100%' , padding: '40px 20px' })}
+  /* emotion styled의 경우 */
+  ${mobile({ maxWidth: '360px', height: '100%', padding: '40px 20px' })}
 `;

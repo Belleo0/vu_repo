@@ -9,8 +9,6 @@ import { css } from '@emotion/react';
 import useWindowSize from '@hooks/useWindowSize';
 import { mobile } from '@utils/responsive';
 
-
-
 enum ButtonType {
   'ABLE',
   'INABLE',
@@ -56,7 +54,7 @@ export default () => {
 
   const backStepHandler = () => {
     navigate('/auth/register/step-0');
-  }
+  };
 
   const [isAllChk, setIsAllChk] = useState<boolean>(false); // 전체동의
   const [chkList, setChkList] = useState<any>([]); // usr가 선택한 리스트를 넣어둔다
@@ -132,7 +130,7 @@ export default () => {
             <ProgressCircleOff>3</ProgressCircleOff>
           </ProgressBar>
           <MainTitleMobile>
-          {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
+            {!companyName ? companyName : 'CONAZ에 오신 것을 환영합니다'}
           </MainTitleMobile>
           <MiddleTitle>약관동의</MiddleTitle>
           <MainContentBox>
@@ -173,7 +171,11 @@ export default () => {
                     src={getAssetURL('../assets/check_01_ic_off.svg')}
                   />
                 )}
-                <RepeatTitle>{width > 360 ? '서비스 이용약관에 동의합니다.' : '서비스 이용약관 동의'}</RepeatTitle>
+                <RepeatTitle>
+                  {width > 360
+                    ? '서비스 이용약관에 동의합니다.'
+                    : '서비스 이용약관 동의'}
+                </RepeatTitle>
                 <RequireTitle>(필수)</RequireTitle>
               </TextWrapper>
               <MoreTitle>내용보기</MoreTitle>
@@ -197,7 +199,11 @@ export default () => {
                     src={getAssetURL('../assets/check_01_ic_off.svg')}
                   />
                 )}
-                <RepeatTitle>{width > 360 ? '개인정보 수집 및 이용에 동의합니다.' : '개인정보 수집 및 이용 동의'}</RepeatTitle>
+                <RepeatTitle>
+                  {width > 360
+                    ? '개인정보 수집 및 이용에 동의합니다.'
+                    : '개인정보 수집 및 이용 동의'}
+                </RepeatTitle>
                 <RequireTitle style={{ marginRight: '27px' }}>
                   (필수)
                 </RequireTitle>
@@ -223,7 +229,11 @@ export default () => {
                     src={getAssetURL('../assets/check_01_ic_off.svg')}
                   />
                 )}
-                <RepeatTitle>{width > 360 ? '이벤트/마케팅 수신에 동의합니다.' : '이벤트/마케팅 수신 동의'}</RepeatTitle>
+                <RepeatTitle>
+                  {width > 360
+                    ? '이벤트/마케팅 수신에 동의합니다.'
+                    : '이벤트/마케팅 수신 동의'}
+                </RepeatTitle>
                 <NoRequireTitle>(선택)</NoRequireTitle>
               </TextWrapper>
             </LineWrapper>
@@ -246,7 +256,9 @@ export default () => {
                     src={getAssetURL('../assets/check_01_ic_off.svg')}
                   />
                 )}
-                <RepeatTitle>{width > 360 ? '내용이 들어갑니다.' : '내용'}</RepeatTitle>
+                <RepeatTitle>
+                  {width > 360 ? '내용이 들어갑니다.' : '내용'}
+                </RepeatTitle>
                 <NoRequireTitle>(선택)</NoRequireTitle>
               </TextWrapper>
             </LineWrapper>
@@ -254,9 +266,9 @@ export default () => {
           <ButtonWrapper>
             <BackButtonL
               type={ButtonType.INABLE}
-              onClick={()=> backStepHandler()}
+              onClick={() => backStepHandler()}
               style={
-                width > 360? {display:'none'} : {display:'inline-block'}
+                width > 360 ? { display: 'none' } : { display: 'inline-block' }
               }
             >
               이전
@@ -293,12 +305,13 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
 
-  ${mobile({ maxWidth: '360px', marginTop:'0px'})}
+  ${mobile({ maxWidth: '360px', marginTop: '0px' })}
 `;
 
 const MainTitleMobile = styled.div`
   display: none;
-  ${mobile({ display:'block',
+  ${mobile({
+    display: 'block',
     height: '29px',
     float: 'left',
     fontSize: '20px',
@@ -307,7 +320,7 @@ const MainTitleMobile = styled.div`
     fontStyle: 'normal',
     letterSpacing: '-0.44px',
     color: '#000',
-    margin: '12px 80px 46px 20px'
+    margin: '12px 80px 46px 20px',
   })}
 `;
 const MainTitlePc = styled.div`
@@ -320,7 +333,7 @@ const MainTitlePc = styled.div`
   text-align: center;
   color: #000;
 
-  ${mobile({ display:'none'})}
+  ${mobile({ display: 'none' })}
 `;
 
 const TermsWrapper = styled.div`
@@ -331,7 +344,12 @@ const TermsWrapper = styled.div`
   border-radius: 20px;
   background-color: #fff;
 
-  ${mobile({ maxWidth: '360px' , height:'100%', marginTop:'0' , padding : '0px'})}
+  ${mobile({
+    maxWidth: '360px',
+    height: '100%',
+    marginTop: '0',
+    padding: '0px',
+  })}
 `;
 
 const ProgressBar = styled.span`
@@ -341,7 +359,7 @@ const ProgressBar = styled.span`
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  ${mobile({ float : 'left' , margin: '22px 200px 0px 20px'})}
+  ${mobile({ float: 'left', margin: '22px 200px 0px 20px' })}
 `;
 
 const ProgressCircle = styled.div`
@@ -356,7 +374,12 @@ const ProgressCircle = styled.div`
   text-align: center;
   color: #fff;
 
-  ${mobile({ width: '18px', height: '18px' , padding: '4px 6px 1px 6px' , fontSize: '10px'})}
+  ${mobile({
+    width: '18px',
+    height: '18px',
+    padding: '4px 6px 1px 6px',
+    fontSize: '10px',
+  })}
 `;
 
 const ProgressCircleOff = styled.div`
@@ -372,7 +395,12 @@ const ProgressCircleOff = styled.div`
   color: #999999;
   border: 1px solid #999;
 
-  ${mobile({ width: '18px', height: '18px' , fontSize: '10px', padding: '3px 5px 3px 5px'})}
+  ${mobile({
+    width: '18px',
+    height: '18px',
+    fontSize: '10px',
+    padding: '3px 5px 3px 5px',
+  })}
 `;
 
 const ProgressDashed = styled.img`
@@ -392,7 +420,7 @@ const MiddleTitle = styled.div`
   text-align: left;
   color: #444;
 
-  ${mobile({ fontSize: '14px', marginBottom: '10px', marginLeft:'20px'})}
+  ${mobile({ fontSize: '14px', marginBottom: '10px', marginLeft: '20px' })}
 `;
 
 const MainContentBox = styled.div`
@@ -404,7 +432,7 @@ const MainContentBox = styled.div`
   border: solid 1px #c7c7c7;
   background-color: #fff;
 
-  ${mobile({ maxWidth: '320px', margin: '0px 20px 223px 20px'})}
+  ${mobile({ maxWidth: '320px', margin: '0px 20px 223px 20px' })}
 `;
 
 const DistanceIcon = styled.img`
@@ -423,7 +451,7 @@ const RepeatTitle = styled.span`
   text-align: left;
   color: #000;
 
-  ${mobile({ display :'block' , float:'left' })}
+  ${mobile({ display: 'block', float: 'left' })}
 `;
 
 const LineWrapper = styled.div`
@@ -442,7 +470,7 @@ const LineGuard = styled.div`
   border-top: 1px solid #f2f2f2;
   margin: 14px 0;
 
-  ${mobile({ width: '280px'})}
+  ${mobile({ width: '280px' })}
 `;
 
 const RequireTitle = styled.span`
@@ -477,19 +505,21 @@ const MoreTitle = styled.span`
 `;
 
 const ButtonWrapper = styled.div`
-  ${mobile({ width:'100%' , 
-    height: '66px' , 
-    display:'flex' , 
-    borderTop : '1px solid #e3e3e3'})}
+  ${mobile({
+    width: '100%',
+    height: '66px',
+    display: 'flex',
+    borderTop: '1px solid #e3e3e3',
+  })}
 `;
 
-const BackButtonL = styled.div<{ type: ButtonType}>`
-  width:150px;
+const BackButtonL = styled.div<{ type: ButtonType }>`
+  width: 150px;
   height: 46px;
   margin: 10px 20px 10px 20px;
   border-radius: 6px;
   color: #999999;
-  padding-top:14px;
+  padding-top: 14px;
   background-color: #f2f2f2;
   border-color: #f2f2f2;
   font-weight: 500;
@@ -517,9 +547,7 @@ const GoButtonR = styled.div<{ type: ButtonType }>`
     cursor: ${cursor[type]};
   `}
 
-  ${mobile({ width:'150px', 
-    height:'46px' ,
-    margin: '10px 0px 10px 0px'})}
+  ${mobile({ width: '150px', height: '46px', margin: '10px 0px 10px 0px' })}
 `;
 
 const TextWrapper = styled.div`
