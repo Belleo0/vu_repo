@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+    <g transform="translate(-102 -232)">
+        <circle data-name="타원 320" cx="40" cy="40" r="40" transform="translate(102 232)" style="fill:#f2f2f2"/>
+        <g data-name="그룹 17085">
+            <g data-name="그룹 14154">
+                <path data-name="패스 5575" d="M30.414 4.12h-4.146V3.047a2.146 2.146 0 1 0-4.293 0V4.12c-4.293-2.259-5.659-2.259-9.952 0V3.047a2.146 2.146 0 1 0-4.293 0V4.12H3.583A2.683 2.683 0 0 0 .9 6.8v21.47a2.683 2.683 0 0 0 2.683 2.684h11.463a.537.537 0 0 0 0-1.073H3.583a1.615 1.615 0 0 1-1.61-1.61V11.635h30.051v6.051a.537.537 0 1 0 1.073 0V6.8a2.683 2.683 0 0 0-2.683-2.68zm-7.366-1.073a1.073 1.073 0 1 1 2.146 0v3.22a1.073 1.073 0 1 1-2.146 0zm-14.248 0a1.073 1.073 0 1 1 2.146 0v3.22a1.073 1.073 0 1 1-2.146 0zm23.221 7.514H1.973V6.8a1.615 1.615 0 0 1 1.61-1.61H7.73v1.077a2.146 2.146 0 1 0 4.293 0V5.194c4.293 2.259 5.659 2.259 9.952 0v1.073a2.146 2.146 0 1 0 4.293 0V5.194h4.147a1.615 1.615 0 0 1 1.61 1.61z" transform="translate(125.086 255.002)" style="stroke-width:.5px;fill:#222;stroke:#222"/>
+                <path data-name="패스 5585" d="M24.446 16.2a8.246 8.246 0 1 0 8.246 8.246 8.246 8.246 0 0 0-8.246-8.246zm0 15.223a6.977 6.977 0 1 1 6.977-6.977 6.977 6.977 0 0 1-6.977 6.977z" transform="translate(125.408 255.408)" style="stroke-width:.3px;fill:#222;stroke:#222"/>
+                <path data-name="패스 5603" d="M5.014 16.5a.5.5 0 0 1 .514.476v4.286H8.1a.478.478 0 1 1 0 .952H5.014a.5.5 0 0 1-.514-.476v-4.762a.5.5 0 0 1 .514-.476zm0 0" transform="translate(144.818 258.642)" style="stroke-width:.3px;fill:#222;stroke:#222"/>
+                <path data-name="사각형 11728" transform="translate(137.301 256.122)" style="fill:#f2f2f2" d="M0 0h9.5v6.854H0z"/>
+                <path data-name="사각형 11729" transform="translate(136.878 259.122)" style="stroke-width:.5px;fill:#222;stroke:#222" d="M0 0h10.245v1.024H0z"/>
+            </g>
+            <path data-name="사각형 11718" transform="translate(122 252)" style="fill:none" d="M0 0h40v40H0z"/>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,1 @@
+import{r as i}from"./index.fa23706f.js";const o=()=>{const[t,n]=i.exports.useState({width:void 0,height:void 0}),e=()=>{n({width:window.innerWidth,height:window.innerHeight})};return i.exports.useEffect(()=>(window.addEventListener("resize",e),e(),()=>window.removeEventListener("resize",e)),[]),t};var s=o;export{s as u};
