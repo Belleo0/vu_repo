@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-    <g style="stroke:#fff;fill:none">
-        <path style="stroke:none" d="M0 0h18v18H0z" transform="rotate(90 9 10)"/>
-        <path style="fill:none" d="M-.5-.5h19v19h-19z" transform="rotate(90 9 10)"/>
-    </g>
-    <path d="m0 0 4 4-4 4" transform="rotate(-90 9 3)" style="stroke:#000;stroke-linecap:round;stroke-linejoin:round;fill:none"/>
-</svg>

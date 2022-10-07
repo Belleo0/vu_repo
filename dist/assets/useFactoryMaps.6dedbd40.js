@@ -1,1 +1,0 @@
-import{d as m}from"./index.fa23706f.js";import{a as t}from"./Header.8f74d7dd.js";const e="FACTORY_MAPS";var _=(a,r,p,s)=>t([e,a,r,s],()=>m.get("/factories/maps",{params:a!==null?{field_id:a,duration:r,...p||{}}:{address:s,duration:r,...p||{}}}));export{_ as u};

@@ -1,1 +1,0 @@
-import{d as r}from"./index.fa23706f.js";import{u as a,a as o}from"./Header.8f74d7dd.js";const t="MY_SPACES";var u=s=>{const e=a();return o([t,s],()=>r.get(`/${e?"field":"factory"}-spaces`,{params:{is_hide:s}}))};export{u};

@@ -1,1 +1,0 @@
-import{r}from"./index.fa23706f.js";function n(e,o){const[t,a]=r.exports.useState(()=>JSON.parse(window.localStorage.getItem(e)||"{}")||o);return r.exports.useEffect(()=>{window.localStorage.setItem(e,JSON.stringify(t))},[t]),[t,a]}export{n as u};

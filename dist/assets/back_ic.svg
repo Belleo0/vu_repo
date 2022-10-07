@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
-    <g style="stroke:#fff;fill:none">
-        <path style="stroke:none" d="M0 0h20v20H0z" transform="translate(1 1)"/>
-        <path style="fill:none" d="M-.5-.5h21v21h-21z" transform="translate(1 1)"/>
-    </g>
-    <path data-name="패스 7272" d="m0 0 6 6-6 6" transform="rotate(180 7 8.5)" style="stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px;fill:none"/>
-</svg>

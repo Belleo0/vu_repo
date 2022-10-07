@@ -1,1 +1,0 @@
-import{d as t}from"./index.fa23706f.js";import{a as o}from"./Header.8f74d7dd.js";const d="FRIENDS_KEY";var f=r=>{const{data:s,error:a,refetch:e}=o([d,r],()=>t.get("/frineds",{params:r?{name:r}:null}));return{data:{friends:s,error:a,refetch:e}}};export{f as u};
