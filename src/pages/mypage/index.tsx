@@ -14,10 +14,14 @@ import TextModal from '@components/TextModal';
 import useUserInfo from '@hooks/useUserInfo';
 import api from '@api';
 import FileUpload from '@components/FileUpload';
-
+import useWindowSize from "../../hooks/useWindowSize"
+import MobileScreen from './mobile';
 export default () => {
   const userInfo = useUserInfo();
   const navigate = useNavigate();
+  const { width } = useWindowSize();
+
+  const isMobile = width <= 360 ? true : false;
 
   let initialState = {
     name: userInfo ? userInfo?.name : '',
@@ -29,6 +33,20 @@ export default () => {
     password: userInfo ? userInfo?.password : '',
     phone: userInfo ? userInfo?.phone : '',
   };
+
+  interface userData{
+name: string,
+ email: string,
+ companyName: string,
+ position: string,
+ department: string,
+ tel: string,
+ password: string,
+ phone: string,}
+
+
+
+
 
   const [userData, setUserData] = useState(initialState);
 
@@ -255,7 +273,12 @@ export default () => {
     }
   }, [isEmailCode, isPhoneCode, isPassword]);
 
-  return (
+  if(isMobile==true)
+  {
+    return <MobileScreen userData={userData}></MobileScreen>
+
+  }
+  else return (
     <MypageLayout>
       <Container>
         <Title>회원정보 수정</Title>
@@ -617,7 +640,11 @@ export default () => {
       />
     </MypageLayout>
   );
+
+  
 };
+
+
 
 const Container = styled.div`
   width: 650px;
