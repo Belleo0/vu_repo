@@ -70,7 +70,7 @@ const Container = styled.div`
   border-radius: 6px;
   box-sizing: border-box;
   z-index: 200;
-`;
+ `;
 
 const AbsoluteContainer = styled.div`
   width: 100%;
@@ -79,15 +79,15 @@ const AbsoluteContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  top: 0;
+  
 `;
 
 export const ModalContainer = styled.div`
-  min-width: 400px;
+  min-width: 300px;
   padding: 30px 40px;
   border-radius: 20px;
   background-color: #fff;
-
+ 
   overflow: hidden;
 `;
 

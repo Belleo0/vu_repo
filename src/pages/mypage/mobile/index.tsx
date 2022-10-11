@@ -12,8 +12,8 @@ import LinedInput from '@components/LinedInput';
 import Input from '@components/Input';
 import Button, { ButtonType } from '@components/Button';
 import   { CSSProperties, HTMLAttributes } from 'react';
-
-
+import api from '@api';
+import ImgModal from '@components/ImgModal';
 interface Props{
     userData:{
     name: string,
@@ -32,28 +32,259 @@ interface Props{
 const MobileScreen=(props:Props)=>{
 
     const navigate = useNavigate();
+    const [userData, setUserData] = useState(props.userData);
     //init state
-    const [isEdit,setIsedit]=useState<boolean>(true)
+    const [isEdit,setIsEdit]=useState<boolean>(false)
+    const [name,setName]=useState<string>(props.userData.name)
     const [email,setEmail]=useState<string>(props.userData.email)
     const [password,setPassword]=useState<string>(props.userData.password)
     const [phone,setPhone]=useState<string>(props.userData.phone)
+    const [companyname,setCompanyname]=useState<string>(props.userData.companyName)
+    const [tel,setTel]=useState<string>(props.userData.tel)
+    const [department,setDepartment]=useState<string>(props.userData.department)
+    const [position,setPosition]=useState<string>(props.userData.position)
+    const [images, setImages] = useState<object[]>([]);
+
     //edit state
-    const [currentPassword,setCurrentPassword]=useState<string>(``)
-    const [newPassword,setNewPassword]=useState<string>(``)
+     const [newPassword,setNewPassword]=useState<string>(``)
     const [confirmPassword,setConfirmPassword]=useState<string>(``)
     const [newPhone,setNewPhone]=useState<string>(``)
 
-    //status state
-    const  [isEditPassword,setIsEditPassword]=useState<boolean>(false)
-    const  [isEditMail,setIsEditEmail]=useState<boolean>(false)
-    const  [isEditPhone,setIsEditPhone]=useState<boolean>(false)
+
+    
+    const [veryfyPhoneCode, setVeryfyPhoneCode] = useState<string>('');
+    const  [isPasswordEdit,setIsPasswordEdit]=useState<boolean>(false)
+    const  [isPhoneEdit,setIsPhoneEdit]=useState<boolean>(false)
+    const [verifyEmailCode, setVerifyEmailCode] = useState<string>('');
+   
+    const  [isEmailEdit,setIsEmailEdit]=useState<boolean>(false)
+    const [isEmailCode, setIsEmailCode] = useState<boolean>(false);
+    const [isEmailDone, setIsEmailDone] = useState<boolean>(false);
+    const [isEmailDoneFail, setIsEmailDoneFail] = useState<boolean>(false);
+    const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
+    const [isErrorEmailModalOpen, setIsErrorEmailModalOpen] = useState<boolean>(false);
+    
+    const [isPassword, setIsPassword] = useState(false);
+
+     const [isPhoneCode, setIsPhoneCode] = useState(false);
+    const [isPhoneDone, setIsPhoneDone] = useState(false);
+    const [isPhoneDoneFail, setIsPhoneDoneFail] = useState(false);
+  
+
+    const [isWithdrawal, setIsWithdrawal] = useState(false);
+    const [isBlocking, setIsBlocking] = useState(false);
+    const [isSubmittedForm, setIsSubmittedForm] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+
+    //validation
+    const isEmailValidated = useMemo(() => {
+      const regex =
+        /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,10}$/;
+      return regex.test(email);
+    }, [email]);
+  
+    const isEmailVerifyCode = useMemo(() => {
+      const regex = /^[0-9]/;
+      return regex.test(verifyEmailCode);
+    }, [verifyEmailCode]);
+    
+    //handle
+    const handlePhoneEdit = () => {
+      setIsPhoneEdit(true);
+    };
+    const handlePassword = () => {
+      setIsPassword(!isPassword);
+      setIsEditing(true)
+    };
+
+    const handleEmailEdit = () => {
+      setIsEmailEdit(true);
+    };
+    const isPhoneValidated = useMemo(() => {
+      const regex = /^[0-9]{10,11}$/;
+      return regex.test(phone);
+    }, [phone]);
+  
+    const isPhoneVerifyCode = useMemo(() => {
+      const regex = /^[0-9]/;
+      return regex.test(veryfyPhoneCode);
+    }, [veryfyPhoneCode]);
+    
+    const isPasswordValidated = useMemo(() => {
+      const regex =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/; // 비밀번호 정규식
+      return regex.test(newPassword);
+    }, [newPassword]);
+  
+    const isConfirmPasswordValidated = useMemo(() => {
+      const regex =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/; // 비밀번호 정규식
+      if (
+        newPassword.length > 0 &&
+        regex.test(confirmPassword) &&
+        newPassword === confirmPassword
+      ) {
+        setIsEditing(false);
+        return true;
+      }
+    }, [newPassword, confirmPassword]);
+
+    const handleName=(e: React.ChangeEvent<HTMLInputElement>) =>{
+      setName(e.target.value)
+    }
+    const handleTel=(e: React.ChangeEvent<HTMLInputElement>) =>{
+      setTel(e.target.value)
+    }
+    const handlePosition=(e: React.ChangeEvent<HTMLInputElement>) =>{
+      setPosition(e.target.value)
+    }
+    const handleDepartment=(e: React.ChangeEvent<HTMLInputElement>) =>{
+      setDepartment(e.target.value)
+    }
+    
+    const handleBlocking = () => {
+      setIsBlocking(!isBlocking);
+    };
+
+
+    //api
+  const handleRequestEmailCode = async () => {
+    try {
+      const { data } = await api.get('/users/check-duplicated-email', {
+        params: { email: email },
+      });
+      if (data?.result === false) {
+        const { data } = await api.post('/verifications/email', {
+          email: email,
+        });
+        console.log(data)
+        if (data?.result === true) {
+          setIsEmailModalOpen(true);
+          setIsEmailCode(true);
+          setVerifyEmailCode('');
+          setIsEmailDone(false);
+          setIsEditing(true);
+        } else {
+          window.alert('오류발생');
+        }
+      } else if (data?.result === true) {
+        setIsErrorEmailModalOpen(true);
+        setIsEmailCode(false);
+        setVerifyEmailCode('');
+        setIsEmailDone(false);
+        setIsEditing(true);
+      }
+    } catch (error) {
+      window.alert('오류발생');
+    }
+  };
+  const handleVerifyEmailCode = async () => {
+    try {
+      const { data } = await api.post('/verifications/email/verify', {
+        email: email,
+        key: verifyEmailCode,
+      });
+      if (data?.result === true) {
+        setIsEmailDone(true);
+        setIsEditing(false);
+        window.alert('인증성공!');
+      }
+    } catch (error) {
+      setIsEmailDoneFail(true);
+      window.alert('인증실패!');
+    }
+  };
+
+  const handleEdit = async () => {
+    if (email && phone) {
+      try {
+        if (confirmPassword !== '' && confirmPassword) {
+          await api.put('/auth/login', {
+            ...userData,
+            signname: email,
+            phone: phone,
+            password: confirmPassword,
+          });
+          setIsSubmittedForm(true);
+        } else {
+          await api.put('/auth/login', {
+            ...userData,
+            signname: email,
+            phone: phone,
+          });
+          setIsSubmittedForm(true);
+        }
+      } catch (error) {
+        window.alert('저장 실패');
+      }
+    } else {
+      return window.alert('이메일, 비밀번호, 핸드폰번호를 입력해주세요');
+    }
+  };
+
+  const handleRequestPhone = async () => {
+    const tempPh = phone.replace(/-/g, '');
+    try {
+      const { data } = await api.post('/verifications/phone', {
+        phone: tempPh,
+      });
+      if (data?.result === true) {
+        setIsPhoneCode(true);
+        setVeryfyPhoneCode('');
+        setIsPhoneDone(false);
+        setIsEditing(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePhoneVerifyCode = async () => {
+    try {
+      const tempPh = phone.replace(/-/g, '');
+      const { data } = await api.post('/verifications/phone/verify', {
+        phone: tempPh,
+        key: veryfyPhoneCode,
+      });
+      if (data?.result) {
+        setIsPhoneDone(true);
+        setIsEditing(false);
+        window.alert('인증성공!');
+      }
+    } catch (error) {
+      console.log(error);
+      setIsPhoneDoneFail(true);
+      window.alert('인증실패!');
+    }
+  };
+ 
+  
+
 
     if(isEdit)
     return (
-      <MbEdit>
+      <MbEdit> 
+        
+        {
+          !!isEmailModalOpen?  
+         
+            <ImgModal
+          
+          open={isEmailModalOpen}
+          onClose={() => setIsEmailModalOpen(false)}
+          email={email}
+          content={' 으로 \n 이메일 인증 주소가 발송되었어요.'}
+          redContent={'메일을 받지 못하셨다면 스팸 폴더를 확인해주세요.'}
+          imgUrl="../assets/img-email.png"
+        />
+            
+          
+          :null
+        }
+   
           <MbEditNav>
                 <MbEditNavLeft>
-                  <MbEditBackIcon src={arrowBackIcon}></MbEditBackIcon>
+                  <MbEditBackIcon onClick={()=>setIsEdit(false)} src={arrowBackIcon}></MbEditBackIcon>
                 </MbEditNavLeft>
                 <MbEditNavRight>
                   <MbTitle  >회원정보 수정</MbTitle>
@@ -63,13 +294,25 @@ const MobileScreen=(props:Props)=>{
                 <MbEditImg src={profileImg}></MbEditImg>
                 <MbEditImgBtn>이미지 수정</MbEditImgBtn>
            </MbEditMain>
+            {/* 이름 */}
            <MbEditColumn>
-            <MbEditRowTitle>이름</MbEditRowTitle>
-            <MbEditRowContent>{props.userData.name}</MbEditRowContent>
+            <MbEditRowContent>
+            <LinedInput 
+                label="이름"
+                type="text"
+                name="name"
+                value={name}
+                onChange={handleName}
+                xIcon={false} 
+                disabled={true}
+              />
+              </MbEditRowContent>
            </MbEditColumn>
            <MbEditColumn>
+              {/* 이메일 */}
                <ButtonInputBox>
                 <Input
+                 
                   label="이메일"
                   redStar="*"
                   type="email"
@@ -77,128 +320,230 @@ const MobileScreen=(props:Props)=>{
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   inputStyle={inputStyle}
-                  // inputStyle={
-                  //   isEmailEdit ? emailEditInputStyle : emailInputStyle
-                  // }
-                  // errorMessage={
-                  //   email === ''
-                  //     ? ''
-                  //     : isEmailValidated
-                  //     ? ''
-                  //     : '이메일 형식이 올바르지 않습니다.'
-                  // }
-                  // disabled={!isEmailEdit}
+                  errorMessage={
+                    email === ''
+                      ? ''
+                      : isEmailValidated
+                      ? ''
+                      : '이메일 형식이 올바르지 않습니다.'
+                  }
+                  errorMessageStyle={
+                    {width:"202px"}
+                  }
+                  disabled={!isEmailEdit}
                 />
-                <Button
-                  type={ButtonType.BLACK_WHITE }
+                <Button   onClick={
+                    isEmailEdit ? handleRequestEmailCode : handleEmailEdit
+                  }
+                  type={
+                    (isEmailValidated && !isEmailCode) ||
+                    (isEmailDone && isEmailEdit)
+                      ? ButtonType.BLACK_WHITE
+                      : isEmailValidated && isEmailCode
+                      ? ButtonType.GRAY
+                      : ButtonType.GRAY
+                  }
                  containerStyle={buttonStyle}
-                >
-                   <BtnContent1>이메일 인증</BtnContent1>
+                > 
+                    {isEmailEdit && !isEmailDone
+                    ?   <BtnContent>이메일 인증  </BtnContent>
+                    : isEmailEdit && isEmailDone
+                    ? <BtnContent >재인증받기 </BtnContent>:
+                    <BtnContent >이메일 변경</BtnContent >}
                 </Button>
               </ButtonInputBox>
-           </MbEditColumn>
+              </MbEditColumn>
+                    
+                {
+                  isEmailCode && ( 
+                    <MbEditColumn  >
+                    <ButtonInputBox  >
+                      <Input
+                         autoComplete="off"
+                        type="verifycode"
+                        name="verifyEmailCode"
+                        value={verifyEmailCode}
+                        placeholder={'인증번호를 입력해 주세요.'}
+                        onChange={(e) => setVerifyEmailCode(e.target.value)}
+                        inputStyle={inputStyle}
+                        errorMessage={
+                          isEmailDone
+                            ? '인증번호가 일치합니다.'
+                            : isEmailDoneFail
+                            ? '인증번호가 일치하지 않습니다.'
+                            : ''
+                        }
+                        errorMessageStyle={
+                          isEmailDone ? { width:"202px", color: '#00b448' } : {width:"202px", color: '#ef0000' }
+                        }
+                      />
+                      <Button   
+                        type={
+                          isEmailVerifyCode && !isEmailDone
+                            ? ButtonType.BLACK_WHITE
+                            : ButtonType.GRAY
+                        }
+                        onClick={handleVerifyEmailCode}
+                        containerStyle={ buttonStyleNonLabel}
+                      > <BtnContent>확인</BtnContent> 
+                      </Button>
+                    </ButtonInputBox>
+                    </MbEditColumn>
+                  )
+                }      
+               
+         
+    
    
             <MbEditColumn>
-            <MbEditRowTitle>회사명</MbEditRowTitle>
-            <MbEditRowContent>{props.userData.companyName}</MbEditRowContent>
+            
+            <MbEditRowContent> 
+            {/* 회사명 */}
+            <LinedInput
+                label="회사명"
+                type="text"
+                name="companyName"
+                value={companyname}
+                // helperMessage={'회사변경은 탈퇴 후 재가입 하시기 바랍니다.'}
+                xIcon={false}
+                disabled={true}
+              />
+            </MbEditRowContent>
            </MbEditColumn>
       
-           <MbEditColumn>
-            <MbEditRowTitle>직위/직급</MbEditRowTitle>
-            <MbEditRowContent>{props.userData.position}</MbEditRowContent>
+           <MbEditColumn >
+            <MbEditRowContent>
+                {/* 직위/직급 */}
+                <LinedInput
+                label="직위/직급"
+                type="text"
+                name="position"
+                value={position}
+                onChange={handlePosition}
+                xIcon={false}
+                disabled={true}
+              /></MbEditRowContent>
            </MbEditColumn>
-     
+             {/* 부서 */}
            <MbEditColumn>
-            <MbEditRowTitle>부서(선택)</MbEditRowTitle>
-            <MbEditRowContent>{props.userData.department}</MbEditRowContent>
+            <MbEditRowContent>
+              <LinedInput
+                label="부서(선택)"
+                type="text"
+                name="department"
+                value={department}
+                onChange={handleDepartment}
+                xIcon={false}
+                disabled={true}
+              />
+              </MbEditRowContent>
            </MbEditColumn>
-        
+           {/* 사내번호 */}
            <MbEditColumn>
-            <MbEditRowTitle>사내번호</MbEditRowTitle>
-            <MbEditRowContent>{props.userData.tel}</MbEditRowContent>
+           <MbEditRowContent>
+             <LinedInput
+                label="사내번호"
+                type="text"
+                name="tel"
+                value={tel}
+                onChange={handleTel}
+                xIcon={false}
+              />
+           </MbEditRowContent>
            </MbEditColumn>
-         
-           {
-              !!isEditPassword?
-              <div>
+
+             {/* 비밀번호 */}
+             {!isPassword && (
               <MbEditColumn>
                 <ButtonInputBox>
-                <Input
+                  <Input
+                    label="비밀번호"
+                    type="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    inputStyle={inputStyle}
+                    disabled={!isPassword}
+                    errorMessage={''}
+                  />
+                  <Button
+                    type={ButtonType.BLACK_WHITE}
+                    containerStyle={buttonStyle}
+                    onClick={handlePassword}
+                  >
+                   <BtnContent>비밀번호 변경</BtnContent> 
+                  </Button>
+                </ButtonInputBox>
+                </MbEditColumn>
+              )}
+
+           {/* 비밀번호 변경 */}
+              {isPassword && (
+                <>
+                  <MbEditColumn>
+                  <ButtonInputBox  >
+                    <Input
                     label="현재 비밀번호"
                     redStar="*"
                     type="password"
-                    name="currentpassword"
-                    value={currentPassword}
-                    placeholder="비밀번호 입력"
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    inputStyle={inputStyleFull}
-                    // disabled={!isPassword}
-                    errorMessage={''}
+                    placeholder="비밀번호를 입력해 주세요"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    containerStyle={{ marginBottom: 8,width:"85%" }}
                   />
-                </ButtonInputBox>
-              </MbEditColumn> 
-             
-              <MbEditColumn>
-                <ButtonInputBox>
-                <Input
+                    </ ButtonInputBox  >
+                  
+                  </MbEditColumn>
+                  
+                  <MbEditColumn>
+                  <ButtonInputBox  >
+                    <Input
                     label="새 비밀번호"
                     redStar="*"
                     type="password"
-                    name="confirmpassword"
+                    name="newPassword"
+                    placeholder="영문과 숫자, 특수문자 포함 8자 이상 입력해 주세요"
                     value={newPassword}
-                    placeholder="영문, 숫자, 특수문자 포함 8자 이상 입력"
                     onChange={(e) => setNewPassword(e.target.value)}
-                    inputStyle={inputStyleFull}
-                    // disabled={!isPassword}
-                    errorMessage={''}
+                    containerStyle={{ marginBottom: 8,width:"85%" }}
+                    errorMessage={
+                      newPassword === ''
+                        ? ''
+                        : isPasswordValidated
+                        ? ''
+                        : '영문, 숫자, 특수문자 포함 8자 이상 입력해 주세요'
+                    }
                   />
-                </ButtonInputBox>
-              </MbEditColumn> 
-              
-              <MbEditColumn>
-                <ButtonInputBox>
-                <Input
+                    </ButtonInputBox>
+                 
+                  </MbEditColumn>
+                    <MbEditColumn>
+                    <ButtonInputBox  >
+                  <Input
                     label="새 비밀번호 확인"
                     redStar="*"
                     type="password"
-                    name="confirmpassword"
+                    name="passwordConfirm"
+                    placeholder="새 비밀번호를 다시 입력해 주세요"
                     value={confirmPassword}
-                    placeholder="영문, 숫자, 특수문자 포함 8자 이상 입력"
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    inputStyle={inputStyleFull}
-                    // disabled={!isPassword}
-                    errorMessage={''}
+                    containerStyle={{ marginBottom: 8,width:"85%" }}
+                    errorMessage={
+                      confirmPassword === ''
+                        ? ''
+                        : isConfirmPasswordValidated
+                        ? ''
+                        : '비밀번호가 일치하지 않습니다'
+                    }
                   />
-                </ButtonInputBox>
-              </MbEditColumn> 
-              </div>
-                : <MbEditColumn>
-                <ButtonInputBox>
-                        <Input
-                          label="비밀번호"
-                          type="password"
-                          name="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          inputStyle={inputStyle}
-                          // disabled={!isPassword}
-                          errorMessage={''}
-                        />
-                        <Button 
-                          onClick={()=>{setIsEditPassword(true)}}
-                          type={ButtonType.BLACK_WHITE}
-                          containerStyle={buttonStyle}
-                          // onClick={handlePassword}
-                        >
-                         <BtnContent1 >비밀번호 변경</BtnContent1>
-                        </Button>
-                      </ButtonInputBox>
-                 </MbEditColumn>
-             }
+                   </ButtonInputBox>
+                  </MbEditColumn>
+                </>
+              )}
+            
           
-            {
-              !!isEditPhone? 
-                <MbEditColumn>
+              <MbEditColumn>
               <ButtonInputBox>
               <Input
                 label="휴대폰번호"
@@ -210,63 +555,87 @@ const MobileScreen=(props:Props)=>{
                 onChange={(e) => setNewPhone(e.target.value)}
                 inputStyle={inputStyle}
                 maxLength={11}
-                // disabled={!isPhoneEdit}
+                disabled={!isPhoneEdit}
               />
               <Button
-                type={ButtonType.BLACK_WHITE}
-                                    
-                // onClick={isPhoneEdit ? handleRequestPhone : handlePhoneEdit}
-                containerStyle={buttonEditStyle}
+           type={
+            (isPhoneValidated && !isPhoneCode) ||
+            (isPhoneDone && isPhoneEdit)
+              ? ButtonType.BLACK_WHITE
+              : isPhoneValidated && isPhoneCode
+              ? ButtonType.GRAY
+              : ButtonType.GRAY
+          }
+          onClick={isPhoneEdit ? handleRequestPhone : handlePhoneEdit}
+                containerStyle={buttonStyle2}
               >
-                {/* {isPhoneEdit && !isPhoneDone
-                  ? '인증번호 전송'
+                {isPhoneEdit && !isPhoneDone
+                  ?  <BtnContent>인증번호 전송</BtnContent> 
                   : isPhoneEdit && isPhoneDone
-                  ? '재인증받기'
-                  : '휴대폰번호 변경'} */}
-           <BtnEditContentStyle>휴대폰번호 변경</BtnEditContentStyle>   </Button>
+                  ? <BtnContent>재인증받기</BtnContent>
+                  :  <BtnContent>휴대폰번호 변경</BtnContent>}
+           </Button>
             </ButtonInputBox>
          </MbEditColumn>  
-              
-              :<MbEditColumn>
-              <ButtonInputBox>
-                   <Input
-                     label="휴대폰번호"
-                     redStar="*"
-                     type="text"
-                     name="phone"
-                     placeholder="'-' 입력 제외(번호만 입력해 주세요)"
-                     value={phone}
-                     onChange={(e) => setPhone(e.target.value)}
-                     inputStyle={inputStyle}
-                     maxLength={11}
-                     // disabled={!isPhoneEdit}
-                   />
-                   <Button
-                     type={ButtonType.BLACK_WHITE}
-                     onClick={()=>{setIsEditPhone(true)}}     
-                     // onClick={isPhoneEdit ? handleRequestPhone : handlePhoneEdit}
-                     containerStyle={buttonStyle2}
-                   >
-                     {/* {isPhoneEdit && !isPhoneDone
-                       ? '인증번호 전송'
-                       : isPhoneEdit && isPhoneDone
-                       ? '재인증받기'
-                       : '휴대폰번호 변경'} */}
-                <BtnContent2>휴대폰번호 변경</BtnContent2>   </Button>
-                 </ButtonInputBox>
-              </MbEditColumn>
-            }
-            
+                {/* 휴대폰번호 인증 */}
+              {isPhoneCode && (
+                <MbEditColumn>
+                <ButtonInputBox  >
+                  <Input
+                    type="text"
+                    name="verificationNumber"
+                    placeholder="인증번호 6자리 입력"
+                    value={veryfyPhoneCode}
+                    onChange={(e) => setVeryfyPhoneCode(e.target.value)}
+                    inputStyle={{
+                      backgroundColor: '#fff',
+                      borderRadius: '6px',
+                    }}
+                    errorMessage={
+                      isPhoneDone
+                        ?  '인증번호가 일치합니다.'
+                        : isPhoneDoneFail
+                        ? '인증번호가 일치하지 않습니다.'
+                        : ''
+                    }
+                    errorMessageStyle={
+                      isPhoneDone ? { color: '#00b448' } : { color: '#ef0000' }
+                    }
+                  />
+                  <Button
+                    type={
+                      isPhoneVerifyCode && !isPhoneDone
+                        ? ButtonType.BLACK_WHITE
+                        : ButtonType.GRAY
+                    }
+                    containerStyle={buttonStyleNonLabel}
+                    onClick={handlePhoneVerifyCode}
+                  >
+                    {isPhoneDone ? <BtnContent>확인완료</BtnContent>  : <BtnContent>확인</BtnContent>}
+                  </Button>
+                </ButtonInputBox>
+                </MbEditColumn>
+              )}  
+ 
            <MbEditColumn>
              <MbEditRowTitle>회원탈퇴</MbEditRowTitle>
              <MbEditRowCenter>
-                 <MbEditCancel>취소</MbEditCancel>
-                 {
-                   !!isEditMail ||!!isEditPassword ||!!isEditPhone ?
-                   <MbEditSaveHide>저장</MbEditSaveHide>
-                   :  <MbEditSave>저장</MbEditSave>
-                 }
-                
+             <ButtonBox>
+            <Button
+              type={ButtonType.GRAY_BLACK}
+              containerStyle={MbEditCancel}
+              onClick={handleBlocking}
+            >
+              취소
+            </Button>
+            <Button
+              containerStyle={MbEditCancel}
+              type={isEditing ? ButtonType.GRAY : ButtonType.PRIMARY}
+              onClick={() => (isEditing ? null : handleEdit())}
+            >
+              저장
+            </Button>
+          </ButtonBox>
              </MbEditRowCenter>
            </MbEditColumn>
 
@@ -303,7 +672,7 @@ const MobileScreen=(props:Props)=>{
                           <MbRowTitle>회원정보 수정</MbRowTitle>
                       </MbContentLeft>
                       <MbArrowIcon src={arrowIcon} onClick={()=>{
-                        setIsedit(true)
+                        setIsEdit(true)
                       }}></MbArrowIcon>   
                      </MbRowContent>
                      </MbRow>
@@ -408,12 +777,18 @@ const MbEditImgBtn=styled.div`
   text-align: center;
   color: #000;
   `
-  
+const MbEditRow=styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 const MbEditColumn=styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 24px;
+  margin-top: 16px;
+ 
 `
 const MbEditRowCenter=styled.div`
   display: flex;
@@ -436,6 +811,7 @@ const MbEditRowTitle=styled.span`
 `
 
 const MbEditRowContent=styled.span`
+ 
  margin: 0px 0px 0px 20px;
   font-family: SourceHanSansKR;
   font-size: 14px;
@@ -448,16 +824,7 @@ const MbEditRowContent=styled.span`
   color: #222;`
 
  
- const inputEditStyle:CSSProperties={
-  margin:"10px 10px 60px 20px",
-  padding:"11px 48px 11px 14px",
-  width:"202px",
-  height:"42px",
-  borderRadius:"6px",
-  border:"solid 1px #c7c7c7",
-  backgroundColor:"#fff",
-  outlineStyle:"none"
- }
+
 
 const inputStyle:CSSProperties={
   width:"202px",
@@ -466,6 +833,7 @@ const inputStyle:CSSProperties={
   border:"solid 1px #c7c7c7",
   backgroundColor:"#f2f2f2",
   outlineStyle:"none"
+  
   
 
 }
@@ -479,22 +847,8 @@ const inputStyleFull:CSSProperties={
 
 }
   
-  const BtnEditContentStyle=styled.span`
+  const BtnContent=styled.span`
    width: 91px;
-  height: 20px;
-  font-family: SourceHanSansKR;
-  font-size: 14px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.71;
-  letter-spacing: -0.28px;
-  text-align: left;
-  color: #999;
- `
-
- const BtnContent1=styled.span`
-  width: 66px;
   height: 20px;
   font-family: SourceHanSansKR;
   font-size: 14px;
@@ -504,79 +858,64 @@ const inputStyleFull:CSSProperties={
   line-height: 1.71;
   letter-spacing: -0.28px;
   text-align: center;
-  color: #fff;
- `
- const BtnContent2=styled.span`
-   width: 91px;
-  height: 20px;
-  font-family: SourceHanSansKR;
-  font-size: 14px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.71;
-  letter-spacing: -0.28px;
-  text-align: left;
-  color: #fff;
- `
-
  
- const buttonEditStyle:CSSProperties={
-  width: '108px',
-  height: '42px',
-  padding: "11px 8px 11px 9px",
-  margin: "10px 20px 0px 9px",
-  borderRadius:"6px",
-  backgroundColor:"#f2f2f2",
-  color:"white"
-  
+ `
  
- }
-
+ 
  const buttonStyle2:CSSProperties={
   width: '108px',
   height: '42px',
   padding: "11px 8px 11px 9px",
   margin: "10px 20px 0px 9px",
-  borderRadius:"6px",
-  backgroundColor:"#000",
-  color:"white"
-  
+  borderRadius:"6px", 
+  backgroundColor:"black",
+  color:"white",
+
  
  }
  const buttonStyle:CSSProperties = {
    width: '108px',
   height: '42px',
-  padding:"11px 21px",
+  padding:"11px 15px",
   margin:"10px 20px 0px 9px",
   borderRadius:"6px",
-  backgroundColor:"#000",
-  color:"white",
+ 
+
+  
+
 
 };
-
+const buttonStyleNonLabel:CSSProperties={
+  width: "108px",
+  height: "42px",
+  margin: "-15px 20px 2px 9px",
+  padding: "11px 41px",
+  borderRadius: "6px",  
+}
+ 
 
  
- 
-const MbEditCancel=styled.div`
- width: 154px;
-  height: 46px;
-  margin: 0 12px 0 0;
-  padding: 12px 63px 13px;
-  border-radius: 6px;
-  background-color: #f2f2f2;
-  font-family: SourceHanSansKR;
-  font-size: 15px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 4.13;
-  letter-spacing: -0.3px;
-  text-align: center;
-  color: #222;
-  display: flex;
-  align-items: center;
-`
+
+
+
+const MbEditCancel:CSSProperties={
+  width:"154px",
+  height:"46px",
+  margin:"0 12px 0 0",
+  padding:"12px 63px 13px",
+  borderRadius:"6px",
+  fontFamily:"SourceHanSansKR",
+  fontSize:"15px",
+  fontStretch:"normal",
+  fontStyle:"normal",
+  lineHeight:"4.13",
+  letterSpacing:"-0.3px",
+  textAlign:"center",
+  display:"flex",
+  alignItems:"center"
+
+}
+  
 
 const MbEditSave=styled.div`
 width: 154px;
@@ -619,12 +958,29 @@ const ButtonInputBox = styled.div`
   width: 340px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   margin: 0px 20px 0px 20px;
-  border:"1px solid red",
+   
   
 `
+ 
+const Popupcontent:CSSProperties={
+  width: "300px",
+  height: "230px",
+  margin: "11px 30px 32px",
+  padding: "20px 20px 40px 29px",
+  borderRadius: "20px",
+  backgroundColor: "#fff",
+ 
+}
+
+ 
+const ButtonBox = styled.div`
+  display: flex;
+  margin-top: 60px;
+  margin-bottom: 50px;
+`;
 
 
 //styled mypage

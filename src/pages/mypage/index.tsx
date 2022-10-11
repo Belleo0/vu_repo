@@ -16,6 +16,7 @@ import api from '@api';
 import FileUpload from '@components/FileUpload';
 import useWindowSize from "../../hooks/useWindowSize"
 import MobileScreen from './mobile';
+import Popup from 'reactjs-popup';
 export default () => {
   const userInfo = useUserInfo();
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default () => {
   };
 
   interface userData{
-name: string,
+ name: string,
  email: string,
  companyName: string,
  position: string,
@@ -43,9 +44,6 @@ name: string,
  tel: string,
  password: string,
  phone: string,}
-
-
-
 
 
   const [userData, setUserData] = useState(initialState);
@@ -280,6 +278,9 @@ name: string,
   }
   else return (
     <MypageLayout>
+      <Popup trigger={<button> Trigger</button>} position="right center">
+    <div>Popup content here !!</div>
+  </Popup>
       <Container>
         <Title>회원정보 수정</Title>
         <MyInfoSection>
