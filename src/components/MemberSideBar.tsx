@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import MemberCard from './MemberCard';
 import ScrollBox from './ScrollBox';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
+import useWindowSize from "../hooks/useWindowSize"
 
 enum ChipTypeEnum {
   DEFAULT,
@@ -82,12 +83,81 @@ export default () => {
       spaces.length > 0 &&
       searchedSpaces
     ) {
-      setSelectedIdWithFirstId();
+      //mobile screen not select first id
+      if(!isMobile)
+      {
+        setSelectedIdWithFirstId();
+      }
+    
       // setIsFilterOpen(false);
     }
   }, [tabType, chipType, spaces, isMounted, searchedSpaces]);
 
   console.log(isHide);
+
+
+const { width } = useWindowSize();
+const isMobile = width <= 360 ? true : false;
+
+ if(isMobile)
+ {
+  return (
+    <SpeceBarWrap>
+      <MbSpaceFilterWrap>
+        <TabContainer>
+          <Tab
+            active={tabType === TabTypeEnum.DEFAULT}
+            onClick={() => handleChangeTabType(TabTypeEnum.DEFAULT)}
+          >
+            건설현장 ({spaces?.length})
+          </Tab>
+          <Tab
+            active={tabType === TabTypeEnum.HIDE}
+            onClick={() => handleChangeTabType(TabTypeEnum.HIDE)}
+          >
+            구성원 (99)
+          </Tab>
+        </TabContainer>
+      </MbSpaceFilterWrap>
+      {isFieldUser && (
+        <ChipWrap>
+          <Chip
+            active={chipType === ChipTypeEnum.DEFAULT}
+            onClick={() => handleChangeChipType(ChipTypeEnum.DEFAULT)}
+          >
+            전체
+          </Chip>
+          <Chip
+            active={chipType === ChipTypeEnum.ACTIVE}
+            onClick={() => handleChangeChipType(ChipTypeEnum.ACTIVE)}
+          >
+            등록 건설현장
+          </Chip>
+          <Chip
+            active={chipType === ChipTypeEnum.HIDE}
+            onClick={() => handleChangeChipType(ChipTypeEnum.HIDE)}
+          >
+            숨김 건설현장
+          </Chip>
+        </ChipWrap>
+      )}
+      <SearchedSpaceWrap>
+        {searchedSpaces.map((v: any, i: number) => (
+          <MemberCard
+            key={`space-${v.id}-${i}`}
+            info={v}
+            id={v.id}
+            name={v?.name}
+            address={v?.basic_address}
+            revalidate={refetch}
+            isHide={chipType === ChipTypeEnum.HIDE}
+            setSelectedIdWithFirstId={setSelectedIdWithFirstId}
+          />
+        ))}
+      </SearchedSpaceWrap>
+    </SpeceBarWrap>)
+ }
+ else 
 
   return (
     <SpeceBarWrap>
@@ -163,6 +233,12 @@ const SpeceBarWrap = styled.div`
   border-top: 1px solid #c7c7c7;
   background-color: white;
 `;
+const MbSpaceFilterWrap=styled.div`
+     display: block;
+    height: 46px;
+    padding: 0px 30px 0px 30px;
+    border-bottom: 1px solid #e3e3e3;
+`
 
 const SpaceFilterWrap = styled.div`
   display: block;

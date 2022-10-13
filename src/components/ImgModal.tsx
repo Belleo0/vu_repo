@@ -2,8 +2,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import Button, { ButtonType } from './Button';
-import Modal, { ModalButtonWrap, ModalContainer } from './Modal';
-
+import Modal, { ModalButtonWrap, ModalContainer,MbModalContainer } from './Modal';
+import useWindowSize from "../hooks/useWindowSize"
 interface IImgModal {
   title?: React.ReactNode;
   content?: React.ReactNode;
@@ -18,7 +18,57 @@ interface IImgModal {
   wrapperStyle?: React.CSSProperties;
 }
 
+
+
 export default (props: IImgModal) => {
+
+const { width } = useWindowSize();
+const isMobile = width <= 360 ? true : false;
+
+if(isMobile)
+{
+  return (
+    <Modal {...props}>
+      <MbModalContainer>
+        {props.imgUrl ? (
+          <IconContainer onClick={props.onClose}>
+            <Icon src={getAssetURL('../assets/ic-del.svg')} />
+          </IconContainer>
+        ) : null}
+        {props.imgUrl ? (
+          <ImageContainer>
+            <Image src={getAssetURL(`${props.imgUrl}`)} />
+          </ImageContainer>
+        ) : null}
+        <ModalTitle>{props?.title}</ModalTitle>
+        {props.content && (
+          <ModalText>
+            <span style={{ color: '#258fff' }}>{props?.email}</span>
+            {props?.content}
+          </ModalText>
+        )}
+        <ModalRedText>{props?.redContent}</ModalRedText>
+        <ModalButtonWrap>
+          {props.onSubmit ? (
+            <Button
+              type={ButtonType.GRAY_BLACK}
+              onClick={props.onClose}
+              containerStyle={{ marginRight: 20 }}
+            >
+              취소
+            </Button>
+          ) : null}
+          {props.submitText && (
+            <Button onClick={props?.onSubmit ? props.onSubmit : props.onClose}>
+              {props?.submitText || '확인'}
+            </Button>
+          )}
+        </ModalButtonWrap>
+      </MbModalContainer>
+    </Modal>
+  )
+}
+else 
   return (
     <Modal {...props}>
       <ModalContainer>

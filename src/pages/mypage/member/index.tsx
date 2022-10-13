@@ -12,9 +12,11 @@ import useMySpaceInfo from '@api/useMySpaceInfo';
 import MemberSpaceBar from '@components/MemberSpaceBar';
 import MemberListTable from '@components/MemberListTable';
 import InviteModal from '@components/InviteModal';
-
+import useWindowSize from '../../../hooks/useWindowSize';
+import MobileScreen from '../mobile/ member/index';
 const memberData = [
   {
+    id: '1',
     name: '김건설',
     company: '(주)대성건설',
     position: '대리',
@@ -25,6 +27,7 @@ const memberData = [
     status: 0,
   },
   {
+    id: '2',
     name: '김수현',
     company: '(주)대성건설',
     position: '대리',
@@ -34,6 +37,7 @@ const memberData = [
     status: 1,
   },
   {
+    id: '3',
     name: '이하진',
     company: '(주)대성건설',
     position: '대리',
@@ -43,6 +47,7 @@ const memberData = [
     status: 2,
   },
   {
+    id: '4',
     name: '제임스',
     company: '(주)대성건설',
     position: '대리',
@@ -52,6 +57,7 @@ const memberData = [
     status: 2,
   },
   {
+    id: '5',
     name: '코나즈',
     company: '(주)대성건설',
     position: '대리',
@@ -70,6 +76,7 @@ const memberData = [
     status: 2,
   },
   {
+    id: '6',
     name: '코나즈',
     company: '(주)대성건설',
     position: '대리',
@@ -82,6 +89,7 @@ const memberData = [
 
 export default () => {
   const userInfo = useUserInfo();
+
   const navigate = useNavigate();
   const selectedSpaceId = useSelectedSpaceId();
 
@@ -92,41 +100,46 @@ export default () => {
   } = useMySpaceInfo(selectedSpaceId);
 
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
-  console.log(info);
+  const { width } = useWindowSize();
+  const isMobile = width <= 360 ? true : false;
 
-  return (
-    <MypageLayout>
-      <Container>
-        <Title>조직관리</Title>
-        <MemberWrap>
-          <SideBarSection>
-            <MemberSideBar />
-          </SideBarSection>
-          <RightSection>
-            <MemberSpaceBar
-              id={info?.id}
-              name={info?.name}
-              adminUserName={info?.admin_user?.name}
-              siteUserName={info?.site_user?.name}
-              address={info?.basic_address}
-              setInviteModalOpen={setInviteModalOpen}
-            />
-            <MemberListTable
-              data={members}
-              me={userInfo}
-              siteUserId={info?.site_user?.id}
-            />
-          </RightSection>
-        </MemberWrap>
-        <InviteModal
-          open={inviteModalOpen}
-          onClose={() => setInviteModalOpen(false)}
-          fieldId={info?.id}
-          fieldName={info?.name}
-        />
-      </Container>
-    </MypageLayout>
-  );
+  if (isMobile) {
+    return <MobileScreen></MobileScreen>;
+  } else
+    return (
+      <MypageLayout>
+        <Container>
+          <Title>조직관리</Title>
+          <MemberWrap>
+            <SideBarSection>
+              <MemberSideBar />
+            </SideBarSection>
+            <RightSection>
+              <MemberSpaceBar
+                id={info?.id}
+                name={info?.name}
+                adminUserName={info?.admin_user?.name}
+                siteUserName={info?.site_user?.name}
+                address={info?.basic_address}
+                setInviteModalOpen={setInviteModalOpen}
+              />
+
+              <MemberListTable
+                data={members}
+                me={userInfo}
+                siteUserId={info?.site_user?.id}
+              />
+            </RightSection>
+          </MemberWrap>
+          <InviteModal
+            open={inviteModalOpen}
+            onClose={() => setInviteModalOpen(false)}
+            fieldId={info?.id}
+            fieldName={info?.name}
+          />
+        </Container>
+      </MypageLayout>
+    );
 };
 
 const Container = styled.div`

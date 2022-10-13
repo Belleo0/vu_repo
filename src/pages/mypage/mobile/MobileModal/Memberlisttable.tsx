@@ -1,31 +1,30 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { useLocation, useNavigate } from 'react-router-dom';
-
 import getAssetURL from '@utils/getAssetURL';
 import { setSelectedUserInfo } from '@data/chat';
-
-import MypageLayout from '@layout/MypageLayout';
-
 import Button, { ButtonSize, ButtonType } from '@components/Button';
 import useUserInfo from '@hooks/useUserInfo';
-import ScrollBox from './ScrollBox';
-import TextModal from './TextModal';
-import ImgModal from './ImgModal';
+import ScrollBox from '../../../../components/ScrollBox';
+import TextModal from '../../../../components/TextModal';
+import ImgModal from '../../../../components/ImgModal';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import useFriends from '@api/useFriends';
 import { useDispatch } from 'react-redux';
  
+useDispatch
 interface IMemberTable {
   data: any[];
   revalidate?: any;
   me: any;
   siteUserId: number;
+ 
+   
 }
 
-export default ({ data = [], revalidate, me, siteUserId }: IMemberTable) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+export default ({ data = [], revalidate, me, siteUserId  }: IMemberTable) => {
+  
+  const disptach=useDispatch()
   const isFieldUser = useIsFieldUser();
   const {
     data: { friends, error, refetch },
@@ -46,110 +45,31 @@ export default ({ data = [], revalidate, me, siteUserId }: IMemberTable) => {
   const handleDeleteMember = () => {
     setIsDeleteMember(!isDeleteMember);
   };
+ 
 
-  
-  return (
-    <MemberListContainer>
+   
+ 
+    return(
+      <MemberListContainer>
       {data?.map((v: any, i: number) => (
-        <MemberCell key={i}>
+        <MbMemberCell   key={i}>
           <CellLeftSection>
-            <ProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
-            <MemberRow>
-              <MemberInfoWrap>
-                <CompanyInfo>{v?.company.name}</CompanyInfo>
-                <NameInfo>{v?.name}</NameInfo>
-                <PositionInfo>{v.position}</PositionInfo>
+            <MbMemberRow   onClick={()=>disptach(setSelectedUserInfo(v))}>
+            <MbProfileImage src={getAssetURL('../assets/default-profile.jpeg')} />
+              <MbMemberInfoWrap>
+              <CompanyInfo>{v?.company}</CompanyInfo>
+              <div style={{display:"flex",alignItems:"center"}}> 
+              <MbMemberTitle>{v?.name}</MbMemberTitle>
+              <MbMemberTitle style={{marginLeft:".5rem"}}>{v?.position}</MbMemberTitle> </div>
+                </MbMemberInfoWrap>  
                 {v?.authority && isFieldUser ? (
                   <Chip>주문담당자</Chip>
                 ) : v?.authority ? (
                   <Chip>공장관리자</Chip>
                 ) : null}
-              </MemberInfoWrap>
-              <MemberButtonWrap>
-                <Button
-                  size={ButtonSize.SMALL}
-                  type={
-                    me
-                      ? ButtonType.DISABLED
-                      : v.status === 1
-                      ? ButtonType.GRAY_BLACK
-                      : ButtonType.PRIMARY
-                  }
-                  icon={
-                    me
-                      ? 'ic-add-person-gray'
-                      : v.status === 1
-                      ? 'ic-minus-people-bk'
-                      : 'ic-add-person-white'
-                  }
-                  containerStyle={{
-                    width: 'auto',
-                    height: '42px',
-                    marginRight: 10,
-                  }}
-                >
-                  {v.status === 1 ? '친구삭제 ' : '친구추가'}
-                </Button>
-                <Button
-                  size={ButtonSize.SMALL}
-                  type={ButtonType.PRIMARY}
-                  icon="ic-chat-white"
-                  containerStyle={{ width: 'auto', height: '42px' }}
-                  onClick={() => {
-                    me ? null : dispatch(setSelectedUserInfo(v));
-                  }}
-                >
-                  채팅하기
-                </Button>
-              </MemberButtonWrap>
-            </MemberRow>
-            <MemberRow>
-              <MemberContactWrap>
-                <ContactInfo>
-                  <Icon src={getAssetURL('../assets/ic-cellphone-bk.svg')} />
-                  {v?.phone}
-                </ContactInfo>
-                <ContactInfo>
-                  <Icon src={getAssetURL('../assets/ic-phone-bk.svg')} />
-                  {v?.tel}
-                </ContactInfo>
-                <ContactInfo>
-                  <Icon src={getAssetURL('../assets/ic-email-bk.svg')} />
-                  {v?.signname}
-                </ContactInfo>
-              </MemberContactWrap>
-            </MemberRow>
+            </MbMemberRow>
           </CellLeftSection>
-          {siteUserId === v.id ? null : (
-            <AuthorityButtonWrap>
-              <Button
-                type={ButtonType.BLACK_OUTLINE}
-                size={ButtonSize.SMALL}
-                containerStyle={{
-                  width: 86,
-                  height: 36,
-                  borderRadius: 40,
-                  marginBottom: 14,
-                }}
-                onClick={() => setIsOrderAuthority(true)}
-              >
-                권한위임
-              </Button>
-              <Button
-                type={ButtonType.BLACK_OUTLINE}
-                size={ButtonSize.SMALL}
-                containerStyle={{
-                  width: 86,
-                  height: 36,
-                  borderRadius: 40,
-                }}
-                onClick={() => setIsDeleteMember(true)}
-              >
-                삭제
-              </Button>
-            </AuthorityButtonWrap>
-          )}
-        </MemberCell>
+        </MbMemberCell>
       ))}
       <TextModal
         open={isOrderAuthority}
@@ -172,8 +92,9 @@ export default ({ data = [], revalidate, me, siteUserId }: IMemberTable) => {
         submitText={'확인'}
       />
     </MemberListContainer>
-  );
-};
+    )
+            }
+ 
 
 const MemberListContainer = styled(ScrollBox)`
   width: 100%;
@@ -198,7 +119,7 @@ const MbMemberRow=styled.div`
   width: 320px;
   height: 80px;
    display: flex;
-  text-align: center;
+   align-items: center;
   margin:0 20px 0 20px;
   background-color: #fff;
 

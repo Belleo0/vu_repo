@@ -3,6 +3,7 @@ import useIsFieldUser from '@hooks/useIsFieldUser';
 import getAssetURL from '@utils/getAssetURL';
 import React, { useState } from 'react';
 import InviteModal from './InviteModal';
+import useWindowSize from "../hooks/useWindowSize"
 
 interface ISpaceBar {
   id: number;
@@ -22,6 +23,47 @@ export default ({
   setInviteModalOpen,
 }: ISpaceBar) => {
   const isFieldUser = useIsFieldUser();
+  const { width } = useWindowSize();
+  const isMobile = width <= 360 ? true : false;
+
+  if(isMobile)
+  return (
+      <SpaceBar>
+         <MbInfoContainer >
+        <InfoRow style={{ marginBottom: 12 }}>
+          <SpaceName>{name}</SpaceName>
+        </InfoRow>
+        {isFieldUser ? (
+          <MbInfoContainer  >
+            <MbPersonWrap>
+             <MbPersonLabel><PersonLabel>구매계약 담당자</PersonLabel></MbPersonLabel> 
+               <PersonName>{adminUserName? adminUserName:"김건설 과장"}</PersonName>
+            </MbPersonWrap>
+            <MbPersonWrap>
+             <MbPersonLabel><PersonLabel>주문담당자(현장)</PersonLabel></MbPersonLabel> 
+              <PersonName>{siteUserName? siteUserName:"김건설 과장"}</PersonName>
+            </MbPersonWrap>
+          </MbInfoContainer>
+        ) : (
+          <InfoRow>
+            <PersonWrap>
+              <PersonLabel>공장주소</PersonLabel>
+              <PersonName>{address}</PersonName>
+            </PersonWrap>
+          </InfoRow>
+        )}
+        <ButtonWrap style={{marginTop:"20px"}}>
+        <MbButton onClick={() => setInviteModalOpen(true)}>
+          <ButtonIcon src={getAssetURL('../assets/ic-more.svg')} /> 이{' '}
+          {isFieldUser ? '현장' : '공장'}에 멤버 초대하기
+        </MbButton>
+      </ButtonWrap>
+      </MbInfoContainer>
+      
+      </SpaceBar>
+  
+    )
+  else
 
   return (
     <SpaceBar>
@@ -33,11 +75,12 @@ export default ({
         {isFieldUser ? (
           <InfoRow>
             <PersonWrap>
-              <PersonLabel>구매계약 담당자</PersonLabel>
+              <PersonLabel>구매계약 담당자</PersonLabel> 
               <PersonName>{adminUserName}</PersonName>
             </PersonWrap>
             <PersonWrap>
-              <PersonLabel>주문담당자(현장)</PersonLabel>
+            <PersonLabel>주문담당자(현장)</PersonLabel> 
+             
               <PersonName>{siteUserName}</PersonName>
             </PersonWrap>
           </InfoRow>
@@ -59,6 +102,11 @@ export default ({
     </SpaceBar>
   );
 };
+
+
+const MbSpaceBar=styled.div`
+ 
+`
 
 const SpaceBar = styled.div`
   display: flex;
@@ -85,7 +133,14 @@ const InfoContainer = styled.div`
 
   margin-right: auto;
 `;
-
+ 
+const MbInfoContainer=styled.div`
+   display: flex;
+  flex-direction: column;
+  margin-right: auto;
+  width: 100%;
+`
+ 
 const InfoRow = styled.div`
   display: flex;
   align-items: center;
@@ -98,13 +153,23 @@ const SpaceName = styled.span`
   text-align: left;
   color: #000;
 `;
+const MbPersonWrap=styled.div`
+    display: flex;
+  align-items: center;
+  margin-right: 50px;
+  margin-bottom:8px;
+`
 
 const PersonWrap = styled.div`
   display: flex;
   align-items: center;
   margin-right: 50px;
+  margin-bottom:2px;
 `;
-
+const MbPersonLabel=styled.div`
+  width: 103px;
+  margin-right: 10px;
+`
 const PersonLabel = styled.span`
   font-size: 14px;
   font-weight: 500;
@@ -113,7 +178,7 @@ const PersonLabel = styled.span`
   color: #999;
   margin-right: 10px;
 `;
-
+ 
 const PersonName = styled.span`
   font-size: 16px;
   letter-spacing: -0.32px;
@@ -136,7 +201,29 @@ const PersonName = styled.span`
 //   color: #000;
 // `;
 
-const ButtonWrap = styled.div``;
+const ButtonWrap = styled.div`
+
+
+`;
+
+const MbButton=styled.span`
+   width: 320px;
+  height: 46px;
+  margin: 20px 0px 0px 0px;
+  padding: 12px 79px 13px 78px;
+  border-radius: 6px;
+  border: solid 1px #258fff;
+  background-color: #fff;
+  font-family: SourceHanSansKR;
+  font-size: 15px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.07;
+  letter-spacing: -0.3px;
+  text-align: left;
+  color: #258fff;
+`
 
 const Button = styled.span`
   height: 50px;

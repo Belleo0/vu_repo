@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { useLocation, useNavigate } from 'react-router-dom';
-
 import getAssetURL from '@utils/getAssetURL';
-
 import MypageLayout from '@layout/MypageLayout';
-
 import LinedInput from '@components/LinedInput';
 import Input from '@components/Input';
 import Button, { ButtonType } from '@components/Button';
@@ -14,16 +11,13 @@ import TextModal from '@components/TextModal';
 import useUserInfo from '@hooks/useUserInfo';
 import api from '@api';
 import FileUpload from '@components/FileUpload';
-import useWindowSize from "../../hooks/useWindowSize"
+import useWindowSize from '../../hooks/useWindowSize';
 import MobileScreen from './mobile';
-import Popup from 'reactjs-popup';
 export default () => {
-  const userInfo = useUserInfo();
   const navigate = useNavigate();
   const { width } = useWindowSize();
-
   const isMobile = width <= 360 ? true : false;
-
+  const userInfo = useUserInfo();
   let initialState = {
     name: userInfo ? userInfo?.name : '',
     email: userInfo ? userInfo?.signname : '',
@@ -35,16 +29,16 @@ export default () => {
     phone: userInfo ? userInfo?.phone : '',
   };
 
-  interface userData{
- name: string,
- email: string,
- companyName: string,
- position: string,
- department: string,
- tel: string,
- password: string,
- phone: string,}
-
+  interface userData {
+    name: string;
+    email: string;
+    companyName: string;
+    position: string;
+    department: string;
+    tel: string;
+    password: string;
+    phone: string;
+  }
 
   const [userData, setUserData] = useState(initialState);
 
@@ -56,9 +50,7 @@ export default () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [veryfyPhoneCode, setVeryfyPhoneCode] = useState('');
   const [images, setImages] = useState([]);
-
   const { name, companyName, position, department, tel } = userData;
-
   const [isEmailEdit, setIsEmailEdit] = useState(false);
   const [isEmailCode, setIsEmailCode] = useState(false);
   const [isEmailDone, setIsEmailDone] = useState(false);
@@ -271,381 +263,376 @@ export default () => {
     }
   }, [isEmailCode, isPhoneCode, isPassword]);
 
-  if(isMobile==true)
-  {
-    return <MobileScreen userData={userData}></MobileScreen>
-
-  }
-  else return (
-    <MypageLayout>
-      <Popup trigger={<button> Trigger</button>} position="right center">
-    <div>Popup content here !!</div>
-  </Popup>
-      <Container>
-        <Title>회원정보 수정</Title>
-        <MyInfoSection>
-          <MyInfoWrapper>
-            <ProfileImageBox>
-              <ProfileImage
-                src={getAssetURL('../assets/default-profile.jpeg')}
-              />
-              <FileUpload
-                label={'이미지수정'}
-                images={images}
-                setImages={setImages}
-                limit={1}
-                disabledPreview={true}
-                buttonStyle={uploadButton}
-              />
-            </ProfileImageBox>
-            <MyInfoFormBox>
-              {/* 이름 */}
-              <LinedInput
-                label="이름"
-                type="text"
-                name="name"
-                value={name}
-                onChange={handleChange}
-                xIcon={false}
-              />
-
-              {/* 이메일 */}
-              <ButtonInputBox>
-                <Input
-                  label="이메일"
-                  redStar="*"
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  inputStyle={
-                    isEmailEdit ? emailEditInputStyle : emailInputStyle
-                  }
-                  errorMessage={
-                    email === ''
-                      ? ''
-                      : isEmailValidated
-                      ? ''
-                      : '이메일 형식이 올바르지 않습니다.'
-                  }
-                  disabled={!isEmailEdit}
+  if (isMobile == true) {
+    return <MobileScreen userData={userData}></MobileScreen>;
+  } else
+    return (
+      <MypageLayout>
+        <Container>
+          <Title>회원정보 수정</Title>
+          <MyInfoSection>
+            <MyInfoWrapper>
+              <ProfileImageBox>
+                <ProfileImage
+                  src={getAssetURL('../assets/default-profile.jpeg')}
                 />
-                <Button
-                  type={
-                    (isEmailValidated && !isEmailCode) ||
-                    (isEmailDone && isEmailEdit)
-                      ? ButtonType.BLACK_WHITE
-                      : isEmailValidated && isEmailCode
-                      ? ButtonType.GRAY
-                      : ButtonType.GRAY
-                  }
-                  onClick={
-                    isEmailEdit ? handleRequestEmailCode : handleEmailEdit
-                  }
-                  containerStyle={buttonStyle}
-                >
-                  {isEmailEdit && !isEmailDone
-                    ? '이메일 인증'
-                    : isEmailEdit && isEmailDone
-                    ? '재인증받기'
-                    : '이메일 변경'}
-                </Button>
-              </ButtonInputBox>
+                <FileUpload
+                  label={'이미지수정'}
+                  images={images}
+                  setImages={setImages}
+                  limit={1}
+                  disabledPreview={true}
+                  buttonStyle={uploadButton}
+                />
+              </ProfileImageBox>
+              <MyInfoFormBox>
+                {/* 이름 */}
+                <LinedInput
+                  label="이름"
+                  type="text"
+                  name="name"
+                  value={name}
+                  onChange={handleChange}
+                  xIcon={false}
+                />
 
-              {/* 이메일 인증 */}
-              {isEmailCode && (
-                <ButtonInputBox style={{ marginTop: '8px' }}>
-                  <Input
-                    type="email"
-                    name="verifyEmailCode"
-                    value={verifyEmailCode}
-                    placeholder={'인증번호를 입력해 주세요.'}
-                    onChange={(e) => setVerifyEmailCode(e.target.value)}
-                    inputStyle={{
-                      backgroundColor: '#fff',
-                      borderRadius: '6px',
-                    }}
-                    errorMessage={
-                      isEmailDone
-                        ? '인증번호가 일치합니다.'
-                        : isEmailDoneFail
-                        ? '인증번호가 일치하지 않습니다.'
-                        : ''
-                    }
-                    errorMessageStyle={
-                      isEmailDone ? { color: '#00b448' } : { color: '#ef0000' }
-                    }
-                  />
-                  <Button
-                    type={
-                      isEmailVerifyCode && !isEmailDone
-                        ? ButtonType.BLACK_WHITE
-                        : ButtonType.GRAY
-                    }
-                    onClick={handleVerifyEmailCode}
-                    containerStyle={buttonStyle2}
-                  >
-                    {isEmailDone ? '확인완료' : '확인'}
-                  </Button>
-                </ButtonInputBox>
-              )}
-              <Divider style={{ marginTop: '8px' }} />
-
-              {/* 회사명 */}
-              <LinedInput
-                label="회사명"
-                type="text"
-                name="companyName"
-                value={companyName}
-                helperMessage={'회사변경은 탈퇴 후 재가입 하시기 바랍니다.'}
-                xIcon={false}
-              />
-
-              {/* 직위/직급 */}
-              <LinedInput
-                label="직위/직급"
-                type="text"
-                name="position"
-                value={position}
-                onChange={handleChange}
-                xIcon={false}
-              />
-
-              {/* 부서 */}
-              <LinedInput
-                label="부서(선택)"
-                type="text"
-                name="department"
-                value={department}
-                onChange={handleChange}
-                xIcon={false}
-              />
-
-              {/* 사내번호 */}
-              <LinedInput
-                label="사내번호"
-                type="text"
-                name="tel"
-                value={tel}
-                onChange={handleChange}
-                xIcon={false}
-              />
-
-              {/* 비밀번호 */}
-              {!isPassword && (
+                {/* 이메일 */}
                 <ButtonInputBox>
                   <Input
-                    label="비밀번호"
-                    type="password"
-                    name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    inputStyle={{
-                      backgroundColor: '#f2f2f2',
-                      borderRadius: '6px',
-                    }}
-                    disabled={!isPassword}
-                    errorMessage={''}
-                  />
-                  <Button
-                    type={ButtonType.BLACK_WHITE}
-                    containerStyle={buttonStyle}
-                    onClick={handlePassword}
-                  >
-                    비밀번호 변경
-                  </Button>
-                </ButtonInputBox>
-              )}
-
-              {/* 비밀번호 변경 */}
-              {isPassword && (
-                <>
-                  <Input
-                    label="현재 비밀번호"
+                    label="이메일"
                     redStar="*"
-                    type="password"
-                    placeholder="비밀번호를 입력해 주세요"
-                    name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    containerStyle={{ marginBottom: 8 }}
-                  />
-                  <Divider />
-                  <Input
-                    label="새 비밀번호"
-                    redStar="*"
-                    type="password"
-                    name="newPassword"
-                    placeholder="영문과 숫자, 특수문자 포함 8자 이상 입력해 주세요"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    containerStyle={{ marginBottom: 8 }}
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    inputStyle={
+                      isEmailEdit ? emailEditInputStyle : emailInputStyle
+                    }
                     errorMessage={
-                      newPassword === ''
+                      email === ''
                         ? ''
-                        : isPasswordValidated
+                        : isEmailValidated
                         ? ''
-                        : '영문, 숫자, 특수문자 포함 8자 이상 입력해 주세요'
+                        : '이메일 형식이 올바르지 않습니다.'
                     }
-                  />
-                  <Divider />
-                  <Input
-                    label="새 비밀번호 확인"
-                    redStar="*"
-                    type="password"
-                    name="passwordConfirm"
-                    placeholder="새 비밀번호를 다시 입력해 주세요"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    containerStyle={{ marginBottom: 8 }}
-                    errorMessage={
-                      confirmPassword === ''
-                        ? ''
-                        : isConfirmPasswordValidated
-                        ? ''
-                        : '비밀번호가 일치하지 않습니다'
-                    }
-                  />
-                </>
-              )}
-              <Divider style={{ marginTop: '8px' }} />
-
-              {/* 휴대폰번호 */}
-              <ButtonInputBox>
-                <Input
-                  label="휴대폰번호"
-                  redStar="*"
-                  type="text"
-                  name="phone"
-                  placeholder="'-' 입력 제외(번호만 입력해 주세요)"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  inputStyle={
-                    isPhoneEdit ? emailEditInputStyle : emailInputStyle
-                  }
-                  maxLength={11}
-                  disabled={!isPhoneEdit}
-                />
-                <Button
-                  type={
-                    (isPhoneValidated && !isPhoneCode) ||
-                    (isPhoneDone && isPhoneEdit)
-                      ? ButtonType.BLACK_WHITE
-                      : isPhoneValidated && isPhoneCode
-                      ? ButtonType.GRAY
-                      : ButtonType.GRAY
-                  }
-                  onClick={isPhoneEdit ? handleRequestPhone : handlePhoneEdit}
-                  containerStyle={buttonStyle}
-                >
-                  {isPhoneEdit && !isPhoneDone
-                    ? '인증번호 전송'
-                    : isPhoneEdit && isPhoneDone
-                    ? '재인증받기'
-                    : '휴대폰번호 변경'}
-                </Button>
-              </ButtonInputBox>
-
-              {/* 휴대폰번호 인증 */}
-              {isPhoneCode && (
-                <ButtonInputBox style={{ marginTop: '8px' }}>
-                  <Input
-                    type="text"
-                    name="verificationNumber"
-                    placeholder="인증번호 6자리 입력"
-                    value={veryfyPhoneCode}
-                    onChange={(e) => setVeryfyPhoneCode(e.target.value)}
-                    inputStyle={{
-                      backgroundColor: '#fff',
-                      borderRadius: '6px',
-                    }}
-                    errorMessage={
-                      isPhoneDone
-                        ? '인증번호가 일치합니다.'
-                        : isPhoneDoneFail
-                        ? '인증번호가 일치하지 않습니다.'
-                        : ''
-                    }
-                    errorMessageStyle={
-                      isPhoneDone ? { color: '#00b448' } : { color: '#ef0000' }
-                    }
+                    disabled={!isEmailEdit}
                   />
                   <Button
                     type={
-                      isPhoneVerifyCode && !isPhoneDone
+                      (isEmailValidated && !isEmailCode) ||
+                      (isEmailDone && isEmailEdit)
                         ? ButtonType.BLACK_WHITE
+                        : isEmailValidated && isEmailCode
+                        ? ButtonType.GRAY
                         : ButtonType.GRAY
                     }
-                    containerStyle={buttonStyle2}
-                    onClick={handlePhoneVerifyCode}
+                    onClick={
+                      isEmailEdit ? handleRequestEmailCode : handleEmailEdit
+                    }
+                    containerStyle={buttonStyle}
                   >
-                    {isPhoneDone ? '확인완료' : '확인'}
+                    {isEmailEdit && !isEmailDone
+                      ? '이메일 인증'
+                      : isEmailEdit && isEmailDone
+                      ? '재인증받기'
+                      : '이메일 변경'}
                   </Button>
                 </ButtonInputBox>
-              )}
-            </MyInfoFormBox>
-          </MyInfoWrapper>
-          <ButtonBox>
-            <Button
-              type={ButtonType.GRAY_BLACK}
-              containerStyle={{ marginRight: '20px' }}
-              onClick={handleBlocking}
-            >
-              취소
-            </Button>
-            <Button
-              type={isEditing ? ButtonType.GRAY : ButtonType.PRIMARY}
-              onClick={() => (isEditing ? null : handleEdit())}
-            >
-              저장
-            </Button>
-          </ButtonBox>
-          <Withdrawal onClick={handleWithdrawalModal}>회원탈퇴</Withdrawal>
-        </MyInfoSection>
-      </Container>
-      <ImgModal
-        open={isEmailModalOpen}
-        onClose={() => setIsEmailModalOpen(false)}
-        email={email}
-        content={' 으로 \n 이메일 인증 주소가 발송되었어요.'}
-        redContent={'메일을 받지 못하셨다면 스팸 폴더를 확인해주세요.'}
-        imgUrl="../assets/img-email.png"
-      />
-      <TextModal
-        open={isErrorEmailModalOpen}
-        onClose={() => setIsErrorEmailModalOpen(false)}
-        submitText={'확인'}
-        content={'이미 가입한 회원입니다.'}
-      />
-      <TextModal
-        open={isSubmittedForm}
-        onClose={() => handleSubmittedForm()}
-        submitText={'확인'}
-        content={'저장이 완료되었습니다.'}
-      />
-      <TextModal
-        open={isWithdrawal}
-        onClose={() => setIsWithdrawal(false)}
-        submitText="탈퇴하기"
-        content={'정말 탈퇴하시겠습니까? \n 탈퇴 후 되돌릴 수 없습니다.'}
-        onSubmit={() => setIsWithdrawal(false)}
-      />
-      <TextModal
-        open={isBlocking}
-        onClose={() => setIsBlocking(false)}
-        submitText="나가기"
-        content={
-          '페이지를 나가시겠습니까? \n 변경사항이 저장되지 않을 수 있습니다.'
-        }
-        onSubmit={() => navigate(0)}
-      />
-    </MypageLayout>
-  );
 
-  
+                {/* 이메일 인증 */}
+                {isEmailCode && (
+                  <ButtonInputBox style={{ marginTop: '8px' }}>
+                    <Input
+                      type="email"
+                      name="verifyEmailCode"
+                      value={verifyEmailCode}
+                      placeholder={'인증번호를 입력해 주세요.'}
+                      onChange={(e) => setVerifyEmailCode(e.target.value)}
+                      inputStyle={{
+                        backgroundColor: '#fff',
+                        borderRadius: '6px',
+                      }}
+                      errorMessage={
+                        isEmailDone
+                          ? '인증번호가 일치합니다.'
+                          : isEmailDoneFail
+                          ? '인증번호가 일치하지 않습니다.'
+                          : ''
+                      }
+                      errorMessageStyle={
+                        isEmailDone
+                          ? { color: '#00b448' }
+                          : { color: '#ef0000' }
+                      }
+                    />
+                    <Button
+                      type={
+                        isEmailVerifyCode && !isEmailDone
+                          ? ButtonType.BLACK_WHITE
+                          : ButtonType.GRAY
+                      }
+                      onClick={handleVerifyEmailCode}
+                      containerStyle={buttonStyle2}
+                    >
+                      {isEmailDone ? '확인완료' : '확인'}
+                    </Button>
+                  </ButtonInputBox>
+                )}
+                <Divider style={{ marginTop: '8px' }} />
+
+                {/* 회사명 */}
+                <LinedInput
+                  label="회사명"
+                  type="text"
+                  name="companyName"
+                  value={companyName}
+                  helperMessage={'회사변경은 탈퇴 후 재가입 하시기 바랍니다.'}
+                  xIcon={false}
+                />
+
+                {/* 직위/직급 */}
+                <LinedInput
+                  label="직위/직급"
+                  type="text"
+                  name="position"
+                  value={position}
+                  onChange={handleChange}
+                  xIcon={false}
+                />
+
+                {/* 부서 */}
+                <LinedInput
+                  label="부서(선택)"
+                  type="text"
+                  name="department"
+                  value={department}
+                  onChange={handleChange}
+                  xIcon={false}
+                />
+
+                {/* 사내번호 */}
+                <LinedInput
+                  label="사내번호"
+                  type="text"
+                  name="tel"
+                  value={tel}
+                  onChange={handleChange}
+                  xIcon={false}
+                />
+
+                {/* 비밀번호 */}
+                {!isPassword && (
+                  <ButtonInputBox>
+                    <Input
+                      label="비밀번호"
+                      type="password"
+                      name="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      inputStyle={{
+                        backgroundColor: '#f2f2f2',
+                        borderRadius: '6px',
+                      }}
+                      disabled={!isPassword}
+                      errorMessage={''}
+                    />
+                    <Button
+                      type={ButtonType.BLACK_WHITE}
+                      containerStyle={buttonStyle}
+                      onClick={handlePassword}
+                    >
+                      비밀번호 변경
+                    </Button>
+                  </ButtonInputBox>
+                )}
+
+                {/* 비밀번호 변경 */}
+                {isPassword && (
+                  <>
+                    <Input
+                      label="현재 비밀번호"
+                      redStar="*"
+                      type="password"
+                      placeholder="비밀번호를 입력해 주세요"
+                      name="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      containerStyle={{ marginBottom: 8 }}
+                    />
+                    <Divider />
+                    <Input
+                      label="새 비밀번호"
+                      redStar="*"
+                      type="password"
+                      name="newPassword"
+                      placeholder="영문과 숫자, 특수문자 포함 8자 이상 입력해 주세요"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      containerStyle={{ marginBottom: 8 }}
+                      errorMessage={
+                        newPassword === ''
+                          ? ''
+                          : isPasswordValidated
+                          ? ''
+                          : '영문, 숫자, 특수문자 포함 8자 이상 입력해 주세요'
+                      }
+                    />
+                    <Divider />
+                    <Input
+                      label="새 비밀번호 확인"
+                      redStar="*"
+                      type="password"
+                      name="passwordConfirm"
+                      placeholder="새 비밀번호를 다시 입력해 주세요"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      containerStyle={{ marginBottom: 8 }}
+                      errorMessage={
+                        confirmPassword === ''
+                          ? ''
+                          : isConfirmPasswordValidated
+                          ? ''
+                          : '비밀번호가 일치하지 않습니다'
+                      }
+                    />
+                  </>
+                )}
+                <Divider style={{ marginTop: '8px' }} />
+
+                {/* 휴대폰번호 */}
+                <ButtonInputBox>
+                  <Input
+                    label="휴대폰번호"
+                    redStar="*"
+                    type="text"
+                    name="phone"
+                    placeholder="'-' 입력 제외(번호만 입력해 주세요)"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    inputStyle={
+                      isPhoneEdit ? emailEditInputStyle : emailInputStyle
+                    }
+                    maxLength={11}
+                    disabled={!isPhoneEdit}
+                  />
+                  <Button
+                    type={
+                      (isPhoneValidated && !isPhoneCode) ||
+                      (isPhoneDone && isPhoneEdit)
+                        ? ButtonType.BLACK_WHITE
+                        : isPhoneValidated && isPhoneCode
+                        ? ButtonType.GRAY
+                        : ButtonType.GRAY
+                    }
+                    onClick={isPhoneEdit ? handleRequestPhone : handlePhoneEdit}
+                    containerStyle={buttonStyle}
+                  >
+                    {isPhoneEdit && !isPhoneDone
+                      ? '인증번호 전송'
+                      : isPhoneEdit && isPhoneDone
+                      ? '재인증받기'
+                      : '휴대폰번호 변경'}
+                  </Button>
+                </ButtonInputBox>
+
+                {/* 휴대폰번호 인증 */}
+                {isPhoneCode && (
+                  <ButtonInputBox style={{ marginTop: '8px' }}>
+                    <Input
+                      type="text"
+                      name="verificationNumber"
+                      placeholder="인증번호 6자리 입력"
+                      value={veryfyPhoneCode}
+                      onChange={(e) => setVeryfyPhoneCode(e.target.value)}
+                      inputStyle={{
+                        backgroundColor: '#fff',
+                        borderRadius: '6px',
+                      }}
+                      errorMessage={
+                        isPhoneDone
+                          ? '인증번호가 일치합니다.'
+                          : isPhoneDoneFail
+                          ? '인증번호가 일치하지 않습니다.'
+                          : ''
+                      }
+                      errorMessageStyle={
+                        isPhoneDone
+                          ? { color: '#00b448' }
+                          : { color: '#ef0000' }
+                      }
+                    />
+                    <Button
+                      type={
+                        isPhoneVerifyCode && !isPhoneDone
+                          ? ButtonType.BLACK_WHITE
+                          : ButtonType.GRAY
+                      }
+                      containerStyle={buttonStyle2}
+                      onClick={handlePhoneVerifyCode}
+                    >
+                      {isPhoneDone ? '확인완료' : '확인'}
+                    </Button>
+                  </ButtonInputBox>
+                )}
+              </MyInfoFormBox>
+            </MyInfoWrapper>
+            <ButtonBox>
+              <Button
+                type={ButtonType.GRAY_BLACK}
+                containerStyle={{ marginRight: '20px' }}
+                onClick={handleBlocking}
+              >
+                취소
+              </Button>
+              <Button
+                type={isEditing ? ButtonType.GRAY : ButtonType.PRIMARY}
+                onClick={() => (isEditing ? null : handleEdit())}
+              >
+                저장
+              </Button>
+            </ButtonBox>
+            <Withdrawal onClick={handleWithdrawalModal}>회원탈퇴</Withdrawal>
+          </MyInfoSection>
+        </Container>
+        <ImgModal
+          open={isEmailModalOpen}
+          onClose={() => setIsEmailModalOpen(false)}
+          email={email}
+          content={' 으로 \n 이메일 인증 주소가 발송되었어요.'}
+          redContent={'메일을 받지 못하셨다면 스팸 폴더를 확인해주세요.'}
+          imgUrl="../assets/img-email.png"
+        />
+        <TextModal
+          open={isErrorEmailModalOpen}
+          onClose={() => setIsErrorEmailModalOpen(false)}
+          submitText={'확인'}
+          content={'이미 가입한 회원입니다.'}
+        />
+        <TextModal
+          open={isSubmittedForm}
+          onClose={() => handleSubmittedForm()}
+          submitText={'확인'}
+          content={'저장이 완료되었습니다.'}
+        />
+        <TextModal
+          open={isWithdrawal}
+          onClose={() => setIsWithdrawal(false)}
+          submitText="탈퇴하기"
+          content={'정말 탈퇴하시겠습니까? \n 탈퇴 후 되돌릴 수 없습니다.'}
+          onSubmit={() => setIsWithdrawal(false)}
+        />
+        <TextModal
+          open={isBlocking}
+          onClose={() => setIsBlocking(false)}
+          submitText="나가기"
+          content={
+            '페이지를 나가시겠습니까? \n 변경사항이 저장되지 않을 수 있습니다.'
+          }
+          onSubmit={() => navigate(0)}
+        />
+      </MypageLayout>
+    );
 };
-
-
 
 const Container = styled.div`
   width: 650px;
