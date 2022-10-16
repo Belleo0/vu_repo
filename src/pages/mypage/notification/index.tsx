@@ -10,6 +10,8 @@ import { css } from '@emotion/react';
 import useIsFieldUser from '@hooks/useIsFieldUser';
 import FieldNotification from '@components/FieldNotification';
 import FactoryNotification from '@components/FactoryNotification';
+import useWindowSize from '../../../hooks/useWindowSize';
+import FieldNotificationMobile from '../Displaymobile/Components/notification/index';
 
 const notiData = {
   id: 1,
@@ -38,6 +40,16 @@ export default () => {
   const handleChange = () => {
     setChecked(!checked);
   };
+
+  const { width } = useWindowSize();
+  const isMobile = width <= 360 ? true : false;
+
+ if(isFieldUser&& isMobile)
+ {
+  return <FieldNotificationMobile></FieldNotificationMobile>
+ }
+
+ else 
   return (
     <MypageLayout>
       <Container>

@@ -12,7 +12,7 @@ import useUserInfo from '@hooks/useUserInfo';
 import api from '@api';
 import FileUpload from '@components/FileUpload';
 import useWindowSize from '../../hooks/useWindowSize';
-import MobileScreen from './mobile';
+import MobileScreen from './Displaymobile/Components/index';
 export default () => {
   const navigate = useNavigate();
   const { width } = useWindowSize();

@@ -1,8 +1,8 @@
 import React, { CSSProperties } from 'react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import Button, { ButtonType, ButtonSize } from '../../../../components/Button';
-import Modal, { ModalButtonWrap } from '../../../../components/Modal';
+import Button, { ButtonType, ButtonSize } from '@components/Button';
+import Modal, { ModalButtonWrap } from '@components/Modal';
 import { useDispatch } from 'react-redux';
 import { setSelectedUserInfo } from '@data/chat';
 import useSelectedUserInfo from '@hooks/useSelectedUserInfo';
@@ -20,7 +20,7 @@ interface ICardModal {
 const MemberCardModal = (props: ICardModal) => {
   const dispatch = useDispatch();
   const userinfoSelected = useSelectedUserInfo();
-  console.log(userinfoSelected);
+ 
   return (
     <Modal {...props}>
       <ModalCard>
@@ -184,7 +184,7 @@ const ModalCard = styled.div`
   position: absolute;
   bottom: 0;
   width: 360px;
-  height: 60vh;
+  height: 447px;
   padding: 20px 0 0;
   background-color: #fff;
   border-top-left-radius: 20px;

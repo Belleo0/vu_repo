@@ -3,97 +3,60 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import MemberSpaceBar from '@components/MemberSpaceBar';
-import MemberSideBar from '@components/MemberSideBar';
+
 import useUserInfo from '@hooks/useUserInfo';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
 import useMySpaceInfo from '@api/useMySpaceInfo';
 
-import TextYesNoModal from '../MobileModal/TextYesNoModal';
-import MemberCardModal from '../MobileModal/MemberCardModal';
-import MemberListTable from '../MobileModal/Memberlisttable';
-import TextOptionModal from '../MobileModal/TextOptionModal';
+import TextYesNoModal from '../../MobileModal/TextYesNoModal';
+import MemberCardModal from './Membercardmodal';
+import MemberListTable from './Memberlisttable';
+import MemberSideBar from './Membersidebar';
+ import MemberOptionModal from './Memberoptionmodal';
 import useSelectedUserInfo from '@hooks/useSelectedUserInfo';
 import getAssetURL from '@utils/getAssetURL';
-
-const memberData = [
-  {
-    id: '1',
-    name: '김건설',
-    company: '(주)대성건설',
-    position: '대리',
-    authority: '1',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 0,
-  },
-  {
-    id: '2',
-    name: '김수현',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 1,
-  },
-  {
-    id: '3',
-    name: '이하진',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
-  },
-  {
-    id: '4',
-    name: '제임스',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
-  },
-  {
-    id: '5',
-    name: '코나즈',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
-  },
-  {
-    name: '코나즈',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
-  },
-  {
-    id: '6',
-    name: '코나즈',
-    company: '(주)대성건설',
-    position: '대리',
-    cellPhone: '010-1234-5678',
-    phone: '02) 2134-5678',
-    email: 'conbox@conbox.com',
-    status: 2,
-  },
-];
+import { memberData } from '../../Data/memberdata';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { setIsOpenMemberSpace } from '@data/space';
+import { clearSelectedUserInfo } from '@data/chat';
 
 const MobileScreen = () => {
   const navigate = useNavigate();
+  const disptach = useDispatch();
   const selectedSpaceId = useSelectedSpaceId();
   const [inviteModalOpen, setInviteModalOpen] = useState(true);
-  const [isManager, setIsManager] = useState(false);
-  const [isCardModalOpen, setIsCardModalOpen] = useState(false);
+  const [isManager, setIsManager] = useState(true);
+  const [isEidtModalOpen,setIsEditModalOpen]=useState(false)
+  const [isModified,setIsModified]=useState(false)
+  const [isDeleted,setIsDeleted]=useState(false)
+  const [isSubmit,setIsSubmit]=useState(false)
+  const [isContactModalOpen,setIsContactModalOpen]=useState(false)
+   
+ const onSubmit=()=>{
+     setIsSubmit(true)
+     setIsModified(false)
+     setIsDeleted(false)
+ }
+  
+  const onEdit=()=>{
+    setIsModified(true)
+    setIsEditModalOpen(false)
+  }
+  const onDelete=()=>{
+    setIsDeleted(true)
+    setIsEditModalOpen(false)
+  }
+
+  const onOpenEdit = () => {
+     setIsEditModalOpen(true);
+  };
+
+  const onOpenContact=()=>{
+    setIsContactModalOpen(true)
+  }
+
+  //Get isMemberSpaceOpen
+  const isMemberSpaceOpen = useSelector((v: any) => v.space.isMemberSpaceOpen);
   //Get userInfo
   const userInfo = useUserInfo();
   //Get selectedMember
@@ -104,19 +67,23 @@ const MobileScreen = () => {
     isLoading,
     supplierMutate,
   } = useMySpaceInfo(selectedSpaceId);
-  //if selecteduserinfo is selected will open Membercardmodal
-  useEffect(() => {
-    if (userinfoSelected) setIsCardModalOpen(true);
-  }, [userinfoSelected]);
-  // if id selected it will check position of user is manager or member to render
-  if (selectedSpaceId) {
+
+  //reset Space
+  const resetState = () => {
+    disptach(setIsOpenMemberSpace(false));
+    disptach(clearSelectedUserInfo());
+    navigate('/mypage');
+  };
+ 
+  // if  isMemberSpaceOpen  it will check position of user is manager or member to render
+  if (isMemberSpaceOpen == true) {
     if (isManager) {
       return (
         <MbContainer>
           <MbNav>
             <MbBackIcon
               style={{ marginLeft: '20px' }}
-              onClick={() => navigate('/mypage')}
+              onClick={resetState}
               src={getAssetURL('../assets/arrow_back_ic.svg')}
             ></MbBackIcon>
             <MbTitle>조직관리</MbTitle>
@@ -133,55 +100,72 @@ const MobileScreen = () => {
             address={userInfo?.basic_address}
             setInviteModalOpen={setInviteModalOpen}
           />
-          <MemberWrap>
+          <MemberSpaceWrap>
             <MemberRow> 현장 멤버 {memberData.length}</MemberRow>
             <MemberListTable
               data={memberData}
               me={userInfo}
               siteUserId={userInfo?.site_user?.id}
+              onOpenEdit={onOpenEdit}
+              onOpenContact={onOpenContact}
+              isManager={isManager}
             />
-          </MemberWrap>
+          </MemberSpaceWrap>
+
+          {/* Click Avatar of member will open  Member Contact Modal */}
           <MemberCardModal
-            open={isCardModalOpen}
-            onClose={() => setIsCardModalOpen(false)}
+            open={isContactModalOpen}
+            onClose={() => setIsContactModalOpen(false)}
             me={userInfo}
           ></MemberCardModal>
 
-          {/* <TextOptionModal
-            open={false}
-            onClose={() => setIsCardModalOpen(false)}
-            title="필터"
-            option={['권한위임', '삭제']}
-          ></TextOptionModal> */}
+         {/* Edit Modal */}
+         <MemberOptionModal
+          open={isEidtModalOpen}
+          fulloption={true}
+          editTitle={"권한위임"}
+          deleteTitle={"삭제"}
+          title={"필터"}
+          onClose={()=>{setIsEditModalOpen(false)}}
+          onDelete={onDelete}
+          onEdit={onEdit}
+         ></MemberOptionModal>
 
-          {/* <TextYesNoModal
-            open={true}
-            onClose={() => setIsCardModalOpen(false)}
+          {/* Click Edit will show this modal */}
+          <TextYesNoModal
+            open={isModified}
+            onClose={() => setIsModified(false)}
+            onSubmit={onSubmit}
             fullbutton={true}
             content="주문담당자 권한을 위임하시겠습니까?"
             yescontent="권한위임"
             nocontent="취소"
-          ></TextYesNoModal> */}
-
-          {/* <TextYesNoModal
-            open={true}
-            onClose={() => setIsCardModalOpen(false)}
+            redtext=''
+          ></TextYesNoModal>
+           {/* Susscess Message When Submit */}
+          <TextYesNoModal
+            open={isSubmit}
+            onClose={() => setIsSubmit(false)}
+            onSubmit={() => setIsSubmit(false)}
             fullbutton={false}
             content="주문담당자 변경이 완료되었습니다."
             yescontent="확인"
             nocontent=""
-          ></TextYesNoModal> */}
+            redtext=''
+          ></TextYesNoModal>
 
-          {/* <TextYesNoModal
-            open={true}
-            onClose={() => setIsCardModalOpen(false)}
+          <TextYesNoModal
+            open={isDeleted}
+            onClose={() =>setIsDeleted(false)}
+            onSubmit={onSubmit}
             fullbutton={true}
             content="구성원을 중앙동 일동미라주더마린에서 
             삭제하시겠습니까?
             삭제 시 거래 및 모든 채팅방에서 삭제됩니다."
             yescontent="삭제"
             nocontent="취소"
-          ></TextYesNoModal> */}
+            redtext=''
+          ></TextYesNoModal>
         </MbContainer>
       );
     } else
@@ -190,7 +174,7 @@ const MobileScreen = () => {
           <MbNav>
             <MbBackIcon
               style={{ marginLeft: '20px' }}
-              onClick={() => navigate('/mypage')}
+              onClick={resetState}
               src={getAssetURL('../assets/arrow_back_ic.svg')}
             ></MbBackIcon>
             <MbTitle>조직관리</MbTitle>
@@ -207,42 +191,46 @@ const MobileScreen = () => {
             address={userInfo?.basic_address}
             setInviteModalOpen={setInviteModalOpen}
           />
-          <MemberWrap>
+          <MemberSpaceWrap>
             <MemberRow> 현장 멤버 {memberData.length}</MemberRow>
             <MemberListTable
               data={memberData}
               me={userInfo}
               siteUserId={userInfo?.site_user?.id}
+              onOpenEdit={() => {}}
+              onOpenContact={onOpenContact}
+              isManager={isManager}
             />
-          </MemberWrap>
+          </MemberSpaceWrap>
         </MbContainer>
       );
   }
-  //Return member 
-  return (
-    <MbContainer>
-      <MbNav>
-        <MbBackIcon
-          style={{ marginLeft: '20px' }}
-          onClick={() => navigate('/mypage')}
-          src={getAssetURL('../assets/arrow_back_ic.svg')}
-        ></MbBackIcon>
-        <MbTitle>조직관리</MbTitle>
-        <MbIcon
-          style={{ marginRight: '20px' }}
-          src={getAssetURL('../assets/search_ic_bl.svg')}
-        ></MbIcon>
-      </MbNav>
-      <MemberWrap>
-        <MemberSideBar />
-      </MemberWrap>
-    </MbContainer>
-  );
+  //Return member
+  else
+    return (
+      <MbContainer>
+        <MbNav>
+          <MbBackIcon
+            style={{ marginLeft: '20px' }}
+            onClick={resetState}
+            src={getAssetURL('../assets/arrow_back_ic.svg')}
+          ></MbBackIcon>
+          <MbTitle>조직관리</MbTitle>
+          <MbIcon
+            style={{ marginRight: '20px' }}
+            src={getAssetURL('../assets/search_ic_bl.svg')}
+          ></MbIcon>
+        </MbNav>
+        <MemberWrap>
+          <MemberSideBar isManager={isManager} />
+        </MemberWrap>
+      </MbContainer>
+    );
 };
 
 const MemberRow = styled.div`
   display: flex;
-  width: 320;
+  width: 320px;
   font-family: SourceHanSansKR;
   font-size: 15px;
   font-weight: 500;
@@ -252,8 +240,13 @@ const MemberRow = styled.div`
   letter-spacing: -0.3px;
   text-align: right;
   color: #222;
-  margin: 0 20px;
+ 
 `;
+
+const MemberSpaceWrap=styled.div`
+  width: 320px;
+  margin: 0 20px 0 20px;
+`
 
 const MemberWrap = styled.div`
   display: flex;

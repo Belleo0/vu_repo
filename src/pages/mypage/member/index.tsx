@@ -13,7 +13,7 @@ import MemberSpaceBar from '@components/MemberSpaceBar';
 import MemberListTable from '@components/MemberListTable';
 import InviteModal from '@components/InviteModal';
 import useWindowSize from '../../../hooks/useWindowSize';
-import MobileScreen from '../mobile/ member/index';
+import MobileScreen from '../Displaymobile/Components/ member/index';
 const memberData = [
   {
     id: '1',

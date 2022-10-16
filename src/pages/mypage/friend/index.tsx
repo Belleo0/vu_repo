@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
-
 import MypageLayout from '@layout/MypageLayout';
 import useUserInfo from '@hooks/useUserInfo';
 import useSelectedSpaceId from '@hooks/useSelectedSpaceId';
@@ -10,6 +9,8 @@ import MemberListTable from '@components/MemberListTable';
 import FriendSideBar from '@components/FriendSideBar';
 import useFriends from '@api/useFriends';
 import FriendListTable from '@components/FriendListTable';
+import useWindowSize from '../../../hooks/useWindowSize';
+import MobileScreen from '../Displaymobile/Components/friend/index';
 
 export default () => {
   const [selectedFriendInfo, setSelectedFriendInfo] = useState<any>(null);
@@ -17,7 +18,7 @@ export default () => {
   const {
     data: { friends, error, refetch },
   } = useFriends();
-
+  
   const setSelectedIdWithFirstId = () => {
     if (friends && friends?.length > 0) {
       setSelectedFriendInfo(friends?.[0]);
@@ -27,27 +28,37 @@ export default () => {
   useEffect(() => {
     setSelectedIdWithFirstId();
   }, [friends]);
+ 
+  const { width } = useWindowSize();
+  const isMobile = width <= 360 ? true : false;
 
-  return (
-    <MypageLayout>
-      <Container>
-        <Title>친구관리</Title>
-        <MemberWrap>
-          <SideBarSection>
-            <FriendSideBar
-              data={friends}
-              selectedFriendInfo={selectedFriendInfo}
-              setSelectedFriendInfo={setSelectedFriendInfo}
-              mutate={refetch}
-            />
-          </SideBarSection>
-          <RightSection>
-            <FriendListTable data={selectedFriendInfo} mutate={refetch} />
-          </RightSection>
-        </MemberWrap>
-      </Container>
-    </MypageLayout>
-  );
+  if (isMobile) 
+    {
+      return <MobileScreen></MobileScreen>
+    }
+  else
+  {
+    return (
+      <MypageLayout>
+        <Container>
+          <Title>친구관리</Title>
+          <MemberWrap>
+            <SideBarSection>
+              <FriendSideBar
+                data={friends}
+                selectedFriendInfo={selectedFriendInfo}
+                setSelectedFriendInfo={setSelectedFriendInfo}
+                mutate={refetch}
+              />
+            </SideBarSection>
+            <RightSection>
+              <FriendListTable data={selectedFriendInfo} mutate={refetch} />
+            </RightSection>
+          </MemberWrap>
+        </Container>
+      </MypageLayout>
+    );
+  } 
 };
 
 const Container = styled.div`

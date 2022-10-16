@@ -1,11 +1,12 @@
 import React, { CSSProperties } from 'react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
-import Modal, { ModalButtonWrap } from '../../../../components/Modal';
+import Modal, { ModalButtonWrap } from '@components/Modal';
 
 interface ITextOptionModal {
   open: boolean;
   onClose: () => void;
+  onSubmit:()=>void;
   containerStyle?: React.CSSProperties;
   wrapperStyle?: React.CSSProperties;
   title: string;
@@ -13,6 +14,8 @@ interface ITextOptionModal {
 }
 
 const TextOptionModal = (props: ITextOptionModal) => {
+  const rootdiv = document.getElementById('root') as HTMLInputElement ;
+  rootdiv.setAttribute("style", "overflow:hidden");
   return (
     <Modal {...props}>
       <ModalContainer>
@@ -20,7 +23,7 @@ const TextOptionModal = (props: ITextOptionModal) => {
         {props.option.map((v: any, i: number) => {
           if (i == props.option.length - 1) {
             return (
-              <ModalOption>
+              <ModalOption key={"textoptionmodal"}>
                 <ModalTextRed>{v}</ModalTextRed>
               </ModalOption>
             );
@@ -75,7 +78,8 @@ const ModalContainer = styled.div`
   position: absolute;
   bottom: 0;
   width: 360px;
-  height: 25vh;
+  min-height: 15vh;
+  max-height: 50vh;
   padding: 20px 0 0;
   background-color: #fff;
   border-top-left-radius: 20px;

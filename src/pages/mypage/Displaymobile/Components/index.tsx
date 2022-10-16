@@ -695,6 +695,7 @@ const MobileScreen = (props: Props) => {
               <MbRowTitle>친구관리</MbRowTitle>
             </MbContentLeft>
             <MbArrowIcon
+               onClick={()=>{ navigate('/friend');}}
               src={getAssetURL('../assets/arrow_ic.svg')}
             ></MbArrowIcon>
           </MbRowContent>
@@ -702,12 +703,14 @@ const MobileScreen = (props: Props) => {
         <MbRow>
           <MbRowContent>
             <MbContentLeft>
-              <MbRowIcon
+              <MbRowIcon 
+               
                 src={getAssetURL('../assets/setting_ic.svg')}
               ></MbRowIcon>
               <MbRowTitle> 알림 설정</MbRowTitle>
             </MbContentLeft>
             <MbArrowIcon
+              onClick={()=>{navigate('/notification')}}
               src={getAssetURL('../assets/arrow_ic.svg')}
             ></MbArrowIcon>
           </MbRowContent>

@@ -20,6 +20,9 @@ interface IMemberTable {
 }
 
 export default ({ data, mutate }: IMemberTable) => {
+  
+ console
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isFieldUser = useIsFieldUser();
