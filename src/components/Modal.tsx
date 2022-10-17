@@ -82,14 +82,8 @@ const AbsoluteContainer = styled.div`
   
 `;
 
-export const MbModalContainer=styled.div`
-  width: 300px;
-  margin: 0 20px;
-  padding: 6px 20px;
-  background-color: #fff;
-  border-radius: 20px;
- overflow: hidden;
-`
+
+
 
 export const ModalContainer = styled.div`
   min-width: 300px;

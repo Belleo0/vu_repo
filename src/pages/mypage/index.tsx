@@ -18,6 +18,8 @@ export default () => {
   const { width } = useWindowSize();
   const isMobile = width <= 360 ? true : false;
   const userInfo = useUserInfo();
+  console.log(userInfo)
+  
   let initialState = {
     name: userInfo ? userInfo?.name : '',
     email: userInfo ? userInfo?.signname : '',
@@ -27,6 +29,8 @@ export default () => {
     tel: userInfo ? userInfo?.tel : '',
     password: userInfo ? userInfo?.password : '',
     phone: userInfo ? userInfo?.phone : '',
+    company:userInfo?userInfo?.company:{},
+    likeCount:userInfo?userInfo?.likeCount:{},
   };
 
   interface userData {

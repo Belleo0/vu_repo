@@ -12,7 +12,7 @@ import TextYesNoModal from '../../MobileModal/TextYesNoModal';
 import MemberCardModal from './Membercardmodal';
 import MemberListTable from './Memberlisttable';
 import MemberSideBar from './Membersidebar';
- import MemberOptionModal from './Memberoptionmodal';
+import MemberOptionModal from './Memberoptionmodal';
 import useSelectedUserInfo from '@hooks/useSelectedUserInfo';
 import getAssetURL from '@utils/getAssetURL';
 import { memberData } from '../../Data/memberdata';
@@ -25,35 +25,37 @@ const MobileScreen = () => {
   const disptach = useDispatch();
   const selectedSpaceId = useSelectedSpaceId();
   const [inviteModalOpen, setInviteModalOpen] = useState(true);
-  const [isManager, setIsManager] = useState(true);
-  const [isEidtModalOpen,setIsEditModalOpen]=useState(false)
-  const [isModified,setIsModified]=useState(false)
-  const [isDeleted,setIsDeleted]=useState(false)
-  const [isSubmit,setIsSubmit]=useState(false)
-  const [isContactModalOpen,setIsContactModalOpen]=useState(false)
-   
- const onSubmit=()=>{
-     setIsSubmit(true)
-     setIsModified(false)
-     setIsDeleted(false)
- }
-  
-  const onEdit=()=>{
-    setIsModified(true)
-    setIsEditModalOpen(false)
-  }
-  const onDelete=()=>{
-    setIsDeleted(true)
-    setIsEditModalOpen(false)
-  }
 
-  const onOpenEdit = () => {
-     setIsEditModalOpen(true);
+  const [isEidtModalOpen, setIsEditModalOpen] = useState(false);
+  const [isModified, setIsModified] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
+  //Note: this state control view Manager or Member
+  const [isManager, setIsManager] = useState(true);
+  const onSubmit = () => {
+    setIsSubmit(true);
+    setIsModified(false);
+    setIsDeleted(false);
   };
 
-  const onOpenContact=()=>{
-    setIsContactModalOpen(true)
-  }
+  const onEdit = () => {
+    setIsModified(true);
+    setIsEditModalOpen(false);
+  };
+  const onDelete = () => {
+    setIsDeleted(true);
+    setIsEditModalOpen(false);
+  };
+
+  const onOpenEdit = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const onOpenContact = () => {
+    setIsContactModalOpen(true);
+  };
 
   //Get isMemberSpaceOpen
   const isMemberSpaceOpen = useSelector((v: any) => v.space.isMemberSpaceOpen);
@@ -74,7 +76,7 @@ const MobileScreen = () => {
     disptach(clearSelectedUserInfo());
     navigate('/mypage');
   };
- 
+
   // if  isMemberSpaceOpen  it will check position of user is manager or member to render
   if (isMemberSpaceOpen == true) {
     if (isManager) {
@@ -109,6 +111,7 @@ const MobileScreen = () => {
               onOpenEdit={onOpenEdit}
               onOpenContact={onOpenContact}
               isManager={isManager}
+              isMemberTab={false}
             />
           </MemberSpaceWrap>
 
@@ -119,17 +122,19 @@ const MobileScreen = () => {
             me={userInfo}
           ></MemberCardModal>
 
-         {/* Edit Modal */}
-         <MemberOptionModal
-          open={isEidtModalOpen}
-          fulloption={true}
-          editTitle={"권한위임"}
-          deleteTitle={"삭제"}
-          title={"필터"}
-          onClose={()=>{setIsEditModalOpen(false)}}
-          onDelete={onDelete}
-          onEdit={onEdit}
-         ></MemberOptionModal>
+          {/* Edit Modal */}
+          <MemberOptionModal
+            open={isEidtModalOpen}
+            fulloption={true}
+            editTitle={'권한위임'}
+            deleteTitle={'삭제'}
+            title={'필터'}
+            onClose={() => {
+              setIsEditModalOpen(false);
+            }}
+            onDelete={onDelete}
+            onEdit={onEdit}
+          ></MemberOptionModal>
 
           {/* Click Edit will show this modal */}
           <TextYesNoModal
@@ -140,9 +145,10 @@ const MobileScreen = () => {
             content="주문담당자 권한을 위임하시겠습니까?"
             yescontent="권한위임"
             nocontent="취소"
-            redtext=''
+            redtext=""
+            title=''
           ></TextYesNoModal>
-           {/* Susscess Message When Submit */}
+          {/* Susscess Message When Submit */}
           <TextYesNoModal
             open={isSubmit}
             onClose={() => setIsSubmit(false)}
@@ -151,12 +157,13 @@ const MobileScreen = () => {
             content="주문담당자 변경이 완료되었습니다."
             yescontent="확인"
             nocontent=""
-            redtext=''
+            redtext=""
+            title=''
           ></TextYesNoModal>
 
           <TextYesNoModal
             open={isDeleted}
-            onClose={() =>setIsDeleted(false)}
+            onClose={() => setIsDeleted(false)}
             onSubmit={onSubmit}
             fullbutton={true}
             content="구성원을 중앙동 일동미라주더마린에서 
@@ -164,7 +171,8 @@ const MobileScreen = () => {
             삭제 시 거래 및 모든 채팅방에서 삭제됩니다."
             yescontent="삭제"
             nocontent="취소"
-            redtext=''
+            redtext=""
+            title=''
           ></TextYesNoModal>
         </MbContainer>
       );
@@ -197,11 +205,77 @@ const MobileScreen = () => {
               data={memberData}
               me={userInfo}
               siteUserId={userInfo?.site_user?.id}
-              onOpenEdit={() => {}}
+              onOpenEdit={onOpenEdit}
               onOpenContact={onOpenContact}
               isManager={isManager}
+              isMemberTab={false}
             />
           </MemberSpaceWrap>
+
+          {/* Click Avatar of member will open  Member Contact Modal */}
+          <MemberCardModal
+            open={isContactModalOpen}
+            onClose={() => setIsContactModalOpen(false)}
+            me={userInfo}
+          ></MemberCardModal>
+          {/* Edit Modal */}
+          <MemberOptionModal
+            open={isEidtModalOpen}
+            fulloption={true}
+            editTitle={'권한위임'}
+            deleteTitle={'삭제'}
+            title={'필터'}
+            onClose={() => {
+              setIsEditModalOpen(false);
+            }}
+            onDelete={onDelete}
+            onEdit={onEdit}
+          ></MemberOptionModal>
+
+          {/* Click Edit will show this modal */}
+          <TextYesNoModal
+            open={isModified}
+            onClose={() => setIsModified(false)}
+            onSubmit={onSubmit}
+            fullbutton={true}
+            content="주문담당자 권한을 위임하시겠습니까?"
+            yescontent="권한위임"
+            nocontent="취소"
+            redtext=""
+            title=''
+          ></TextYesNoModal>
+          {/* Susscess Message When Submit */}
+          <TextYesNoModal
+            open={isSubmit}
+            onClose={() => setIsSubmit(false)}
+            onSubmit={() => setIsSubmit(false)}
+            fullbutton={false}
+            content="주문담당자 변경이 완료되었습니다."
+            yescontent="확인"
+            nocontent=""
+            redtext=""
+            title=''
+          ></TextYesNoModal>
+
+          <TextYesNoModal
+            open={isDeleted}
+            onClose={() => setIsDeleted(false)}
+            onSubmit={onSubmit}
+            fullbutton={true}
+            content="구성원을 중앙동 일동미라주더마린에서 
+            삭제하시겠습니까?
+            삭제 시 거래 및 모든 채팅방에서 삭제됩니다."
+            yescontent="삭제"
+            nocontent="취소"
+            redtext=""
+            title=''
+          ></TextYesNoModal>
+
+          <MemberCardModal
+            open={isContactModalOpen}
+            onClose={() => setIsContactModalOpen(false)}
+            me={userInfo}
+          ></MemberCardModal>
         </MbContainer>
       );
   }
@@ -240,13 +314,15 @@ const MemberRow = styled.div`
   letter-spacing: -0.3px;
   text-align: right;
   color: #222;
- 
+  height: 51px;
+
+  align-items: center;
 `;
 
-const MemberSpaceWrap=styled.div`
+const MemberSpaceWrap = styled.div`
   width: 320px;
   margin: 0 20px 0 20px;
-`
+`;
 
 const MemberWrap = styled.div`
   display: flex;

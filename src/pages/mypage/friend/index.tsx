@@ -9,7 +9,7 @@ import MemberListTable from '@components/MemberListTable';
 import FriendSideBar from '@components/FriendSideBar';
 import useFriends from '@api/useFriends';
 import FriendListTable from '@components/FriendListTable';
-import useWindowSize from '../../../hooks/useWindowSize';
+import useWindowSize from '@hooks/useWindowSize';
 import MobileScreen from '../Displaymobile/Components/friend/index';
 
 export default () => {

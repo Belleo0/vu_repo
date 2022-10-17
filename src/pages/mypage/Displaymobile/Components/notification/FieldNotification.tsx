@@ -7,7 +7,7 @@ interface IFieldNotification {
   revalidate?: any;
 }
 
-export default ({ data = {}, revalidate }: IFieldNotification) => {
+export default ({ data = [], revalidate }: IFieldNotification) => {
   const [checked, setChecked] = useState<boolean>(false);
 
   const handleChange = () => {
@@ -92,6 +92,7 @@ const ContentOrder = styled.div`
 const ContentRow = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-top: 14px;
   margin-bottom: 24px;
 `;
 

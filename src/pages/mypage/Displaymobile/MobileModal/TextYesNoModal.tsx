@@ -11,6 +11,7 @@ interface ITextYesNoModal {
   containerStyle?: React.CSSProperties;
   wrapperStyle?: React.CSSProperties;
   fullbutton: boolean;
+  title:string,
   content: string;
   nocontent: string;
   yescontent: string;
@@ -36,6 +37,10 @@ const TextYesNoModal = (props: ITextYesNoModal) => {
   return (
     <Modal {...props}>
       <ModalContainer>
+        <ModalContent>
+        <ModalTitle>{props.title}</ModalTitle>
+        </ModalContent>
+      
         <ModalContent>
         {contentArr?.map((v: any, i: number) => (
 
@@ -72,6 +77,19 @@ const TextYesNoModal = (props: ITextYesNoModal) => {
 };
 
 export default TextYesNoModal;
+ 
+const ModalTitle=styled.div`
+  font-family: SourceHanSansKR;
+  font-size: 15px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.47;
+  letter-spacing: -0.3px;
+  text-align: center;
+  color: #444;
+  width: 100%;
+`
 
 const ModalContent = styled.span`
   font-size: 14px;

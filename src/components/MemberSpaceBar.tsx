@@ -139,6 +139,7 @@ const MbInfoContainer=styled.div`
   flex-direction: column;
   margin-right: auto;
   width: 100%;
+  justify-content: center;
 `
  
 const InfoRow = styled.div`

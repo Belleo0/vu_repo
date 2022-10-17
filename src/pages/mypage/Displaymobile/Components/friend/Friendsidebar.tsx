@@ -148,7 +148,6 @@ const SearchedSpaceWrap = styled(ScrollBox)`
   flex: 1;
   flex-direction: column;
   width: 320px;
-  overflow-y: scroll;
   margin: 0 20px 0 20px;
   /* &::-webkit-scrollbar {
     display: none;

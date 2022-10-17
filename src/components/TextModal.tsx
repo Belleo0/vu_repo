@@ -1,6 +1,5 @@
 import Button, { ButtonType } from './Button';
 import Modal, { ModalButtonWrap, ModalContainer, ModalText } from './Modal';
-
 interface ITextModal {
   content: React.ReactNode;
   open: boolean;
@@ -12,9 +11,14 @@ interface ITextModal {
 }
 
 export default (props: ITextModal) => {
+ 
+
+
+
+
   return (
     <Modal {...props}>
-      <ModalContainer>
+      <ModalContainer style={props.containerStyle}>
         <ModalText>{props?.content}</ModalText>
         <ModalButtonWrap>
           {props.onSubmit && (
@@ -34,3 +38,5 @@ export default (props: ITextModal) => {
     </Modal>
   );
 };
+
+

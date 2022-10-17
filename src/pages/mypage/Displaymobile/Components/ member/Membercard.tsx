@@ -61,7 +61,7 @@ export default ({
             isOpen={isOpen}
             onClick={() => setIsOpen((prev) => !prev)}
           />
-          <PeopleCountText>999명</PeopleCountText>
+          <PeopleCountText>99명</PeopleCountText>
         </PeopleCountWrap>
       </InfoContainer>
     </Container>

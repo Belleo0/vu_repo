@@ -8,7 +8,7 @@ import ImgModal from '@components/ImgModal';
 import TextModal from '@components/TextModal';
 import api from '@api';
 import getAssetURL from '@utils/getAssetURL';
- 
+
 interface Props {
   userData: {
     name: string;
@@ -19,6 +19,8 @@ interface Props {
     tel: string;
     password: string;
     phone: string;
+    company: any;
+    likeCount: number;
   };
 }
 
@@ -44,7 +46,7 @@ const MobileScreen = (props: Props) => {
   //edit state
   const [newPassword, setNewPassword] = useState<string>(``);
   const [confirmPassword, setConfirmPassword] = useState<string>(``);
- 
+
   const [veryfyPhoneCode, setVeryfyPhoneCode] = useState<string>('');
   const [isPasswordEdit, setIsPasswordEdit] = useState<boolean>(false);
   const [isPhoneEdit, setIsPhoneEdit] = useState<boolean>(false);
@@ -260,6 +262,7 @@ const MobileScreen = (props: Props) => {
           content={' 으로 \n 이메일 인증 주소가 발송되었어요.'}
           redContent={'메일을 받지 못하셨다면 스팸 폴더를 확인해주세요.'}
           imgUrl="../assets/img-email.png"
+          containerStyle={ImgModalStyle}
         />
         <TextModal
           open={isWithdrawal}
@@ -267,6 +270,7 @@ const MobileScreen = (props: Props) => {
           submitText="탈퇴하기"
           content={'정말 탈퇴하시겠습니까? \n 탈퇴 후 되돌릴 수 없습니다.'}
           onSubmit={() => setIsWithdrawal(false)}
+          containerStyle={TextModalStyle}
         />
 
         <MbEditNav>
@@ -297,7 +301,7 @@ const MobileScreen = (props: Props) => {
             />
           </MbEditRowContent>
         </MbEditColumn>
-        <MbEditColumn>
+        <MbEditBox>
           {/* 이메일 */}
           <ButtonInputBox>
             <Input
@@ -339,7 +343,7 @@ const MobileScreen = (props: Props) => {
               )}
             </Button>
           </ButtonInputBox>
-        </MbEditColumn>
+        </MbEditBox>
 
         {isEmailCode && (
           <MbEditColumn>
@@ -440,7 +444,7 @@ const MobileScreen = (props: Props) => {
 
         {/* 비밀번호 */}
         {!isPassword && (
-          <MbEditColumn>
+          <MbEditBox>
             <ButtonInputBox>
               <Input
                 label="비밀번호"
@@ -460,13 +464,13 @@ const MobileScreen = (props: Props) => {
                 <BtnContent>비밀번호 변경</BtnContent>
               </Button>
             </ButtonInputBox>
-          </MbEditColumn>
+          </MbEditBox>
         )}
 
         {/* 비밀번호 변경 */}
         {isPassword && (
           <>
-            <MbEditColumn>
+            <MbEditBox>
               <ButtonInputBox>
                 <Input
                   label="현재 비밀번호"
@@ -479,9 +483,9 @@ const MobileScreen = (props: Props) => {
                   containerStyle={{ marginBottom: 8, width: '85%' }}
                 />
               </ButtonInputBox>
-            </MbEditColumn>
+            </MbEditBox>
 
-            <MbEditColumn>
+            <MbEditBox>
               <ButtonInputBox>
                 <Input
                   label="새 비밀번호"
@@ -501,8 +505,8 @@ const MobileScreen = (props: Props) => {
                   }
                 />
               </ButtonInputBox>
-            </MbEditColumn>
-            <MbEditColumn>
+            </MbEditBox>
+            <MbEditBox>
               <ButtonInputBox>
                 <Input
                   label="새 비밀번호 확인"
@@ -522,11 +526,11 @@ const MobileScreen = (props: Props) => {
                   }
                 />
               </ButtonInputBox>
-            </MbEditColumn>
+            </MbEditBox>
           </>
         )}
 
-        <MbEditColumn>
+        <MbEditBox>
           <ButtonInputBox>
             <Input
               label="휴대폰번호"
@@ -561,10 +565,10 @@ const MobileScreen = (props: Props) => {
               )}
             </Button>
           </ButtonInputBox>
-        </MbEditColumn>
+        </MbEditBox>
         {/* 휴대폰번호 인증 */}
         {isPhoneCode && (
-          <MbEditColumn>
+          <MbEditBox>
             <ButtonInputBox>
               <Input
                 type="text"
@@ -603,16 +607,16 @@ const MobileScreen = (props: Props) => {
                 )}
               </Button>
             </ButtonInputBox>
-          </MbEditColumn>
+          </MbEditBox>
         )}
 
-        <MbEditColumn>
-          <MbEditRowTitle>
+        
+          <WithdrawalWarap>
             {' '}
             <Withdrawal onClick={() => setIsWithdrawal(true)}>
               회원탈퇴
             </Withdrawal>
-          </MbEditRowTitle>
+          </WithdrawalWarap>
           <MbEditRowCenter>
             <ButtonBox>
               <Button
@@ -631,21 +635,29 @@ const MobileScreen = (props: Props) => {
               </Button>
             </ButtonBox>
           </MbEditRowCenter>
-        </MbEditColumn>
+         
       </MbEdit>
     );
   else
     return (
       <MbContainer>
         <MbTitle>마이</MbTitle>
-        {!!props.userData ? (
+        {props.userData ?  (
           <MbProfile>
-            <MbAvatar src={getAssetURL('../assets/profile.png')}></MbAvatar>
             <MbInfo>
+              <MbAvatar src={getAssetURL('../assets/profile.png')}></MbAvatar>
               <MbInfoContent>
                 <MbInfoSub>{props.userData.companyName}</MbInfoSub>
                 <MbInfoMain>{props.userData.name}</MbInfoMain>
               </MbInfoContent>
+              {userData?.company.company_type === 'REMICON' && (
+                <LikeWrap>
+                  <Icon src={getAssetURL('../assets/ic-like.svg')} />
+                  <Count>
+                    {userData?.likeCount ? userData?.likeCount : '0'}
+                  </Count>
+                </LikeWrap>
+              )}
             </MbInfo>
           </MbProfile>
         ) : (
@@ -695,7 +707,9 @@ const MobileScreen = (props: Props) => {
               <MbRowTitle>친구관리</MbRowTitle>
             </MbContentLeft>
             <MbArrowIcon
-               onClick={()=>{ navigate('/friend');}}
+              onClick={() => {
+                navigate('/friend');
+              }}
               src={getAssetURL('../assets/arrow_ic.svg')}
             ></MbArrowIcon>
           </MbRowContent>
@@ -703,14 +717,15 @@ const MobileScreen = (props: Props) => {
         <MbRow>
           <MbRowContent>
             <MbContentLeft>
-              <MbRowIcon 
-               
+              <MbRowIcon
                 src={getAssetURL('../assets/setting_ic.svg')}
               ></MbRowIcon>
               <MbRowTitle> 알림 설정</MbRowTitle>
             </MbContentLeft>
             <MbArrowIcon
-              onClick={()=>{navigate('/notification')}}
+              onClick={() => {
+                navigate('/notification');
+              }}
               src={getAssetURL('../assets/arrow_ic.svg')}
             ></MbArrowIcon>
           </MbRowContent>
@@ -757,7 +772,9 @@ const MbNavEmtyItem = styled.div`
   margin-right: 20px;
 `;
 
-const MbEditMain = styled.div``;
+const MbEditMain = styled.div`
+margin-bottom: 9px;
+`;
 
 const MbEditImg = styled.img`
   width: 86px;
@@ -785,25 +802,32 @@ const MbEditImgBtn = styled.div`
   text-align: center;
   color: #000;
 `;
-const MbEditRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
+const MbEditBox=styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 103px;
+  margin: 0px 0 0px 0;
+
+`
+ 
 const MbEditColumn = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 16px;
+  height: 81px;
+  margin: 16px 0 0px 0;
+
 `;
 const MbEditRowCenter = styled.div`
   display: flex;
   justify-content: center;
+  height: 66px;
 `;
 
-const MbEditRowTitle = styled.span`
-  margin: 0px 0px 0px 20px;
+const WithdrawalWarap = styled.span`
+  margin: 60px 0px px 20px;
   font-family: SourceHanSansKR;
   font-size: 13px;
   font-weight: normal;
@@ -813,6 +837,9 @@ const MbEditRowTitle = styled.span`
   letter-spacing: -0.26px;
   text-align: left;
   color: #444;
+  width: 320px;
+  
+ 
 `;
 
 const MbEditRowContent = styled.span`
@@ -826,10 +853,12 @@ const MbEditRowContent = styled.span`
   letter-spacing: -0.28px;
   text-align: left;
   color: #222;
+
+  
 `;
 
 const Withdrawal = styled.span`
-  width: 51px;
+  width: 100%;
   height: 20px;
   font-size: 14px;
   font-weight: normal;
@@ -841,6 +870,8 @@ const Withdrawal = styled.span`
   color: #999;
   border-bottom: 1px solid #999;
   cursor: pointer;
+  
+
 `;
 
 const inputStyle: CSSProperties = {
@@ -851,13 +882,7 @@ const inputStyle: CSSProperties = {
   backgroundColor: '#f2f2f2',
   outlineStyle: 'none',
 };
-const inputStyleFull: CSSProperties = {
-  width: '320px',
-  height: '42px',
-  borderRadius: '6px',
-  border: 'solid 1px #c7c7c7',
-  backgroundColor: '#fff',
-};
+ 
 
 const BtnContent = styled.span`
   width: 91px;
@@ -913,43 +938,7 @@ const MbEditCancel: CSSProperties = {
   alignItems: 'center',
 };
 
-const MbEditSave = styled.div`
-  width: 154px;
-  height: 46px;
-  margin: 0 0 0 12px;
-  padding: 12px 63px 13px;
-  border-radius: 6px;
-  background-color: #258fff;
-  font-family: SourceHanSansKR;
-  font-size: 15px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 4.13;
-  letter-spacing: -0.3px;
-  display: flex;
-  align-items: center;
-  color: #fff;
-`;
-const MbEditSaveHide = styled.div`
-  width: 154px;
-  height: 46px;
-  margin: 0 0 0 12px;
-  padding: 12px 63px 13px;
-  border-radius: 6px;
-  background-color: #f2f2f2;
-  font-family: SourceHanSansKR;
-  font-size: 15px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 4.13;
-  letter-spacing: -0.3px;
-  display: flex;
-  align-items: center;
-  color: #999;
-`;
-
+ 
 const ButtonInputBox = styled.div`
   width: 340px;
   display: flex;
@@ -961,8 +950,8 @@ const ButtonInputBox = styled.div`
 
 const ButtonBox = styled.div`
   display: flex;
-  margin-top: 60px;
-  margin-bottom: 50px;
+   height: 100%;
+ 
 `;
 
 //styled mypage
@@ -984,6 +973,32 @@ const MbContentLeft = styled.div`
   align-items: center;
   cursor: pointer;
 `;
+ 
+ 
+const ImgModalStyle:CSSProperties={
+  width:"300px",
+  height:"230px",
+  margin:"11px 30px 32px",
+  padding:"20px 20px 40px 20px",
+  borderRadius:"20px",
+  backgroundColor:"#fff"
+}
+ 
+const TextModalStyle:CSSProperties={
+ width:"300px",
+ margin:"19px 30px 49px",
+ padding:"30px 20px 20px",
+  backgroundColor:"#fff",
+  borderRadius:"20px",
+  overflow:"hidden",
+  height:"164px",
+  display:"flex",
+  flexDirection:"column",
+  alignItems:"center",
+  justifyContent:"center",
+   
+
+}
 
 const MbRowIcon = styled.img`
   width: 24px;
@@ -1034,9 +1049,10 @@ const MbInfoMain = styled.span`
 
 const MbInfo = styled.div`
   height: 66px;
-  margin-left: 20px;
   display: flex;
-`;
+  width: 100%;
+  align-items: center;
+ `;
 const MbInfoContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -1045,6 +1061,7 @@ const MbAvatar = styled.img`
   width: 66px;
   height: 66px;
   border-radius: 50%;
+  margin-right: 12px;
 `;
 
 const MbContainer = styled.div`
@@ -1061,11 +1078,11 @@ const MbTitle = styled.div`
 `;
 
 const MbProfile = styled.div`
-  width: 360px;
+  width: 320px;
   height: 124px;
   display: flex;
   align-items: center;
-  margin-left: 12px;
+  margin:0 20px 0 20px;
 `;
 
 const MbAlertLogin = styled.div`
@@ -1098,6 +1115,21 @@ const MbAlertTitle = styled.div`
   letter-spacing: -0.28px;
   text-align: left;
   color: #222;
+`;
+const LikeWrap = styled.div`
+display: flex;
+justify-content: flex-end;
+align-items: center;
+margin-left: auto;
+`;
+const Icon = styled.img`
+  width: 19px;
+  height: auto;
+  margin-right: 4px;
+`;
+const Count = styled.span`
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 export default MobileScreen;

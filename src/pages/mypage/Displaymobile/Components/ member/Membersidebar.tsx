@@ -12,7 +12,8 @@ import { memberData } from '../../Data/memberdata';
 import MemberCard from './Membercard';
 import MemberListTable from './Memberlisttable';
 import MemberOptionModal from './Memberoptionmodal';
- 
+import MemberCardModal from './Membercardmodal';
+import TextYesNoModal from '../../MobileModal/TextYesNoModal';
 enum ChipTypeEnum {
   DEFAULT,
   ACTIVE,
@@ -39,18 +40,26 @@ export default ({ isManager }: ISidebar) => {
   const [chipType, setChipType] = useState<ChipTypeEnum>(ChipTypeEnum.DEFAULT);
   const [isMounted, setIsMounted] = useState(false);
   const [search, setSearch] = useState('');
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
+  const onOpenContact = () => {
+    setIsContactModalOpen(true);
+  };
   //position of user in member group
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen,setIsDeleteModalOpen]=useState(false)
 
   const onEdit = () => {
     //do something with Edit
     setIsModalOpen(false);
   };
-  
-  const onDelete=()=>{
-    //do something  with Delete
+
+  const onDelete = () => {
+    //do something  with Delete 
     setIsModalOpen(false)
-  }
+    setIsDeleteModalOpen(true)
+
+  };
   const onOpenEdit = () => {
     setIsModalOpen(true);
   };
@@ -76,11 +85,9 @@ export default ({ isManager }: ISidebar) => {
   const handleChangeTabType = (type: TabTypeEnum) => {
     setTabType(type);
     setIsMounted(false);
-   
   };
 
   const handleChangeChipType = (type: ChipTypeEnum) => {
-   
     setChipType(type);
     setIsMounted(false);
   };
@@ -167,10 +174,25 @@ export default ({ isManager }: ISidebar) => {
             siteUserId={userInfo?.site_user?.id}
             isManager={isManager}
             onOpenEdit={onOpenEdit}
-            onOpenContact={() => {}}
+            onOpenContact={onOpenContact}
+            isMemberTab={true}
           ></MemberListTable>
         </SearchedSpaceWrap>
       )}
+
+      <TextYesNoModal
+       open={isDeleteModalOpen}
+       onClose={()=>setIsDeleteModalOpen(false)}
+      onSubmit={()=>{}}
+      fullbutton={true}
+      content={`구성원이 소속된 모든 공장에서
+      삭제하시겠습니까?
+      각 공장의 모든 거래 및 채팅에서 제거됩니다.`}
+      yescontent={"삭제"}
+      nocontent={"취소"}
+      redtext={`모든 공장`}
+       title={``}
+      ></TextYesNoModal>
 
       <MemberOptionModal
         open={isModalOpen}
@@ -182,6 +204,11 @@ export default ({ isManager }: ISidebar) => {
         onDelete={onDelete}
         title="필터"
       ></MemberOptionModal>
+      <MemberCardModal
+        open={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        me={userInfo}
+      ></MemberCardModal>
     </SpeceBarWrap>
   );
 };

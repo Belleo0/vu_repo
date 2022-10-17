@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import getAssetURL from '@utils/getAssetURL';
 import Button, { ButtonType } from './Button';
-import Modal, { ModalButtonWrap, ModalContainer,MbModalContainer } from './Modal';
+import Modal, { ModalButtonWrap, ModalContainer } from './Modal';
 import useWindowSize from "../hooks/useWindowSize"
 interface IImgModal {
   title?: React.ReactNode;
@@ -29,7 +29,7 @@ if(isMobile)
 {
   return (
     <Modal {...props}>
-      <MbModalContainer>
+      <ModalContainer>
         {props.imgUrl ? (
           <IconContainer onClick={props.onClose}>
             <Icon src={getAssetURL('../assets/ic-del.svg')} />
@@ -64,7 +64,7 @@ if(isMobile)
             </Button>
           )}
         </ModalButtonWrap>
-      </MbModalContainer>
+      </ModalContainer>
     </Modal>
   )
 }

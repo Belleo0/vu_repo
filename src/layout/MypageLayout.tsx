@@ -6,7 +6,8 @@ import React from 'react';
 
 export default ({ children }: { children: React.ReactNode }) => {
   return (
-    <Container>
+    <Container> 
+ 
       <Header />
       <ContentContainer>
         <MypageSidebar />

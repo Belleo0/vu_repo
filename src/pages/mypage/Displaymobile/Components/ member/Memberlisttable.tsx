@@ -19,6 +19,7 @@ interface IMemberTable {
   isManager: boolean;
   onOpenEdit: () => void;
   onOpenContact:()=>void;
+  isMemberTab:boolean;
 }
 
 export default ({
@@ -29,6 +30,7 @@ export default ({
   isManager,
   onOpenContact,
   onOpenEdit,
+  isMemberTab,
 }: IMemberTable) => {
   const disptach = useDispatch();
   const isFieldUser = useIsFieldUser();
@@ -43,7 +45,9 @@ export default ({
   const [ConfirmDeleteMember, setConfirmDeleteMember] =
     useState<boolean>(false);
 
-    
+    const userInfo = useUserInfo();
+
+    console.log(userInfo)
 
   if (isManager) {
     return (
@@ -86,7 +90,7 @@ export default ({
           <MbMemberCell key={i}>
             <MbMemberRow onClick={() => disptach(setSelectedUserInfo(v))}>
               <MbRowLeft>
-                <MbProfileImage src={getAssetURL('../assets/profile.png')} />
+                <MbProfileImage onClick={onOpenContact} src={getAssetURL('../assets/profile.png')} />
                 <MbMemberInfoWrap>
                   <CompanyInfo>{v?.company}</CompanyInfo>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -103,7 +107,13 @@ export default ({
                 ) : null}
               </MbRowLeft>
               <MbRowRight>
-                 
+              {
+                  userInfo?.company.company_type=="REMICON"? 
+                    v?.authority? null:
+                   isMemberTab==true?null:
+                   <Icon onClick={onOpenEdit} src={getAssetURL('../assets/three-dots.svg')}></Icon>
+                  :null
+                 }
               </MbRowRight>
             </MbMemberRow>
           </MbMemberCell>
@@ -119,6 +129,16 @@ const MemberListContainer = styled(ScrollBox)`
 `;
 const MbMemberCell = styled.div`
   display: flex;
+  width: 100%;
+  height: 74px;
+  margin: 16px 0px;
+  /* padding: 15px 0px 0x 20px; */
+  border-radius: 12px;
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.06);
+  border: solid 1px #f2f2f2;
+  background-color: #fff;
+  
+  ;
 `;
 const MbMemberRow = styled.div`
   width: 100%;

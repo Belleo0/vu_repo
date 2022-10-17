@@ -3,12 +3,31 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import getAssetURL from '@utils/getAssetURL';
 import FieldNotification from './FieldNotification';
-
- 
+import FactoryNotification from './FactoryNotification';
+import useIsFieldUser from '@hooks/useIsFieldUser';
+const notiData = {
+  id: 1,
+  notification: {
+    appPush: {
+      estimationSubmit: 1,
+      remiconOrderConfirm: 1,
+      preWeather: 1,
+      reminder: 1,
+    },
+    kakaoPush: {
+      estimationSubmit: 0,
+      remiconOrderConfirm: 0,
+      preWeather: 0,
+      reminder: 0,
+    },
+  },
+};
 export default () => {
 
   const navigate =useNavigate()
- 
+  const isFieldUser= useIsFieldUser()
+
+  const notidata = notiData.notification;
 
   return (
     <MbContainer>
@@ -25,7 +44,11 @@ export default () => {
       ></MbIcon>
     </MbNav>
     <NotificationWrap>
-    <FieldNotification></FieldNotification>
+     {isFieldUser ? (
+            <FieldNotification data={notidata} revalidate={notidata} />
+          ) : (
+            <FactoryNotification data={notidata} revalidate={notidata} />
+          )}
     </NotificationWrap>
     
    

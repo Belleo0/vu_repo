@@ -37,7 +37,7 @@ export default ({
       {data?.map((v: any, i: number) => (
         <FriendCell key={i}> 
           <FriendRow onClick={() => setandopenModal(v)}>
-            <FriendRowLeft>
+           
               <FriendImage src={getAssetURL('../assets/profile.png')} />
               <MbMemberInfoWrap>
                 <FriendInfo>{v?.company}</FriendInfo>
@@ -48,7 +48,7 @@ export default ({
                   </FriendTitle>{' '}
                 </div>
               </MbMemberInfoWrap>
-            </FriendRowLeft>
+           
           </FriendRow>
         </FriendCell>
       ))}
@@ -57,12 +57,22 @@ export default ({
 };
 
 const FriendListContainer = styled(ScrollBox)`
-  width: 100%;
-  overflow-y: scroll;
+  width: 320px;
+ 
   border: none;
 `;
 const FriendCell = styled.div`
+ 
   display: flex;
+  width: 320px;
+  height: 74px;
+ 
+  padding: 15px 0px 0x 20px;
+  border-radius: 12px;
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.06);
+  border: solid 1px #f2f2f2;
+  background-color: #fff;
+  margin: 16px 0 16px 0;
 `;
 const FriendRow = styled.div`
   width: 100%;

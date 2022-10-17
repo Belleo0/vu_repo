@@ -11,9 +11,8 @@ import useIsFieldUser from '@hooks/useIsFieldUser';
 import FieldNotification from '@components/FieldNotification';
 import FactoryNotification from '@components/FactoryNotification';
 import useWindowSize from '../../../hooks/useWindowSize';
-import FieldNotificationMobile from '../Displaymobile/Components/notification/index';
-
-const notiData = {
+import NotificationMobile from '../Displaymobile/Components/notification/index';
+ const notiData = {
   id: 1,
   notification: {
     appPush: {
@@ -44,11 +43,10 @@ export default () => {
   const { width } = useWindowSize();
   const isMobile = width <= 360 ? true : false;
 
- if(isFieldUser&& isMobile)
+ if(isMobile)
  {
-  return <FieldNotificationMobile></FieldNotificationMobile>
+  return < NotificationMobile data={notiData}></ NotificationMobile>
  }
-
  else 
   return (
     <MypageLayout>
