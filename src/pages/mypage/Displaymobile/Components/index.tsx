@@ -274,18 +274,20 @@ const MobileScreen = (props: Props) => {
         />
 
         <MbEditNav>
-          <MbNavConent>
+          <MbNavContent>
             <MbEditBackIcon
               onClick={() => setIsEdit(false)}
               src={getAssetURL('../assets/arrow_back_ic.svg')}
             ></MbEditBackIcon>
-            <MbTitle>회원정보 수정</MbTitle>
+            <MbTitle1>회원정보 수정</MbTitle1>
             <MbNavEmtyItem></MbNavEmtyItem>
-          </MbNavConent>
+          </MbNavContent>
         </MbEditNav>
         <MbEditMain>
-          <MbEditImg src={getAssetURL('../assets/profile.png')}></MbEditImg>
-          <MbEditImgBtn>이미지 수정</MbEditImgBtn>
+          <MainRow> 
+            <MbEditImg style={{marginBottom:"10px"}} src={getAssetURL('../assets/profile.png')}></MbEditImg >
+            <MbEditImgBtn>이미지 수정</MbEditImgBtn>
+          </MainRow>
         </MbEditMain>
         {/* 이름 */}
         <MbEditColumn>
@@ -297,7 +299,7 @@ const MobileScreen = (props: Props) => {
               value={name}
               onChange={handleName}
               xIcon={false}
-              disabled={true}
+              disabled={false}
             />
           </MbEditRowContent>
         </MbEditColumn>
@@ -668,6 +670,7 @@ const MobileScreen = (props: Props) => {
             <MbAlertBtn>로그인</MbAlertBtn>
           </MbAlertLogin>
         )}
+        <Divide></Divide>
         <MbRow>
           <MbRowContent>
             <MbContentLeft>
@@ -757,14 +760,14 @@ const MbEditNav = styled.div`
   text-align: center;
 `;
 
-const MbNavConent = styled.div`
+const MbNavContent = styled.div`
   width: 320px;
   height: 100%;
   margin: 0 20px 0 20px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  justify-content: space-between;
+  
+ 
 `;
 const MbNavEmtyItem = styled.div`
   width: 24px;
@@ -773,20 +776,30 @@ const MbNavEmtyItem = styled.div`
 `;
 
 const MbEditMain = styled.div`
-margin-bottom: 9px;
+margin-bottom: 24px;
 `;
+
+const  MainRow = styled.div`
+  width: 100%;
+  height: 128px;
+  margin: 24px 0 0px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`
+ 
 
 const MbEditImg = styled.img`
   width: 86px;
   height: 86px;
-  margin-top: 24px;
   object-fit: contain;
 `;
 
 const MbEditImgBtn = styled.div`
   width: 76px;
   height: 32px;
-  margin: 10px 14px 0px 5px;
+  // margin: 10px 14px 0px 5px;
   padding: 7px 10px 8px;
   border-radius: 6px;
   border: solid 1px #000;
@@ -817,7 +830,8 @@ const MbEditColumn = styled.div`
   flex-direction: column;
   width: 100%;
   height: 81px;
-  margin: 16px 0 0px 0;
+  border: 1px solid red;
+  
 
 `;
 const MbEditRowCenter = styled.div`
@@ -1024,6 +1038,8 @@ const MbRowContent = styled.div`
 `;
 
 const MbInfoSub = styled.span`
+height: 17px;
+margin: 0 23px 2px 0;
   font-family: SourceHanSansKR;
   font-size: 12px;
   font-weight: normal;
@@ -1045,6 +1061,8 @@ const MbInfoMain = styled.span`
   letter-spacing: -0.36px;
   text-align: left;
   color: #000;
+  height: 26px;
+  margin: 2px 0 0;
 `;
 
 const MbInfo = styled.div`
@@ -1075,15 +1093,44 @@ const MbTitle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: SourceHanSansKR;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: #000;
+  
 `;
+
+const MbTitle1 = styled.span`
+  width: 90px;
+  height: 24px;
+  margin: 0 0 0 105px;
+  font-family: SourceHanSansKR;
+  font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: -0.32px;
+  text-align: center;
+  color: #222;
+`
 
 const MbProfile = styled.div`
   width: 320px;
-  height: 124px;
+  height: 66px;
   display: flex;
   align-items: center;
-  margin:0 20px 0 20px;
+  margin:24px 20px 30px 20px;
 `;
+
+const Divide=styled.div`
+width: 360px;
+  height: 4px;
+  margin: 30px 0 0;
+  background-color: #f2f2f2;`
 
 const MbAlertLogin = styled.div`
   width: 360px;
@@ -1104,8 +1151,7 @@ const MbAlertBtn = styled.button`
 `;
 const MbAlertTitle = styled.div`
   width: 251px;
-  height: 20px;
-  margin: 0 0 12px;
+  height: 20px;;
   font-family: SourceHanSansKR;
   font-size: 14px;
   font-weight: normal;
@@ -1131,5 +1177,9 @@ const Count = styled.span`
   font-size: 14px;
   font-weight: 500;
 `;
+
+const EditName=styled.div`
+width: 100%;
+`
 
 export default MobileScreen;
